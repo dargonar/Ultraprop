@@ -83,12 +83,13 @@ function onPropTypeChanged(sender){
 } 
 
 function initUI() {
+  onWindowResize();
   jQuery('[jqtransform|=true]').jqTransform();
 	//Checkboxes
   jQuery('#filters_bar [id*="prop_type_id"]').change(function(){ onPropTypeChanged(this);onMainFilterChange(this);});
   jQuery('#prop_operation_id').change(
     function(){
-      if (jQuery('#prop_operation_id').val()==2)
+      if (jQuery('#prop_operation_id').val()==OPER_RENT)
         setPriceSliderOptions('price_slider', default_slider_max2, default_slider_step2, default_slider_min2, default_slider_max2);
       else 
         setPriceSliderOptions('price_slider', default_slider_max1, default_slider_step1, default_slider_min1, default_slider_max1);
@@ -178,18 +179,15 @@ function initUI() {
 
 
 function initMap(){
+  autoGeolocate();
   if(navigator.geolocation) {
-    showGeolocationAdvice();//triggerGeolocationAdvice(); //
+    //triggerGeolocationAdvice();
     navigator.geolocation.getCurrentPosition(html5LocatePositionSuccess, html5LocatePositionError);
-  }
-  else
-  {
-    autoGeolocate();
   }
   return false;  
 }
 
-/* ======================== */
+/* ======================================================================== */
 /* Geolocation overlay */
 var geolocation_advice_timer = null;
 function triggerGeolocationAdvice(){
@@ -198,7 +196,7 @@ function triggerGeolocationAdvice(){
       stopGeolocationAdvice();
       showGeolocationAdvice();
     }
-  , 7500);
+  , 5000);
 }
 function onGeolocationOverlayClose()
 {
@@ -224,7 +222,7 @@ function stopGeolocationAdvice(){
   if(geolocation_advice_timer!=null)
     clearInterval(geolocation_advice_timer);
 }
-/* ======================== */
+/* ======================================================================== */
 
 /* GEOLOCATION */
 function autoGeolocate(){
@@ -239,41 +237,35 @@ function autoGeolocate(){
     default_lon=-57.954683;
   }
   var myLatlng = new google.maps.LatLng(default_lat, default_lon);
-  locateMap(myLatlng, '');
+  locateMap(myLatlng);
   initMapSearch();
 }
 
 function html5LocatePositionError(positionerror){
   // Ver http://dev.w3.org/geo/api/spec-source.html
   onGeolocationOverlayClose();
-  autoGeolocate();
 }
 
 function html5LocatePositionSuccess(position) {
   // Ver http://dev.w3.org/geo/api/spec-source.html
   onGeolocationOverlayClose();
   var point = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  locateMap(point, '¡Usted está aquí!');
-  initMapSearch();
+  map.setCenter(point);
+  doSearch();
 }
 
-function locateMap(myLatlng, text)
+function locateMap(myLatlng)
 {
-  onWindowResize();
   var myOptions = {
     zoom: default_zoom_level,
     center: myLatlng,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
+  onWindowResize();
   map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
   
   //GEOCODER
   geocoder = new google.maps.Geocoder();
-  
-  // marker = new google.maps.Marker({
-    // map: map,
-    // position: myLatlng
-  // });
   
   /* inicializo variables del mapa */
   myProjectionHelperOverlay = new ProjectionHelperOverlay(map);
@@ -287,16 +279,19 @@ function locateMap(myLatlng, text)
   jQuery("#searchmap").autocomplete({
       //This bit uses the geocoder to fetch address values
       source: function(request, response) {
-        geocoder.geocode( {'address': request.term }, function(results, status) {
+        geocoder.geocode( {'address': request.term, 'region' : 'ar'}, function(results, status) {
           response(jQuery.map(results, function(item) {
-            return {
-              label:  item.formatted_address,
-              value: item.formatted_address,
-              latitude: item.geometry.location.lat(),
-              longitude: item.geometry.location.lng()
-            };
+              //Solo direcciones de argentina
+              if( !is_from_country(item,'Argentina') )
+                return null;
+
+              return {
+                    label: item.formatted_address,
+                    value: item.formatted_address,
+                    result: item
+              }
           }));
-        });
+        })
       },
       //This bit is executed upon selection of an address
       select: function(event, ui) {
@@ -309,12 +304,27 @@ function locateMap(myLatlng, text)
         map.setOptions(myOptions);
         //marker.setPosition(location);
         jQuery("#searchmap").attr('title', jQuery("#searchmap").val());
+        doSearch(); // Hack: dado que no me cuelgo mas del boumds-changed del mapa!
       }
     });
     
     return false;
 }
 
+// Sacar a geocoding utils.
+function is_from_country(item, country)
+{
+  //Solo direcciones de argentina
+  for(var i=0; i<item.address_components.length; i++)
+  {
+    var acomp = item.address_components[i];
+    if( acomp.types[0] == 'country' && acomp.long_name.toUpperCase() == country.toUpperCase())
+      return true;
+  }
+  
+  return false;
+}
+      
 function initMapSearch(){
   var g_initial_map_event = google.maps.event.addListener(map, 'bounds_changed', 
     function() {
@@ -355,12 +365,6 @@ function onWindowResize(){
   jQuery('#map_canvas').css('height', (a - headerHeight() - footerHeight) + "px"); 
   map_size_changed=true;
   
-  if(isMSIE7)
-  {
-    alert(jQuery('#main').width());             // map_container:663
-    alert(jQuery('#tabs_container').width());     // map_canvas: 323
-    alert(jQuery('body').width());
-  }
 }
 
 /* UI Events*/
@@ -1044,18 +1048,38 @@ function checkTabNavButtons(){
   
 }
 /* =========================================================================== */
-
+function getRule(){
+	var tmp = document.styleSheets;
+	if (tmp) 
+  {		
+    for (var i=0;i<tmp.length;i++) {			
+      if (tmp[i].href!=null)
+      {
+        if (tmp[i].href.indexOf('mapa_tabs.css') != -1) 
+        {				
+          return tmp[i];				
+          break;			
+        }
+      }
+    }	
+  }
+}
 var rules = null;
 var containerTabsWidth = null;
 var defaultTabWidth = 150;
 function calculateWinTabsVisibility(){
   if(rules==null)
   {  
-    rules = document.styleSheets[document.styleSheets.length-1]['rules'];
-    if( !rules )
-      rules = document.styleSheets[document.styleSheets.length-1]['cssRules'];
+    var rule = getRule();
+    rules=rule['rules'];
+    if(rules == null || typeof(rules) == 'undefined' || !rules)
+      rules=rule['cssRules'];
+    // rules = document.styleSheets[(document.styleSheets.length - 1)]['rules'];
+    // if(rules == null || typeof(rules) == 'undefined' || !rules)
+      // rules = document.styleSheets[(document.styleSheets.length - 1)]['cssRules'];
+    // if(rules == null || typeof(rules) == 'undefined' || !rules)
+      // rules = getRule();
   }
-  
   if(containerTabsWidth==null)
     containerTabsWidth = jQuery('#main_tabs .wintabs').innerWidth();
   
@@ -1079,15 +1103,16 @@ function calculateWinTabsVisibility(){
     var dx = defaultTabWidth-Math.ceil(parseFloat(diff/countAddressDiv))-5;
     defaultTabWidth = dx;
     rules[0].style['width']=dx+'px';
-    
+    //rules[0].style = 'width:'+dx+'px';
   }
   
 }
       
 function onShowFicha(sender, key)
 {
-  if(jQuery('#ficha_'+key).length>0)
-    return showTabWindow(null, key);
+  // HACK: para debuggear la apertura de tabs -> comentar las dos lineas siguientes.
+  // if(jQuery('#ficha_'+key).length>0)
+    // return showTabWindow(null, key);
   
   var winTabs = jQuery('#main_tabs');
   if(!winTabs.is(':visible'))
@@ -1216,7 +1241,7 @@ function closeTabWindow(sender, key)
   var next = jQuery('#main_tabs .wintabs #tab_'+key+' + li');
   jQuery('#tab_'+key).remove();
   jQuery('#ficha_'+key).remove();
-  
+  calculateWinTabsVisibility();
   if(next.length>0)
   { 
     showTabWindow(null, next.attr('key'));

@@ -3,7 +3,7 @@
     <img class="icon prop" src="/img/pixel-transp.gif" />
     <a class="close" href="#" onclick="return closeTabWindow(this, '{{property.key()}}');" title="Cerrar tab"></a>
     <div title="{{property.headline}} - {{cur}}{{ price|currencyfy }}-" class="address" style="overflow:hidden;" 
-      onclick="return showTabWindow(this, '{{property.key()}}');">{{property.headline}}-<small>{{cur}}</small>{{ price|currencyfy(small=True) }}				
+      onclick="return showTabWindow(this, '{{property.key()}}');">{{property.headline|replace(' ','&nbsp;')}}&nbsp;<small>{{cur}}</small>{{ price|currencyfy(small=True) }}				
     </div>
   </div>
 </li>
