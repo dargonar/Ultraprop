@@ -127,7 +127,7 @@ def create_query_from_dict(values, Model, keys_only=True):
 
 class PropertyPaginatorMixin(object):
   state_source = 'request'
-  page_size    = 2
+  page_size    = 20
   
   def get2(self, **kwargs):
     
@@ -154,6 +154,8 @@ class PropertyPaginatorMixin(object):
   #  ---- VIRTUAL FUNCTIONS ----
   
   def get_items(self, page=1):
+    if page == 1:
+      self.session['cursor'] = [None]
     
     values = self.form.data
       
@@ -224,7 +226,6 @@ class PropertyPaginatorMixin(object):
   def form(self):
     if self.state_source == 'request':
       self.session['request.data'] = self.request.POST.mixed()
-      self.session['cursor']       = [None]
     
     return PropertyFilterForm(MultiDict(self.session['request.data']))
     
