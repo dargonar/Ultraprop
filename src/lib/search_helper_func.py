@@ -127,13 +127,15 @@ def create_query_from_dict(values, Model, keys_only=True):
 
 class PropertyPaginatorMixin(object):
   state_source = 'request'
-  page_size    = 20
+  page_size    = 2
   
   def get2(self, **kwargs):
     
     if 'page' in kwargs:
       self.state_source = 'session'
 
+    logging.error('EL SOURCE ES :' + self.state_source)
+      
     page = int(kwargs.get('page','1'))
     kwargs['properties'] , kwargs['page'] = self.get_items(page=page)
     
@@ -181,23 +183,33 @@ class PropertyPaginatorMixin(object):
     self.add_extra_filter(base_query)
     
     # Tomo las propiedades para la pagina 
-    properties, page = self.get_properties_for_page(page, base_query)
+    logging.error('---ENTRO CON---:' + str(self.session['cursor']))
     
+    logging.error('VOY A BUSCAR PAGE:' + str(page))
+    properties, page = self.get_properties_for_page(page, base_query)
+    logging.error('DIO len=' + str(len(properties)) + ', page=' + str(page))
     # Si estoy en la ultima pagina y se borra todo si vuelvo a esa pagina mostraria 
     # que no hay datos, deberia ir a la pagina anterior si se puede (page>1) o sino 
     # dejarlo asi (borre todo y habia una sola pagina )
     
     if len(properties) == 0 and page > 1:
+      logging.error('EPA DIO 0 y > 1, vuelvo a buscar')
       # Elimino el cursor de esa pagina por que no existe mas
       self.session['cursor'] = self.session['cursor'][:-1]
       page                   = page - 1
+      logging.error('BBBB: VOY A BUSCAR PAGE:' + str(page))
       properties, page       = self.get_properties_for_page(page, base_query)
+      logging.error('BBBB: DIO len=' + str(len(properties)) + ', page=' + str(page))
     
     # Saco el cursor y veo si lo tengo que guardar (si es que estoy al final)
     # y si nos dio por lo menos page_size de taman/o
     new_cursor = base_query.cursor()
+    logging.error('VOY A VER SI LO GUARDO')
     if page+1 > len(self.session['cursor']):
       self.session['cursor'].append( new_cursor )
+      logging.error('si lo guarde y ahora es :' + str(self.session['cursor']))
+    else:
+      logging.error('no guarde un joraca')
 
     # Retornamos las propiedades y la pagina correjida
     return properties, page    
@@ -206,7 +218,9 @@ class PropertyPaginatorMixin(object):
     
     # Si me piden una pagina que esta mas alla de mis cursores, uso la ultima y redefino page
     if page > len(self.session['cursor']):
+      logging.error('EPA: el page>len(sesion) =>' + str(page) + ',' + str(len(self.session['cursor'])) )
       page = len(self.session['cursor'])
+      logging.error('EPA: ahora el page es : ' + str(page))
     
     # Tomo el cursor para la pagina
     cursor = self.session['cursor'][page-1]
@@ -224,6 +238,7 @@ class PropertyPaginatorMixin(object):
     if self.state_source == 'request':
       self.session['request.data'] = self.request.POST.mixed()
       self.session['cursor']       = [None]
+      logging.error('ESTOY RESETEANDO LA CUESTION')
     
     return PropertyFilterForm(MultiDict(self.session['request.data']))
     
