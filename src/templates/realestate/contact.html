@@ -1,0 +1,60 @@
+{% extends "realestate/_base.html" %}
+
+{%- macro form_field(field) -%}
+  <dd {% if field.errors %} class="errorbox" {% endif %} >
+    {% if field.errors %}
+      {{field(class='error', **kwargs)}}
+    {% else %}
+      {{field(**kwargs)}}
+    {% endif %}
+    {% if field.errors %} <p class="error">{{ field.errors.0 }}</p> {% endif %}
+  </dd>
+{%- endmacro -%}
+
+{%block head%}
+  <script type="text/javascript" src="/js/jquery.ketchup.js"></script>
+  <script type="text/javascript" src="/js/jquery.ketchup.run.js"></script>
+{%endblock%}  
+
+
+{% block content %}
+  <div id="content">
+    <h1>Contáctenos</h1>
+    
+    <div class="contactform">
+      <p class="txt">Si desea saber más de nosotros o nuestros servicios, por favor
+complete el siguiente formulario para que podamos contactarlo a la brevedad.</p>
+
+		<form method="post" action="{{url_for('realestate/info', realestate=realestate.key()|string)}}">
+        {% if flash %}
+          <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
+        {% endif %}
+        <h3>Datos Personales</h3>
+        <dl class="contact">
+            <dt>Nombre y Apellido </dt>
+            {{ form_field(form.name, placeholder="nombre y apellido") }}
+            
+            <dt>Email</dt>
+            {{ form_field(form.email, placeholder="email") }}
+            
+            <dt>Teléfono</dt>
+            {{ form_field(form.telephone, placeholder="teléfono") }}
+        </dl>
+        
+        
+        
+        <dl class="contact">
+            <dt><h3>Comentario</h3></dt>
+            {{ form_field(form.message, placeholder="comentario") }}
+            {{ form.ketchup(placeholder="description") }}
+            <dt></dt>
+            <dd><input type="submit" id="btnSend" class="btnSend" value="Enviar"></dd>
+        </dl>
+		</form>
+
+  </div>
+  
+  <!-- ///// CONTENT ///// --> 
+  
+</div>
+{% endblock %} 

@@ -1,0 +1,23 @@
+{% extends "frontend/_base.html"%}
+
+{%block main%}
+  	<!-- RIGHT COLUMN -->
+  <div id="main">
+    {% include "frontend/templates/filters.html" %}
+    <div class="mainContent">
+    <!-- /// WINDOW TABS /// -->
+		{% include "frontend/templates/wintabs.html" %}
+    <!-- COMPARE CONTAINER -->
+      <div class="innerContent">
+        <div class="compareContentBdr"></div>
+        <div class="compareContent">
+           {% include "frontend/templates/comparebox.html" %}
+           {% include "frontend/templates/comparebox.html" %}
+           {% include "frontend/templates/comparebox.html" %}
+           {% include "frontend/templates/comparebox.html" %}
+           {% include "frontend/templates/comparebox.html" %}
+        </div>
+      </div>
+    </div>
+  </div>
+{%endblock%}  

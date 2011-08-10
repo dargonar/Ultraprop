@@ -1,0 +1,50 @@
+{% import 'realestate/includes/_form_fields.html' as ff %}
+<div class="box">
+  <form id="filter" method="POST" action="{{url_for('realestate/search', realestate=realestate.key()|string)}}">
+  <div class="filters">
+  	<h3>Buscador</h3>
+    <div class="location_box">
+      <p class="label">Zona</p>
+      {{form.location_text(class='search', placeholder='Calle, Barrio, Localidad')}}
+      <input class="btnSearch" type="submit" value=""/>
+    </div>
+    
+    
+    <div class="fields">
+      	<div class="divider_h"></div>
+        {{ff.simple_field(form.prop_type)}}
+        
+        <div class="divider_h"></div>
+        {{ff.simple_field(form.prop_operation_id)}}
+        
+        <div id="cosas" {% if form.prop_operation_id.data == 0 %} style="display:none;" {% endif %}>
+        <div class="divider_h"></div>
+        {{ff.simple_field(form.currency)}}
+        
+        <div class="divider_h"></div>
+        {{ff.simple_field_pair(form.price_min, form.price_max)}}
+        </div>
+        
+        <div class="divider_h"></div>
+        <p class="label">Ambientes</p>
+        {{form.rooms}}
+        
+        <div class="divider_h"></div>
+        <p class="label">Superficie Cub.</p>
+        {{form.area_indoor}}
+        
+        {{form.sort(style='display:none')}}
+        
+        <div class="divider_h"></div>
+        <a id="apply" href="#" class="uibutton special submit">Buscar</a>
+        <div class="divider_h"></div>
+     
+        {{form.search}}
+     </div>   
+        
+        
+    </div>
+  </form>
+</div>
+
+

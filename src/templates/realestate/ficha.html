@@ -1,0 +1,47 @@
+{% extends "realestate/_base.html" %}
+
+{%block head%}
+  <style type="text/css">
+    body {background:none;}
+  </style>
+{%endblock%}  
+
+{% block content %}
+
+  <div id="content" style="overflow:hidden; width:976px; margin:0 auto; padding-top:20px;">
+
+    <div style="float:left; width:650px;">
+        <h2 style="font-size:16px; font-weight:normal; margin:0; color:#666; line-height:normal;">Ficha de Propiedad (TC200683)</h2>
+          <h1 style="color:#65A33A; font-size:24px; color:#FF3333; font-weight:bold; line-height:normal;">Departamento</h1>
+          
+          
+          <ul class="mnuProp">
+            <li class="active"><a href="#">Detalles</a></li>
+              <li><a href="#">Fotos</a></li>
+              <li><a href="#">Mapa</a></li>
+              <li><a href="#">Preguntas</a></li>
+          </ul>
+          
+          <p class="address">3600 Av. Scalabrini Ortiz, San Cristobal, Buenos Aires, Argentina</p>
+          
+          <div class="colBox">
+              <!-- /// PICTURE COLUMN /// -->
+              <div class="picCol">
+                  <!-- /// SLIDESHOW /// -->
+                  {%include "realestate/includes/slideshow.html"%}
+                          
+                  <!-- ///// ACTIONS MENU ///// -->
+                  {%include "realestate/includes/mnu_actions.html"%}
+              </div>
+              
+              <!-- ///// DATA COLUMN ///// -->
+              <div class="dataCol">
+                  {%include "realestate/includes/properties.html"%}
+              </div>
+          </div>
+          
+      </div>
+      
+      <div style="float:right; width:300px; height:500px; background:#eee;"></div>
+  </div>
+{% endblock %}

@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ultraprop admin</title>
+
+<link href="/css/common.css" rel="stylesheet" type="text/css" />
+<link href="/css/backend.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/fb-buttons.css" rel="stylesheet" type="text/css" />
+<link href="/css/jqtransform.css" rel="stylesheet" type="text/css" />
+
+<script src="/js/jquery.min.js" type="text/javascript"></script>
+<script src="/js/jquery-ui-1.8.7.custom.min.js" type="text/javascript"></script>
+<!-- script src="/js/jquery-ui.min.js" type="text/javascript"></script-->
+<script src="/js/jquery.jqtransform-backend.js" type="text/javascript"></script>
+<script src="/js/jquery.addplaceholder.js" type="text/javascript"></script>
+<script src="/js/backend.js" type="text/javascript"></script>
+
+{% block headscript %}
+{% endblock %}
+
+<script type="text/javascript">
+  var paymentadvice_interval = null;
+  jQuery(document).ready(function() {
+    //jQuery('[jqtransform|=true]').jqTransform();
+    jQuery('input[placeholder]').addPlaceholder({ 'class': 'hint'});
+    
+    if(jQuery('#realestate_disabled_close').length>0)
+    {
+      paymentadvice_interval = setInterval(
+        function() { 
+              clearInterval(paymentadvice_interval); 
+              jQuery('#realestate_disabled_close').click();
+            }
+        , 5000);
+    }
+  });
+</script>
+
+<style type="text/css">
+td { vertical-align: top; }
+</style>
+</head>
+
+<body class="backend">
+  {% if session['account.realestate.enabled']==0 %}
+    {% include "backend/includes/header_payment_advice.html" %}
+  {% endif %}
+  {% include "backend/includes/header.html" %}
+
+ <ul id="mnuTop" class="tabs">
+    <li class="{{ 'active' if mnutop == 'propiedades' else '' }}">
+        <a href="{{url_for('property/list')}}">Propiedades</a>
+    </li>
+    <li class="{{ 'active' if mnutop == 'inmobiliaria' else '' }}"><a href="{{url_for('backend/realestate/edit')}}">Inmobiliaria</a></li>
+    <li class="{{ 'active' if mnutop == 'usuarios' else '' }}"><a href="{{url_for('backend/user/edit')}}">Usuario</a></li>
+    <!--li><a href="#">Estadísticas</a></li>
+    <li><a href="#">Mensajes</a></li>
+    <li><a href="#">Notas</a></li>
+    <li><a href="#">Configuración</a></li-->
+</ul>
+
+{% if mnutop == 'propiedades' %}
+<ul class="SubMnuTop">
+    <li><a href="{{url_for('property/list')}}"><span></span>Listado de propiedades</a></li>
+    <li><a href="{{url_for('property/new')}}"><span></span>Cargar nueva propiedad</a></li>
+</ul>
+{% endif %}
+ 
+<div class="container" id="container">       
+   
+     <table width="100%" border="0">
+      <tr>
+        <td class="colLeft">
+            {% block menuleft %}
+            {% endblock %}
+        </td>
+        <td>
+            {% block content %}
+            {% endblock %}   
+        </td>
+      </tr>
+    </table>
+
+</div>
+
+</body>
+</html>

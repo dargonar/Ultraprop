@@ -1,0 +1,46 @@
+  {% set oper_id = form.prop_operation_id.data if form.prop_operation_id.data|string != '0' else property.prop_operation_id %}
+  <div class="prop_box">
+    <div class="location">
+    	<p class="address">{{ property | addressify }}</p>
+   		<a class="link" href="{{url_for('realestate/ficha', key=property.key()|string, oper=oper_id|string , realestate=realestate.key()|string)}}">Ver ficha &raquo;</a>
+    </div>
+    <ul class="data">
+        <li class="picture">
+            {% set image_src = '/img/picturebox/nophoto_150x113.jpg' %} 
+            {% if property.main_image %}
+              {% set image_src = url_for('images/show',key=property.main_image.key()|string, width=147, height=110) %}
+            {% endif  %} 
+            <a href="{{url_for('realestate/ficha', key=property.key()|string, oper=oper_id|string, realestate=realestate.key()|string)}}">
+                <img class="pic" src="{{image_src}}" onerror="this.src='/pics/small/sample1.jpg';" title="{{property.headline}}" height="110"/>
+            </a> 
+            <p class="pic_qty">{{ property.images_count|string + ' fotos' if property.images_count>0 else 'No hay imagenes'}}</p>
+        </li>
+        <li class="detail">
+          <p class="headline">{{ property.headline }}, 
+            {{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor','area_outdoor']) }}</font>
+          </p>
+
+            <p class="price">
+                <span class="label">Precio</span>
+                <span class="value price">{{ property|pricefy(operation_type=oper_id, small=False) }}</span>
+            </p>
+            <p class="sup">
+                <span class="label">Superficie Cub.</span>
+                <span class="value sup">{{property.area_indoor}} m2</span>
+            </p>
+            
+            <p class="detail">
+              {{ property.main_description | truncate(172) }}
+            </p>
+        </li>
+    </ul>
+    
+    <!--ul class="actions">
+    	<li>&nbsp;<a href="#">Ver fotos</a></li>
+      <li>&nbsp;<a href="#">Agregar a favoritos</a></li>
+      <li style="float:right; font-weight:bold;">
+        <a href="{# {url_for('realestate/ficha', key=property.key()|string, oper=form.prop_operation_id.data, realestate=realestate.key()|string)} #}">Ver ficha &raquo;</a>
+      </li>
+    </ul-->
+    
+</div>

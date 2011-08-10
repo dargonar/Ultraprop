@@ -1,0 +1,23 @@
+<div id="gallery" class="ad-gallery">
+  <div class="ad-image-wrapper"></div>
+  <div class="ad-controls"></div>
+  <div class="ad-nav">
+    <div class="ad-thumbs">
+      <ul class="ad-thumb-list">
+        {% for img in images %}
+          <li>
+            <a href="{{ url_for('images/show', key=img.file.key()|string, width=322, height=242) }}">
+              <img id="image_{{loop.index}}" src="{{ url_for('images/show', key=img.file.key()|string, width='0', height=55) }}"  style="max-height:55px;" title="" alt="" class="popupimg class{{loop.index}}"> 
+            </a>
+          </li>
+        {% else %}
+          <li class="nophoto">
+            <a href="/img/picturebox/nophoto_322x242.jpg"> 
+              <img id="image_no" src="/img/picturebox/nophoto_115x86.jpg" />
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>

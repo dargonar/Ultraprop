@@ -1,0 +1,7 @@
+    {%block content%}
+    {%endblock%}  
+
+    Saludos
+    www.ultraprop.com.ar
+    
+    Por favor, no responda a este mensaje; fue enviado desde una cuenta de correo electrónico no monitoreada. Este mensaje es un correo electrónico relacionado con el uso de  ULTRAPROP. Para peticiones generales o solicitar soporte para tu cuenta de ULTRAPROP, por favor contactanos en Soporte ULTRAPROP <{{support_url}}>.

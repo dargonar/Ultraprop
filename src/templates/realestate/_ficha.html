@@ -1,0 +1,105 @@
+{% extends "realestate/_base.html" %}
+
+{%block head%}
+  <script type="text/javascript" src="/js/jquery.ketchup.js"></script>
+  <script type="text/javascript" src="/js/jquery.ketchup.run.js"></script>
+{%endblock%}  
+  
+{% block content %}
+  <div id="content">
+
+  {% set realestate_logo = url_for('images/show',key=property.realestate.logo.key()|string, width=133, height=47) if property.realestate and property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
+  {% set realestate_logo_big = url_for('images/show',key=property.realestate.logo.key()|string, width=230, height=80) if property.realestate and property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
+  <div class="innerContent detail" id="ficha_{{property.key()}}">
+ 
+ 
+ <!-- CONTACT --> 
+ <div class="rightColumn"> 
+  <div class="contactBox">
+  	<div class="head">{{ '<p>Llámenos al</p>'+realestate.telephone_number if realestate.telephone_number else '<p>Contáctenos</p>'}}</div>
+    {% if flash %}
+      <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
+    {% endif %}
+    <form method="post" action="{{url_for('realestate/ficha', key=property.key()|string, oper=oper, realestate=realestate.key()|string)}}">
+      <label>Su nombre</label>
+      {{ form.name(placeholder="nombre", class="name") }}
+      <label>Su email</label>
+      {{ form.email(placeholder="email") }}
+      <label>Su teléfono</label>
+      {{ form.telephone(placeholder="cód.area número") }}
+      <label>Comentario</label>
+      {{ form.message(placeholder="comentario") }}
+      {{ form.ketchup(placeholder="description") }}
+      <input class="btnSend" name="" type="submit" value="Enviar Email" />
+      
+    </form>
+  </div>
+  
+  <div class="contactData">
+      <!-- AGENT INFO -->
+      <div id="agent_info" class="agentbox">
+         {% if property.realestate %}  
+          <div class="data">
+            <h1>{{property.realestate.name}}</h1>
+            <span>{{property.realestate.address}}</span><br/>
+            <span>{{property.realestate.telephone_number}}</span><br/>
+            <a href="{{property.realestate.website}}" target="_blank">{{property.realestate.website}}</a><br/>
+            <span>{{property.realestate.email}}</span><br/>
+          </div>
+        {% endif %}
+        
+      </div>
+   </div>
+   
+</div>
+  
+    <div id="detailBox" class="detailBox">
+      <!--h2 class="super">{{ property.getPropType() }} en {{ property.getPropOperation() }}</h2-->
+      <div class="addressbox">
+      	<p class="address">{{ property | addressify }}</p>
+        <p class="price"><small>{{ cur }}</small> {{ price|currencyfy }}</p>
+      </div>
+      
+      <!--img class="pic" src="/img/samples/bigpic.jpg" width="625" height="469" /-->
+      {%include "realestate/includes/_slideshow.html"%}
+      
+      {%include "realestate/includes/_prop_details.html"%}
+      
+      <!-- ///// DETAIL ///// -->
+      <div class="infoBox">
+        <h2>Descripción de la Propiedad</h2>
+          <p class="detail">
+            {{ property.main_description}}
+          </p>
+          <h2>Detalles de la Propiedad</h2>
+          <ul class="detail">
+            {% set binary_properties = config_array['binary_values_properties'] %}
+            {% for key in binary_properties.keys() if (property[key] > 0 and binary_properties[key]['is_filter']==1) %}
+            <li>{{ binary_properties[key]['description'] }}</li>
+            {% endfor%}
+          </ul>
+          <h2>Servicios Adicionales</h2>
+          <ul class="detail">
+            {% for key in binary_properties.keys() if (property[key] > 0 and binary_properties[key]['is_filter']==0) %}
+            <li>{{ binary_properties[key]['description'] }}</li>
+            {% endfor%}
+          </ul>
+          <h2>Ubicación de la propiedad</h2>
+          {% set img_map_src  = 'http://maps.google.com/maps/api/staticmap?center='+property.latitude|string+', '+property.longitude|string+'&zoom=14&size=625x302&maptype=roadmap&markers=icon:http://puertoprop.appspot.com/static/img/icons/map/icong.png%7C'+property.latitude|string+', '+property.longitude|string+'&sensor=false' %}
+          {% set map_img_id   = 'map_image_'+property.key()|string%}
+          {% set map_buttons  = 'mapButtons_'+property.key()|string%}
+          <div class="mapButtons" id="{{map_buttons}}">
+            <span onclick="return swithPropertyLocationMap(this,'{{map_img_id}}','{{img_map_src}}','roadmap','{{map_buttons}}');" class="selected">Calle</span>
+            <span onclick="return swithPropertyLocationMap(this,'{{map_img_id}}','{{img_map_src}}','satellite','{{map_buttons}}');">Satélite</span>
+            <span onclick="return swithPropertyLocationMap(this,'{{map_img_id}}','{{img_map_src}}','terrain','{{map_buttons}}');">Terreno</span>
+            <span onclick="return swithPropertyLocationMap(this,'{{map_img_id}}','{{img_map_src}}','hybrid','{{map_buttons}}');">Híbrido</span>
+          </div>
+          <!-- ////// MAP 625 x 302 ////// -->
+          <img id="{{ map_img_id }}" src="{{img_map_src}}" />
+
+
+
+     </div>
+    </div>
+  </div>
+{% endblock %}

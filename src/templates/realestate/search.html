@@ -1,0 +1,73 @@
+{% extends "realestate/_base.html" %}
+
+{% block head %}
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#prop_operation_id').change( function(e) {
+    var hide = $('#prop_operation_id').val() != 0;
+    $('#cosas').toggle(hide);
+    $('form#filter').submit();
+  });
+
+  $('#prop_type, #currency, #rooms, #area_indoor').change( function(e) {
+    $('form#filter').submit();
+  });
+  
+  $('#fake_sort').change( function(e) {
+    $('#sort').val( $('#fake_sort').val() );
+    $('form#filter').submit();
+  });
+  
+  $('#apply').click( function(e) {
+    $('form#filter').submit();
+  });
+});
+</script>
+{% endblock %}
+
+
+{% block content %}
+  <div id="content">
+	<div id="left_content">
+      {% include "realestate/includes/_property_list_menu_left.html" %}
+      </div>
+      
+      <div id="right_content">    
+        <div class="prop_column">
+          <h2>Propiedades</h2>
+            <div id="sort_by">
+                <div class="order">
+                  <label>Ordenar por</label> 
+                  {{ form.sort(id='fake_sort') }}
+                </div>
+              <div class="qty"><b>{{ page_size*(page-1)+1 }}  - {{ page_size*(page-1)+ (properties|length if properties else 0 )}} </b></div>
+            </div>
+            {% if properties %}
+              {% for property in properties %}
+                {%include "realestate/includes/_mod_property_list.html" %}
+              {% endfor %}
+            {% endif %}
+
+            {% set prevurl = url_for('realestate/search/page', page=page-1, realestate=realestate.key()|string) if page > 1 else '#' %}
+            {% set prevena = 'disable' if prevurl == '#' else '' %}
+            {% set nexturl = url_for('realestate/search/page', page=page+1, realestate=realestate.key()|string) if properties|length == page_size else '#' %}
+            {% set nextena = 'disable' if nexturl == '#' else '' %}
+
+            <ul id="paginator">
+              <li class="prev">
+                <a href="{{prevurl}}" class="{{prevena}}">&laquo; Anterior</a>
+              </li>
+              <li class="next">
+                <a href="{{nexturl}}" class="{{nextena}}">Siguiente &raquo;</a>
+              </li>
+            </ul>
+              
+          </div>
+          
+      </div>
+
+    
+    <!-- ///// CONTENT ///// -->
+       
+  </div>
+{% endblock %}

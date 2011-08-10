@@ -1,0 +1,47 @@
+<ul class="prop_content" key="{{ property.key()|string }}">
+  <li class="prop_box" id="prop_box_{{ property.key()|string }}" 
+    onclick="onShowPopup(this, null, '{{ property.key()|string }}');return false;" 
+    onmouseout="return onMouseOutProp('{{ property.key()|string }}');" onmouseover="return onMouseOverProp('{{ property.key()|string }}');" >
+    <div class="bdrTop"></div>
+    <div class="head">
+      <!--img src="/img/misc/transparent.png" class="chk selected"/-->
+      <div class="address">
+        <a href="#" onclick="return onShowFicha(this, '{{property.key()}}');" title="Ver ficha de propiedad">{{ property | addressify }}</a>
+        <!--a href="#" onclick="return false;" class="index" title="Indice del paginador">{# {index} #}&nbsp;</a-->
+      </div>
+      
+      <!--a class="close" title="Quitar de la vista" onclick="return removeProperty('{{property.key()}}');" ></a>
+      <img src="/img/misc/transparent.png" class="favorite"/-->
+    </div>
+      
+    <div class="picbox" onclick="return onShowPopup(this, null, '{{property.key()}}');">
+      <img class="viewBubble pic" {% if property.main_image %} src="{{url_for('images/show',key=property.main_image.key()|string, width='0', height=86)}}" {% else %} src="/img/picturebox/nophoto_115x86.jpg"  {% endif %} onerror="this.src='/pics/small/sample1.jpg';" title="{{property.headline}}"/>
+      <div class="qty">{{ property.images_count }}&nbsp;fotos</div>
+    </div>
+        
+    <div class="databox">
+      <dl>
+        <dt>
+          {% set price = property.price_sell %}
+          {% set cur   = property.price_sell_currency %}
+          {% if price_data_operation ==  Property._OPER_RENT %}
+            {% set price  = property.price_rent %}
+            {% set cur    = property.price_rent_currency %}
+          {% endif %}
+          Precio<p class="price"><small>{{ cur }}</small> {{ price|currencyfy }}</p>
+        </dt>
+        <dd>
+            <!-- [property.area_outdoor|int , property.area_indoor|int]|sum -->
+            Superficie cub.<p class="superficie">{{ "%.1f"|format(property.area_indoor) }} m²</p>
+        </dd>
+      </dl>
+      <!-- year_built -->
+      <p class="detail">{{ property.headline }}, 
+        {{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_outdoor']) }}
+      </p>
+    </div>
+  </li>
+  <li class="prop_mini_bubble" id="prop_mini_bubble_{{ property.key()|string }}">
+    {% include "frontend/templates/_bubble_mini.html" %}
+  </li>
+</ul>

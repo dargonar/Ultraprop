@@ -1,0 +1,50 @@
+{% extends "backend/_base2.html" %}
+
+{% block content %}
+    <div id="login_container" class="login_window" align="center">
+    <div class="popup">
+      <div id="login" class="popup_box" align="left"> 
+        <div class="header">Inicie sesión en su cuenta o <a href="{{url_for('backend/auth/signup')}}">regístrese</a>.</div>
+        <form action="{{url_for('backend/auth/login')}}" method="post">
+          <p class="first"> 
+            <span class="field">
+              <input class="xg long" type="text" value="" placeholder="Ingrese su Email" title="Ingrese su Email" tabindex="1" name="useremail" id="useremail">
+            </span> 
+          </p>
+          <p class="last"> 
+            <span class="field">
+              <input class="xg medium" type="password" value="" placeholder="Ingrese su Contraseña" title="Ingrese su Contraseña" tabindex="2" name="userpass" id="userpass" />
+              <a id="btnForgotPass" href="#" onclick="jQuery('#login').hide();jQuery('#restore_pass').show(); return false;" class="small">Olvidó su contraseña?</a> 
+            </span> 
+          </p>
+          {% if flash %}
+            <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
+          {% endif %}
+          <a href="#" class="fancy_button login"><input type="submit" value="LOGIN" name=""></a>
+        </form>
+        <div jqtransform="true">
+          <div class="ex-label"> 
+            <input type="checkbox" checked="checked" id="" name="">
+            &nbsp;Recordarme en este equipo 
+          </div>
+        </div>
+      </div>
+      
+      <form action="{{url_for('backend/auth/restore/request')}}" method="post" id="restore_pass">
+        <div class="popup_box" align="left"> 
+            <div class="header">¿Olvidó su contraseña? Le enviaremos un email para recuperarla.</div>
+            <p class="first">
+                <span class="field">
+                    <input class="xg long" type="input" value="" placeholder="Ingrese su Email" title="Ingrese su Email" tabindex="1" name="useremail" id="useremail">
+                </span> 
+            </p>
+            <a href="#" class="fancy_button restore"><input type="submit" value="MODIFICAR CONTRASEÑA" name=""></a>
+            <a id="btnLogin" style="float:left; height:42px; display:inline; margin-top:10px; line-height:42px; margin-left:10px;" href="#" onclick="jQuery('#restore_pass').hide();jQuery('#login').show(); return false;">Volver a Login</a> 
+        </div>
+      </form>
+        
+    </div>
+
+    <!--div class="bgpopup"></div-->
+  </div>
+{% endblock %}

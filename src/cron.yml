@@ -1,0 +1,7 @@
+cron:
+# - description: SugarCRM Feed
+  # url: /cron/incremental_backup
+  # schedule: every 60 minutes
+# - description: Contact mailer
+  # url: /cron/welcome_email
+  # schedule: every 5 minutes

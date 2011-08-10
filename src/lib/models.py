@@ -1,0 +1,537 @@
+# -*- coding: utf-8 -*-
+
+from google.appengine.ext import db, blobstore
+from geo.geomodel import GeoModel
+import random 
+import logging
+import unicodedata
+
+from datetime import date, datetime , timedelta
+
+from search_helper import config_array, alphabet, MAX_QUERY_RESULTS
+from search_helper import build_list, get_index_alphabet , calculate_price, indexed_properties
+
+from geo import geocell
+
+
+class State(db.Model):
+  name                = db.StringProperty()
+  country_code        = db.StringProperty()
+  def __repr__(self):
+    return self.name
+    
+class City(db.Model):
+  name                = db.StringProperty()
+  state               = db.ReferenceProperty(State)
+  def __repr__(self):
+    return self.name
+
+class Neighborhood(GeoModel):
+  name                = db.StringProperty()
+  zip_code            = db.StringProperty()
+  city                = db.ReferenceProperty(City)
+  # geo                 = db.ListProperty(db.GeoPt)
+  def __repr__(self):
+    return self.name
+   
+class RealEstate(db.Model):
+  
+  @classmethod
+  def new(cls):
+    return RealEstate(enable=0, managed_domain=1)
+    
+  logo                = blobstore.BlobReferenceProperty()
+  name                = db.StringProperty()
+  website             = db.LinkProperty(indexed=False)
+  email               = db.EmailProperty(indexed=False)
+  
+  title               = db.StringProperty()
+  fax_number          = db.StringProperty(indexed=False)
+  telephone_number    = db.StringProperty(indexed=False)
+  telephone_number2   = db.StringProperty(indexed=False)
+  
+  address             = db.StringProperty(indexed=False)
+  zip_code            = db.StringProperty()
+  updated_at          = db.DateTimeProperty(auto_now=True)
+  created_at          = db.DateTimeProperty(auto_now_add=True)
+  
+  enable              = db.IntegerProperty()
+  managed_domain      = db.IntegerProperty()
+
+  @staticmethod
+  def public_attributes():
+    """Returns a set of simple attributes on Immovable Property entities."""
+    return ['logo', 'name', 'website', 'email', 'title', 'fax_number', 'telephone_number', 'telephone_number2', 'address', 'zip_code', 'enable']
+  
+  def __repr__(self):
+    return self.name
+    
+class User(db.Model):
+  
+  @classmethod
+  def new(cls):
+    return User(enabled=0, restore_password=0)
+  
+  first_name          = db.StringProperty()
+  last_name           = db.StringProperty()
+  mobile_number       = db.StringProperty(indexed=False)
+  telephone_number    = db.StringProperty(indexed=False)  
+  email               = db.EmailProperty()
+  rol                 = db.StringProperty(required=True, default='oper')
+  password            = db.StringProperty()
+  gender              = db.StringProperty(indexed=False)
+  birthday            = db.DateProperty(auto_now_add=True, indexed=False)
+  realestate          = db.ReferenceProperty(RealEstate)
+  enabled             = db.IntegerProperty()
+  restore_password    = db.IntegerProperty()
+  updated_at          = db.DateTimeProperty(auto_now=True)
+  created_at          = db.DateTimeProperty(auto_now_add=True)
+  
+  @property
+  def full_name(self):
+    return '%s %s' % (self.first_name, self.last_name)
+  
+  def __repr__(self):
+    return self.name
+
+class Property(GeoModel):
+
+  _PUBLISHED     = 1
+  _NOT_PUBLISHED = 2
+  _DELETED       = 3
+  
+  @staticmethod
+  def new(realestate):
+    return Property(realestate=realestate, status=Property._PUBLISHED ,image_count=0)
+
+  status                  = db.IntegerProperty()
+  def is_deleted(self):
+    return self.status == Property._DELETED
+  
+  def is_published(self):
+    return self.status == Property._PUBLISHED
+  
+  def is_not_published(self):
+    return self.status == Property._NOT_PUBLISHED
+  
+  # Information Fields	
+  headline                = db.StringProperty()
+  main_description        = db.TextProperty()
+  country                 = db.StringProperty(indexed=False)
+  state                   = db.StringProperty(indexed=False)
+  city                    = db.StringProperty(indexed=False)
+  neighborhood            = db.StringProperty(indexed=False)
+  street_name             = db.StringProperty(indexed=False)
+  street_number           = db.IntegerProperty(indexed=False)
+  
+  zip_code                = db.StringProperty(indexed=False)
+  	
+  floor                   = db.StringProperty(indexed=False)
+  building_floors	        = db.IntegerProperty(indexed=False)
+  	
+  images_count            = db.IntegerProperty()
+  	
+  neighborhood_name       = db.StringProperty(indexed=False)         
+  user                    = db.ReferenceProperty(User)
+  
+  # ===================================================== # 
+  # Search fields	                                        #
+  # ===================================================== #
+  
+  # AREA FIELDS
+  area_indoor             = db.IntegerProperty(indexed=False)
+    # 1	 # 0-40
+    # 2	 # 40-50
+    # 3	 # 50-60
+    # 4	 # 60-70
+    # 5	 # 60-100
+    # 6	 # 100-200
+    # 7	 # 200-300
+    # 8	 # 300 o más
+  area_outdoor            = db.IntegerProperty(indexed=False)
+    # 1	  # 0-10
+    # 2	  # 10-20
+    # 3	  # 20-50
+    # 4	  # 50-100
+    # 5	  # 100 o más
+  
+  # ROOMS FIELDS
+  rooms     	            = db.IntegerProperty(indexed=False)   # 1 a 5 - P es >= 6
+  bathrooms               = db.IntegerProperty(indexed=False)   # 1 a 3 - P es >= 4
+  bedrooms                = db.IntegerProperty(indexed=False)   # 1 a 4 -	P es >= 5
+
+  # PRICES FIELDS
+  price_sell              = db.FloatProperty(indexed=False)
+  price_rent              = db.FloatProperty(indexed=False)
+  
+  _CURRENCY_RATE          = 4
+  _CURRENCY_ARS           = 'ARS'
+  _CURRENCY_USD           = 'USD'
+  price_sell_currency     = db.StringProperty(indexed=False)
+  price_rent_currency     = db.StringProperty(indexed=False)
+  
+  price_sell_computed     = db.FloatProperty()
+  price_rent_computed     = db.FloatProperty()
+  
+  # AMENITIES FIELDS GROUP 1
+  appurtenance            = db.IntegerProperty(indexed=False)
+  balcony                 = db.IntegerProperty(indexed=False)
+  doorman                 = db.IntegerProperty(indexed=False)
+  elevator                = db.IntegerProperty(indexed=False)
+  fireplace               = db.IntegerProperty(indexed=False)
+  furnished               = db.IntegerProperty(indexed=False)
+  garage                  = db.IntegerProperty(indexed=False)
+    
+  # AMENITIES FIELDS GROUP 2
+  garden                  = db.IntegerProperty(indexed=False)
+  grillroom               = db.IntegerProperty(indexed=False)
+  gym                     = db.IntegerProperty(indexed=False)
+  live_work               = db.IntegerProperty(indexed=False)
+  luxury                  = db.IntegerProperty(indexed=False)
+  pool                    = db.IntegerProperty(indexed=False)
+  terrace                 = db.IntegerProperty(indexed=False)
+  
+  
+  # AMENITIES FIELDS GROUP 3 & YEAR BUILT
+  washer_dryer            = db.IntegerProperty(indexed=False)
+  sum	                    = db.IntegerProperty(indexed=False)
+	
+  # LAS DE EMO QUE NO ESTABAN
+  agua_corriente          = db.IntegerProperty(indexed=False)
+  gas_natural             = db.IntegerProperty(indexed=False)
+  gas_envasado            = db.IntegerProperty(indexed=False)
+  luz                     = db.IntegerProperty(indexed=False)
+  cloacas                 = db.IntegerProperty(indexed=False)
+  telefono                = db.IntegerProperty(indexed=False)
+  tv_cable                = db.IntegerProperty(indexed=False)
+  internet                = db.IntegerProperty(indexed=False)
+  vigilancia              = db.IntegerProperty(indexed=False)
+  monitoreo               = db.IntegerProperty(indexed=False)
+  
+  # ADDED BY MaRiAn
+  patio                   = db.IntegerProperty(indexed=False)
+  
+  
+  year_built	            = db.IntegerProperty(indexed=False)
+    # 1	 # A estrenar
+    # 2	 # menor a 5 años
+    # 3	 # entre 5 y 10 años
+    # 4	 # entre 10 y 20 años
+    # 5	 # entre 20 y 50 años
+    # 6	 # más de 50 años
+
+  # DATETIMEs
+  updated_at              = db.DateTimeProperty(auto_now=True)
+  created_at              = db.DateTimeProperty(auto_now_add=True)
+  
+  # PUBLISHER	
+  realestate              = db.ReferenceProperty(RealEstate)
+  	
+  # PROPERTY TYPES
+  prop_type_id	                    = db.StringProperty(indexed=False)
+  #prop_type_id_cell                 = db.StringListProperty()  
+  
+  # PROPERTY STATE & OPERATION & OWNER
+  prop_state_id	                = db.IntegerProperty(indexed=False)
+        # Nuevo	        1
+        # A reciclar	  2
+        # Reciclado	    3
+        # Regular	      4
+        # Bueno	        5
+        # Muy bueno	    6
+        # Excelente	    7
+  prop_operation_state_id	      = db.IntegerProperty(indexed=False)
+        # Disponible	  1
+        # Reservada	    2
+        # Vendida	      3
+        # Alquilada	    4
+  prop_owner_id	                = db.IntegerProperty(indexed=False)
+        # Inmobiliaria	1
+        # Dueño directo	2
+  _OPER_SELL=1
+  _OPER_RENT=2
+  prop_operation_id	            = db.IntegerProperty(indexed=False)
+        # Venta	        1
+        # Alquiler	    2
+  
+  main_image              = blobstore.BlobReferenceProperty()
+  # # ======================================================= #
+  # # PROPIEDADES PARA DEFINIR RANGOS A PARTIR DE OTRAS PROPS #
+  # area_indoor_id          = db.IntegerProperty() # 0-40
+  
+  # area_outdoor_id         = db.IntegerProperty() # 0-10
+  
+  # rooms_id                = db.IntegerProperty() # 6 o más
+  # bathrooms_id            = db.IntegerProperty() # 3 o más
+  # bedrooms_id             = db.IntegerProperty() # 5 o más
+  
+  # year_built_id           = db.IntegerProperty() # A estrenar
+  # # ======================================================= #
+
+  def has_images(self):
+    if self.images_count is not None and self.images_count != 0:
+      return 1
+    return 0
+  
+  def calculate_inner_values(self):
+    
+    # Calculamos los precios en pesos
+    self.price_rent_computed = calculate_price(self.price_rent, self.price_rent_currency, 'ARS')
+    self.price_sell_computed = calculate_price(self.price_sell, self.price_sell_currency, 'ARS')
+    
+    # Armamos para la busqueda en backend
+    address = []
+    for item in ['country','state','city','neighborhood','street_name']:
+      if getattr(self,item) is not None and getattr(self,item).strip() != '':
+        try:
+          s = unicodedata.normalize('NFKD', getattr(self,item)).encode('ascii', 'ignore').lower()
+          # HACK 
+          if s != u'ciudad autonoma de buenos aires':
+            address += map(lambda x: '_'+x, s.split(' '))
+        except Exception, e:
+          pass
+    self.location_geocells = self.check_options_ex()+address
+    
+    # Ponemos el headline
+    ops = []
+    for i in range(0,len(config_array['multiple_values_properties']['prop_operation_id']['descriptions'])):
+      if i & self.prop_operation_id:
+        ops.append(config_array['multiple_values_properties']['prop_operation_id']['descriptions'][i])
+        
+    self.headline = u'%s en %s' % ( config_array['cells']['prop_type_id']['short_descriptions'][alphabet.index(self.prop_type_id)]
+                                  , '/'.join(ops))
+
+    
+  def need_update_index(self, oldme):
+    
+    # Ahora (no) tiene imagenes?
+    if oldme.has_images() != self.has_images():
+      return True
+    
+    # Cambio alguna de las propiedades que se indexan?
+    for prop in indexed_properties(['location','price_sell_computed','price_rent_computed']):
+      v1 = getattr(oldme,prop)
+      v2 = getattr(self,prop)
+      if cmp(v1,v2):
+        return True
+    
+    return False
+
+  def update_property_index(self, pi):
+    pi.location = self.location
+
+    max_res_geocell, primos = geocell.compute(self.location, geocell.MAX_GEOCELL_RESOLUTION, True)
+    tmp = [max_res_geocell[:res] for res in range(1, geocell.MAX_GEOCELL_RESOLUTION + 1)]
+   
+    pi.location_geocells       = sorted(tmp+primos)+self.check_options_ex()
+    pi.price_sell_computed     = self.price_sell_computed
+    pi.price_rent_computed     = self.price_rent_computed
+    pi.area_indoor             = self.area_indoor
+    pi.bedrooms                = self.bedrooms
+    pi.rooms                   = self.rooms
+    pi.images_count            = self.has_images()
+    pi.realestate              = self.realestate
+    pi.property                = self.key()    
+  
+  def save(self):
+    self.calculate_inner_values()
+
+    # Magia para saber si necesitamos actualizar o rebuildear el index [o no hacer nada]
+    # Solo para la edicion, quitar publicacion o borrar lo fuerzan directamente
+    retvalue = 'nones'
+    oldme = db.get(self.key())
+    if self.need_update_index(oldme):
+      retvalue = 'need_update'
+      if self.location != oldme.location:
+        retvalue = 'need_rebuild'
+        
+    super(Property, self).save()
+    return retvalue
+    
+  #Cuando nuevo
+  def put(self):
+    self.calculate_inner_values()
+    super(Property, self).put()
+    return 'need_rebuild'
+  
+  def getPropType(self):
+    return config_array['cells']['prop_type_id']['short_descriptions'][alphabet.index(self.prop_type_id)]
+
+  @property
+  def hack_city(self):
+    HACK = u'Ciudad Autónoma de Buenos Aires'
+    return self.city if self.city != HACK else 'Capital Federal'
+
+  def getPropAddress(self):
+    if self.street_number<=0:
+      return u'%s 0, %s, %s' % (self.street_name, self.neighborhood, self.hack_city )
+    return u'%s %s, %s, %s' % (self.street_name, str(int(int(self.street_number/100)*100)), self.neighborhood, self.hack_city)
+    
+    
+  def getPropFullAddress(self):
+    from utils import do_addressify
+    return do_addressify(self)
+    #return u'%s, %s' % (self.getPropAddress(), self.country)
+    
+  def getPropOperation(self):
+    return config_array['multiple_values_properties']['prop_operation_id']['descriptions'][self.prop_operation_id]
+  
+  def getPropState(self):
+    value = self.prop_state_id
+    
+    if value <=0:
+      return 'Sin datos'
+    data  = config_array['discrete_range_config']['prop_state_id']
+    if data['is_indexed_property']==True:
+      array = data['rangos']
+      value = array.index(min(filter(lambda x:x>=value,array)))
+    else:
+      if value>=data['min_value']:
+        value = int(data['min_value'])
+    
+    return data['descriptions'][(value)]
+    #return config_array['multiple_values_properties']['prop_state_id']['descriptions'][self.prop_state_id]
+  
+  def getAge(self):
+    if self.year_built > 0:
+      return str(self.year_built)
+    return 'Sin datos'
+    
+    data  = config_array['discrete_range_config']['year_built']
+    value = self.year_built
+    if data['is_indexed_property']==True:
+      array = data['rangos']
+      value = array.index(min(filter(lambda x:x>=value,array)))
+    else:
+      if value>=data['min_value']:
+        value = int(data['min_value'])
+    
+    return data['descriptions'][(value)]
+    
+  def check_options(self):
+    array = self.check_options_ex()
+    self.update_location()
+    self.location_geocells += array
+    return 0
+
+  def check_options_ex(self):
+    options=[]
+    
+    generated_attributes_array = config_array['cells']['prop_type_id']['generated_attributes']
+    for key in generated_attributes_array.keys():
+      pair_array = []
+      if(self.prop_type_id in generated_attributes_array[key]['array']):
+        for value in generated_attributes_array[key]['array']:
+          if value == 0:
+            continue
+          rango = [0, value]
+          is_binary = True 
+          pair = get_index_alphabet(self.prop_type_id, rango, is_binary)
+          pair_array.append(pair)
+        the_format = generated_attributes_array[key]['format']
+        types = map(lambda x: the_format % str(x),build_list(pair_array))
+        options=types
+    
+    for key in config_array['binary_values_properties']:
+      value = getattr(self, key)
+      if value == 1:
+        the_property = config_array['binary_values_properties'][key]['related_property']
+        options.append(the_property)
+        
+    discrete_range_config_array = config_array['discrete_range_config']
+    for key in discrete_range_config_array.keys():
+      data = discrete_range_config_array[key]
+      value = getattr(self, key)
+      the_property = data['related_property']
+      if data['is_indexed_property']==True:
+        array = data['rangos']
+        value = array.index(min(filter(lambda x:x>=value,array)))
+      else:
+        if value>=data['min_value']:
+          value = int(data['min_value'])
+      the_value = '%s%s' % (the_property, str(value))
+      options.append(the_value)
+      
+    multiple_values_properties_array = config_array['multiple_values_properties']
+    for key in multiple_values_properties_array.keys():
+      value = getattr(self, key)
+      the_property = multiple_values_properties_array[key]['related_property']
+      
+      #-----------HACK PENSAR---------------
+      if the_property == 'op':
+        for i in range(0,len(multiple_values_properties_array[key]['descriptions'])):
+          if i & value:
+            the_value = '%s%s' % (the_property, str(i))
+            options.append(the_value)
+      #-----------HACK PENSAR---------------
+      else:
+        the_value = '%s%s' % (the_property, str(value))
+        options.append(the_value)
+    return options
+    
+  @staticmethod
+  def public_attributes():
+    """Returns a set of simple attributes on Immovable Property entities."""
+    return ['headline', 'main_description', 'country', 'state', 'city', 'neighborhood', 'street_name', 'street_number', 'zip_code', 'floor',
+          'building_floors', 'images_count', 'area_indoor', 'area_outdoor', 'rooms', 'bathrooms', 'bedrooms', 'appurtenance', 
+          'balcony', 'doorman', 'elevator', 'fireplace', 'furnished', 'garage','garden','grillroom', 'gym', 'live_work', 
+          'luxury','pool', 'terrace', 'washer_dryer', 'sum', 
+          'agua_corriente', 'gas_natural', 'gas_envasado', 'luz', 'cloacas', 'telefono', 'tv_cable', 'internet', 'vigilancia', 'monitoreo','patio', 
+          'year_built', 'prop_type_id', 'prop_state_id', 'prop_operation_state_id', 
+          'prop_owner_id', 'prop_operation_id'
+          ,'price_sell' ,'price_rent', 'price_sell_currency', 'price_rent_currency', 'price_sell_computed', 'price_rent_computed']
+    #, 'user', 'realestate', 'updated_at', 'created_at'
+
+  # @staticmethod
+  # def public_attributes_ex():
+    # return ['area_indoor_id', 'area_outdoor_id' , 'rooms_id', 'bathrooms_id', 'bedrooms_id', 'year_built_id']
+          
+  def _get_latitude(self):
+    return self.location.lat if self.location else None
+
+  def _set_latitude(self, lat):
+    if not self.location:
+      self.location = db.GeoPt()
+
+    self.location.lat = lat
+
+  latitude = property(_get_latitude, _set_latitude)
+
+  def _get_longitude(self):
+    return self.location.lon if self.location else None
+
+  def _set_longitude(self, lon):
+    if not self.location:
+      self.location = db.GeoPt()
+
+    self.location.lon = lon
+
+  longitude = property(_get_longitude, _set_longitude)
+  
+  def __repr__(self):
+    return self.headline
+
+class PropertyIndex(GeoModel):
+  # location = db.GeoPtProperty()
+  # location_geocells = db.StringListProperty()
+  price_sell_computed     = db.FloatProperty()
+  price_rent_computed     = db.FloatProperty()
+  published_at            = db.DateTimeProperty(auto_now_add=True)
+  price_changed_at        = db.DateTimeProperty(auto_now_add=True)
+  area_indoor             = db.IntegerProperty()
+  bedrooms                = db.IntegerProperty()
+  rooms                   = db.IntegerProperty()
+  realestate              = db.ReferenceProperty(RealEstate)
+  property                = db.ReferenceProperty(Property)
+  images_count            = db.IntegerProperty() # 1 tiene, 0 no tiene
+  
+class ImageFile(db.Model):
+  file                = blobstore.BlobReferenceProperty()
+  filename            = db.StringProperty()
+  title               = db.StringProperty()
+  position            = db.IntegerProperty()
+  property            = db.ReferenceProperty(Property)
+  realestate          = db.ReferenceProperty(RealEstate)
+  created_at          = db.DateTimeProperty(auto_now_add=True)
+  def __repr__(self):
+    return self.filename

@@ -1,0 +1,13 @@
+  <ul class="mnuTop">
+    <li><a href="{{ url_for('frontend/home') }}" title="Inicio">Inicio</a></li>
+    {% if in_map is defined %}
+      {% if in_map != 1 %}
+      <li><a href="{{ url_for('frontend/map') }}" title="Búsqueda por mapa" >Mapa</a></li>
+      <li><a href="{{ url_for('backend/auth/login') }}" title="Iniciar sesión como inmobiliaria">Soy inmobiliaria</a></li>
+      {% endif %}
+    {% else %}
+      <li><a href="{{ url_for('frontend/map') }}" title="Búsqueda por mapa" >Mapa</a></li>
+      <li><a href="{{ url_for('backend/auth/login') }}" title="Iniciar sesión como inmobiliaria">Soy inmobiliaria</a></li>
+    {% endif %}
+    <li><a href="#" title="¿Necesitás ayuda? Hacé click acá">Ayuda</a></li>
+  </ul>

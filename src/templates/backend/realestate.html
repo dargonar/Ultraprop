@@ -1,0 +1,174 @@
+{% extends "backend/_base.html" %}
+
+{%- macro form_field(field, class='') -%}
+		{% if field.errors %}
+      {{field(class=class+' error', **kwargs)}}
+    {% else %}
+      {{field(class=class, **kwargs)}}
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro form_field2(field) -%}
+  <dd {% if field.errors %} class="errorbox" {% endif %} >
+    {{ form_field(field, **kwargs)}}
+    {{ form_error(field) }}
+  </dd>  
+{%- endmacro -%}
+
+{%- macro form_error(field) -%}
+    {% if field.description != '' %}<span class="m2">{{field.description}}</span>{% endif %}
+    {% if field.errors %} <p class="error">{{ field.errors.0 }}</p> {% endif %}
+{%- endmacro -%}
+
+
+{%- macro form_field2_container_double(field1, field2) -%}
+  <dd {% if field1.errors or field2.errors %} class="errorbox" {% endif %} >
+{%- endmacro -%}
+
+{%- macro form_field2_container(field) -%}
+  <dd {% if field.errors %} class="errorbox" {% endif %} >
+{%- endmacro -%}
+
+{% block headscript %}
+  <script type="text/javascript">
+  $(document).ready(function() {
+    //////// ADD NEW PHONE //////////
+    $("#btnAddPhone").click(function()
+      {	
+        $('#phone2').slideDown('slow', function() {
+        // Animation complete.
+      });
+      return false;
+    });
+    
+    $("#btnDeletePhone").click(function()
+     {	
+      $('#phone2').slideUp('slow', function() {
+        // Animation complete.
+      });
+      return false;
+    });
+    //jQuery('#form_logo_input').change(function(){
+      //jQuery('#filename').html(jQuery('#form_logo_input').val());
+      //console.log('on file selected:'+jQuery('#form_logo_input').val());
+    //});
+  });
+  </script>
+
+  
+  
+  <style type="text/css">
+
+  .jqTransformRadioWrapper { 
+    clear:both; 
+    margin:0;  
+    margin-right:3px; 
+    margin-top:-2px; 
+    width:20px; 
+  }
+  .jqTransformRadioWrapper input { vertical-align:bottom;}
+  </style>
+
+{% endblock %}
+
+{% block content %}
+
+	<div style="overflow:hidden; margin-bottom:20px;">
+		<h1>Editar Inmobiliaria</h1>
+  </div>
+  {% if flash %}
+    <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
+  {% endif %}
+    
+  <form id="signup_form" action="{{url_for('backend/realestate/edit')}}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="key" value="{{key}}" />
+    <!-- ///// IDENTITY ///// -->    
+    <h2 class="title">Inmobiliaria</h2>
+    <dl class="form">
+        <dt>Logo</dt>
+        {{ form_field2_container(form.logo) }}
+
+            <div class="lbl_upload">
+            	<span class="logobox">
+                	
+                    {% if realestate_logo %}
+                    <a href="#" onclick="jQuery('#form_logo_input').click();return false;">
+                    	<img src="{{realestate_logo}}" />
+                    </a>
+                    {% else %}
+                    <a class="nologo" href="#" onclick="jQuery('#form_logo_input').click();return false;">
+                      <span>Subir una imagen</span>
+                      <br />Haga click aquí
+                    </a>
+                    {% endif %}
+                    {{ form_field(form.logo, id="form_logo_input") }}
+                </span>
+            </div>
+           
+
+            <div style="clear:both;"></div>
+            <span id="filename"></span>
+            <br/>
+            <small class="gray">
+            Tamaño recomendado: 280 pixeles de ancho x 75 de alto.<br /> 
+            Ancho máx. 300 pixeles, Altura Máx. 100 pixeles.
+            </small>
+            {{ form_error(form.logo) }}
+        </dd>
+    </dl> 
+    <dl class="form">
+        <dt>Nombre de la Inmobiliaria</dt>
+        
+        {{ form_field2(form.name, placeholder="nombre/razón social", title="nombre/razón social") }}
+    </dl> 
+    <dl class="form">
+          <dt>Dirección</dt>
+          {{ form_field2_container_double(form.address, form.zip_code) }}
+            {{ form_field(form.address, placeholder="calle nº, ciudad, provincia, país", title="calle nº, ciudad, provincia, país", class="medium") }} 
+            {{ form_field(form.zip_code, placeholder="cód. postal", title="cód. postal",  class="short") }} 
+          {{ form_error(form.address) }}
+          {{ form_error(form.zip_code) }}
+          </dd>
+    </dl>
+    <dl class="form">
+      <dt>Teléfono</dt>
+      {{ form_field2_container(form.telephone_number) }}
+        {{ form_field(form.telephone_number, placeholder="área+número (interno)", title="área+número (interno)") }}
+        <a href="#" class="btnIcon">
+          <img id="btnAddPhone" src="/img/icons/add.png" />
+        </a>
+        {{ form_error(form.telephone_number) }}
+      </dd>
+    </dl>
+    <dl class="form">     
+      <dt>Fax</dt>
+      {{ form_field2(form.fax_number, placeholder="área+número (interno)", title="área+número (interno)") }}
+    </dl>
+    <dl id="phone2" class="form" style="{{ 'display:none;' if not form.telephone_number2.data and not form.telephone_number2.errors else '' }}">    
+      <dt>Teléfono 2</dt>
+      {{ form_field2_container(form.telephone_number2) }}
+        {{ form_field(form.telephone_number2, title="área+número (interno)", placeholder="área+número (interno)") }}
+        <a href="#" class="btnIcon">
+          <img id="btnDeletePhone" src="/img/icons/delete.png" />
+        </a><br />
+        {{ form_error(form.telephone_number2) }}
+      </dd>
+    </dl>
+      <dl class="form">
+        <dt>Correo electrónico</dt>
+        {{ form_field2(form.email, placeholder="correo electrónico", title="correo electrónico") }}
+    </dl>  
+    <dl class="form">
+        <dt>Sitio Web</dt>
+        {{ form_field2(form.website, title="url", placeholder="url") }}
+    </dl>
+    <dl class="form">
+      <dt></dt>
+      <dd>
+        <div class="navButtons" style="text-align:left;">
+          <input type="submit" value="Guardar Inmobiliaria" name="" class="btnWizard">
+        </div>
+      </dd>
+    </dl>  
+  </form>  
+{% endblock  %}

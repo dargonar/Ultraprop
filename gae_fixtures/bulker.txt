@@ -1,0 +1,96 @@
+echo 'XX' | python2.5 ../google_appengine/bulkloader.py --dump --kind=NAMEOFMODEL --url=http://localhost:8080/remote_api --filename=FILENAME --app_id=APPID --email=foobar@nowhere.com --passin
+
+appcfg.py create_bulkloader_config --a --url=http://localhost:8096/ --filename=elfilename.yml
+
+
+appcfg.py upload_data --config_file=album_loader.py --filename=album_data.csv --kind=Album <app-directory>
+
+
+
+appcfg.py upload_data --email=admin --application=dev~viralizar --filename=realstatebulked.csv --config_file=bulkloader.yaml --url=http://localhost:8096/remote_api --kind=RealEstate ../src
+appcfg.py upload_data --email=admin --application=dev~viralizar --filename=propertybulked.csv  --config_file=bulkloader_prop.yml --url=http://localhost:8080/remote_api --kind=Property ../src
+
+from models import Property
+for p in Property.all():
+  print p.headline
+
+*-----------------------------------------------------------------------------------------------------*
+
+/* Create Bulkloader */
+appcfg.py create_bulkloader_config --filename=bulkloader.yaml W:\wdir\ultrageo\src\
+--
+/* Clear Dev Datastore */
+dev_appserver.py --clear_datastore W:\wdir\ultrageo\src
+
+/* Load Image */
+http://localhost:8092/
+
+/* Download */
+appcfg.py download_data --config_file=bulkloader.yaml --filename=propertybulked_downloaded.csv --kind=Property --url=http://localhost:8092/remote_api
+
+/* Upload Local Datastore */
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=realstatebulked.csv --kind=RealEstate --url=http://localhost:8092/remote_api --email=ptutino@gmail.com
+appcfg.py upload_data --bandwidth_limit=4000 --http_limit=10 --config_file=bulkloader.yaml --filename=propertybulked.csv --kind=Property --url=http://localhost:8092/remote_api --email=ptutino@gmail.com
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=propertyindexbulked.csv --kind=PropertyIndex --url=http://localhost:8092/remote_api --email=ptutino@gmail.com
+appcfg.py upload_data --bandwidth_limit=1000 --http_limit=10 --config_file=bulkloader.yaml --filename=imagefilebulker.csv --kind=ImageFile --url=http://localhost:8092/remote_api --email=ptutino@gmail.com
+
+/* Upload Server Datastore */
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=realstatebulked.csv --kind=RealEstate --url=http://nonameyet2.appspot.com/remote_api --email=matias.romeo@gmail.com
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=propertybulked.csv --kind=Property --url=http://puertoprop.appspot.com/remote_api --email=matias.romeo@gmail.com
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=imagefilebulker.csv --kind=ImageFile --url=http://puertoprop.appspot.com/remote_api --email=ptutino@gmail.com
+
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=realstatebulked.csv --kind=RealEstate --url=http://casaenolavarria.appspot.com/remote_api --email=ptutino@gmail.com
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=propertybulked.csv --kind=Property --url=http://casaenolavarria.appspot.com/remote_api --email=ptutino@gmail.com
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=imagefilebulker.csv --kind=ImageFile --url=http://casaenolavarria.appspot.com/remote_api --email=ptutino@gmail.com
+
+<<<<<<< .mine
+=======
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=realstatebulked.csv --kind=RealEstate --url=http://23octubre2011.appspot.com/remote_api --email=ptutino@gmail.com
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=propertybulked.csv --kind=Property --url=http://23octubre2011.appspot.com/remote_api --email=ptutino@gmail.com
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=propertyindexbulked.csv --kind=PropertyIndex --url=http://23octubre2011.appspot.com/remote_api --email=ptutino@gmail.com
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=imagefilebulker.csv --kind=ImageFile --url=http://23octubre2011.appspot.com/remote_api --email=ptutino@gmail.com
+>>>>>>> .r217
+
+<<<<<<< .mine
+=======
+
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=propertybulked.csv --kind=Property --url=http://puertoprop.appspot.com/remote_api --email=ptutino@gmail.com
+appcfg.py upload_data --config_file=bulkloader.yaml --filename=propertyindexbulked.csv --kind=PropertyIndex --url=http://puertoprop.appspot.com/remote_api --email=ptutino@gmail.com
+
+>>>>>>> .r214
+list 16 * 10
+
+PropType = StringList
+
+Residencial     
+    # Departamentos/Loft
+    # Casas
+    # PH
+    # Oficinas [*]          
+    # Locales Comerciales [*]
+  total:120
+  
+Residencial ¿Agreste?
+    # Countries y Barrios Cerrados
+    # Quintas                         
+    # Campos y Chacras
+  total:4
+
+A construir
+    # Terrenos y Lotes
+    # Galpones, Depositos y Edificios Ind.
+  total:1
+  
+Lugar de trabajo
+    # Galpones, Depositos y Edificios Ind.
+    # Locales Comerciales [*]
+    # Negocios y Fondos de Comercio
+    # Oficinas [*]
+    # Consultorios
+  total:120
+  
+    # Cocheras
+  total:1
+
+    # Bovedas, Nichos y Parcelas
+  total:1

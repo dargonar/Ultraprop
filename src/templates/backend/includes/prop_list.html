@@ -1,0 +1,55 @@
+	<div class="list_box" jqtransform="true">
+    <!--h2 style="color:#000; margin-bottom:10px; font-size:14px; background:#eee; padding:8px;">Scalabrini Ortiz Raul Av. 3600 Piso 4º, San Cristobal</h2-->
+    <!-- CHECKBOX -->
+    <input name="{{property.key()|string}}" class="chkprop" id="{{property.key()|string}}" type="checkbox" />
+        
+    <!-- PICTURE -->
+        {% if property.main_image %}
+        <a href="{{url_for('property/edit',key=property.key())}}">
+        	<img class="pic" src="{{url_for('images/show',key=property.main_image.key()|string, width='0', height=105)}}" /> 
+        </a>
+        {% else %}  
+        <a href="{{url_for('property/edit',key=property.key())}}" class="noelement proplist pic"><span>Sin Fotos</span></a>
+        {% endif %}
+        
+        <!-- DATA -->
+        <div class="data">
+        	<h3>{{property.headline}}<span>- {{property | addressify }}</span></h3>
+            <p class="price">
+                <span class="label">Precio</span>
+                {% if session['request.data'].prop_operation_id == Property._OPER_SELL %}
+                <span class="value price"><small>{{ property.price_sell_currency }}</small> {{property.price_sell|currencyfy}}</span>
+                {% elif session['request.data'].prop_operation_id == Property._OPER_RENT %}
+                <span class="value price"><small>{{ property.price_rent_currency }}</small> {{property.price_rent|currencyfy}}</span>
+                {% else %}
+                <span class="value price">
+                  {% if property.prop_operation_id == Property._OPER_RENT %}
+                  <small>{{property.price_rent_currency}}</small> {{property.price_rent|currencyfy}}
+                  {% elif property.prop_operation_id == Property._OPER_SELL %}
+                  <small>{{ property.price_sell_currency }}</small> {{property.price_sell|currencyfy}}
+                  {% else %}
+                  <small>{{property.price_rent_currency}}</small> {{property.price_rent|currencyfy}} /
+                  <small>{{ property.price_sell_currency }}</small> {{property.price_sell|currencyfy}}
+                  {% endif %}
+                </span>
+                {% endif %}
+            </p>
+            <p class="sup">
+                <span class="label">Superficie</span>
+                <span class="value sup">{{property.area_indoor}} m2</span>
+            </p>
+            <p class="detail">{{property.main_description|truncate(120)}}</p>
+        </div>
+        
+        <!-- -->
+        <div class="actions">
+        	{% if property.is_deleted() %}
+          <a class="restorer uibutton" href="{{url_for('property/restore',key=property.key())}}">Recuperar</a>
+          {% else %}
+          <a class="uibutton icon edit" href="{{url_for('property/edit',key=property.key())}}">Editar</a>
+          <a published="{{property.status}}" class="publisher uibutton icon delete" href="{{url_for('property/publish',key=property.key(), yes='0' if property.is_published() else '1')}}">{{'Desactivar' if property.is_published() else 'Publicar'}}</a>
+          {% endif %}
+
+        </div>
+        
+    </div>
