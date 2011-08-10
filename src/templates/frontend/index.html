@@ -34,16 +34,16 @@
   
   var realestate_key        = {{ "'"+preset['map.filter.realestate']+"'" if preset and preset['map.filter.realestate'] else 'null'}};
   
+  var OPER_SELL             = {{ _OPER_SELL }};
+  var OPER_RENT             = {{ _OPER_RENT }};
 </script>
 <script src="/js/ZeroClipboard.js" type="text/javascript"></script>
 <script src="/js/jquery.tools.min.js" type="text/javascript"></script>
-<script src="/js/modernizr.custom.20337.js" type="text/javascript"></script>
-<script src="/js/index.js" type="text/javascript"></script>
+<script src="/js/index.js?v=1.6" type="text/javascript"></script>
 
 <script type="text/javascript" src="/js/jquery.ketchup.js"></script>
-
 <style type="text/css"> 
-	html { width:100%; heigh:100%; overflow:hidden;}
-	body.frontend_search  .main_tabs .wintabs li.resizable .head .address {width:150px;}
+    html { width:100%; heigh:100%; overflow:hidden;}
 </style>
+<link href="/css/mapa_tabs.css" rel="stylesheet" type="text/css" /> 
 {%endblock%}  

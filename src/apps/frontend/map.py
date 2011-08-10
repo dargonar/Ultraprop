@@ -4,6 +4,7 @@ import logging
 from webapp2_extras.json import json
 from search_helper import config_array, MAX_QUERY_RESULTS
 from utils import FrontendHandler
+from models import Property
 
 class Index(FrontendHandler):
   def get(self, **kwargs):
@@ -15,7 +16,7 @@ class Index(FrontendHandler):
         value = self.request.GET.get(key)
         if value is not None: # and len(str(value))>0:
           dict[key] = value
-      dict['prop_operation_id']     = '2'
+      dict['prop_operation_id']     = str(Property._OPER_SELL)
       dict['show_extended_filter']  = show_extended_filter
       if self.session.has_key('map.filter.realestate'):
         dict['map.filter.realestate'] = self.session.pop('map.filter.realestate')
@@ -28,7 +29,8 @@ class Index(FrontendHandler):
                           , max_results=MAX_QUERY_RESULTS
                           , preset=dict
                           , presetJSON=json.dumps(dict)
-                          )
+                          , _OPER_SELL=Property._OPER_SELL
+                          , _OPER_RENT=Property._OPER_RENT)
 
   def post(self, **kwargs):
     dict = {}

@@ -12,12 +12,9 @@ function swithPropertyLocationMap(sender, img_id, img_map_src, map_type, map_typ
 var tmp_currency='$';
 
 function getPriceValue(value){
-  /*
-  if(value<50)
-    return Math.pow(value, 2)/100;
-  return Math.pow((value-12), 2)/10;
-  */
-  return value;
+  if(jQuery('#prop_operation_id').val()==OPER_RENT)
+    return value;
+  return sellPrices[value];
 }
 
 function getPriceValues(){
@@ -25,6 +22,8 @@ function getPriceValues(){
   return [getPriceValue(values[0]), getPriceValue(values[1])];
 }
 
+var sellPrices = ['0','5000','10000','25000','50000','75000','100000', 
+                  '125000','150000','175000','200000','250000','300000', '350000', '400000','500000', '500001'];
 function setPriceSliderOptions(price_slider, max, step, value0, value1)
 {
   jQuery("#"+price_slider).slider( "option" , 'max' ,  max);
@@ -36,7 +35,8 @@ function formatRangePriceText(object_id, from, to, currency, max)
 {
   tmp_currency = currency.toUpperCase();
   var max_limit = formatPriceText(to);
-  if (to == max)
+  
+  if((to == max) |(jQuery('#prop_operation_id').val()==OPER_SELL & to == parseInt(sellPrices[sellPrices.length-1])))
   {
     max_limit = '-sin límite-';
   }
