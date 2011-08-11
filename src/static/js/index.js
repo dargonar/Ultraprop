@@ -1126,8 +1126,8 @@ function calculateWinTabsVisibility(){
 function onShowFicha(sender, key)
 {
   // HACK: para debuggear la apertura de tabs -> comentar las dos lineas siguientes.
-  // if(jQuery('#ficha_'+key).length>0)
-    // return showTabWindow(null, key);
+  if(jQuery('#ficha_'+key).length>0)
+    return showTabWindow(null, key);
   
   var winTabs = jQuery('#main_tabs');
   if(!winTabs.is(':visible'))
