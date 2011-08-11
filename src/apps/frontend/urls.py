@@ -14,7 +14,7 @@ def get_rules():
       # Esta la pongo aca por puta
       Route('/run/mapper', name='run/mapper', handler='apps.backend.property.RunMapper'),
       
-
+      
       Route('/',                                                    name='frontend/home',             handler='apps.frontend.home.Index'),
       
       Route('/mapa',                                                name='frontend/map',              handler='apps.frontend.map.Index'),

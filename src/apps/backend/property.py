@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
     property handlers
     ~~~~~~~~
@@ -203,41 +203,40 @@ from taskqueue import Mapper
 from google.appengine.ext.blobstore import BlobInfo
 
 class MyModelMapper(Mapper):
-  KIND = Property
+  KIND = User
 
   def map(self, e):
     
-    # Add the entity to the list of entities to be deleted.
-    imgs = ImageFile.all(keys_only=True).filter('property =', e.key()).order('position').fetch(500)
-
-    if not len(imgs):
-      e.images_count = 0
-      e.main_image   = None
-    else:
-      e.images_count = len(imgs)
-      e.main_image   = db.get(imgs[0]).file
+    if e.email != 'matias.romeo@gmail.com':
+      return ([], []) 
+    realestate            = e.realestate
+    
+    # Armo context, lo uso en varios lugares, jaja!
+    context = { 'server_url':                 'http://'+self.request.headers.get('host', 'no host')
+               ,'realestate_name':            realestate.name
+               ,'user_email':                 e.email
+               ,'user_password':              e.password
+               , 'support_url' :               'http://'+self.request.headers.get('host', 'no host')}
+    
+    # Mando Correo a Usuario.
+    # Armo el body en plain text.
+    body = self.render_template('email/launch.txt', **context)  
+    # Armo el body en HTML.
+    html = self.render_template('email/launch.html', **context)  
+    
+    # Envío el correo.
+    mail.send_mail(sender="www.ultraprop.com.ar <info@ultraprop.com.ar>" , 
+                 to       = context['user_email'],
+                 subject  = u"Actualización del sistema - ULTRAPROP",
+                 body     = body,
+                 html     = html)
+    # --------------------------------------------------------------------------------
       
-    return ([e], [])
+    
+    return ([], [])
 
   def finish(self):
     logging.error('Terminamos...')
-
-# class MyModelMapper(Mapper):
-  # KIND = ImageFile
-
-  # def map(self, e):
-    
-    # # Add the entity to the list of entities to be deleted.
-    # if not e.file:
-      # bi = BlobInfo.all().filter('filename =', e.filename).get()
-      # if bi:
-        # logging.error(e.filename + ':' + str(e.key()) + ':' + str(bi.key()) )
-        # e.file = bi
-        # return ([e], [])
-        
-      # logging.error(e.filename + ':' + str(e.key()) + ': No hay link y no hay blob')
-    
-    # return ([], [])
 
 class RunMapper(BackendHandler):
   def get(self, **kwargs):

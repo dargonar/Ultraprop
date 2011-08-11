@@ -104,6 +104,7 @@ class BackendMixin(object):
     self.session['account.fullname']                = '%s, %s' % (user.last_name, user.first_name)
     self.session['account.key']                     = str(user.key())
     self.set_realestate_key(str(user.realestate.key()))
+    self.session['account.realestate.name']         = user.realestate.name
     self.session['account.realestate.enabled']      = user.realestate.enable
     self.session['account.roles']                   = map(lambda s: s.strip(), user.rol.split(','))
     
