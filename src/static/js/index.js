@@ -718,7 +718,7 @@ function showInfoBox(m_ib_desc, marker, infoHtml, width, mMapPixelOffset)
             ,closeBoxMargin: "4px 0px 0px 0px", closeBoxURL: "/img/pixel-transp.gif"
             ,infoBoxClearance: new google.maps.Size(1, 1), isHidden: false
             ,enableEventPropagation:true
-            ,pane: "floatPane" ,enableEventPropagation: false };
+            ,pane: "floatPane"};
   
   var m_ib = bubble_ib;
   if(m_ib_desc=='minibubble_ib') 
