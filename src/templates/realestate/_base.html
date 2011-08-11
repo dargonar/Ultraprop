@@ -50,7 +50,7 @@
     <div id="header">
     	<div class="content">
         <div id="logo" class="grid_3">
-          <a href="{{url_for('realestate/home', realestate=realestate.key()|string)}}">
+          <a href="{{realestate.website if realestate.website and realestate.website|wordcount>0 else url_for('realestate/home', realestate=realestate.key()|string)}}">
             {% if realestate_logo %}
             <img src="{{realestate_logo}}" alt="{{realestate.name}}" border="0" />
             {% else %}
