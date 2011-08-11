@@ -27,11 +27,15 @@
 			'checkafill': false			// if true there's a periodic check in case something auto-filled the password fields
 		};
 		
+    //Limpiamos los PLACEHOLDERS antes de salir
+    $('form').submit(function() {
+      $(this).find('.'+settings['class']).val('');
+    });
+  
 		return this.each(function(){
 			// if browser supports placeholder stop the function
-			if ($.support.placeholder) 
+			if ($.support.placeholder && !$.browser.msie) 
       {
-        //alert('support.placeholder! Not doung a fuck!');
         return false;
 			}
 			// get the options if there are any
@@ -39,14 +43,16 @@
 			
 			// tag must be either input or textarea, if 'dotextarea' is true, otherwise move to next element
 			// using this.tagName instead of $(this).is() because it's faster
-			if ( !( this.tagName.toLowerCase()=='input' || (settings['dotextarea'] && this.tagName.toLowerCase()=='textarea') ) ) return true;
-			
+			if ( !( this.tagName.toLowerCase()=='input' || (settings['dotextarea'] && this.tagName.toLowerCase()=='textarea') ) ) 
+      { 
+        return true;
+			}
 			// finally let's get $(this) and do one last test for placeholder value
 			var $this = $(this),
 				ph = this.getAttribute('placeholder'),
 				ispass = $this.is('input[type=password]');		// this is used twice so I'm assigning it to a variable
-			
-			if (!ph) return true;
+      
+      if (!ph) return true;
 			
 			// so, we have a legit tag and it has a placeholder value, let's get to work
 			
@@ -57,7 +63,8 @@
 			// in case 'dopass' was false double check it's not a password field and then
 			// for both textarea and regular input the same function applies
 			else if (!ispass) {
-				inputPlacehold($this, ph);
+				//passPlacehold($this, ph);
+        inputPlacehold($this, ph);
 			}
 		});
 		
