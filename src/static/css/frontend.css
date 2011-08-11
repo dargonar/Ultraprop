@@ -94,13 +94,13 @@ body.frontend_search #sidebar {
 	bottom:0;
 	position:absolute;
 	left:0;
+  height:100%;
 }
 body.frontend_search #main {
-	margin-left: 340px;
-	/*	background-color: #ccffff; */
+	/*margin-left: 340px;*/
+	left: 340px;
 	top:0;
 	bottom:0;
-	left:0;
 	right:0;
 	position:absolute;
 }
@@ -714,7 +714,7 @@ body.frontend_search #r_actions_bar optgroup {
 }
 /* ////////// PROPERTIE BOX ////////// */
 body.frontend_search .prop_container {
-	overflow:hidden;
+	overflow-x:hidden;
 	overflow-y:auto;
 	/*top:57px;*/
   top:32px;
@@ -722,6 +722,8 @@ body.frontend_search .prop_container {
 	left:0;
 	right:0;
 	position:absolute;
+  display: block;
+  height:auto;
 }
 body.frontend_search .prop_content {
 	overflow:hidden;
@@ -984,8 +986,8 @@ body.frontend_search #map_container {
 	position: relative;
 }
 body.frontend_search #map_canvas {
-	padding-right:340px;
-  *padding-right:0px;
+	/*padding-right:340px;*/
+  /* *padding-right:0px; */
 	width:100%;
 	height:100%;
 }
