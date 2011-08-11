@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from webapp2 import Route
+from webapp2 import Route, RedirectHandler
 from webapp2_extras.routes import PathPrefixRoute
-
 
 def get_rules():
     """Returns a list of URL rules for the Hello, World! application.
@@ -13,8 +12,13 @@ def get_rules():
     rules = [
       # Esta la pongo aca por puta
       Route('/run/mapper', name='run/mapper', handler='apps.backend.property.RunMapper'),
+<<<<<<< HEAD
       
       
+=======
+      Route('/webclient/index.asp?INM_Id=77', RedirectHandler, defaults={'_uri': '/www/agtzfnVsdHJhcHJvcHISCxIKUmVhbEVzdGF0ZSICNzcM/busqueda'}),
+
+>>>>>>> emi-arreglos-antes-de-salir
       Route('/',                                                    name='frontend/home',             handler='apps.frontend.home.Index'),
       
       Route('/mapa',                                                name='frontend/map',              handler='apps.frontend.map.Index'),
