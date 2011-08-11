@@ -206,33 +206,7 @@ class MyModelMapper(Mapper):
   KIND = User
 
   def map(self, e):
-    
-    if e.email != 'matias.romeo@gmail.com':
-      return ([], []) 
-    realestate            = e.realestate
-    
-    # Armo context, lo uso en varios lugares, jaja!
-    context = { 'server_url':                 'http://'+self.request.headers.get('host', 'no host')
-               ,'realestate_name':            realestate.name
-               ,'user_email':                 e.email
-               ,'user_password':              e.password
-               , 'support_url' :               'http://'+self.request.headers.get('host', 'no host')}
-    
-    # Mando Correo a Usuario.
-    # Armo el body en plain text.
-    body = self.render_template('email/launch.txt', **context)  
-    # Armo el body en HTML.
-    html = self.render_template('email/launch.html', **context)  
-    
-    # Envío el correo.
-    mail.send_mail(sender="www.ultraprop.com.ar <info@ultraprop.com.ar>" , 
-                 to       = context['user_email'],
-                 subject  = u"Actualización del sistema - ULTRAPROP",
-                 body     = body,
-                 html     = html)
-    # --------------------------------------------------------------------------------
-      
-    
+    # PONER CODIGO ACA
     return ([], [])
 
   def finish(self):
