@@ -11,7 +11,7 @@
               {% set image_src = url_for('images/show',key=property.main_image.key()|string, width=147, height=110) %}
             {% endif  %} 
             <a href="{{url_for('realestate/ficha', key=property.key()|string, oper=oper_id|string, realestate=realestate.key()|string)}}">
-                <img class="pic" src="{{image_src}}" onerror="this.src='/pics/small/sample1.jpg';" title="{{property.headline}}" height="110"/>
+                <img class="pic" src="{{image_src}}" onerror="this.src='/pics/small/sample1.jpg';" title="{{property.headline}}"/>
             </a> 
             <p class="pic_qty">{{ property.images_count|string + ' fotos' if property.images_count>0 else 'No hay imagenes'}}</p>
         </li>

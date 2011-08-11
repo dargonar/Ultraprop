@@ -15,7 +15,7 @@
     </div>
       
     <div class="picbox" onclick="return onShowPopup(this, null, '{{property.key()}}');">
-      <img class="viewBubble pic" {% if property.main_image %} src="{{url_for('images/show',key=property.main_image.key()|string, width='0', height=86)}}" {% else %} src="/img/picturebox/nophoto_115x86.jpg"  {% endif %} onerror="this.src='/pics/small/sample1.jpg';" title="{{property.headline}}"/>
+      <img class="viewBubble pic" {% if property.main_image %} src="{{url_for('images/show',key=property.main_image.key()|string, width=115, height=86)}}" {% else %} src="/img/picturebox/nophoto_115x86.jpg"  {% endif %} onerror="this.src='/pics/small/sample1.jpg';" title="{{property.headline}}"/>
       <div class="qty">{{ property.images_count }}&nbsp;fotos</div>
     </div>
         

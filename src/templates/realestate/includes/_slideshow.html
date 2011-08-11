@@ -7,7 +7,7 @@
         {% for img in images %}
           <li>
             <a href="{{ url_for('images/show', key=img.file.key()|string, width=469, height=469) }}">
-              <img id="image_{{loop.index}}" src="{{ url_for('images/show', key=img.file.key()|string, width='0', height=55) }}" title="" style="max-height:55px;max-width:50px;" class="popupimg class{{loop.index}}"> 
+              <img id="image_{{loop.index}}" src="{{ url_for('images/show', key=img.file.key()|string, width=72, height=55) }}" title="" style="max-height:55px;max-width:50px;" class="popupimg class{{loop.index}}"> 
             </a>
           </li>
         {% else %}
