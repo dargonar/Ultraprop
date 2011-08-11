@@ -303,7 +303,8 @@ dl.news dd h5 {
 }
 .prop_box ul.data {
 	overflow:hidden;
-	margin-top:6px;
+	margin-top:6px; 
+	min-height:121px;	
 }
 .prop_box ul.data li {
 	float:left;
@@ -837,6 +838,9 @@ ul.detail li {
 	border: 1px solid #CCCCCC;
 	padding: 4px;
 }
+
+.picture a img.pic { max-width:130px;}
+
 /* ///// CONTACT FORM ///// */
 .contactform {
 	overflow:hidden;
