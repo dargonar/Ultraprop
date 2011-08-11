@@ -5,22 +5,28 @@
     </a>
     
     <ul class="mnuTop">
-      {% if is_logged %}
-      <li>Hola {{session['account.realestate.name']}}!&nbsp;</li>
+      {% if is_logged is defined %}
+        {% if is_logged %}
+        <li>Hola {{session['account.realestate.name']}}!&nbsp;</li>
+        {% endif %}
       {% endif %}
       {% if not is_logged %}
         <li><a href="{{url_for('backend/auth/login')}}" title="Inicio de sesión">Ingresar</a></li>
         <li><a href="{{url_for('backend/auth/signup')}}" title="Regístrese">Registrarse</a></li>
       {% endif %}
       <li><a href="{{url_for('frontend/map')}}" target="_blank" title="Búsqueda por mapa">Mapa</a></li>
-      {% if is_logged %}
-      <li>
-        <a href="{{ url_for('frontend/map/realestate', realestate=session['account.realestate.key']) }}" target="_blank" title="Vea sólo sus propiedades en el Mapa">Mis propiedades en mapa</a>
-      </li>
-      <li>
-        <a href="{{ url_for('realestate/search', realestate=session['account.realestate.key']) }}" target="_blank" title="Ir a mi página web">Mi Web</a>
-      </li>
-      <li><a href="{{url_for('backend/auth/logout')}}" title="Cerrar sesión">Salir</a></li>
+      {% if is_logged is defined %}
+        {% if is_logged %}
+        <li>
+          <a href="{{ url_for('frontend/map/realestate', realestate=session['account.realestate.key']) }}" target="_blank" title="Vea sólo sus propiedades en el Mapa">Mis propiedades en mapa</a>
+        </li>
+        <li>
+          <a href="{{ url_for('realestate/search', realestate=session['account.realestate.key']) }}" target="_blank" title="Ir a mi página web">Mi Web</a>
+        </li>
+        <li>
+          <a href="{{url_for('backend/auth/logout')}}" title="Cerrar sesión">Salir</a>
+        </li>
+        {% endif %}
       {% endif %}
       <li><a href="mailto:ayuda@ultraprop.com.ar" title="Mandanos un correo. Estamos armando la ayuda online.">Ayuda</a></li>
     </ul>

@@ -1,5 +1,7 @@
 /* ========================================================================================== */
 /* Utils  =================================================================================== */
+var sellPrices = ['0','5000','10000','25000','50000','75000','100000', 
+                  '125000','150000','175000','200000','250000','300000', '350000', '400000','500000', '500001']; // 500001 hacked en search_helper_func.
 
 function swithPropertyLocationMap(sender, img_id, img_map_src, map_type, map_type_selector_id){
   var new_src = img_map_src.replace('roadmap',map_type);
@@ -22,8 +24,6 @@ function getPriceValues(){
   return [getPriceValue(values[0]), getPriceValue(values[1])];
 }
 
-var sellPrices = ['0','5000','10000','25000','50000','75000','100000', 
-                  '125000','150000','175000','200000','250000','300000', '350000', '400000','500000', '500001'];
 function setPriceSliderOptions(price_slider, max, step, value0, value1)
 {
   jQuery("#"+price_slider).slider( "option" , 'max' ,  max);

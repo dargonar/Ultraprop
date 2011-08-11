@@ -126,10 +126,10 @@ def do_currencyfy(number, small=False, **args):
   return temp
   
 def do_pricefy(property, operation_type = None, small=False, **args):
-  number = property.price_rent_computed
+  number = property.price_rent
   cur = property.price_rent_currency
   if (operation_type is None and property.price_sell_computed>0.0) or int(operation_type) == Property._OPER_SELL:
-    number = property.price_sell_computed
+    number = property.price_sell
     cur = property.price_sell_currency
   return '<small>'+cur+'</small>'+do_currencyfy(number, small=small)
   
