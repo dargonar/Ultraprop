@@ -450,12 +450,21 @@ function doSearch() {
   
   var price_values = jQuery('#price_slider').slider('values');
   // Parametros por default
+  var price_min = price_values[0];
+  var price_max = price_values[1];
+  
+  if(jQuery('#prop_operation_id').val()==OPER_SELL)
+  { 
+    price_min = sellPrices[price_values[0]];
+    price_max = sellPrices[price_values[1]];
+  }
+  
   var searchParameters = {
         query_type : 'bounds' // 'proximity'
         , extended_options:1
         , price_apply : 1
-        , price_min: price_values[0]
-        , price_max: price_values[1] 
+        , price_min: price_min
+        , price_max: price_max 
         , sort: jQuery('#sort').val()
       };
   
