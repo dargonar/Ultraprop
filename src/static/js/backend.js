@@ -54,14 +54,21 @@ function loadScript() {
   document.body.appendChild(script);
 }
 
-function handle_result(result, status)
+function handle_result(result, status, latlong)
 {
   $('#searchmap').val(result.formatted_address);
   
   //Limpiamos y actualizamos actualizamos campos del form
   $('form#registerform>dl.form.x2col').find('input').val('');
 
-  $('#location').val(result.geometry.location.lat() + ',' + result.geometry.location.lng());
+  if( latlong == null )
+  {
+    $('#location').val(result.geometry.location.lat() + ',' + result.geometry.location.lng());
+  }
+  else
+  {
+    $('#location').val(latlong.lat() + ',' + latlong.lng());
+  }
             
   for(var r in result.address_components)
   {
@@ -104,7 +111,8 @@ function put_marker_at(position)
     google.maps.event.addListener(marker, 'dragend', function() {
       put_marker = false;
       geocoder.geocode({latLng:marker.getPosition()}, function(results, status) { 
-        handle_result(results[0], status); 
+        //alert('tengo geocode result:' + marker.getPosition() + ' - ' + results[0].geometry.location );
+        handle_result(results[0], status, marker.getPosition() ); 
       });
     });
 }
@@ -164,7 +172,7 @@ function init_new_property()
       $.each(results, function(i, item) {
         if( is_from_country(item, 'Argentina') )
         {
-          handle_result(item, status);
+          handle_result(item, status, null);
           handled = true;
           return false;
         }
@@ -199,7 +207,7 @@ function init_new_property()
     },
     select: function(event, ui) {
       put_marker = true;
-      handle_result(ui.item.result, google.maps.GeocoderStatus.OK);
+      handle_result(ui.item.result, google.maps.GeocoderStatus.OK, null);
     }
   });   
 

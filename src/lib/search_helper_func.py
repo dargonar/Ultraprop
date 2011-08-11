@@ -133,7 +133,7 @@ class PropertyPaginatorMixin(object):
     
     if 'page' in kwargs:
       self.state_source = 'session'
-
+      
     page = int(kwargs.get('page','1'))
     kwargs['properties'] , kwargs['page'] = self.get_items(page=page)
     
@@ -154,6 +154,8 @@ class PropertyPaginatorMixin(object):
   #  ---- VIRTUAL FUNCTIONS ----
   
   def get_items(self, page=1):
+    if page == 1:
+      self.session['cursor'] = [None]
     
     values = self.form.data
       
@@ -182,11 +184,10 @@ class PropertyPaginatorMixin(object):
     
     # Tomo las propiedades para la pagina 
     properties, page = self.get_properties_for_page(page, base_query)
-    
+
     # Si estoy en la ultima pagina y se borra todo si vuelvo a esa pagina mostraria 
     # que no hay datos, deberia ir a la pagina anterior si se puede (page>1) o sino 
     # dejarlo asi (borre todo y habia una sola pagina )
-    
     if len(properties) == 0 and page > 1:
       # Elimino el cursor de esa pagina por que no existe mas
       self.session['cursor'] = self.session['cursor'][:-1]
@@ -197,7 +198,9 @@ class PropertyPaginatorMixin(object):
     # y si nos dio por lo menos page_size de taman/o
     new_cursor = base_query.cursor()
     if page+1 > len(self.session['cursor']):
-      self.session['cursor'].append( new_cursor )
+      ss = self.session['cursor']
+      ss.append( new_cursor )
+      self.session['cursor'] = ss
 
     # Retornamos las propiedades y la pagina correjida
     return properties, page    
@@ -223,7 +226,6 @@ class PropertyPaginatorMixin(object):
   def form(self):
     if self.state_source == 'request':
       self.session['request.data'] = self.request.POST.mixed()
-      self.session['cursor']       = [None]
     
     return PropertyFilterForm(MultiDict(self.session['request.data']))
     

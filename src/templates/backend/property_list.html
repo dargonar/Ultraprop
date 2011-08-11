@@ -22,10 +22,9 @@ $(document).ready(function() {
     $('form#filter').submit();
   });
   
-  $('#prop_type, #currency, #rooms, #area_indoor').change( function(e) {
+  $('#prop_type, #currency, #rooms, #area_indoor, #status').change( function(e) {
     $('form#filter').submit();
   });
-
   
   $('#nprop').click( function(e) {
     window.location = '{{url_for('property/new')}}';

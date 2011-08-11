@@ -113,13 +113,16 @@ def do_time_distance_in_words(from_date, since_date = None, target_tz=None, incl
 
 def do_currencyfy(number, small=False, **args):
   temp = "%.1f" % number
-  if small:
-    temp = "%d" % int(number)
+  # if small:
+    # temp = "%d" % int(number)
   temp = temp.replace('.', ',')
   profile = compile(r"(\d)(\d\d\d[.,])")
   while 1:
       temp, count = subn(profile,r"\1.\2",temp)
       if not count: break
+  if small:
+    if ',' in temp:
+      return temp[:-2]
   return temp
   
 def do_pricefy(property, operation_type = None, small=False, **args):

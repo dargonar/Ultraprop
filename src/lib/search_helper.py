@@ -83,7 +83,7 @@ config_array = {
                                   , 'related_property':'ow'}
     , 'prop_operation_id':       {'descriptions': [u'--indistinto--', u'Venta', u'Alquiler']
                                     , 'related_property':'op'
-                                    , 'ranges':{'1':{'step':'25000', 'min':'0', 'max':'2000000'}, '2':{'step':'250', 'min':'0', 'max':'10000'}}
+                                    , 'ranges':{'1':{'step':'1', 'min':'0', 'max':'16'}, '2':{'step':'250', 'min':'0', 'max':'10000'}}
                                   }
   }
   , 'binary_values_properties':{

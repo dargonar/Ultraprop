@@ -18,7 +18,8 @@
     <script src="/js/utils.js" type="text/javascript"></script>
     <script src="/js/jquery.addplaceholder.js" type="text/javascript"></script>
     <script type="text/javascript">
-      
+      var OPER_SELL             = {{ _OPER_SELL }};
+      var OPER_RENT             = {{ _OPER_RENT }};
       var geocoder = new google.maps.Geocoder();
       
       function is_from_country(item, country)
@@ -98,11 +99,17 @@
           }
         }); 
         
-        $("#prop_operation_id_container input").change(function(){
+        $("#prop_operation_id_container input:visible").change(function(){
           if ($("#prop_operation_id_container :checked").attr('id') == 'prop_operation_id2')
+          {
+            $('#prop_operation_id').val(OPER_RENT);
             setPriceSliderOptions('price_slider', default_slider_max2, default_slider_step2, default_slider_min2, default_slider_max2);
+          }
           else 
+          {
+            $('#prop_operation_id').val(OPER_SELL);
             setPriceSliderOptions('price_slider', default_slider_max1, default_slider_step1, default_slider_min1, default_slider_max1);
+          }
         });
         
         jQuery('input[placeholder]').addPlaceholder({ 'class': 'hint'}); //{dotextarea:false, class:hint}
@@ -205,7 +212,8 @@ title="Vicente López, Florida, Olivos, La Lucila, Martínez, Acasusso, San Isid
                             {% set index = loop.index0 %}
                             {% if index>0 %}
                               <label class="ex-label">
-                                <input type="radio" {{'checked="checked"' if index==2 else ''}} id="prop_operation_id{{index}}" name="prop_operation_id" value="{{index}}" />&nbsp;{{item}}
+                                <input type="radio" {{'checked="checked"' if index==_OPER_SELL else ''}} id="prop_operation_id{{index}}" name="prop_operation_id" value="{{index}}" />&nbsp;{{item}}
+                                <input type="hidden" id="prop_operation_id" value="{{_OPER_SELL}}">
                               </label>
                             {% endif %}
                           {% endfor %}
