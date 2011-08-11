@@ -107,8 +107,8 @@ function initUI() {
   
   if(jQuery('#prop_operation_id').val()==OPER_SELL && default_max_value>default_slider_max)
   { 
-    default_min_value = sellPrices.indexOf(default_min_value.toString());
-    default_max_value = sellPrices.indexOf(default_max_value.toString());
+    default_min_value = $.inArray(default_min_value.toString(), sellPrices); //sellPrices.indexOf(default_min_value.toString());
+    default_max_value = $.inArray(default_max_value.toString(), sellPrices); //sellPrices.indexOf(default_max_value.toString());
   }
   
   jQuery("#price_slider").slider({
@@ -1075,6 +1075,7 @@ function getRule(){
     for (var i=0;i<tmp.length;i++) {			
       if (tmp[i].href!=null)
       {
+        $.inArray()
         if (tmp[i].href.indexOf('mapa_tabs.css') != -1) 
         {				
           return tmp[i];				
