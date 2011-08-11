@@ -302,7 +302,7 @@ function locateMap(myLatlng)
       },
       //This bit is executed upon selection of an address
       select: function(event, ui) {
-        var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+        var location = new google.maps.LatLng(ui.item.result.geometry.location.lat(), ui.item.result.geometry.location.lng());
         //map.setCenter(location);
         var myOptions = {
           zoom: 15,
