@@ -15,5 +15,9 @@ class Index(FrontendHandler):
                 , presetJSON=json.dumps(preset)
                 , _OPER_SELL=Property._OPER_SELL
                 , _OPER_RENT=Property._OPER_RENT)
+
+class IndexRedir(FrontendHandler):
+  def get(self, **kwargs):
+    return self.redirect_to('frontend/home')
   
     
