@@ -12,6 +12,7 @@ from google.appengine.api import mail
 from search_helper import config_array, MAX_QUERY_RESULTS
 from forms import EmailLinkForm
 from utils import FrontendHandler, get_bitly_url
+from models import Property
 
 # Dummy Handler, por si chequea bit.ly.
 class SearchShare(FrontendHandler):
@@ -73,7 +74,9 @@ class LoadSearchLink(FrontendHandler):
                           , config_array=config_array
                           , max_results=MAX_QUERY_RESULTS
                           , preset=dict
-                          , presetJSON=json.dumps(dict))
+                          , presetJSON=json.dumps(dict)
+                          , _OPER_SELL=Property._OPER_SELL
+                          , _OPER_RENT=Property._OPER_RENT)
 
 class EmailShortenedLink(FrontendHandler):
   def post(self, **kwargs):

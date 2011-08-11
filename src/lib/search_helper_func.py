@@ -32,15 +32,16 @@ def create_query_from_dict(values, Model, keys_only=True):
   price_field   = 'price_sell_computed' if oper==Property._OPER_SELL else 'price_rent_computed'
   
   if 'price_apply' in request_keys:
-    min_price = float(values.get('price_min'))*currency_rate
-    max_price = float(values.get('price_max'))*currency_rate
-
-    value_range = ( min_price, max_price)
-    #logging.error('price_field >= ' + str(float(value_range[0])))
-    base_query.filter(price_field+' >= ', float(value_range[0]))
-    if int(config_array['multiple_values_properties']['prop_operation_id']['ranges'][str(oper)]['max'])>int(max_price):
-      #logging.error('price_field <= ' + str(float(value_range[1])))
-      base_query.filter(price_field+' <= ', float(value_range[1]))
+    if 'price_min' in request_keys:
+      min_price = float(values.get('price_min'))*currency_rate
+      base_query.filter(price_field+' >= ', float(min_price))
+    
+    if 'price_max' in request_keys:
+      max_price = float(values.get('price_max'))*currency_rate
+      max_config = int(config_array['multiple_values_properties']['prop_operation_id']['ranges'][str(oper)]['max'])
+      # 500001 hacked en utils.js
+      if (((max_config>int(max_price)) and oper==Property._OPER_RENT) or ((500001.0>max_price) and oper==Property._OPER_SELL) ):
+        base_query.filter(price_field+' <= ', max_price)
   # ============================================================= #
   
   # ============================================================= #

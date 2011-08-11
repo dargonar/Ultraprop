@@ -18,17 +18,16 @@
   var default_slider_min    = {{ price_ranges['min'] }};
   var default_slider_max    = {{ price_ranges['max'] }};
   var default_min_value     = {{ preset['price_min'] if preset and preset['price_min'] else price_ranges['min'] }};
-  var default_max_value     = {{ preset['price_max'] if preset and preset['price_min'] else price_ranges['max'] }};
-  var default_max_value     = {{ preset['price_max'] if preset and preset['price_min'] else price_ranges['max'] }};
+  var default_max_value     = {{ preset['price_max'] if preset and preset['price_max'] else price_ranges['max'] }};
   
-  {% set price_ranges = config_array['multiple_values_properties']['prop_operation_id']['ranges']['1'] %}
-  var default_slider_step1  = {{ price_ranges['step'] }};
-  var default_slider_min1   = {{ price_ranges['min'] }};
-  var default_slider_max1   = {{ price_ranges['max'] }};
-  {% set price_ranges = config_array['multiple_values_properties']['prop_operation_id']['ranges']['2'] %}
-  var default_slider_step2  = {{ price_ranges['step'] }};
-  var default_slider_min2   = {{ price_ranges['min'] }};
-  var default_slider_max2   = {{ price_ranges['max'] }};
+  {% set operation1_config = config_array['multiple_values_properties']['prop_operation_id']['ranges']['1'] %}
+  var default_slider_step1  = {{ operation1_config['step'] }};
+  var default_slider_min1   = {{ operation1_config['min'] }};
+  var default_slider_max1   = {{ operation1_config['max'] }};
+  {% set operation2_config = config_array['multiple_values_properties']['prop_operation_id']['ranges']['2'] %}
+  var default_slider_step2  = {{ operation2_config['step'] }};
+  var default_slider_min2   = {{ operation2_config['min'] }};
+  var default_slider_max2   = {{ operation2_config['max'] }};
   
   var show_extended_filter  = {{ preset['show_extended_filter'] if preset and preset['show_extended_filter'] else '0' }};
   
@@ -39,7 +38,7 @@
 </script>
 <script src="/js/ZeroClipboard.js" type="text/javascript"></script>
 <script src="/js/jquery.tools.min.js" type="text/javascript"></script>
-<script src="/js/index.js?v=1.6" type="text/javascript"></script>
+<script src="/js/index.js?v=1.7" type="text/javascript"></script>
 
 <script type="text/javascript" src="/js/jquery.ketchup.js"></script>
 <style type="text/css"> 

@@ -98,10 +98,16 @@ function initUI() {
                               , jQuery( "#price_slider" ).slider( "option", "min")
                               , jQuery( "#price_slider" ).slider( "option", "max")
                               , jQuery('#currency').val()
-                              ,jQuery( "#price_slider" ).slider( "option", "max") );
+                              , jQuery( "#price_slider" ).slider( "option", "max") );
       onMainFilterChange(this);
     }
   );
+  
+  if(jQuery('#prop_operation_id').val()==OPER_SELL && default_max_value>default_slider_max)
+  { 
+    default_min_value = sellPrices.indexOf(default_min_value.toString());
+    default_max_value = sellPrices.indexOf(default_max_value.toString());
+  }
   
   jQuery("#price_slider").slider({
     orientation: 'horizontal', min: default_slider_min, max: default_slider_max, range: true, step: default_slider_step, values: [default_min_value, default_max_value], 
@@ -110,7 +116,7 @@ function initUI() {
                               , getPriceValue(ui.values[0])
                               , getPriceValue(ui.values[1])
                               , jQuery('#currency').val()
-                              ,jQuery( "#price_slider" ).slider( "option", "max") );
+                              , jQuery( "#price_slider" ).slider( "option", "max") );
       },
     change: function(event, ui) {
       onMainFilterChange(ui);
@@ -118,10 +124,10 @@ function initUI() {
   });
   
   formatRangePriceText('price_display'
-                              ,default_min_value
-                              , default_max_value
+                              , getPriceValue(default_min_value)
+                              , getPriceValue(default_max_value)
                               , jQuery('#currency').val()
-                              ,jQuery( "#price_slider" ).slider( "option", "max") );
+                              , jQuery( "#price_slider" ).slider( "option", "max") );
         
   jQuery.each(filter_ranges, function(key, value) { 
     var data = value;
