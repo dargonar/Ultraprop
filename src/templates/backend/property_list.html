@@ -119,8 +119,10 @@ $(document).ready(function() {
 
 	<h1>Propiedades {{ form.status.data | statusfy }}</h1>
   {% if form.status.data == Property._DELETED %}
-  <p class="msg_warning" align="center"><span class="title">Las Propiedades de la carpeta "eliminadas" tienen una vigencia de 30 días</span>
-A partir de la fecha que fueron eliminadas, luego de esa fecha no podrán ser recuperadas</p>
+  <p class="msg_warning" align="center"><span class="title">
+  Las propiedades eliminadas tienen una vigencia de 30 días, luego serán definitivamente borradas.
+</span>
+</p>
   {% endif %}
   {% if flash %}
   <div class="msg_{{flash.type}}">{{flash.message}}</div>
