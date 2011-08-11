@@ -162,6 +162,7 @@ function initUI() {
                             , getPriceValue(values[1])
                             , jQuery('#currency').val()
                             ,jQuery( "#price_slider" ).slider( "option", "max") );
+      doSearch();
     }
   );
   
