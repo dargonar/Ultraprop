@@ -99,13 +99,14 @@
           }
         }); 
         
-        $("#prop_operation_id_container input:visible").change(function(){
-          if ($("#prop_operation_id_container :checked").attr('id') == 'prop_operation_id2')
+        $('#prop_operation_id_container input[type="radio"]').change(function(){
+          if ($(this).attr('id') == 'prop_operation_id2' && $(this).is(':checked'))
           {
             $('#prop_operation_id').val(OPER_RENT);
             setPriceSliderOptions('price_slider', default_slider_max2, default_slider_step2, default_slider_min2, default_slider_max2);
           }
           else 
+          if ($(this).attr('id') == 'prop_operation_id1' && $(this).is(':checked'))
           {
             $('#prop_operation_id').val(OPER_SELL);
             setPriceSliderOptions('price_slider', default_slider_max1, default_slider_step1, default_slider_min1, default_slider_max1);
