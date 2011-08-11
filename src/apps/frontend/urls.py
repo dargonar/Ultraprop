@@ -13,6 +13,8 @@ def get_rules():
       # Esta la pongo aca por puta
       Route('/run/mapper', name='run/mapper', handler='apps.backend.property.RunMapper'),
       Route('/webclient/index.asp', name='oldredir', handler='apps.realestate.handlers.Redirect'),
+      Route('/manda_bienvenida', name='mandabien', handler='apps.realestate.handlers.LaunchEmail'),
+
       
       Route('/',                                                    name='frontend/home',             handler='apps.frontend.home.Index'),
       

@@ -203,7 +203,7 @@ from taskqueue import Mapper
 from google.appengine.ext.blobstore import BlobInfo
 
 class MyModelMapper(Mapper):
-  KIND = User
+  #KIND = User
 
   def map(self, e):
     # PONER CODIGO ACA

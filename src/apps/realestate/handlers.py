@@ -17,13 +17,12 @@ from google.appengine.api import mail
 from models import User
 
 class LaunchEmail(RealestateHandler):
-  
-  def get(self, params):
+  def get(self, **kwargs):
     
     for e in User.all():
       
-      if e.email != 'matias.romeo@gmail.com':
-        continue
+      # if e.email != 'matias.romeo@gmail.com':
+        # continue
         
       realestate = e.realestate
       
@@ -40,10 +39,10 @@ class LaunchEmail(RealestateHandler):
       # Armo el body en HTML.
       html = self.render_template('email/launch.html', **context)  
       
-      # EnvÌo el correo.
+      # Env√≠o el correo.
       mail.send_mail(sender="www.ultraprop.com.ar <info@ultraprop.com.ar>" , 
                    to       = context['user_email'],
-                   subject  = u"ActualizaciÛn del sistema - ULTRAPROP",
+                   subject  = u"Actualizaci√≥n del sistema - ULTRAPROP",
                    body     = body,
                    html     = html)
       # --------------------------------------------------------------------------------
@@ -56,7 +55,7 @@ class Redirect(RealestateHandler):
     realestate = self.request.GET['INM_Id']
     self.redirect_to('realestate/search', realestate=realestate)
 
-# Index va a ser la homepage de la inmobiliaria, creo que quedar· obsoleto.    
+# Index va a ser la homepage de la inmobiliaria, creo que quedar√° obsoleto.    
 class Index(RealestateHandler):
   def get(self, **kwargs):
     realestate            = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
@@ -66,7 +65,7 @@ class Index(RealestateHandler):
       
     return self.render_response('realestate/index.html', **kwargs)
  
-# Info de la propiedad, creo que quedar· obsoleto.    
+# Info de la propiedad, creo que quedar√° obsoleto.    
 class Info(RealestateHandler):
   def get(self, **kwargs):
     realestate            = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
