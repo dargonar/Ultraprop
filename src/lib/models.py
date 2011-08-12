@@ -500,7 +500,7 @@ class Property(GeoModel):
   
   def __repr__(self):
     from myfilters import do_headlinify, do_addressify, do_descriptify
-    return do_headlinify(self) + '|' + do_addressify(prop) + '|' + do_descriptify(prop, cols=['rooms','bedrooms','bathrooms','area_indoor', 'area_outdoor'], small=True)
+    return do_headlinify(self) + '|' + do_addressify(self) + '|' + do_descriptify(self, cols=['rooms','bedrooms','bathrooms','area_indoor', 'area_outdoor'], small=True)
 
 class PropertyIndex(GeoModel):
   # location = db.GeoPtProperty()

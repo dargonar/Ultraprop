@@ -5,11 +5,13 @@
     <div class="ad-thumbs">
       <ul class="ad-thumb-list">
         {% for img in images %}
+          {% if img.file %}
           <li>
             <a href="{{ url_for('images/show', key=img.file.key()|string, width=322, height=242) }}">
               <img id="image_{{loop.index}}" src="{{ url_for('images/show', key=img.file.key()|string, width=72, height=55) }}"  style="max-height:55px;" title="" alt="" class="popupimg class{{loop.index}}"> 
             </a>
           </li>
+          {% endif %}
         {% else %}
           <li class="nophoto">
             <a href="/img/picturebox/nophoto_322x242.jpg"> 
