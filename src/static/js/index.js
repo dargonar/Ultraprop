@@ -18,10 +18,12 @@ var isMSIE7         = false;
 jQuery(document).ready(function()
 {
   if ( $.browser.msie ) 
+  {
     if(parseInt($.browser.version, 7) )
     {
       isMSIE7 = true;
     }
+  }
   
   if(screen.width<=1024)
   {
@@ -105,8 +107,8 @@ function initUI() {
   
   if(jQuery('#prop_operation_id').val()==OPER_SELL && default_max_value>default_slider_max)
   { 
-    default_min_value = sellPrices.indexOf(default_min_value.toString());
-    default_max_value = sellPrices.indexOf(default_max_value.toString());
+    default_min_value = $.inArray(default_min_value.toString(), sellPrices); //sellPrices.indexOf(default_min_value.toString());
+    default_max_value = $.inArray(default_max_value.toString(), sellPrices); //sellPrices.indexOf(default_max_value.toString());
   }
   
   jQuery("#price_slider").slider({
@@ -296,9 +298,9 @@ function locateMap(myLatlng)
                     label: item.formatted_address,
                     value: item.formatted_address,
                     result: item
-              }
+              };
           }));
-        })
+        });
       },
       //This bit is executed upon selection of an address
       select: function(event, ui) {
@@ -360,16 +362,22 @@ function onWindowResize(){
   
   var extraWidth = 0;
   if(isMSIE7)
-    extraWidth = 340;
+    extraWidth = 0; //340;
   
   jQuery('#map_container').css('width', (b - 340) + "px"); 
   jQuery('#map_container').css('height', (a - headerHeight()) + "px"); 
   
-  jQuery('#map_canvas').css('width', (b - 340 - 340 - extraWidth) + "px"); 
+  //jQuery('#map_canvas').css('width', (b - 340 - 340 - extraWidth) + "px"); 
+  jQuery('#map_canvas').css('width', (b - 340 ) + "px"); 
+  
   var footerHeight = 0;
   if(jQuery('#foot_map').is(':visible'))
     footerHeight = 30;
   jQuery('#map_canvas').css('height', (a - headerHeight() - footerHeight) + "px"); 
+  
+  // var sidebar_h = jQuery(window).height() - jQuery("#header").outerHeight() - jQuery("#filters_bar").outerHeight() - jQuery("#r_actions_bar").outerHeight();
+  jQuery('#sidebar').css('height', jQuery('#content').outerHeight());
+  
   map_size_changed=true;
   
 }
@@ -574,14 +582,10 @@ function doSearch() {
         
         jQuery('#prop_container').html(obj.html);
         
-        if (isMSIE7)
-          jQuery('#prop_container').pngFix(); 
-        
-        $('#display_viewing_count').html(obj.display_viewing_count);
-        $('#tab_viewing_page').html(cursorPosition+1);
-        $('#tab_viewing_count').html(obj.display_viewing_count);
-        $('#display_total_count').html(obj.display_total_count);
-        
+        $('#tab_viewing_page').html(cursorPosition+1); // en tab1.html
+        $('#tab_viewing_count').html(obj.display_viewing_count); // en tab1.html
+        // $('#display_total_count').html(obj.display_total_count); // en map.html
+        //$('#display_viewing_count').html(obj.display_viewing_count); // en map.html
                 
         m_last_result_object = obj; 
         for (var i = 0; i < obj.coords.length; i++) {
@@ -1071,6 +1075,7 @@ function getRule(){
     for (var i=0;i<tmp.length;i++) {			
       if (tmp[i].href!=null)
       {
+        $.inArray()
         if (tmp[i].href.indexOf('mapa_tabs.css') != -1) 
         {				
           return tmp[i];				
