@@ -323,8 +323,8 @@ function locateMap(myLatlng)
 function initMapSearch(){
   var g_initial_map_event = google.maps.event.addListener(map, 'bounds_changed', 
     function() {
-      doSearch();
       google.maps.event.removeListener(g_initial_map_event);
+      doSearch();
   });
 }
 /* Document Resize Event & Functions */
