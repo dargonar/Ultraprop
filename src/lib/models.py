@@ -292,16 +292,6 @@ class Property(GeoModel):
           pass
     self.location_geocells = self.check_options_ex()+address
     
-    # Ponemos el headline
-    ops = []
-    for i in range(0,len(config_array['multiple_values_properties']['prop_operation_id']['descriptions'])):
-      if i & self.prop_operation_id:
-        ops.append(config_array['multiple_values_properties']['prop_operation_id']['descriptions'][i])
-        
-    self.headline = u'%s en %s' % ( config_array['cells']['prop_type_id']['short_descriptions'][alphabet.index(self.prop_type_id)]
-                                  , '/'.join(ops))
-
-    
   def need_update_index(self, oldme):
     
     # Ahora (no) tiene imagenes?
@@ -509,7 +499,8 @@ class Property(GeoModel):
   longitude = property(_get_longitude, _set_longitude)
   
   def __repr__(self):
-    return self.headline
+    from myfilters import do_headlinify, do_addressify, do_descriptify
+    return do_headlinify(self) + '|' + do_addressify(prop) + '|' + do_descriptify(prop, cols=['rooms','bedrooms','bathrooms','area_indoor', 'area_outdoor'], small=True)
 
 class PropertyIndex(GeoModel):
   # location = db.GeoPtProperty()

@@ -5,7 +5,21 @@ from datetime import datetime
 from models import Property
 from re import *
 from backend_forms import status_choices
+from search_helper import config_array, alphabet
+
+def do_headlinify(prop):
+    
+    descs = config_array['multiple_values_properties']['prop_operation_id']['descriptions']
+    
+    # Ponemos el headline
+    ops = []
+    for i in range(0,len(descs)):
+      if i & prop.prop_operation_id:
+        ops.append(descs[i])
         
+    return u'%s en %s' % ( config_array['cells']['prop_type_id']['short_descriptions'][alphabet.index(prop.prop_type_id)]
+                                  , '/'.join(ops))
+  
 def do_descriptify(prop, cols, small=False):
   items = { 'rooms'        : { 'desc': 'ambiente'   ,'small':'amb.'       ,'plural': True  },
             'bedrooms'     : { 'desc': 'dormitorio' ,'small':'dorm.'      ,'plural': True  },

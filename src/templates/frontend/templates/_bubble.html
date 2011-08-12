@@ -7,7 +7,7 @@
   </div>
   
   <div class="subhead">
-      <div class="type">{{ property.headline }}</div>
+      <div class="type">{{ property | headlinify }}</div>
       {% set price            = property.price_sell %}
       {% set cur              = property.price_sell_currency %}
       {% if price_data_operation ==  Property._OPER_RENT %}

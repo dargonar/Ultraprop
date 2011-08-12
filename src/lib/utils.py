@@ -7,7 +7,7 @@ from google.appengine.ext import db
 from webapp2 import abort, cached_property, RequestHandler, Response, HTTPException, uri_for as url_for, get_app
 from webapp2_extras import jinja2, sessions, json
 
-from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify
+from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify, do_headlinify
 
 def get_bitly_url(str_query):
   import urllib2
@@ -165,6 +165,7 @@ class Jinja2Mixin(object):
     env.filters['pricefy']        = do_pricefy
     env.filters['addressify']     = do_addressify
     env.filters['descriptify']    = do_descriptify
+    env.filters['headlinify']     = do_headlinify
     env.globals['url_for']        = self.uri_for
    
     if hasattr(self,'is_logged'):
