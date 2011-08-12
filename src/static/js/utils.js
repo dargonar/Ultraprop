@@ -2,6 +2,7 @@
 /* Utils  =================================================================================== */
 var sellPrices = ['0','5000','10000','25000','50000','75000','100000', 
                   '125000','150000','175000','200000','250000','300000', '350000', '400000','500000', '500001']; // 500001 hacked en search_helper_func.
+var tmp_currency='$';
                   
 function swithPropertyLocationMap(sender, img_id, img_map_src, map_type, map_type_selector_id){
   var new_src = img_map_src.replace('roadmap',map_type);
@@ -11,7 +12,6 @@ function swithPropertyLocationMap(sender, img_id, img_map_src, map_type, map_typ
   return false;
 }
 
-var tmp_currency='$';
 
 function getPriceValue(value){
   if(jQuery('#prop_operation_id').val()==OPER_RENT)
@@ -66,4 +66,18 @@ function formatPrice(level) {
   if (level == -1) return '-';
   
   return 'US$ ' + formatCurrency(level);
+}
+
+/* Helper de Geocoding. */
+function is_from_country(item, country)
+{
+  //Solo direcciones de argentina
+  for(var i=0; i<item.address_components.length; i++)
+  {
+    var acomp = item.address_components[i];
+    if( acomp.types[0] == 'country' && acomp.long_name.toUpperCase() == country.toUpperCase())
+      return true;
+  }
+  
+  return false;
 }

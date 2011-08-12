@@ -1,48 +1,125 @@
-{% extends "frontend/_base.html"%}
+  {% extends "frontend/_base.html"%}
 
-{%block head%}
-<link href="/css/fb-buttons.css" rel="stylesheet" type="text/css" />
+  {%block head%}
+    <link href="/css/fb-buttons.css?v={{app_version_id}}" rel="stylesheet" type="text/css" />
+    <style type="text/css"> 
+        html { width:100%; heigh:100%; overflow:hidden;}
+    </style>
+    <link href="/css/mapa_tabs.css?v={{app_version_id}}" rel="stylesheet" type="text/css" /> 
+  {%endblock%}  
+  
+  {%block js%}
+    <script src="/js/_infobox_packed.js" type="text/javascript"></script>
+    <script src="/js/ZeroClipboard.js" type="text/javascript"></script>
+    <!-- Plugin para mostrar overlay. -->
+    <script src="/js/jquery.tools.min.js" type="text/javascript"></script>
+    <script src="/js/jquery.ketchup.js?v={{app_version_id}}" type="text/javascript"></script>
+    
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+          //////// ACCORDION //////////
+          jQuery( "#accordion" ).accordion({ autoHeight: false });
+          jQuery(".tab_content").hide();
+          jQuery("#sidebar ul.tabs li:first").addClass("active").show();
+          jQuery("#sidebar .tab_content:first").show();
+          /*jQuery("ul.tabs li").click(function(){
+            jQuery("ul.tabs li").removeClass("active");
+            jQuery(this).addClass("active");
+            jQuery(".tab_content").hide();
+            var activeTab = jQuery(this).find("a").attr("href");
+            jQuery(activeTab).show();
+            return false;	
+          });*/
+      });
+    </script>
+    
+    <script type="text/javascript">
+      var config_array          = {{ config_arrayJSON }};
+      var max_results           = {{ max_results }};
+      var preset                = {{ presetJSON if preset else 'null' }};
+      var default_lat           = {{ preset['center_lat'] if preset and preset['center_lat'] and preset['center_lat'] != '0' else 'null' }};
+      var default_lon           = {{ preset['center_lon'] if preset and preset['center_lon'] and preset['center_lon'] != '0' else 'null' }};
+      var default_zoom_level    = {{ preset['zoom_level'] if preset and preset['zoom_level'] else '13' }};
+      
+      {% set price_ranges = config_array['multiple_values_properties']['prop_operation_id']['ranges'][preset['prop_operation_id']] %}
+      var default_slider_step   = {{ price_ranges['step'] }};
+      var default_slider_min    = {{ price_ranges['min'] }};
+      var default_slider_max    = {{ price_ranges['max'] }};
+      var default_min_value     = {{ preset['price_min'] if preset and preset['price_min'] else price_ranges['min'] }};
+      var default_max_value     = {{ preset['price_max'] if preset and preset['price_max'] else price_ranges['max'] }};
+      
+      {% set operation1_config = config_array['multiple_values_properties']['prop_operation_id']['ranges']['1'] %}
+      var default_slider_step1  = {{ operation1_config['step'] }};
+      var default_slider_min1   = {{ operation1_config['min'] }};
+      var default_slider_max1   = {{ operation1_config['max'] }};
+      {% set operation2_config = config_array['multiple_values_properties']['prop_operation_id']['ranges']['2'] %}
+      var default_slider_step2  = {{ operation2_config['step'] }};
+      var default_slider_min2   = {{ operation2_config['min'] }};
+      var default_slider_max2   = {{ operation2_config['max'] }};
+      
+      var show_extended_filter  = {{ preset['show_extended_filter'] if preset and preset['show_extended_filter'] else '0' }};
+      
+      var realestate_key        = {{ "'"+preset['map.filter.realestate']+"'" if preset and preset['map.filter.realestate'] else 'null'}};
+      
+      var OPER_SELL             = {{ _OPER_SELL }};
+      var OPER_RENT             = {{ _OPER_RENT }};
+    </script>
+    <script src="/js/index.js?v={{app_version_id}}" type="text/javascript"></script>
+  {%endblock%}  
 
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&language=es"></script> 
-<script type="text/javascript" src="/js/_infobox_packed.js"></script>
-<script type="text/javascript">
-  var config_array          = {{ config_arrayJSON }};
-  var max_results           = {{ max_results }};
-  var preset                = {{ presetJSON if preset else 'null' }};
-  var default_lat           = {{ preset['center_lat'] if preset and preset['center_lat'] and preset['center_lat'] != '0' else 'null' }};
-  var default_lon           = {{ preset['center_lon'] if preset and preset['center_lon'] and preset['center_lon'] != '0' else 'null' }};
-  var default_zoom_level    = {{ preset['zoom_level'] if preset and preset['zoom_level'] else '13' }};
-  
-  {% set price_ranges = config_array['multiple_values_properties']['prop_operation_id']['ranges'][preset['prop_operation_id']] %}
-  var default_slider_step   = {{ price_ranges['step'] }};
-  var default_slider_min    = {{ price_ranges['min'] }};
-  var default_slider_max    = {{ price_ranges['max'] }};
-  var default_min_value     = {{ preset['price_min'] if preset and preset['price_min'] else price_ranges['min'] }};
-  var default_max_value     = {{ preset['price_max'] if preset and preset['price_max'] else price_ranges['max'] }};
-  
-  {% set operation1_config = config_array['multiple_values_properties']['prop_operation_id']['ranges']['1'] %}
-  var default_slider_step1  = {{ operation1_config['step'] }};
-  var default_slider_min1   = {{ operation1_config['min'] }};
-  var default_slider_max1   = {{ operation1_config['max'] }};
-  {% set operation2_config = config_array['multiple_values_properties']['prop_operation_id']['ranges']['2'] %}
-  var default_slider_step2  = {{ operation2_config['step'] }};
-  var default_slider_min2   = {{ operation2_config['min'] }};
-  var default_slider_max2   = {{ operation2_config['max'] }};
-  
-  var show_extended_filter  = {{ preset['show_extended_filter'] if preset and preset['show_extended_filter'] else '0' }};
-  
-  var realestate_key        = {{ "'"+preset['map.filter.realestate']+"'" if preset and preset['map.filter.realestate'] else 'null'}};
-  
-  var OPER_SELL             = {{ _OPER_SELL }};
-  var OPER_RENT             = {{ _OPER_RENT }};
-</script>
-<script src="/js/ZeroClipboard.js" type="text/javascript"></script>
-<script src="/js/jquery.tools.min.js" type="text/javascript"></script>
-<script src="/js/index.js" type="text/javascript"></script>
+  {% block body %}
+    <body class="frontend_search">
+      <div class="geolocation_overlay" id="geolocation_overlay" style="display:none;"></div>
+      <div class="geoBox top" id="geolocation_advice" style="display:none;">
+        <div class="pointer"></div>
+        <div class="message">
+          <div class="btnClose close" onclick="return onGeolocationOverlayClose();"></div>
+          <h1>Haga click en "Permitir"</h1>
+            <p>Para que podamos ofrecerle propiedades próximas a su ubicación actual.</p>
+        </div>
+      </div>
+      
+      <!-- HEADER -->
+      {%include "frontend/templates/header.html"%}
+      <!-- CONTENT -->
 
-<script type="text/javascript" src="/js/jquery.ketchup.js"></script>
-<style type="text/css"> 
-    html { width:100%; heigh:100%; overflow:hidden;}
-</style>
-<link href="/css/mapa_tabs.css" rel="stylesheet" type="text/css" /> 
-{%endblock%}  
+      <div id="content"> 
+        {%block sidebar%}
+        <!-- LEFT COLUMN -->
+        <div id="sidebar">
+          <ul class="tabs">
+            <li class="active"><a href="#results"  title="Resultados de la búsqueda de propiedades filtradas en la vista del mapa"> Resultados</a></li>
+            <!--li><a href="#tab2" title="Mis búsquedas guardadas">Mis búsquedas</a></li-->
+            <!--li class="none">
+              <div class="btnDefault alert" title="Alertarme por mail cuando una propiedad nueva cumpla con los parámetros de búsqueda y locaclización de la vista" onclick="location.href='#3'">Conf. Alerta</div>
+            </li-->
+          </ul>
+          
+          <!-- TAB1 CONTENT -->
+          <div id="results" class="tab_content"> 
+            {%include "frontend/templates/tab1.html"%}
+          </div>
+        </div>
+        {%endblock%}
+        <!-- RIGHT COLUMN -->
+        {%block main%}
+        <div id="main">
+          {%include "frontend/templates/link_popup.html"%}
+          {%include "frontend/templates/filters.html"%}
+          <div class="mainContent" id="tabs_container">
+            {%include "frontend/templates/wintabs.html" %}
+            {%include "frontend/templates/messages.html" %}
+            <!-- LOADING -->
+            <div id="loading_map" style="display:none;" class="loadingmap" title="Aguarde...">
+              <img src="/img/misc/loader_b.gif" title="Aguarde..." />
+            </div>
+            <!-- div id="shadow-h"></div -->
+            <div id="shadow-v"></div>
+            {%include "frontend/templates/map.html" %}
+          </div>
+        </div>
+        {%endblock%}  
+      </div>
+      <img src="/img/ultraprop_ui_sprite.png" title="hack para IE" style="display:none;" />
+    </body>
+  {% endblock %}

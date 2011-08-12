@@ -86,7 +86,7 @@ function onPropTypeChanged(sender){
 
 function initUI() {
   onWindowResize();
-  jQuery('[jqtransform|=true]').jqTransform();
+  //jQuery('[jqtransform|=true]').jqTransform(); //lo llamo desde el html.
 	//Checkboxes
   jQuery('#filters_bar [id*="prop_type_id"]').change(function(){ onPropTypeChanged(this);onMainFilterChange(this);});
   jQuery('#prop_operation_id').change(
@@ -318,20 +318,6 @@ function locateMap(myLatlng)
     });
     
     return false;
-}
-
-// Sacar a geocoding utils.
-function is_from_country(item, country)
-{
-  //Solo direcciones de argentina
-  for(var i=0; i<item.address_components.length; i++)
-  {
-    var acomp = item.address_components[i];
-    if( acomp.types[0] == 'country' && acomp.long_name.toUpperCase() == country.toUpperCase())
-      return true;
-  }
-  
-  return false;
 }
       
 function initMapSearch(){
@@ -1041,12 +1027,12 @@ function closeBubbles()
     if(checked==true)
     {
       jQuery(relative_main_id).attr('checked', 'checked');
-      jQuery(relative_main_alink_id).addClass('jqTransformChecked');
+      // jQuery(relative_main_alink_id).addClass('jqTransformChecked');
     }
     else
     {
       jQuery(relative_main_id).removeAttr("checked");
-      jQuery(relative_main_alink_id).removeClass('jqTransformChecked');
+      // jQuery(relative_main_alink_id).removeClass('jqTransformChecked');
     }
   }
   

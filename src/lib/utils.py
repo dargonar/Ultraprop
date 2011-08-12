@@ -167,7 +167,8 @@ class Jinja2Mixin(object):
     env.filters['descriptify']    = do_descriptify
     env.filters['headlinify']     = do_headlinify
     env.globals['url_for']        = self.uri_for
-   
+    env.globals['app_version_id'] = self.app.config['ultraprop']['app_version_id']
+    
     if hasattr(self,'is_logged'):
       env.globals['is_logged'] = self.is_logged
     
