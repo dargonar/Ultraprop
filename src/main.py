@@ -26,6 +26,8 @@ def enable_jinja2_debugging():
 debug = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')
 
 # Instantiate the application.
+config['ultraprop']['app_version_id'] = os.environ.get('APPLICATION_ID', '1')
+
 app = webapp2.WSGIApplication(routes=get_rules(config), debug=debug, config=config)
 enable_jinja2_debugging()
 
