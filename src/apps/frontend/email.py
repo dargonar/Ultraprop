@@ -12,6 +12,7 @@ from utils import get_bitly_url, MyBaseHandler
 class SendTask(MyBaseHandler):
   
   def post(self, **kwargs):
+    self.request.charset = 'utf-8'
     
     # TODO: Security hazard (think)
     params = self.request.POST.mixed()
