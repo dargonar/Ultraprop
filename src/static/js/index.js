@@ -513,6 +513,10 @@ function doSearch() {
   
   if (searchParameters.query_type == 'bounds') {
     var current_bounds = map.getBounds();
+    if(!current_bounds)
+    {
+      return false;
+    }
     searchParameters = updateObject(searchParameters, {
       north: current_bounds.getNorthEast().lat(),
       east: current_bounds.getNorthEast().lng(),
@@ -1075,7 +1079,6 @@ function getRule(){
     for (var i=0;i<tmp.length;i++) {			
       if (tmp[i].href!=null)
       {
-        $.inArray()
         if (tmp[i].href.indexOf('mapa_tabs.css') != -1) 
         {				
           return tmp[i];				
@@ -1085,9 +1088,11 @@ function getRule(){
     }	
   }
 }
+
 var rules = null;
 var containerTabsWidth = null;
 var defaultTabWidth = 150;
+var currentTabWidth = 150;
 function calculateWinTabsVisibility(){
   if(rules==null)
   {  
@@ -1095,11 +1100,6 @@ function calculateWinTabsVisibility(){
     rules=rule['rules'];
     if(rules == null || typeof(rules) == 'undefined' || !rules)
       rules=rule['cssRules'];
-    // rules = document.styleSheets[(document.styleSheets.length - 1)]['rules'];
-    // if(rules == null || typeof(rules) == 'undefined' || !rules)
-      // rules = document.styleSheets[(document.styleSheets.length - 1)]['cssRules'];
-    // if(rules == null || typeof(rules) == 'undefined' || !rules)
-      // rules = getRule();
   }
   if(containerTabsWidth==null)
     containerTabsWidth = jQuery('#main_tabs .wintabs').innerWidth();
@@ -1107,7 +1107,6 @@ function calculateWinTabsVisibility(){
   var totalAddressDivInnerWidth     = 0;
   var totalTabsDivWidth             = 0;
   var countAddressDiv               = jQuery('#main_tabs .wintabs li.resizable').length;
-  
   
   jQuery('#main_tabs .wintabs li.resizable').each(
     function(index, value)
@@ -1121,12 +1120,29 @@ function calculateWinTabsVisibility(){
   var diff = totalTabsDivWidth-(containerTabsWidth-jQuery('#main_tabs .wintabs li.non_resizable').innerWidth());
   if(diff>0)
   {
-    var dx = defaultTabWidth-Math.ceil(parseFloat(diff/countAddressDiv))-5;
-    defaultTabWidth = dx;
-    rules[0].style['width']=dx+'px';
-    //rules[0].style = 'width:'+dx+'px';
+    var dx = currentTabWidth-Math.ceil(parseFloat(diff/countAddressDiv))-5;
+    currentTabWidth = dx;
+    rules[0].style['width'] = dx + 'px';
+    return false;
   }
-  
+  else
+  {
+    var dx = currentTabWidth + Math.ceil(parseFloat(Math.abs(diff)/countAddressDiv)) - 6;
+    if(dx<defaultTabWidth)
+    {
+      currentTabWidth = dx;
+      rules[0].style['width'] = dx + 'px';
+    }
+    else
+    {
+      setWinTabsDefault();
+    }
+  }
+}
+
+function setWinTabsDefault(){
+  currentTabWidth = defaultTabWidth;
+  rules[0].style['width']=defaultTabWidth+'px';
 }
       
 function onShowFicha(sender, key)
@@ -1206,7 +1222,7 @@ function selectTabMap(sender)
     google.maps.event.trigger(map, 'resize');
   }
   
-  if(jQuery('#main_tabs .wintabs li').length>1)
+  if(jQuery('#main_tabs .wintabs li.resizable').length>=1)
   {
     // console.log('selectTabMap: hay liss');
     enableSearchOnPan(true);
@@ -1220,9 +1236,10 @@ function selectTabMap(sender)
     return false;
   }
   
-  jQuery('#foot_map').show();
   winTabs.hide();
+  jQuery('#foot_map').show();
   
+  setWinTabsDefault();
   enableSearchOnPan(true);
   
   return false;
@@ -1259,12 +1276,12 @@ function showTabWindow(sender, key){
 
 function closeTabWindow(sender, key)
 {
-  var next = jQuery('#main_tabs .wintabs #tab_'+key+' + li');
+  var next = jQuery('#main_tabs .wintabs #tab_'+key+' + li.resizable').next();
   jQuery('#tab_'+key).remove();
   jQuery('#ficha_'+key).remove();
-  calculateWinTabsVisibility();
   if(next.length>0)
-  { 
+  {
+    calculateWinTabsVisibility();
     showTabWindow(null, next.attr('key'));
     return false;
   }
