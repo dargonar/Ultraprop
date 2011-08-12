@@ -22,8 +22,18 @@
     <h1>Contáctenos</h1>
     
     <div class="contactform">
-      <p class="txt">Si desea saber más de nosotros o nuestros servicios, por favor
-complete el siguiente formulario para que podamos contactarlo a la brevedad.</p>
+    
+      <div class="contactinfo">
+        <span><b>Teléfono:</b> {{realestate.telephone_number}}</span><br/>
+        <span><b>Email:</b> {{realestate.email}}</span><br/>
+        <span><b>Dirección:</b> {{realestate.address}}</span>
+        
+        <br/>
+        <br/> 
+        
+      	<p class="txt">Si desea saber más de nosotros o nuestros servicios, por favor complete el siguiente formulario para que podamos contactarlo a la brevedad.</p>        
+	</div>
+
 
 		<form method="post" action="{{url_for('realestate/info', realestate=realestate.key()|string)}}">
         {% if flash %}

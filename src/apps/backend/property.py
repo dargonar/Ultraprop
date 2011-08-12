@@ -186,7 +186,7 @@ class NewEdit(BackendHandler):
     if self.request.POST['goto'] == 'go':
       return self.redirect_to('property/images', key=str(property.key()))
 
-    self.set_ok('La propiedad fue %s con exito' % ('modificada' if editing else 'creada') )    
+    self.set_ok('La propiedad fue %s ' % ('modificada con exito.' if editing else u'creada con exito, sera visible en el mapa dentro de la próxima hora.') )    
     return self.redirect_to('property/listpage', page=1)
 
   def show_property_form(self, **kwargs):
