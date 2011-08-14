@@ -12,6 +12,8 @@ builtins:
 derived_file_type:
 - python_precompiled
 
+default_expiration: "7d"
+
 inbound_services:
 - warmup
 
