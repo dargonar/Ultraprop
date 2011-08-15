@@ -284,6 +284,32 @@ function locateMap(myLatlng)
       new google.maps.Size(18, 36), new google.maps.Point(0, 0), new google.maps.Point(8, 36)); 
   iconsArray['shadow'] = new google.maps.MarkerImage('/img/icons/map/shadow.png',
       new google.maps.Size(33, 28), new google.maps.Point(0, 0), new google.maps.Point(0, 28)); 
+
+  //Boton localizador
+  $('#btnSearch').click( function() {
+    var address = document.getElementById("searchmap").value;
+
+    put_marker = true;
+    geocoder.geocode({'address': address,'region' : 'ar'}, function(results, status){ 
+    
+      var handled = false;
+      $.each(results, function(i, item) {
+        if( is_from_country(item, 'Argentina') )
+        {
+          handle_result(item.geometry);
+          handled = true;
+          return false;
+        }
+      });
+      
+      if (status != google.maps.GeocoderStatus.OK || handled == false) 
+      {
+        showErrorMessageBox("Imposible ubicar dirección");
+        return;
+      }
+    });
+  });  
+
       
   jQuery("#searchmap").autocomplete({
       //This bit uses the geocoder to fetch address values
@@ -304,20 +330,25 @@ function locateMap(myLatlng)
       },
       //This bit is executed upon selection of an address
       select: function(event, ui) {
-        var location = new google.maps.LatLng(ui.item.result.geometry.location.lat(), ui.item.result.geometry.location.lng());
-        //map.setCenter(location);
-        var myOptions = {
-          zoom: 15,
-          center: location
-        };
-        map.setOptions(myOptions);
-        //marker.setPosition(location);
-        jQuery("#searchmap").attr('title', jQuery("#searchmap").val());
-        doSearch(); // Hack: dado que no me cuelgo mas del boumds-changed del mapa!
+        handle_result( ui.item.result.geometry ); 
       }
     });
     
     return false;
+}
+
+function handle_result(geometry)
+{
+  var location = new google.maps.LatLng(geometry.location.lat(), geometry.location.lng());
+  //map.setCenter(location);
+  var myOptions = {
+    zoom: 15,
+    center: location
+  };
+  map.setOptions(myOptions);
+  //marker.setPosition(location);
+  jQuery("#searchmap").attr('title', jQuery("#searchmap").val());
+  doSearch(); // Hack: dado que no me cuelgo mas del boumds-changed del mapa!
 }
       
 function initMapSearch(){

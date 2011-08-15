@@ -27,6 +27,42 @@ jQuery(document).ready(function(){
                       , 'ars'
                       ,jQuery( "#price_slider" ).slider( "option", "max") );
   
+  function handle_result_home(location)
+  {
+      jQuery('#center_lat').val(location.lat());
+      jQuery('#center_lon').val(location.lng());
+  }
+  
+  jQuery("#btnSearchHome").click( function() {
+    var priceValues = getPriceValues();
+    jQuery('#price_min').val(priceValues[0]);
+    jQuery('#price_max').val(priceValues[1]);
+
+    //TODO: Unificar -> Esta funcion esta en backend/frontend x 2 (home e index)
+    var address = document.getElementById("searchmap").value;
+
+    put_marker = true;
+    geocoder.geocode({'address': address,'region' : 'ar'}, function(results, status){ 
+    
+      var handled = false;
+      $.each(results, function(i, item) {
+        if( is_from_country(item, 'Argentina') )
+        {
+          handle_result_home(item.geometry.location);
+          handled = true;
+          return false;
+        }
+      });
+      
+      if (status != google.maps.GeocoderStatus.OK || handled == false) 
+      {
+        return false;
+      }
+      
+      $('#home_search_form').submit();
+    });
+  });
+  
   jQuery("#searchmap").autocomplete({
     source: function(request, response) {
       geocoder.geocode( {'address': request.term, 'region' : 'ar'}, function(results, status) {
@@ -44,8 +80,7 @@ jQuery(document).ready(function(){
       })
     },
     select: function(event, ui) {
-      jQuery('#center_lat').val(ui.item.result.geometry.location.lat());
-      jQuery('#center_lon').val(ui.item.result.geometry.location.lng());
+      handle_result_home(ui.item.result.geometry.location);
     }
   }); 
   
@@ -66,11 +101,3 @@ jQuery(document).ready(function(){
   jQuery('input[placeholder]').addPlaceholder({ 'class': 'hint'}); //{dotextarea:false, class:hint}
   
 });
-
-function checkForm()
-{
-  var priceValues = getPriceValues();
-  jQuery('#price_min').val(priceValues[0]);
-  jQuery('#price_max').val(priceValues[1]);
-  return true;
-}

@@ -77,7 +77,7 @@ encontrá el tuyo de la forma más Simple.
                 </div>
               </div>
               <div class="box">
-                <form action="{{ url_for('frontend/map') }}" method="post" name="home_search_form" id="home_search_form" onSubmit="return checkForm();" >
+                <form action="{{ url_for('frontend/map') }}" method="post" name="home_search_form" id="home_search_form">
                   <input name="price_min" id="price_min" type="hidden" value="0" />
                   <input name="price_max" id="price_max" type="hidden" value="0" />
                   <input name="center_lat" id="center_lat" type="hidden" value="0" />
@@ -85,7 +85,7 @@ encontrá el tuyo de la forma más Simple.
                   <input name="zoom_level" id="zoom_level" type="hidden" value="15" />
                   <div id="searchbox">
                     <input class="search" name="searchmap" id="searchmap" placeholder="ej: calle 44 829, La Plata, Buenos Aires, Argentina" type="text" value="" />                    
-                    <input type="submit" id="btnSearchHome" value="Buscar" style="border:none;"/>
+                    <input type="button" id="btnSearchHome" value="Buscar" style="border:none;"/>
                     <ul id="locations">
                       <li><a href="#" onclick="return onDirectLink('la_plata');" title="La Plata (centro)">La Plata,</a></li>
                       <li><a href="#" onclick="return onDirectLink('gonnet');" title="Manuel B. Gonnet">Gonnet,</a></li>
