@@ -318,16 +318,16 @@ function update_percent(el, percent)
   $(el).find('td.percent').html(percent);
 }
 
+function img_loaded_callback(img)
+{
+  if( $(img).attr('src') == $(img).attr('orig') )
+    return false;
+  
+  $(img).attr('src', $(img).attr('orig'));
+}
+
 function bind_pic_boxes()
 {
-  // Fucking IE7
-  $('#imgbox>img').load( function() {
-    if( $(this).attr('src') == $(this).attr('orig') )
-      return false;
-    
-    $(this).attr('src', $(this).attr('orig'));
-  });
-  
   //Borrar imagen
   $('.btnClose').unbind('click');
   $('.btnClose').click( function() {
