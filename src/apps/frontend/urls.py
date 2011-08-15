@@ -14,6 +14,10 @@ def get_rules():
       Route('/run/mapper',            name='run/mapper',          handler='apps.backend.property.RunMapper'),
       Route('/webclient/index.asp',   name='oldredir',            handler='apps.realestate.handlers.Redirect'),
       Route('/manda_bienvenida',      name='mandabien',           handler='apps.realestate.handlers.LaunchEmail'),
+      # HACK: Urls de old ultraprop.
+      Route('/Integrantes.asp',       name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
+      Route('/institucional.html',    name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
+      Route('/Contactenos.html',      name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
       Route('/Centro.asp',            name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
       
       Route('/',                                                    name='frontend/home',             handler='apps.frontend.home.Index'),
