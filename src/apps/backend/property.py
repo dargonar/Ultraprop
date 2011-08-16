@@ -213,6 +213,7 @@ class MyModelMapper(Mapper):
     logging.error('Terminamos...')
 
 class RunMapper(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     from google.appengine.ext import deferred
     mapper = MyModelMapper()
@@ -220,11 +221,12 @@ class RunMapper(BackendHandler):
     self.response.write('Defereado!!')
 
 class VerArchivo(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     return self.render_response(kwargs['archivo'].replace('-','/'))
     
 class TraerFotines(RequestHandler):
-  #@need_auth(roles='ultraadmin', code=505)
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     for p in Property.all(keys_only=True):
       taskqueue.add(url=self.url_for('traer_para'), params={'id': int(p.name())})
