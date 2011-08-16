@@ -47,7 +47,7 @@ $(document).ready(function() {
 
   <!-- more_features.html -->
   <h2 class="title">Detalles de la Propiedad</h2>
-  <ul class="features">
+  <ul class="services">
     {{ ff.field_feature(form.appurtenance) }}
     {{ ff.field_feature(form.balcony) }}
     {{ ff.field_feature(form.doorman) }}
@@ -79,18 +79,24 @@ $(document).ready(function() {
   </div>
   
   <!-- location.html -->
-  <h2 class="title">Ubique el Inmueble (Escriba según el ejemplo)</h2>
+  <h2 class="title">Ubique el Inmueble</h2>
   {% if form.location.errors %}
   <div class="msg_error">Debe ubicar la propiedad</div>
   {% endif %}
   <div id="searchbox2">
-      <input id="searchmap" class="search hint" type="text" value="" autocomplete="off" placeholder="ej: Aguirre 276, Capital Federal, Argentina"/>
+      <input id="searchmap" class="search" type="text" value="" autocomplete="off" placeholder="Escriba aquí la dirección"/>
       <!-- SEARCH BUTTON -->
       <div id="btnSearch2" class="btnSearch blue">Ubicar</div>
-      <p class="info">Arrastre el icono para ajustar la ubicación del inmueble.</p>
+      
+      
+      <p class="info">1 - Escriba parte de la dirección en la caja de texto.</p>
+      <p class="info">2 - Ajuste la ubicación del inmueble arrastrando el icono "ICONO"</p>
+      <p class="info">3 - Modifique los valores de ser necesario.</p>
       <div id="map_canvas" style="width:740px; height: 300px"></div>
   </div>
-
+  
+	<p class="msg_warning msg_small"><span class="ico"></span>Ubique la propiedad en el mapa, luego de ser necesario modifique los datos manualmente.</p>
+    
   <dl class="form x2col">
     {{ ff.field(form.country, style='width:200px;') }}
     {{ ff.field(form.state, style='width:200px;') }}

@@ -6,6 +6,7 @@
 from __future__ import with_statement
 import logging
 import urllib
+import time
 
 from datetime import datetime
 from google.appengine.api import images, files, taskqueue
@@ -157,6 +158,21 @@ class Upload(BackendHandler):
 
     # Get the file's blob key
     blob_key = files.blobstore.get_blob_key(file_name)
+
+    # ------ BEGIN HACK -------- #
+    # GAE BUG => http://code.google.com/p/googleappengine/issues/detail?id=5142
+    for i in range(1,10):
+      if not blob_key:
+        time.sleep(0.05)
+        blob_key = files.blobstore.get_blob_key(file_name)
+      else:
+        break
+    
+    if not blob_key:
+      logging.error("no pude obtener el blob_key, hay un leak en el blobstore!")
+      abort(500)
+    # ------ END HACK -------- #
+      
     imgfile = ImageFile()
     imgfile.title     = ''
     imgfile.data      = ''

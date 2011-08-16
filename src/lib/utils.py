@@ -7,7 +7,7 @@ from google.appengine.ext import db
 from webapp2 import abort, cached_property, RequestHandler, Response, HTTPException, uri_for as url_for, get_app
 from webapp2_extras import jinja2, sessions, json
 
-from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify
+from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify, do_headlinify
 
 def get_bitly_url(str_query):
   import urllib2
@@ -104,6 +104,7 @@ class BackendMixin(object):
     self.session['account.fullname']                = '%s, %s' % (user.last_name, user.first_name)
     self.session['account.key']                     = str(user.key())
     self.set_realestate_key(str(user.realestate.key()))
+    self.session['account.realestate.name']         = user.realestate.name
     self.session['account.realestate.enabled']      = user.realestate.enable
     self.session['account.roles']                   = map(lambda s: s.strip(), user.rol.split(','))
     
@@ -164,8 +165,13 @@ class Jinja2Mixin(object):
     env.filters['pricefy']        = do_pricefy
     env.filters['addressify']     = do_addressify
     env.filters['descriptify']    = do_descriptify
+    env.filters['headlinify']     = do_headlinify
     env.globals['url_for']        = self.uri_for
-   
+    env.globals['app_version_id'] = self.app.config['ultraprop']['app_version_id']
+    env.globals['app_version']    = self.app.config['ultraprop']['app_version']
+    env.globals['is_debug']       = self.app.debug
+    
+    
     if hasattr(self,'is_logged'):
       env.globals['is_logged'] = self.is_logged
     

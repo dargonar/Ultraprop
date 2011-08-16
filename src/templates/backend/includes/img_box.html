@@ -10,7 +10,7 @@
         
         <img class="btnClose" src="/img/icons/btnClose.png" /> 
         <div id="imgbox" style="display: table-cell; vertical-align: middle; text-align:center; width:160px; height:120px">
-          <img alt="{{image.filename}}" title="{{image.filename}}" delme="{{url_for('images/remove',key=image.key()|string)}}" class="propImg" orig="{{url_for('images/show',key=image.file.key()|string, width=160, height=120)}}" src="/img/ajax-loader.gif" />
+          <img alt="{{image.filename}}" title="{{image.filename}}" delme="{{url_for('images/remove',key=image.key()|string)}}" class="propImg" orig="{{url_for('images/show',key=image.file.key()|string, width=160, height=120)}}" src="/img/ajax-loader.gif" onload="img_loaded_callback(this);"/>
         </div>
         <p class="name">{{image.filename|truncate(18)}}</p>
         <div jqtransform="true">

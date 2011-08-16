@@ -12,7 +12,50 @@ from backend_forms import PropertyFilterForm, PropertyContactForm
 
 from utils import get_or_404, RealestateHandler
 
-# Index va a ser la homepage de la inmobiliaria, creo que quedar� obsoleto.    
+# Mail de bienvenida
+from google.appengine.api import mail
+from models import User
+
+class LaunchEmail(RealestateHandler):
+  def get(self, **kwargs):
+    
+    for e in User.all():
+      
+      # if e.email != 'matias.romeo@gmail.com':
+        # continue
+        
+      realestate = e.realestate
+      
+      # Armo context, lo uso en varios lugares, jaja!
+      context = { 'server_url':                 'http://www.ultraprop.com.ar'
+                 ,'realestate_name':            realestate.name
+                 ,'user_email':                 e.email
+                 ,'user_password':              e.password
+                 ,'support_url' :               'http://www.ultraprop.com.ar'}
+      
+      # Mando Correo a Usuario.
+      # Armo el body en plain text.
+      body = self.render_template('email/launch.txt', **context)  
+      # Armo el body en HTML.
+      html = self.render_template('email/launch.html', **context)  
+      
+      # Envío el correo.
+      mail.send_mail(sender="www.ultraprop.com.ar <info@ultraprop.com.ar>" , 
+                   to       = context['user_email'],
+                   subject  = u"Actualización del sistema - ULTRAPROP",
+                   body     = body,
+                   html     = html)
+      # --------------------------------------------------------------------------------
+    
+    self.response.write('Lito!')
+
+# Redireccion por si alguien entra con url vieja
+class Redirect(RealestateHandler):
+  def get(self, **kwargs):
+    realestate = self.request.GET['INM_Id']
+    self.redirect_to('realestate/search', realestate=realestate)
+
+# Index va a ser la homepage de la inmobiliaria, creo que quedará obsoleto.    
 class Index(RealestateHandler):
   def get(self, **kwargs):
     realestate            = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
@@ -22,7 +65,7 @@ class Index(RealestateHandler):
       
     return self.render_response('realestate/index.html', **kwargs)
  
-# Info de la propiedad, creo que quedar� obsoleto.    
+# Info de la propiedad, creo que quedará obsoleto.    
 class Info(RealestateHandler):
   def get(self, **kwargs):
     realestate            = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))

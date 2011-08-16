@@ -11,8 +11,8 @@ config_array = {
   # a partir de un 'alphabet'.
   'cells':{
     'prop_type_id': {
-      'descriptions':         [u'--indistinto--', u'Casa', u'Departamento', u'PH', u'Oficina', u'Local Comercial o Fondo de Comercio', u'Galpon o Deposito o Edificio Ind.', u'Consultorio', u'Casa en Country o Barrio Cerrado',  u'Quinta', u'Campo o Chacra', u'Cochera', u'Terreno o Lote']
-      , 'short_descriptions': [u'--indistinto--', u'Casa', u'Depto.', u'PH', u'Oficina', u'Local', u'Galpon', u'Consultorio', u'Country', u'Quinta', u'Chacra', u'Cochera', u'Terreno']
+      'descriptions':         [u'--indistinto--', u'Casa', u'Departamento', u'PH', u'Oficina', u'Local Comercial o Fondo de Comercio', u'Galpon o Deposito o Edificio Ind.', u'Consultorio', u'Casa en Country o Barrio Cerrado',  u'Quinta', u'Lote o Terreno', u'Cochera', u'Campo o Chacra']
+      , 'short_descriptions': [u'--indistinto--', u'Casa', u'Depto.', u'PH', u'Oficina', u'Local', u'Galpon', u'Consultorio', u'Country', u'Quinta', u'Lote', u'Cochera', u'Campo']
       , 'has_divider':        [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1]
       , 'in_home':            [0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       , 'generated_attributes':{
@@ -83,7 +83,7 @@ config_array = {
                                   , 'related_property':'ow'}
     , 'prop_operation_id':       {'descriptions': [u'--indistinto--', u'Venta', u'Alquiler']
                                     , 'related_property':'op'
-                                    , 'ranges':{'1':{'step':'25000', 'min':'0', 'max':'2000000'}, '2':{'step':'250', 'min':'0', 'max':'10000'}}
+                                    , 'ranges':{'1':{'step':'1', 'min':'0', 'max':'16'}, '2':{'step':'250', 'min':'0', 'max':'10000'}}
                                   }
   }
   , 'binary_values_properties':{

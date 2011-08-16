@@ -303,7 +303,8 @@ dl.news dd h5 {
 }
 .prop_box ul.data {
 	overflow:hidden;
-	margin-top:6px;
+	margin-top:6px; 
+	min-height:121px;	
 }
 .prop_box ul.data li {
 	float:left;
@@ -837,17 +838,24 @@ ul.detail li {
 	border: 1px solid #CCCCCC;
 	padding: 4px;
 }
+
+.picture a img.pic { max-width:130px;}
+
 /* ///// CONTACT FORM ///// */
 .contactform {
 	overflow:hidden;
 	padding-top:8px;
 }
-.contactform p.txt {
+.contactform .contactinfo {
 	float:left;
-	width:180px;
-	margin-right:40px;
-	margin-top:12px;
+	width:300px;
+	margin-right:30px;
+	margin-top:12px; 
+	font-size:13px;
 }
+
+.contactform .contactinfo .txt {color:#999; font-size:12px; width:250px;}
+
 .contactform form {
 	float:left;
 }

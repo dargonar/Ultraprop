@@ -7,120 +7,18 @@
 {% block headscript %}
 <script type="text/javascript">
 $(document).ready(function() {
-  $('#prop_operation_id').change( function(e) {
-    var hide = $('#prop_operation_id').val() != 0;
-    
-    $('#cosas').toggle(hide);
-  });
-  
-  $('#fake_sort').change( function(e) {
-    $('#sort').val( $('#fake_sort').val() );
-    $('form#filter').submit();
-  });
-  
-  $('#apply').click( function(e) {
-    $('form#filter').submit();
-  });
-  
-  $('#prop_type, #currency, #rooms, #area_indoor').change( function(e) {
-    $('form#filter').submit();
-  });
-
-  
-  $('#nprop').click( function(e) {
-    window.location = '{{url_for('property/new')}}';
-  });
-  
-  $('a.selall, a.dselall').click( function(e) {
-    var on = $(this).hasClass('selall');
-    $('input[type=checkbox].chkprop').each( function(i,field) {
-      $(field).attr('checked', on ? 'checked' : false);
-      //$('#alink_' + field.id).toggleClass('jqTransformChecked', on);
-    })
-    return false;
-  });
-  
-  $('a.delsel, a.ressel').click( function(e) {
-    var sel = 'input[type=checkbox].chkprop:checked';
-    var del = $(this).hasClass('delsel');
-    var question = 'Esta seguro que desea ' + ( del ? 'borrar' : 'recuperar') + ' estas propiedades?';
-    if ( $(sel).length && confirm(question) )
-    {
-      $('#newstatus').val( del ? {{Property._DELETED}} : {{Property._NOT_PUBLISHED}} )
-      $('form#remove').submit();
-    }
-    return false;
-  });
-  
-  $('a.restorer').click( function(e) {
-    e.preventDefault();
-    if( confirm('Esta seguro que desea recuperar esta propiedad? Aparecera como NO publicada.') )
-    {
-      $(this).addClass('disable');
-      var link = $(this);
-      $.ajax({
-        url:  $(this).attr('href'),
-        type: "GET",
-        success: function(res) {
-          link.parent().parent().fadeOut("slow", function() {
-            $(this).remove();
-          });
-        },
-        error: function(xml, txt, err) {
-          alert('error');
-          $(this).removeClass('disable');
-        } 
-      }); 
-    }
-    
-    return false;
-  });
-  
-  $('a.publisher').click( function(e) {
-    e.preventDefault();
-    var status = $(this).attr('published');
-    var action = status == 1 ? 'desactivar' : 'publicar';
-    
-    var explain;
-
-    if( action == 'desactivar' )
-      explain = 'La propiedad no sera visible en las busquedas de los usuario.';
-    else
-      explain = 'La propiedad sera visible en las busquedas de los usuarios.';
-    
-    var question = 'Esta seguro que desea ' + action + ' esta propiedad?';
-    
-    if( confirm(explain+question) )
-    {
-      $(this).addClass('disable');
-      var link = $(this);
-      $.ajax({
-        url:  $(this).attr('href'),
-        type: "GET",
-        success: function(res) {
-          link.parent().parent().fadeOut("slow", function() {
-            $(this).remove();
-          });
-        },
-        error: function(xml, txt, err) {
-          alert('error');
-          $(this).removeClass('disable');
-        } 
-      }); 
-    }
-    return false;
-  });
-
+  init_property_list('{{url_for('property/new')}}');
 });
 </script>
 {% endblock %}
 
 {% block content %}
-
 	<h1>Propiedades {{ form.status.data | statusfy }}</h1>
   {% if form.status.data == Property._DELETED %}
-  <p class="msg_warning" align="center"><span class="title">Las Propiedades de la carpeta "eliminadas" tienen una vigencia de 30 días</span>
-A partir de la fecha que fueron eliminadas, luego de esa fecha no podrán ser recuperadas</p>
+  <p class="msg_warning" align="center"><span class="title">
+  Las propiedades eliminadas tienen una vigencia de 30 días, luego serán definitivamente borradas.
+  </span>
+  </p>
   {% endif %}
   {% if flash %}
   <div class="msg_{{flash.type}}">{{flash.message}}</div>

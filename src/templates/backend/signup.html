@@ -16,43 +16,12 @@
 {%- endmacro -%}
 
 {% block headscript %}
-  <script type="text/javascript">
-  $(document).ready(function() {
-    jQuery('#password').keyup(function(){
-      var pwd_len = jQuery('#password').val().length;
-      var textos = ['Muy bajo', 'Bajo', 'Regular', 'Alto', 'Muy alto'];
-      var pwd_index = 1;
-      if(pwd_len>6)
-      {
-        if (pwd_len>=7&pwd_len<=8)
-          pwd_index = 2;
-        else if (pwd_len>=9&pwd_len<=10)
-          pwd_index = 3;
-        else if (pwd_len>=11&pwd_len<=12)
-          pwd_index = 4;
-        else if (pwd_len>=13)
-          pwd_index = 5;
-      }
-      jQuery('div.progressbar.password p').html(textos[pwd_index-1]);
-      jQuery('div.progressbar.password div.point').removeClass('level1').removeClass('level2').removeClass('level3').removeClass('level4').removeClass('level5').addClass('level'+pwd_index);
-      checkPasswords();
-      return true;
-    });
-    
-    jQuery('#confirm_password').keyup(function(){checkPasswords();return true;});
-    
-  });
-  function checkPasswords(){
-    if(jQuery('#confirm_password').val()!=jQuery('#password').val())
-    {
-      jQuery('#password_unequal').show();
-      return false;
-    }
-    jQuery('#password_unequal').hide();
-  }
-  </script>
-  <script type="text/javascript" src="/js/jquery.ketchup.js"></script>
-  <script type="text/javascript" src="/js/jquery.ketchup.run.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  init_signup();
+  doKetchup(null);
+});
+</script>
 {% endblock %}
 
 {% block content %}

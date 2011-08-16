@@ -1888,7 +1888,9 @@ body.backend .list_box {
 	padding:10px;
 	overflow:hidden;
 	/*	margin-bottom:10px;*/
-	clear:both;
+	clear:both; 
+	
+	min-height:105px;
 }
 body.backend .list_box:hover {
 	background: none repeat scroll 0 0 #f9f9f9;
@@ -1899,7 +1901,8 @@ body.backend .list_box input[type=checkbox] {
 }
 body.backend .list_box .pic {
 	float:left;
-	margin-left:8px;/*width:140px;*/
+	margin-left:8px; 
+	max-width:140px;
 }
 body.backend .list_box .data {
 	float:left;
@@ -2271,3 +2274,5 @@ body.backend dl.form input[type="text"]:disabled
 }
 
 body.backend .viewPicBox .msg_warning { background-image: none; padding:4px 10px; margin:5px 0;}
+.msg_small { background-image: none !important; padding:4px 10px !important; margin:5px 0 !important;}
+.msg_small span.ico {background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -472px -597px transparent !important; width:16px; height:16px; display:inline-block; margin-right:5px;}

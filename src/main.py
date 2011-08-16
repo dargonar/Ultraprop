@@ -22,10 +22,15 @@ def enable_jinja2_debugging():
     from google.appengine.tools.dev_appserver import HardenedModulesHook
     HardenedModulesHook._WHITE_LIST_C_MODULES += ['_ctypes', 'gestalt']
 
-# Is this the development server?
+# Corriendo en debug?
 debug = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')
 
-# Instantiate the application.
+fullver = os.environ.get('CURRENT_VERSION_ID', '1')
+
+config['ultraprop']['app_version_id'] = fullver
+config['ultraprop']['app_version']    = fullver[0:fullver.rfind('.')]
+
+# Instanciamos la aplicacion.
 app = webapp2.WSGIApplication(routes=get_rules(config), debug=debug, config=config)
 enable_jinja2_debugging()
 

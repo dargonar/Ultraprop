@@ -94,13 +94,13 @@ body.frontend_search #sidebar {
 	bottom:0;
 	position:absolute;
 	left:0;
+  height:100%;
 }
 body.frontend_search #main {
-	margin-left: 340px;
-	/*	background-color: #ccffff; */
+	/*margin-left: 340px;*/
+	left: 340px;
 	top:0;
 	bottom:0;
-	left:0;
 	right:0;
 	position:absolute;
 }
@@ -335,37 +335,6 @@ body.frontend_search #filterbox .buttons .noncancel {
 	margin-right:15px;
 }
 
-body.frontend_search #searchbox input.search{
-  width:390px;
-	height:28px; 
-	line-height:20px;
-  *line-height:28px;
-	border:solid 1px #9cacbf;
-	-webkit-border-top-left-radius: 5px;
-	-webkit-border-bottom-left-radius: 5px;
-	-moz-border-radius-topleft: 5px;
-	-moz-border-radius-bottomleft: 5px;
-	border-top-left-radius: 5px;
-	border-bottom-left-radius: 5px;
-	-moz-box-shadow: 0 1px 0.1em #CCCCCC inset;
-	-webkit-box-shadow: 0 1px 0.1em #CCCCCC inset;
-	box-shadow: 0 1px 0.1em #CCCCCC inset;
-	font-size:16px;
-	color:#47698e;
-	font-weight:bold;
-	font-family:Arial, Helvetica, sans-serif;
-	padding:1px 10px;
-	float:left;
-}
-
-body.frontend_search #searchbox input.search::-webkit-input-placeholder{
-   color:#cccccc;
-}
-
-body.frontend_search #searchbox input.search:-moz-placeholder{
-   color:#cccccc;
-}
-
 body.frontend_search #searchLimits {
 	width:83px;
 	height:29px;
@@ -493,7 +462,7 @@ body.frontend_search #box-options .block {
 	padding: 5px;
 	border-right: 1px solid #E6F0C7;
 	/*height:225px;*/
-  height:252px;
+  height:265px;
 }
 body.frontend_search #box-options .block.block-1 {
 	width: 105px;
@@ -745,7 +714,7 @@ body.frontend_search #r_actions_bar optgroup {
 }
 /* ////////// PROPERTIE BOX ////////// */
 body.frontend_search .prop_container {
-	overflow:hidden;
+	overflow-x:hidden;
 	overflow-y:auto;
 	/*top:57px;*/
   top:32px;
@@ -753,6 +722,8 @@ body.frontend_search .prop_container {
 	left:0;
 	right:0;
 	position:absolute;
+  display: block;
+  height:auto;
 }
 body.frontend_search .prop_content {
 	overflow:hidden;
@@ -1015,7 +986,8 @@ body.frontend_search #map_container {
 	position: relative;
 }
 body.frontend_search #map_canvas {
-	padding-right:340px;
+	/*padding-right:340px;*/
+  /* *padding-right:0px; */
 	width:100%;
 	height:100%;
 }

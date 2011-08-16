@@ -230,7 +230,7 @@ class PropertyForm(Form):
   luxury          = BooleanField('Lujo')
   pool            = BooleanField('Piscina')
   terrace         = BooleanField('Terraza')
-  washer_dryer    = BooleanField('Laundry')
+  washer_dryer    = BooleanField(u'Lavandería')
   sum             = BooleanField('SUM')
   
   main_description= TextAreaField(u'Descripción de la propiedad', [validators.optional(), validators.length(max=5120, message=u'La descripción debe ser como maximo %(max)s caracteres')])

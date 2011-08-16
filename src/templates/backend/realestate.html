@@ -32,43 +32,9 @@
 {% block headscript %}
   <script type="text/javascript">
   $(document).ready(function() {
-    //////// ADD NEW PHONE //////////
-    $("#btnAddPhone").click(function()
-      {	
-        $('#phone2').slideDown('slow', function() {
-        // Animation complete.
-      });
-      return false;
-    });
-    
-    $("#btnDeletePhone").click(function()
-     {	
-      $('#phone2').slideUp('slow', function() {
-        // Animation complete.
-      });
-      return false;
-    });
-    //jQuery('#form_logo_input').change(function(){
-      //jQuery('#filename').html(jQuery('#form_logo_input').val());
-      //console.log('on file selected:'+jQuery('#form_logo_input').val());
-    //});
+    init_realestate();
   });
   </script>
-
-  
-  
-  <style type="text/css">
-
-  .jqTransformRadioWrapper { 
-    clear:both; 
-    margin:0;  
-    margin-right:3px; 
-    margin-top:-2px; 
-    width:20px; 
-  }
-  .jqTransformRadioWrapper input { vertical-align:bottom;}
-  </style>
-
 {% endblock %}
 
 {% block content %}
@@ -124,7 +90,7 @@
     <dl class="form">
           <dt>Dirección</dt>
           {{ form_field2_container_double(form.address, form.zip_code) }}
-            {{ form_field(form.address, placeholder="calle nº, ciudad, provincia, país", title="calle nº, ciudad, provincia, país", class="medium") }} 
+            {{ form_field(form.address, placeholder="calle, ciudad, provincia, país", title="calle, ciudad, provincia, país", class="medium") }} 
             {{ form_field(form.zip_code, placeholder="cód. postal", title="cód. postal",  class="short") }} 
           {{ form_error(form.address) }}
           {{ form_error(form.zip_code) }}

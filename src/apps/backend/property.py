@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
     property handlers
     ~~~~~~~~
@@ -186,7 +186,7 @@ class NewEdit(BackendHandler):
     if self.request.POST['goto'] == 'go':
       return self.redirect_to('property/images', key=str(property.key()))
 
-    self.set_ok('La propiedad fue %s con exito' % ('modificada' if editing else 'creada') )    
+    self.set_ok('La propiedad fue %s ' % ('modificada con exito.' if editing else u'creada con exito, sera visible en el mapa dentro de la próxima hora.') )    
     return self.redirect_to('property/listpage', page=1)
 
   def show_property_form(self, **kwargs):
@@ -203,43 +203,17 @@ from taskqueue import Mapper
 from google.appengine.ext.blobstore import BlobInfo
 
 class MyModelMapper(Mapper):
-  KIND = Property
+  #KIND = User
 
   def map(self, e):
-    
-    # Add the entity to the list of entities to be deleted.
-    imgs = ImageFile.all(keys_only=True).filter('property =', e.key()).order('position').fetch(500)
-
-    if not len(imgs):
-      e.images_count = 0
-      e.main_image   = None
-    else:
-      e.images_count = len(imgs)
-      e.main_image   = db.get(imgs[0]).file
-      
-    return ([e], [])
+    # PONER CODIGO ACA
+    return ([], [])
 
   def finish(self):
     logging.error('Terminamos...')
 
-# class MyModelMapper(Mapper):
-  # KIND = ImageFile
-
-  # def map(self, e):
-    
-    # # Add the entity to the list of entities to be deleted.
-    # if not e.file:
-      # bi = BlobInfo.all().filter('filename =', e.filename).get()
-      # if bi:
-        # logging.error(e.filename + ':' + str(e.key()) + ':' + str(bi.key()) )
-        # e.file = bi
-        # return ([e], [])
-        
-      # logging.error(e.filename + ':' + str(e.key()) + ': No hay link y no hay blob')
-    
-    # return ([], [])
-
 class RunMapper(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     from google.appengine.ext import deferred
     mapper = MyModelMapper()
@@ -247,11 +221,12 @@ class RunMapper(BackendHandler):
     self.response.write('Defereado!!')
 
 class VerArchivo(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     return self.render_response(kwargs['archivo'].replace('-','/'))
     
 class TraerFotines(RequestHandler):
-  #@need_auth(roles='ultraadmin', code=505)
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     for p in Property.all(keys_only=True):
       taskqueue.add(url=self.url_for('traer_para'), params={'id': int(p.name())})

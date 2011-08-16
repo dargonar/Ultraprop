@@ -30,19 +30,19 @@ indexes:
 
 # ===================    
 # published_at
-- kind: PropertyIndex
-  properties:
-  - name: location_geocells
-  - name: price_rent_computed
-  - name: published_at
-    direction: desc
+# - kind: PropertyIndex
+#   properties:
+#   - name: location_geocells
+#   - name: price_rent_computed
+#   - name: published_at
+#     direction: desc
 
-- kind: PropertyIndex
-  properties:
-  - name: location_geocells
-  - name: price_sell_computed
-  - name: published_at
-    direction: desc
+# - kind: PropertyIndex
+#   properties:
+#   - name: location_geocells
+#   - name: price_sell_computed
+#   - name: published_at
+#     direction: desc
   
 # - kind: PropertyIndex
 #   properties:
@@ -52,19 +52,19 @@ indexes:
 
 # ===================    
 # price_changed_at
-- kind: PropertyIndex
-  properties:
-  - name: location_geocells
-  - name: price_sell_computed
-  - name: price_changed_at
-    direction: desc
+# - kind: PropertyIndex
+#   properties:
+#   - name: location_geocells
+#   - name: price_sell_computed
+#   - name: price_changed_at
+#     direction: desc
 
-- kind: PropertyIndex
-  properties:
-  - name: location_geocells
-  - name: price_rent_computed
-  - name: price_changed_at
-    direction: desc
+# - kind: PropertyIndex
+#   properties:
+#   - name: location_geocells
+#   - name: price_rent_computed
+#   - name: price_changed_at
+#     direction: desc
     
 # - kind: PropertyIndex
 #   properties:
@@ -72,59 +72,6 @@ indexes:
 #   - name: price_changed_at
 #     direction: asc
 
-# ===================    
-# area_indoor    
-- kind: PropertyIndex
-  properties:
-  - name: location_geocells
-  - name: price_rent_computed
-  - name: area_indoor
-    direction: desc
-
-- kind: PropertyIndex
-  properties:
-  - name: location_geocells
-  - name: price_sell_computed
-  - name: area_indoor
-    direction: desc
-    
-# - kind: PropertyIndex
-#   properties:
-#   - name: location_geocells
-#   - name: area_indoor
-#     direction: asc    
-
-# ===================    
-# bedrooms    
-- kind: PropertyIndex
-  properties:
-  - name: location_geocells
-  - name: price_rent_computed
-  - name: bedrooms
-    direction: desc
-
-- kind: PropertyIndex
-  properties:
-  - name: location_geocells
-  - name: price_sell_computed
-  - name: bedrooms
-    direction: desc
-
-# ===================    
-# rooms     
-- kind: PropertyIndex
-  properties:
-  - name: location_geocells
-  - name: price_rent_computed
-  - name: rooms
-    direction: desc
-
-- kind: PropertyIndex
-  properties:
-  - name: location_geocells
-  - name: price_sell_computed
-  - name: rooms
-    direction: desc
     
 # ===================    
 # realestate     
@@ -264,3 +211,15 @@ indexes:
 # manually, move them above the marker line.  The index.yaml file is
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
+
+- kind: PropertyIndex
+  properties:
+  - name: location_geocells
+  - name: realestate
+  - name: price_rent_computed
+
+- kind: PropertyIndex
+  properties:
+  - name: location_geocells
+  - name: realestate
+  - name: price_sell_computed

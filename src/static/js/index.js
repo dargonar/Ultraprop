@@ -18,10 +18,12 @@ var isMSIE7         = false;
 jQuery(document).ready(function()
 {
   if ( $.browser.msie ) 
+  {
     if(parseInt($.browser.version, 7) )
     {
       isMSIE7 = true;
     }
+  }
   
   if(screen.width<=1024)
   {
@@ -83,12 +85,13 @@ function onPropTypeChanged(sender){
 } 
 
 function initUI() {
-  jQuery('[jqtransform|=true]').jqTransform();
+  onWindowResize();
+  //jQuery('[jqtransform|=true]').jqTransform(); //lo llamo desde el html.
 	//Checkboxes
   jQuery('#filters_bar [id*="prop_type_id"]').change(function(){ onPropTypeChanged(this);onMainFilterChange(this);});
   jQuery('#prop_operation_id').change(
     function(){
-      if (jQuery('#prop_operation_id').val()==2)
+      if (jQuery('#prop_operation_id').val()==OPER_RENT)
         setPriceSliderOptions('price_slider', default_slider_max2, default_slider_step2, default_slider_min2, default_slider_max2);
       else 
         setPriceSliderOptions('price_slider', default_slider_max1, default_slider_step1, default_slider_min1, default_slider_max1);
@@ -97,10 +100,16 @@ function initUI() {
                               , jQuery( "#price_slider" ).slider( "option", "min")
                               , jQuery( "#price_slider" ).slider( "option", "max")
                               , jQuery('#currency').val()
-                              ,jQuery( "#price_slider" ).slider( "option", "max") );
+                              , jQuery( "#price_slider" ).slider( "option", "max") );
       onMainFilterChange(this);
     }
   );
+  
+  if(jQuery('#prop_operation_id').val()==OPER_SELL && default_max_value>default_slider_max)
+  { 
+    default_min_value = $.inArray(default_min_value.toString(), sellPrices); //sellPrices.indexOf(default_min_value.toString());
+    default_max_value = $.inArray(default_max_value.toString(), sellPrices); //sellPrices.indexOf(default_max_value.toString());
+  }
   
   jQuery("#price_slider").slider({
     orientation: 'horizontal', min: default_slider_min, max: default_slider_max, range: true, step: default_slider_step, values: [default_min_value, default_max_value], 
@@ -109,7 +118,7 @@ function initUI() {
                               , getPriceValue(ui.values[0])
                               , getPriceValue(ui.values[1])
                               , jQuery('#currency').val()
-                              ,jQuery( "#price_slider" ).slider( "option", "max") );
+                              , jQuery( "#price_slider" ).slider( "option", "max") );
       },
     change: function(event, ui) {
       onMainFilterChange(ui);
@@ -117,10 +126,10 @@ function initUI() {
   });
   
   formatRangePriceText('price_display'
-                              ,default_min_value
-                              , default_max_value
+                              , getPriceValue(default_min_value)
+                              , getPriceValue(default_max_value)
                               , jQuery('#currency').val()
-                              ,jQuery( "#price_slider" ).slider( "option", "max") );
+                              , jQuery( "#price_slider" ).slider( "option", "max") );
         
   jQuery.each(filter_ranges, function(key, value) { 
     var data = value;
@@ -155,6 +164,7 @@ function initUI() {
                             , getPriceValue(values[1])
                             , jQuery('#currency').val()
                             ,jQuery( "#price_slider" ).slider( "option", "max") );
+      doSearch();
     }
   );
   
@@ -178,18 +188,15 @@ function initUI() {
 
 
 function initMap(){
+  autoGeolocate();
   if(navigator.geolocation) {
-    showGeolocationAdvice();//triggerGeolocationAdvice(); //
+    //triggerGeolocationAdvice();
     navigator.geolocation.getCurrentPosition(html5LocatePositionSuccess, html5LocatePositionError);
-  }
-  else
-  {
-    autoGeolocate();
   }
   return false;  
 }
 
-/* ======================== */
+/* ======================================================================== */
 /* Geolocation overlay */
 var geolocation_advice_timer = null;
 function triggerGeolocationAdvice(){
@@ -198,7 +205,7 @@ function triggerGeolocationAdvice(){
       stopGeolocationAdvice();
       showGeolocationAdvice();
     }
-  , 7500);
+  , 5000);
 }
 function onGeolocationOverlayClose()
 {
@@ -224,7 +231,7 @@ function stopGeolocationAdvice(){
   if(geolocation_advice_timer!=null)
     clearInterval(geolocation_advice_timer);
 }
-/* ======================== */
+/* ======================================================================== */
 
 /* GEOLOCATION */
 function autoGeolocate(){
@@ -239,41 +246,35 @@ function autoGeolocate(){
     default_lon=-57.954683;
   }
   var myLatlng = new google.maps.LatLng(default_lat, default_lon);
-  locateMap(myLatlng, '');
+  locateMap(myLatlng);
   initMapSearch();
 }
 
 function html5LocatePositionError(positionerror){
   // Ver http://dev.w3.org/geo/api/spec-source.html
   onGeolocationOverlayClose();
-  autoGeolocate();
 }
 
 function html5LocatePositionSuccess(position) {
   // Ver http://dev.w3.org/geo/api/spec-source.html
   onGeolocationOverlayClose();
   var point = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  locateMap(point, '¡Usted está aquí!');
-  initMapSearch();
+  map.setCenter(point);
+  doSearch();
 }
 
-function locateMap(myLatlng, text)
+function locateMap(myLatlng)
 {
-  onWindowResize();
   var myOptions = {
     zoom: default_zoom_level,
     center: myLatlng,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
+  onWindowResize();
   map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
   
   //GEOCODER
   geocoder = new google.maps.Geocoder();
-  
-  // marker = new google.maps.Marker({
-    // map: map,
-    // position: myLatlng
-  // });
   
   /* inicializo variables del mapa */
   myProjectionHelperOverlay = new ProjectionHelperOverlay(map);
@@ -283,43 +284,78 @@ function locateMap(myLatlng, text)
       new google.maps.Size(18, 36), new google.maps.Point(0, 0), new google.maps.Point(8, 36)); 
   iconsArray['shadow'] = new google.maps.MarkerImage('/img/icons/map/shadow.png',
       new google.maps.Size(33, 28), new google.maps.Point(0, 0), new google.maps.Point(0, 28)); 
+
+  //Boton localizador
+  $('#btnSearch').click( function() {
+    var address = document.getElementById("searchmap").value;
+
+    put_marker = true;
+    geocoder.geocode({'address': address,'region' : 'ar'}, function(results, status){ 
+    
+      var handled = false;
+      $.each(results, function(i, item) {
+        if( is_from_country(item, 'Argentina') )
+        {
+          handle_result(item.geometry);
+          handled = true;
+          return false;
+        }
+      });
+      
+      if (status != google.maps.GeocoderStatus.OK || handled == false) 
+      {
+        showErrorMessageBox("Imposible ubicar dirección");
+        return;
+      }
+    });
+  });  
+
       
   jQuery("#searchmap").autocomplete({
       //This bit uses the geocoder to fetch address values
       source: function(request, response) {
-        geocoder.geocode( {'address': request.term }, function(results, status) {
+        geocoder.geocode( {'address': request.term, 'region' : 'ar'}, function(results, status) {
           response(jQuery.map(results, function(item) {
-            return {
-              label:  item.formatted_address,
-              value: item.formatted_address,
-              latitude: item.geometry.location.lat(),
-              longitude: item.geometry.location.lng()
-            };
+              //Solo direcciones de argentina
+              if( !is_from_country(item,'Argentina') )
+                return null;
+
+              return {
+                    label: item.formatted_address,
+                    value: item.formatted_address,
+                    result: item
+              };
           }));
         });
       },
       //This bit is executed upon selection of an address
       select: function(event, ui) {
-        var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
-        //map.setCenter(location);
-        var myOptions = {
-          zoom: 15,
-          center: location
-        };
-        map.setOptions(myOptions);
-        //marker.setPosition(location);
-        jQuery("#searchmap").attr('title', jQuery("#searchmap").val());
+        handle_result( ui.item.result.geometry ); 
       }
     });
     
     return false;
 }
 
+function handle_result(geometry)
+{
+  var location = new google.maps.LatLng(geometry.location.lat(), geometry.location.lng());
+  //map.setCenter(location);
+  var myOptions = {
+    zoom: 15,
+    center: location
+  };
+  map.setOptions(myOptions);
+  //marker.setPosition(location);
+  jQuery("#searchmap").attr('title', jQuery("#searchmap").val());
+  doSearch(); // Hack: dado que no me cuelgo mas del boumds-changed del mapa!
+}
+      
 function initMapSearch(){
   var g_initial_map_event = google.maps.event.addListener(map, 'bounds_changed', 
     function() {
-      doSearch();
       google.maps.event.removeListener(g_initial_map_event);
+      doSearch();
   });
 }
 /* Document Resize Event & Functions */
@@ -343,24 +379,24 @@ function onWindowResize(){
   
   var extraWidth = 0;
   if(isMSIE7)
-    extraWidth = 340;
+    extraWidth = 0; //340;
   
   jQuery('#map_container').css('width', (b - 340) + "px"); 
   jQuery('#map_container').css('height', (a - headerHeight()) + "px"); 
   
-  jQuery('#map_canvas').css('width', (b - 340 - 340 - extraWidth) + "px"); 
+  //jQuery('#map_canvas').css('width', (b - 340 - 340 - extraWidth) + "px"); 
+  jQuery('#map_canvas').css('width', (b - 340 ) + "px"); 
+  
   var footerHeight = 0;
   if(jQuery('#foot_map').is(':visible'))
     footerHeight = 30;
   jQuery('#map_canvas').css('height', (a - headerHeight() - footerHeight) + "px"); 
+  
+  // var sidebar_h = jQuery(window).height() - jQuery("#header").outerHeight() - jQuery("#filters_bar").outerHeight() - jQuery("#r_actions_bar").outerHeight();
+  jQuery('#sidebar').css('height', jQuery('#content').outerHeight());
+  
   map_size_changed=true;
   
-  if(isMSIE7)
-  {
-    alert(jQuery('#main').width());             // map_container:663
-    alert(jQuery('#tabs_container').width());     // map_canvas: 323
-    alert(jQuery('body').width());
-  }
 }
 
 /* UI Events*/
@@ -446,12 +482,21 @@ function doSearch() {
   
   var price_values = jQuery('#price_slider').slider('values');
   // Parametros por default
+  var price_min = price_values[0];
+  var price_max = price_values[1];
+  
+  if(jQuery('#prop_operation_id').val()==OPER_SELL)
+  { 
+    price_min = sellPrices[price_values[0]];
+    price_max = sellPrices[price_values[1]];
+  }
+  
   var searchParameters = {
         query_type : 'bounds' // 'proximity'
         , extended_options:1
         , price_apply : 1
-        , price_min: price_values[0]
-        , price_max: price_values[1] 
+        , price_min: price_min
+        , price_max: price_max 
         , sort: jQuery('#sort').val()
       };
   
@@ -485,6 +530,10 @@ function doSearch() {
   
   if (searchParameters.query_type == 'bounds') {
     var current_bounds = map.getBounds();
+    if(!current_bounds)
+    {
+      return false;
+    }
     searchParameters = updateObject(searchParameters, {
       north: current_bounds.getNorthEast().lat(),
       east: current_bounds.getNorthEast().lng(),
@@ -554,14 +603,10 @@ function doSearch() {
         
         jQuery('#prop_container').html(obj.html);
         
-        if (isMSIE7)
-          jQuery('#prop_container').pngFix(); 
-        
-        $('#display_viewing_count').html(obj.display_viewing_count);
-        $('#tab_viewing_page').html(cursorPosition+1);
-        $('#tab_viewing_count').html(obj.display_viewing_count);
-        $('#display_total_count').html(obj.display_total_count);
-        
+        $('#tab_viewing_page').html(cursorPosition+1); // en tab1.html
+        $('#tab_viewing_count').html(obj.display_viewing_count); // en tab1.html
+        // $('#display_total_count').html(obj.display_total_count); // en map.html
+        //$('#display_viewing_count').html(obj.display_viewing_count); // en map.html
                 
         m_last_result_object = obj; 
         for (var i = 0; i < obj.coords.length; i++) {
@@ -705,7 +750,7 @@ function showInfoBox(m_ib_desc, marker, infoHtml, width, mMapPixelOffset)
             ,closeBoxMargin: "4px 0px 0px 0px", closeBoxURL: "/img/pixel-transp.gif"
             ,infoBoxClearance: new google.maps.Size(1, 1), isHidden: false
             ,enableEventPropagation:true
-            ,pane: "floatPane" ,enableEventPropagation: false };
+            ,pane: "floatPane"};
   
   var m_ib = bubble_ib;
   if(m_ib_desc=='minibubble_ib') 
@@ -1013,12 +1058,12 @@ function closeBubbles()
     if(checked==true)
     {
       jQuery(relative_main_id).attr('checked', 'checked');
-      jQuery(relative_main_alink_id).addClass('jqTransformChecked');
+      // jQuery(relative_main_alink_id).addClass('jqTransformChecked');
     }
     else
     {
       jQuery(relative_main_id).removeAttr("checked");
-      jQuery(relative_main_alink_id).removeClass('jqTransformChecked');
+      // jQuery(relative_main_alink_id).removeClass('jqTransformChecked');
     }
   }
   
@@ -1044,25 +1089,41 @@ function checkTabNavButtons(){
   
 }
 /* =========================================================================== */
+function getRule(){
+	var tmp = document.styleSheets;
+	if (tmp) 
+  {		
+    for (var i=0;i<tmp.length;i++) {			
+      if (tmp[i].href!=null)
+      {
+        if (tmp[i].href.indexOf('mapa_tabs.css') != -1) 
+        {				
+          return tmp[i];				
+          break;			
+        }
+      }
+    }	
+  }
+}
 
 var rules = null;
 var containerTabsWidth = null;
 var defaultTabWidth = 150;
+var currentTabWidth = 150;
 function calculateWinTabsVisibility(){
   if(rules==null)
   {  
-    rules = document.styleSheets[document.styleSheets.length-1]['rules'];
-    if( !rules )
-      rules = document.styleSheets[document.styleSheets.length-1]['cssRules'];
+    var rule = getRule();
+    rules=rule['rules'];
+    if(rules == null || typeof(rules) == 'undefined' || !rules)
+      rules=rule['cssRules'];
   }
-  
   if(containerTabsWidth==null)
     containerTabsWidth = jQuery('#main_tabs .wintabs').innerWidth();
   
   var totalAddressDivInnerWidth     = 0;
   var totalTabsDivWidth             = 0;
   var countAddressDiv               = jQuery('#main_tabs .wintabs li.resizable').length;
-  
   
   jQuery('#main_tabs .wintabs li.resizable').each(
     function(index, value)
@@ -1076,16 +1137,34 @@ function calculateWinTabsVisibility(){
   var diff = totalTabsDivWidth-(containerTabsWidth-jQuery('#main_tabs .wintabs li.non_resizable').innerWidth());
   if(diff>0)
   {
-    var dx = defaultTabWidth-Math.ceil(parseFloat(diff/countAddressDiv))-5;
-    defaultTabWidth = dx;
-    rules[0].style['width']=dx+'px';
-    
+    var dx = currentTabWidth-Math.ceil(parseFloat(diff/countAddressDiv))-5;
+    currentTabWidth = dx;
+    rules[0].style['width'] = dx + 'px';
+    return false;
   }
-  
+  else
+  {
+    var dx = currentTabWidth + Math.ceil(parseFloat(Math.abs(diff)/countAddressDiv)) - 6;
+    if(dx<defaultTabWidth)
+    {
+      currentTabWidth = dx;
+      rules[0].style['width'] = dx + 'px';
+    }
+    else
+    {
+      setWinTabsDefault();
+    }
+  }
+}
+
+function setWinTabsDefault(){
+  currentTabWidth = defaultTabWidth;
+  rules[0].style['width']=defaultTabWidth+'px';
 }
       
 function onShowFicha(sender, key)
 {
+  // HACK: para debuggear la apertura de tabs -> comentar las dos lineas siguientes.
   if(jQuery('#ficha_'+key).length>0)
     return showTabWindow(null, key);
   
@@ -1160,7 +1239,7 @@ function selectTabMap(sender)
     google.maps.event.trigger(map, 'resize');
   }
   
-  if(jQuery('#main_tabs .wintabs li').length>1)
+  if(jQuery('#main_tabs .wintabs li.resizable').length>=1)
   {
     // console.log('selectTabMap: hay liss');
     enableSearchOnPan(true);
@@ -1174,9 +1253,10 @@ function selectTabMap(sender)
     return false;
   }
   
-  jQuery('#foot_map').show();
   winTabs.hide();
+  jQuery('#foot_map').show();
   
+  setWinTabsDefault();
   enableSearchOnPan(true);
   
   return false;
@@ -1213,12 +1293,12 @@ function showTabWindow(sender, key){
 
 function closeTabWindow(sender, key)
 {
-  var next = jQuery('#main_tabs .wintabs #tab_'+key+' + li');
+  var next = jQuery('#main_tabs .wintabs #tab_'+key+' + li.resizable').next();
   jQuery('#tab_'+key).remove();
   jQuery('#ficha_'+key).remove();
-  
   if(next.length>0)
-  { 
+  {
+    calculateWinTabsVisibility();
     showTabWindow(null, next.attr('key'));
     return false;
   }

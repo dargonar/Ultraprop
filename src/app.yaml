@@ -1,5 +1,5 @@
 application: ultraprop
-version: 1
+version: test
 runtime: python
 api_version: 1
 
@@ -11,6 +11,8 @@ builtins:
 
 derived_file_type:
 - python_precompiled
+
+default_expiration: "7d"
 
 inbound_services:
 - warmup

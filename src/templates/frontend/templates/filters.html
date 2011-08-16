@@ -17,13 +17,13 @@
       {% set short_type_descriptions = config_array['cells']['prop_type_id']['short_descriptions'] %}
       {% set groups = config_array['cells']['prop_type_id']['generated_attributes'].keys() %}
       {% set in_home = config_array['cells']['prop_type_id']['in_home'] %}
-      <div class="block" jqtransform="true" group="{{groups[0]}}">
+      <div class="block" jqtransform="true" group="{{groups[0]}}" style="margin:7px 9px;">
         {% for item in type_descriptions %}
           {% set index = loop.index0 %} 
           {% if in_home[index]==1 %}
             <div class="ex-label" title="{{ item }}">
               <input type="checkbox" group_item="{{groups[0]}}" {{ select_checkbox2('prop_type_id['+(index|string)+']') }} name="prop_type_id[{{ index }}]" id="prop_type_id_{{ index }}" title="{{ item }}" />
-              &nbsp;{{ short_type_descriptions[index] }}
+              {{ short_type_descriptions[index] }}
             </div>
           {% endif %}
         {% endfor %}

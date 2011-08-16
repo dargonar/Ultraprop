@@ -5,7 +5,21 @@ from datetime import datetime
 from models import Property
 from re import *
 from backend_forms import status_choices
+from search_helper import config_array, alphabet
+
+def do_headlinify(prop):
+    
+    descs = config_array['multiple_values_properties']['prop_operation_id']['descriptions']
+    
+    # Ponemos el headline
+    ops = []
+    for i in range(0,len(descs)):
+      if i & prop.prop_operation_id:
+        ops.append(descs[i])
         
+    return u'%s en %s' % ( config_array['cells']['prop_type_id']['short_descriptions'][alphabet.index(prop.prop_type_id)]
+                                  , '/'.join(ops))
+  
 def do_descriptify(prop, cols, small=False):
   items = { 'rooms'        : { 'desc': 'ambiente'   ,'small':'amb.'       ,'plural': True  },
             'bedrooms'     : { 'desc': 'dormitorio' ,'small':'dorm.'      ,'plural': True  },
@@ -113,20 +127,23 @@ def do_time_distance_in_words(from_date, since_date = None, target_tz=None, incl
 
 def do_currencyfy(number, small=False, **args):
   temp = "%.1f" % number
-  if small:
-    temp = "%d" % int(number)
+  # if small:
+    # temp = "%d" % int(number)
   temp = temp.replace('.', ',')
   profile = compile(r"(\d)(\d\d\d[.,])")
   while 1:
       temp, count = subn(profile,r"\1.\2",temp)
       if not count: break
+  if small:
+    if ',' in temp:
+      return temp[:-2]
   return temp
   
 def do_pricefy(property, operation_type = None, small=False, **args):
-  number = property.price_rent_computed
+  number = property.price_rent
   cur = property.price_rent_currency
   if (operation_type is None and property.price_sell_computed>0.0) or int(operation_type) == Property._OPER_SELL:
-    number = property.price_sell_computed
+    number = property.price_sell
     cur = property.price_sell_currency
   return '<small>'+cur+'</small>'+do_currencyfy(number, small=small)
   

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from webapp2 import Route
+from webapp2 import Route, RedirectHandler
 from webapp2_extras.routes import PathPrefixRoute
-
 
 def get_rules():
     """Returns a list of URL rules for the Hello, World! application.
@@ -12,9 +11,15 @@ def get_rules():
     """
     rules = [
       # Esta la pongo aca por puta
-      Route('/run/mapper', name='run/mapper', handler='apps.backend.property.RunMapper'),
+      Route('/run/mapper',            name='run/mapper',          handler='apps.backend.property.RunMapper'),
+      Route('/webclient/index.asp',   name='oldredir',            handler='apps.realestate.handlers.Redirect'),
+      Route('/manda_bienvenida',      name='mandabien',           handler='apps.realestate.handlers.LaunchEmail'),
+      # HACK: Urls de old ultraprop.
+      Route('/Integrantes.asp',       name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
+      Route('/institucional.html',    name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
+      Route('/Contactenos.html',      name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
+      Route('/Centro.asp',            name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
       
-
       Route('/',                                                    name='frontend/home',             handler='apps.frontend.home.Index'),
       
       Route('/mapa',                                                name='frontend/map',              handler='apps.frontend.map.Index'),
