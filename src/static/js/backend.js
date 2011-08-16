@@ -517,6 +517,7 @@ function init_pictures(bulk_remove_url, img_reorder_url, img_upload_url)
     file_types_description : "Archivos de imágenes",
     file_upload_limit      : 30,
     file_queue_limit       : 0,
+    prevent_swf_caching    : false,
     debug                  : false,
 
     button_image_url       : "/img/backgrounds/btnupload.png",
