@@ -965,3 +965,20 @@ body.backend #searchbox2 input.search::-webkit-input-placeholder {
 body.backend #searchbox2 input.search:-moz-placeholder{
    color:#cccccc;
 }
+
+
+/* STEPS */
+.step {
+	background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -554px -63px transparent;
+	height:30px;
+	width:30px;
+	float:left;
+	font-size:18px;
+	line-height:30px;
+	color:#fff;
+	text-align:center;
+	margin-left:20px;
+}
+
+/* ICONS */
+.icon16 { height:16px; width:16px; display:inline-block;}
