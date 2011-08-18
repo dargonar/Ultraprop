@@ -334,7 +334,7 @@ class Property(GeoModel):
       retvalue = 'need_update'
       if self.location != oldme.location:
         retvalue = 'need_rebuild'
-        
+    
     super(Property, self).save()
     return retvalue
     
@@ -526,3 +526,19 @@ class ImageFile(db.Model):
   created_at          = db.DateTimeProperty(auto_now_add=True)
   def __repr__(self):
     return self.filename
+    
+class Consulta(db.Model):
+  realestate_name           = db.StringProperty()
+  realestate                = db.ReferenceProperty(RealEstate)
+  property                  = db.ReferenceProperty(Property)
+  realestate_property_link  = db.StringProperty()
+  property_link             = db.StringProperty()
+  sender_name               = db.StringProperty()
+  sender_email              = db.StringProperty()
+  sender_comment            = db.TextProperty()
+  sender_telephone          = db.StringProperty()
+  prop_operation_desc       = db.StringProperty()
+  is_from_ultraprop         = db.IntegerProperty()
+  created_at                = db.DateTimeProperty(auto_now_add=True)
+  
+  
