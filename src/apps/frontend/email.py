@@ -5,7 +5,7 @@ from google.appengine.api import mail
 
 from webapp2 import abort, get_app # uri_for as url_for
 
-from models import Property
+from models import Property, Consulta
 
 from utils import get_bitly_url, MyBaseHandler
 
@@ -60,7 +60,6 @@ class SendTask(MyBaseHandler):
     # Envío el correo.
     mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['requestinfo_user']['sender'], 
                  to       = context['sender_email'],
-                 bcc      = self.config['ultraprop']['mail']['reply_consultas']['mail'],
                  subject  = "Consulta por un inmueble - ULTRAPROP",
                  body     = body,
                  html     = html)
@@ -75,12 +74,11 @@ class SendTask(MyBaseHandler):
     
     prop_operation_id     = params['prop_operation_id']
     
-    # realestate_property_link  = '%s/propiedades.html#%s/%s' % (realestate.website, key, prop_operation_id)
-    # if realestate.managed_domain==0:
-      # realestate_property_link = property_link
-
     realestate_property_link  = '%s/propiedades.html#%s/%s' % (realestate.website, key, prop_operation_id)
+    contact_from_ultraprop = False
     if 'template_realestate' in params:
+      contact_from_ultraprop = True
+    if contact_from_ultraprop:
       property_link         = realestate_property_link
     else:
       str_query             = params['query_string'] 
@@ -116,6 +114,8 @@ class SendTask(MyBaseHandler):
                  body     = body,
                  html     = html)
     
+    self.save_consulta(property, realestate, contact_from_ultraprop, **context)
+    
     self.response.write('ok')
     
     
@@ -142,7 +142,6 @@ class SendTask(MyBaseHandler):
     # Envío el correo.
     mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['contact_user']['sender'], 
                  to       = context['sender_email'],
-                 bcc      = self.config['ultraprop']['mail']['reply_consultas']['mail'],
                  subject  = "Consulta - ULTRAPROP",
                  body     = body,
                  html     = html)
@@ -163,7 +162,7 @@ class SendTask(MyBaseHandler):
                ,'sender_email':               self.request.POST.get('sender_email')
                ,'sender_comment':             self.request.POST.get('sender_comment')
                ,'sender_telephone':           self.request.POST.get('sender_telephone')
-               , 'support_url' :               'http://'+self.request.headers.get('host', 'no host')}
+               ,'support_url' :               'http://'+self.request.headers.get('host', 'no host')}
     
     # Mando Correo a Usuario.
     # Armo el body en plain text.
@@ -178,6 +177,44 @@ class SendTask(MyBaseHandler):
                  subject  = "Hicieron una consulta - ULTRAPROP",
                  body     = body,
                  html     = html)
-    # --------------------------------------------------------------------------------
-      
+    
+    self.save_consulta(None, realestate, False, **context)
+    
     self.response.write('ok')
+    
+  
+  def save_consulta(self, property, realestate, contact_from_ultraprop, **context):
+    #logging.debug('save_consulta:: llamada')          
+    try:
+      consulta                            = Consulta()
+      consulta.realestate_name            = str(context['realestate_name'])
+      consulta.realestate                 = realestate
+      consulta.property                   = property
+      
+      consulta.realestate_property_link   = ''
+      if 'realestate_property_link' in context:
+        consulta.realestate_property_link = context['realestate_property_link']
+      
+      consulta.property_link              = ''
+      if 'property_link' in context:
+        consulta.property_link            = context['property_link']
+        
+      consulta.sender_name                = context['sender_name']
+      consulta.sender_email               = context['sender_email']
+      consulta.sender_comment             = context['sender_comment']
+      consulta.sender_telephone           = ''
+      if 'sender_telephone' in context:
+        consulta.sender_telephone         = context['sender_telephone']
+      
+      prop_operation_id                   = int(context['prop_operation_id']) if 'prop_operation_id' in context else 0
+      consulta.prop_operation_desc = ''
+      if prop_operation_id == Property._OPER_SELL:
+        consulta.prop_operation_desc = 'Venta'
+      if prop_operation_id == Property._OPER_RENT:
+        consulta.prop_operation_desc = 'Alquiler'
+      
+      consulta.is_from_ultraprop          = 1 if contact_from_ultraprop else 0
+      consulta.save()
+    except Exception:
+      logging.error('email.py::save_consulta() exception. Exception:'+str(Exception) + ' args:' + Exception.args)         
+    return 'ok'

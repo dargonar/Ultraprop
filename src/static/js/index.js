@@ -1483,7 +1483,7 @@ function sendMail(form){
   showLoading();
   jQuery.ajax({
       url:    url,
-      type:   'post',
+      type:   'get',
       data:   params,
       error:  function(jqXHR, textStatus, errorThrown) {
                 hideLoading();
