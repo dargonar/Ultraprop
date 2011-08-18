@@ -34,14 +34,16 @@ def create_query_from_dict(values, Model, keys_only=True):
   if 'price_apply' in request_keys:
     if 'price_min' in request_keys:
       min_price = float(values.get('price_min'))*currency_rate
-      base_query.filter(price_field+' >= ', float(min_price))
+      #logging.error('METO %s >= %.0f' % (price_field,float(min_price)) )
+      base_query.filter(price_field+' >=', int(min_price))
     
     if 'price_max' in request_keys:
       max_price = float(values.get('price_max'))*currency_rate
       max_config = int(config_array['multiple_values_properties']['prop_operation_id']['ranges'][str(oper)]['max'])
       # 500001 hacked en utils.js
       if (((max_config!=int(max_price)) and oper==Property._OPER_RENT) or ((500001.0!=max_price) and oper==Property._OPER_SELL) ):
-        base_query.filter(price_field+' <= ', max_price)
+        #logging.error('METO %s >= %.0f' % (price_field,max_price) )
+        base_query.filter(price_field+' <=', int(max_price))
   # ============================================================= #
   
   # ============================================================= #
@@ -67,7 +69,7 @@ def create_query_from_dict(values, Model, keys_only=True):
       for char in allowed_values:
         cell += char if char in prop_type_ids else '0'
       formatted_cell = prop_type_cell_format % cell
-      #logging.error(' base_query:[PROP TYPES CELL] location_geocells = ' + formatted_cell)
+      #logging.error('[PROP TYPES CELL] location_geocells = ' + formatted_cell)
       base_query.filter( 'location_geocells = ', formatted_cell)
   # ============================================================= #
   
@@ -86,7 +88,7 @@ def create_query_from_dict(values, Model, keys_only=True):
         if value >= item['min_value']:
           value = item['min_value']
       the_value = '%s%s' % (attribute, str(value))
-      #logging.error(' base_query:[DISCRETE RANGES] ' + the_value)
+      #logging.error('[DISCRETE RANGES] ' + the_value)
       base_query.filter( 'location_geocells = ', the_value)
   # ============================================================= #  
   
@@ -98,7 +100,7 @@ def create_query_from_dict(values, Model, keys_only=True):
       if(int(value)>0):
         attribute = config_array['multiple_values_properties'][key]['related_property']
         the_value = '%s%s' % (attribute, str(value))
-        #logging.error(' base_query:[MVP] ' + the_value)
+        #logging.error('[MVP] ' + the_value)
         base_query.filter( 'location_geocells = ', the_value)
   # ============================================================= #  
 
@@ -109,19 +111,21 @@ def create_query_from_dict(values, Model, keys_only=True):
   for key in binary_values_properties_array.keys():
     if key in request_keys:
       the_value = binary_values_properties_array[key]['related_property']
-      #logging.error(' base_query:[BINARY PROPERTIES] ' + the_value)
+      #logging.error('[BINARY PROPERTIES] ' + the_value)
       base_query.filter( 'location_geocells = ', the_value)
   # ============================================================= #  
   
   # ============================================================= #
   # Filtro por key de Inmobiliaria=============================== #
   if values.has_key('realestate_key'):
+      #logging.error('realestate= ' + values['realestate_key'])
       base_query.filter('realestate = ', db.Key(values['realestate_key']))
 
   # ============================================================= #
   # Orden                    ==================================== #
   sort = values.get('sort', '-'+price_field)
   sort = sort.replace('sort_price', price_field)
+  #logging.error('ORDERBY ' + sort)
   base_query.order(sort)
   
   return base_query, {'operation':oper, 'price_field':price_field, 'currency':currency}
