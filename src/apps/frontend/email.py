@@ -60,6 +60,7 @@ class SendTask(MyBaseHandler):
     # Envío el correo.
     mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['requestinfo_user']['sender'], 
                  to       = context['sender_email'],
+                 bcc      = self.config['ultraprop']['mail']['reply_consultas']['mail'],
                  subject  = "Consulta por un inmueble - ULTRAPROP",
                  body     = body,
                  html     = html)
@@ -110,6 +111,7 @@ class SendTask(MyBaseHandler):
     # Envío el correo.
     mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['requestinfo_agent']['sender'], 
                  to       = realestate.email,
+                 bcc      = self.config['ultraprop']['mail']['reply_consultas']['mail'],
                  subject  = "Hicieron una consulta por un inmueble - ULTRAPROP",
                  body     = body,
                  html     = html)
@@ -140,6 +142,7 @@ class SendTask(MyBaseHandler):
     # Envío el correo.
     mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['contact_user']['sender'], 
                  to       = context['sender_email'],
+                 bcc      = self.config['ultraprop']['mail']['reply_consultas']['mail'],
                  subject  = "Consulta - ULTRAPROP",
                  body     = body,
                  html     = html)
@@ -171,6 +174,7 @@ class SendTask(MyBaseHandler):
     # Envío el correo.
     mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['contact_agent']['sender'], 
                  to       = realestate.email,
+                 bcc      = self.config['ultraprop']['mail']['reply_consultas']['mail'],
                  subject  = "Hicieron una consulta - ULTRAPROP",
                  body     = body,
                  html     = html)
