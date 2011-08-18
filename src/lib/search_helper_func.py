@@ -34,8 +34,10 @@ def create_query_from_dict(values, Model, keys_only=True):
   if 'price_apply' in request_keys:
     if 'price_min' in request_keys:
       min_price = float(values.get('price_min'))*currency_rate
+      if min_price < 0.1:
+        min_price = 0;
       #logging.error('METO %s >= %.0f' % (price_field,float(min_price)) )
-      base_query.filter(price_field+' >=', int(min_price))
+      base_query.filter(price_field+' >=', min_price)
     
     if 'price_max' in request_keys:
       max_price = float(values.get('price_max'))*currency_rate
@@ -43,7 +45,7 @@ def create_query_from_dict(values, Model, keys_only=True):
       # 500001 hacked en utils.js
       if (((max_config!=int(max_price)) and oper==Property._OPER_RENT) or ((500001.0!=max_price) and oper==Property._OPER_SELL) ):
         #logging.error('METO %s >= %.0f' % (price_field,max_price) )
-        base_query.filter(price_field+' <=', int(max_price))
+        base_query.filter(price_field+' <=', max_price)
   # ============================================================= #
   
   # ============================================================= #
