@@ -52,10 +52,10 @@ jQuery(document).ready(function(){
         }
       });
       
-      if (status != google.maps.GeocoderStatus.OK || handled == false) 
-      {
-        return false;
-      }
+      // if (status != google.maps.GeocoderStatus.OK || handled == false) 
+      // {
+        // return false;
+      // }
       
       $('#home_search_form').submit();
     });
