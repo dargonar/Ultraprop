@@ -59,6 +59,7 @@ class Show(RealestateHandler):
       return self.get(**kwargs)
     
     context = { 'propery_key':                key
+               ,'realestate_key':             realestate
                ,'sender_name':                self.form.name.data
                ,'sender_email':               self.form.email.data
                ,'sender_comment':             self.form.message.data

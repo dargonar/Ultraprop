@@ -70,7 +70,7 @@ class Compare(FrontendHandler):
 
     
 class SendMail(FrontendHandler):
-  def post(self, **kwargs):
+  def get(self, **kwargs):
     self.request.charset = 'utf-8'
     
     key                   = kwargs['key']
@@ -87,7 +87,7 @@ class SendMail(FrontendHandler):
                ,'sender_name':                self.form.name.data
                ,'sender_email':               self.form.email.data
                ,'sender_comment':             self.form.message.data
-               ,'prop_operation_id':          self.request.POST.get('prop_operation_id', default='1')}               
+               ,'prop_operation_id':          self.request.GET.get('prop_operation_id', default='1')}               
                 
     def txn():
       taskqueue.add(url=self.url_for('frontend/email_task'), params=dict({'action':'requestinfo_user'}, **context))
@@ -99,4 +99,4 @@ class SendMail(FrontendHandler):
     
   @cached_property
   def form(self):
-    return PropertyContactForm(self.request.POST)
+    return PropertyContactForm(self.request.GET)

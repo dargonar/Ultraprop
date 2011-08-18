@@ -29,6 +29,7 @@ config['ultraprop'] = {
     'share_link':         {'sender':'info@ultraprop.com.ar', 'template':'share_link'},
     'contact_user':       {'sender':'info@ultraprop.com.ar', 'template':'contact_to_user'},
     'contact_agent':      {'sender':'info@ultraprop.com.ar', 'template':'contact_to_agent'},
+    'reply_consultas':    {'mail':'consultas@ultraprop.com.ar'},
 
   },
   'recaptcha':{
