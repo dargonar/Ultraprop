@@ -34,10 +34,8 @@ jQuery(document).ready(function(){
   }
   
   jQuery("#btnSearchHome").click( function() {
-    var priceValues = getPriceValues();
-    jQuery('#price_min').val(priceValues[0]);
-    jQuery('#price_max').val(priceValues[1]);
-
+    checkForm();
+    
     //TODO: Unificar -> Esta funcion esta en backend/frontend x 2 (home e index)
     var address = document.getElementById("searchmap").value;
 
@@ -101,3 +99,11 @@ jQuery(document).ready(function(){
   jQuery('input[placeholder]').addPlaceholder({ 'class': 'hint'}); //{dotextarea:false, class:hint}
   
 });
+
+function checkForm()
+{
+  var priceValues = getPriceValues(); // funcion en utils.js
+  jQuery('#price_min').val(priceValues[0]);
+  jQuery('#price_max').val(priceValues[1]);
+  return true;
+}
