@@ -4,6 +4,19 @@
 <script type="text/javascript">
 $(document).ready(function() {
   init_new_property();
+
+
+$('#btnMaximize').toggle(function() {
+	$('#location_box').addClass('fullsize');
+	$(this).removeClass('maximize');
+	$(this).addClass('minimize');
+	}, function() {
+	$('#location_box').removeClass('fullsize');
+	$(this).removeClass('minimize');
+	$(this).addClass('maximize');
+});
+
+
 });
 </script>
 {% endblock %}
@@ -79,54 +92,80 @@ $(document).ready(function() {
   </div>
   
   <!-- location.html -->
-  <h2 class="title">Ubique el Inmueble</h2>
+  <h2 class="title">Ubique la propiedad completando los siguientes pasos</h2>
   {% if form.location.errors %}
   <div class="msg_error">Debe ubicar la propiedad</div>
   {% endif %}
-  <div id="searchbox2">
-      <input id="searchmap" class="search" type="text" value="" autocomplete="off" placeholder="Escriba aquí la dirección"/>
-      <!-- SEARCH BUTTON -->
-      <div id="btnSearch2" class="btnSearch blue">Ubicar</div>
-      
-      
-      <p class="info">1 - Escriba parte de la dirección en la caja de texto.</p>
-      <p class="info">2 - Ajuste la ubicación del inmueble arrastrando el icono "ICONO"</p>
-      <p class="info">3 - Modifique los valores de ser necesario.</p>
-      <div id="map_canvas" style="width:740px; height: 300px"></div>
-  </div>
   
-	<p class="msg_warning msg_small"><span class="ico"></span>Ubique la propiedad en el mapa, luego de ser necesario modifique los datos manualmente.</p>
-    
-  <dl class="form x2col">
-    {{ ff.field(form.country, style='width:200px;') }}
-    {{ ff.field(form.state, style='width:200px;') }}
-    {{ ff.field(form.city, style='width:200px;') }}
-    {{ ff.field(form.neighborhood, style='width:200px;') }}
+  <dl class="location">
+  	<dt><div class="step">1</div></dt>
+    <dd>
+        <div id="searchbox2">
+        <input id="searchmap" class="search ui-autocomplete-input" type="text" value="" autocomplete="off" placeholder="Escriba: Calle, Número, Localidad, Provincia"/>
+          <!-- SEARCH BUTTON -->
+          <div id="btnSearch2" class="btnSearch">Ubicar</div>
+        </div>
 
-    {{ form.location(type="hidden") }}
+        <div class="example_box">
+        	<a class="close" href="#" title="Cerrar ayuda"></a>
+            Ejemplo: <b>Av 44 1100, La Plata, Buenos Aires.</b><br />
+            Busque una zona familiar próxima a la propiedad. <b>ejemplo: La Plata, Buenos Aires, Argentina</b>
+        </div>
+	</dd>
   </dl>
 
-  <dl class="form x2col"> 
-      <dt>Dirección</dt>
-      <dd class="clear">
-          <div>
-              <p>Calle</p>
-              {{form.street_name}}
-          </div>
-          
-          <div class="edit {{ 'errorbox' if form.street_number.errors or form.floor_number.errors else '' }}">
-              <div class="short">
-                  <p>Número</p>
-                  {{form.street_number}}
-                  {% if form.street_number.errors %} <p class="error">{{ form.street_number.errors.0 }}</p> {% endif %}
-               </div>
-               <div class="short">   
-                  <p>Piso / Dpto.</p>
-                  {{form.floor_number}}
-                  {% if form.floor_number.errors %} <p class="error">{{ form.floor_number.errors.0 }}</p> {% endif %}
+
+  <dl class="location">
+  	<dt><div class="step">2</div></dt>
+    <dd>
+        <div id="location_box">
+        	<div class="location_head">
+            	<span class="indication">Ajuste la ubicación de la propiedad arrastrando el icono que aparece en el mapa.</span>
+            	<a href="#" id="btnMaximize" class="icon16 maximize" title="Maximizar mapa"></a>
+            </div>
+        	<div id="map_canvas" style="width:740px; height: 300px"></div>
+        </div>
+    </dd>
+  </dl>
+  
+  <dl class="location">
+  	<dt><div class="step">3</div></dt>
+    <dd>
+    	<div id="location_glass" title="Antes de este paso, debe ubicar la propiedad."></div>
+        <div class="location_head border">
+            <span class="indication">De ser necesario, modifique los valores manualmente.</span>
+        </div>
+        <dl class="form x2col">
+{{ ff.field(form.country, style='width:200px;') }}
+{{ ff.field(form.state, style='width:200px;') }}
+{{ ff.field(form.city, style='width:200px;') }}
+{{ ff.field(form.neighborhood, style='width:200px;') }}
+
+{{ form.location(type="hidden") }}
+</dl>
+        <dl class="form x2col"> 
+          <dt>Dirección</dt>
+          <dd class="clear">
+              <div>
+                  <p>Calle</p>
+                  {{form.street_name}}
               </div>
-          </div>
-      </dd>
+              
+              <div class="edit {{ 'errorbox' if form.street_number.errors or form.floor_number.errors else '' }}">
+                  <div class="short">
+                      <p>Número</p>
+                      {{form.street_number}}
+                      {% if form.street_number.errors %} <p class="error">{{ form.street_number.errors.0 }}</p> {% endif %}
+                   </div>
+                   <div class="short">   
+                      <p>Piso / Dpto.</p>
+                      {{form.floor_number}}
+                      {% if form.floor_number.errors %} <p class="error">{{ form.floor_number.errors.0 }}</p> {% endif %}
+                  </div>
+              </div>
+          </dd>
+      </dl>
+    </dd>
   </dl>
 
   <!-- services.html -->
