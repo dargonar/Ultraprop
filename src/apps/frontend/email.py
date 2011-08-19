@@ -28,22 +28,21 @@ class SendTask(MyBaseHandler):
     
     prop_operation_id     = params['prop_operation_id']
     
-    realestate_property_link  = '%s/propiedades.html#%s/%s' % (realestate.website, key, prop_operation_id)
+    contact_from_map = True
     if 'template_realestate' in params:
-      property_link         = realestate_property_link
-    else:
-      str_query             = params['query_string'] 
-      property_link         = get_bitly_url(str_query)
+      contact_from_map = False
+    
+    property_link  = '%s/propiedades.html#%s/%s' % (realestate.website, key, prop_operation_id)
+    
+    if contact_from_map:
+      str_query                 = params['query_string'] 
+      property_link             = get_bitly_url(str_query)
     
     
-    if realestate.managed_domain==0:
-      realestate_property_link = property_link
-      
     # Armo context, lo uso en varios lugares, jaja!
     context = { 'server_url':                 'http://'+self.request.headers.get('host', 'no host')
                ,'realestate_name':            realestate.name
                ,'realestate_website':         realestate.website
-               ,'realestate_property_link':   realestate_property_link
                ,'property_link':              property_link
                ,'sender_name':                self.request.POST.get('sender_name')
                ,'sender_email':               self.request.POST.get('sender_email')
@@ -74,25 +73,22 @@ class SendTask(MyBaseHandler):
     
     prop_operation_id     = params['prop_operation_id']
     
-    realestate_property_link  = '%s/propiedades.html#%s/%s' % (realestate.website, key, prop_operation_id)
-    contact_from_ultraprop = False
+    contact_from_map = True
     if 'template_realestate' in params:
-      contact_from_ultraprop = True
-    if contact_from_ultraprop:
-      property_link         = realestate_property_link
-    else:
-      str_query             = params['query_string'] 
-      property_link         = get_bitly_url(str_query)
+      contact_from_map = False
     
-    if realestate.managed_domain==0:
-      realestate_property_link = property_link
+    realestate_property_link  = '%s/propiedades.html#%s/%s' % (realestate.website, key, prop_operation_id)
+    
+    if contact_from_map:
+      if realestate.website is None or realestate.website.strip()=='': # Deben tener ptopiedades.html y rever tema #if realestate.managed_domain==1 :
+        str_query                 = params['query_string'] 
+        realestate_property_link  = get_bitly_url(str_query)
     
     # Armo context, lo uso en varios lugares, jaja!
     context = { 'server_url':                 'http://'+self.request.headers.get('host', 'no host')
                ,'realestate_name':            realestate.name
                ,'realestate_website':         realestate.website
                ,'realestate_property_link':   realestate_property_link
-               ,'property_link':              property_link
                ,'sender_name':                self.request.POST.get('sender_name')
                ,'sender_email':               self.request.POST.get('sender_email')
                ,'sender_comment':             self.request.POST.get('sender_comment')
@@ -114,7 +110,7 @@ class SendTask(MyBaseHandler):
                  body     = body,
                  html     = html)
     
-    self.save_consulta(property, realestate, contact_from_ultraprop, **context)
+    self.save_consulta(property, realestate, contact_from_map, **context)
     
     self.response.write('ok')
     
@@ -215,6 +211,7 @@ class SendTask(MyBaseHandler):
       
       consulta.is_from_ultraprop          = 1 if contact_from_ultraprop else 0
       consulta.save()
-    except Exception:
-      logging.error('email.py::save_consulta() exception. Exception:'+str(Exception) + ' args:' + Exception.args)         
+    except Exception, e:
+      logging.error('email.py::save_consulta() exception.')
+      logging.exception(e)
     return 'ok'
