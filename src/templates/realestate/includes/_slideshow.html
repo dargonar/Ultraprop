@@ -7,10 +7,26 @@
         {% for img in images %}
           {% if img.file %}
           <li>
+          
+
+          
             <a href="{{ url_for('images/show', key=img.file.key()|string, width=625, height=469) }}">
               <!--img id="image_{{loop.index}}" src="{{ url_for('images/show', key=img.file.key()|string, width=72, height=55) }}" title="" style="max-height:55px;max-width:50px;" class="popupimg class{{loop.index}}"--> 
-              <img id="image_{{loop.index}}" src="{{ url_for('images/show', key=img.file.key()|string, width=83, height=63) }}" title="" style="max-height:63px;" class="popupimg class{{loop.index}}"> 
+              
+              <!--img id="image_{{loop.index}}" src="{{ url_for('images/show', key=img.file.key()|string, width=83, height=63) }}" title="" style="max-height:63px;" class="popupimg class{{loop.index}}"--> 
+              
+              
+            <div id="imgbox" style="display: table-cell; vertical-align: middle; text-align:center; height:63px">  
+              <img id="image_{{loop.index}}" src="{{ url_for('images/show', key=img.file.key()|string, width=83, height=63) }}" title="" class="popupimg class{{loop.index}}"> 
+            </div>   
+            
             </a>
+          
+          
+          
+    
+          
+          
           </li>
           {% endif %}
         {% else %}

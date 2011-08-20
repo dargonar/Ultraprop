@@ -227,11 +227,9 @@
           }
             .ad-gallery .ad-thumbs li a img {
               border: 1px solid #ccc;
-              display: block;
-			  
-			  /*width:72px; */
-			  width:100px; 
-/*			  height:54px;*/
+/*            display: block;
+			  width:100px; */
+
             }
             .ad-gallery .ad-thumbs li a.ad-active img {
               border: 1px solid #999;
