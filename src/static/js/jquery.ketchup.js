@@ -6,7 +6,7 @@ function doKetchup(obj){
   jQuery(selector).append('<input type="text" name="inketchup" id="inketchup" value="" />');
   setTimeout(
     function() { 
-        jQuery('#inketchup').val('2');
+        jQuery(selector+' [name=inketchup]').val('2');
       }
     , 2000);
 }
