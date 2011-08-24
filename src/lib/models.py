@@ -13,6 +13,17 @@ from search_helper import build_list, get_index_alphabet , calculate_price, inde
 
 from geo import geocell
 
+class Plan(db.Model):
+  _MONTHLY   = 1
+  _ONT_TIME  = 2
+  
+  type                = db.IntegerProperty()  #In months
+  name                = db.StringProperty()
+  description         = db.Text()
+  duration            = db.IntegerProperty()
+  
+  def __repr__(self):
+    return 'PLAN:|' + name + '|' + description
 
 class State(db.Model):
   name                = db.StringProperty()
