@@ -141,6 +141,7 @@ class UnRestorePassword(BackendHandler):
     user              = get_or_404(kwargs.get('key'))
     if user.enabled == 0 and user.restore_password == 1:
       user.restore_password = 0
+      user.enabled = 1
       user.save()
     self.set_ok('Su cuenta ha sido actualizada satisfactoriamente!')
     return self.redirect_to('backend/auth/login')    
