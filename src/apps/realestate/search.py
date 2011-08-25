@@ -25,6 +25,7 @@ class Search(RealestateHandler, PropertyPaginatorMixin):
     base_query.filter('realestate =', self.realestate )
 
   def render(self, **kwargs):
+    self.response.headers["P3P"] = 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"'
     kwargs['menu_item']       = 'search'
     kwargs['realestate']      = self.realestate
     kwargs['realestate_logo'] = get_serving_url(self.realestate.logo) if self.realestate.logo else None
