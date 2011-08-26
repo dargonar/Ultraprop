@@ -13,17 +13,26 @@ from search_helper import build_list, get_index_alphabet , calculate_price, inde
 
 from geo import geocell
 
+class Payment(db.Model):
+  payment_id          = db.StringProperty()
+  created_at          = db.DateTimeProperty(auto_now_add=True)
+  
+class Invoice(db.Model):
+  
+  updated_at          = db.DateTimeProperty(auto_now=True)
+  created_at          = db.DateTimeProperty(auto_now_add=True)
+  
 class Plan(db.Model):
   _MONTHLY   = 1
-  _ONT_TIME  = 2
+  _ONE_TIME  = 2
   
-  type                = db.IntegerProperty()  #In months
   name                = db.StringProperty()
+  type                = db.IntegerProperty()
   description         = db.Text()
-  duration            = db.IntegerProperty()
-  
+  free_days           = db.IntegerProperty()
+
   def __repr__(self):
-    return 'PLAN:|' + name + '|' + description
+    return 'PLAN: ' + name
 
 class State(db.Model):
   name                = db.StringProperty()
