@@ -440,6 +440,15 @@ var cursorPosition = 0;
 var cursorsArray = null;
 
 function doSearch() {
+  
+  if(markers_coords!=null)
+  {
+    //do something
+    load_json_result(markers_coords,0, false);
+    markers_coords=null;
+    return false;
+  }
+  
   if (g_currentSearchXHR && 'abort' in g_currentSearchXHR) {
     // console.log("doSearch:: ABORTED");
     g_currentSearchXHR.abort();
@@ -561,71 +570,77 @@ function doSearch() {
       
       jQuery('#loading_sidebar').hide();
       
-      if (obj && obj.status && obj.status == 'success') {
-        // Esto es para debug, muestro LatLon'g en cartel de error y si puedo lo copio al clipboard!
-        
-        if(jQuery('#meta_debug').length>0)
-          jQuery('#meta_debug').append("<p>"+obj.the_box+"</p>");
-        
-        var cursorObject = obj.cursor;
-        // console.log('   Recibi como "next" CURSOR ['+cursorObject+']');
-        if(cursorObject!=null && cursorObject.length>0)
-        {
-          if(cursorStep>=0)
-          {
-            cursorObject = ((cursorObject=='None')?null:cursorObject);
-            cursorsArray[cursorPosition]=new Array();
-            cursorsArray[cursorPosition][1]=cursorObject;
-            if(cursorsArray.length>2)
-              cursorsArray[cursorPosition][-1]=cursorsArray[cursorPosition-2][1];
-            else
-              cursorsArray[cursorPosition][-1]=null;
-          }
-          $('#btnMoreProps_next').attr('disabled', ((cursorObject==null)?'disabled':''));
-          $('#btnMoreProps_next').attr('title',((cursorObject==null)?'':'Ver página '+ (cursorPosition+2)));
-        }
-        else
-        {
-          $('#btnMoreProps_next').attr('disabled', 'disabled');
-          $('#btnMoreProps_next').attr('title','');
-        }
-        
-        if(cursorsArray.length>1)
-        {
-          $('#btnMoreProps_prev').attr('disabled', '');
-          $('#btnMoreProps_prev').attr('title', 'Ver página '+cursorPosition);
-        }
-        else
-        {
-          $('#btnMoreProps_prev').attr('disabled', 'disabled');
-          $('#btnMoreProps_prev').attr('title', '');
-        }
-        
-        jQuery('#prop_container').html(obj.html);
-        
-        $('#tab_viewing_page').html(cursorPosition+1); // en tab1.html
-        $('#tab_viewing_count').html(obj.display_viewing_count); // en tab1.html
-        // $('#display_total_count').html(obj.display_total_count); // en map.html
-        //$('#display_viewing_count').html(obj.display_viewing_count); // en map.html
-                
-        m_last_result_object = obj; 
-        for (var i = 0; i < obj.coords.length; i++) {
-          var coord = obj.coords[i];
-          marker = createResultMarker(coord);
-        }
-        
-        jQuery('#loading_map').hide();
-      } 
-      else 
-      {
-        jQuery('#loading_map').hide();
-        jQuery('#loading_sidebar').hide();
-      }
+      load_json_result(obj, cursorStep, true);
+      
     }
   });
   enableSearchOnPan();
 }
 
+function load_json_result(obj, cursorStep, load_html){
+  if (obj && obj.status && obj.status == 'success') {
+    // Esto es para debug, muestro LatLon'g en cartel de error y si puedo lo copio al clipboard!
+    
+    if(jQuery('#meta_debug').length>0)
+      jQuery('#meta_debug').append("<p>"+obj.the_box+"</p>");
+    var cursorObject = obj.cursor;
+    // console.log('   Recibi como "next" CURSOR ['+cursorObject+']');
+    if(cursorObject!=null && cursorObject.length>0 && cursorObject!='None')
+    {
+      if(cursorStep>=0)
+      {
+        cursorObject = ((cursorObject=='None')?null:cursorObject);
+        cursorsArray[cursorPosition]=new Array();
+        cursorsArray[cursorPosition][1]=cursorObject;
+        if(cursorsArray.length>2)
+          cursorsArray[cursorPosition][-1]=cursorsArray[cursorPosition-2][1];
+        else
+          cursorsArray[cursorPosition][-1]=null;
+      }
+      $('#btnMoreProps_next').attr('disabled', ((cursorObject==null)?'disabled':''));
+      $('#btnMoreProps_next').attr('title',((cursorObject==null)?'':'Ver página '+ (cursorPosition+2)));
+    }
+    else
+    {
+      $('#btnMoreProps_next').attr('disabled', 'disabled');
+      $('#btnMoreProps_next').attr('title','');
+    }
+    
+    if(cursorsArray!=null && cursorsArray.length>1)
+    {
+      $('#btnMoreProps_prev').attr('disabled', '');
+      $('#btnMoreProps_prev').attr('title', 'Ver página '+cursorPosition);
+    }
+    else
+    {
+      $('#btnMoreProps_prev').attr('disabled', 'disabled');
+      $('#btnMoreProps_prev').attr('title', '');
+    }
+    
+    if(load_html)
+    {
+      jQuery('#prop_container').html(obj.html);
+    }
+    
+    $('#tab_viewing_page').html(cursorPosition+1); // en tab1.html
+    $('#tab_viewing_count').html(obj.display_viewing_count); // en tab1.html
+    // $('#display_total_count').html(obj.display_total_count); // en map.html
+    //$('#display_viewing_count').html(obj.display_viewing_count); // en map.html
+            
+    m_last_result_object = obj; 
+    for (var i = 0; i < obj.coords.length; i++) {
+      var coord = obj.coords[i];
+      marker = createResultMarker(coord);
+    }
+    
+    jQuery('#loading_map').hide();
+  } 
+  else 
+  {
+    jQuery('#loading_map').hide();
+    jQuery('#loading_sidebar').hide();
+  }
+}
 /**
  * Enables or disables search-on-pan, which performs new queries upon panning
  * of the map.

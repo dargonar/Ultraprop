@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 import logging
 import urllib
+import cgi
 
 from google.appengine.ext import db
 
 from webapp2 import abort, cached_property, RequestHandler, Response, HTTPException, uri_for as url_for, get_app
 from webapp2_extras import jinja2, sessions, json
 
-from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify, do_headlinify
+from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify, do_headlinify, do_slugify
 
+from models import Link
+# ================================================================================ #
+# Funciones para manejo de Links: guardar y recuperar busqueda en mapa =========== #
+# ================================================================================ #
 def get_bitly_url(str_query):
   import urllib2
   url     = url_for('frontend/link/share', _full=True) + '?' + str_query
@@ -35,7 +40,78 @@ def get_bitly_url(str_query):
   
   return url_for('frontend/link/map', _full=True, bitly_hash=bitly_hash) 
 
+def expand_bitly_url(bitly_hash):
+  import urllib2
   
+  url = 'http://bit.ly/' + bitly_hash
+  expander_params =   { "login"    : "diventiservices",
+                       "apiKey"   : "R_3a5d98588cb05423c22de21292cd98d6",
+                       "shortUrl"  : url, 
+                       "format"   : "json"
+                       }
+
+                       
+  form_data       = urllib.urlencode(expander_params)             
+  
+  post_url        = 'http://api.bitly.com/v3/expand?'+form_data
+  
+  # result = urlfetch.fetch(url=post_url, method=urlfetch.GET)
+  result          = urllib2.urlopen(post_url).read()
+  
+  decoded_result  = json.decode(result)
+  
+  if 'expand' not in decoded_result['data'] or 'long_url' not in decoded_result['data']['expand'][0]:
+    return None
+  return cgi.parse_qs(decoded_result['data']['expand'][0]['long_url'].split('?')[1])
+  
+  
+def get_dict_from_querystring_dict(query_dict):
+  south         = query_dict['south'][0]
+  north         = query_dict['north'][0]
+  west          = query_dict['west'][0]
+  east          = query_dict['east'][0]
+  center_lat    = (float(north) + float(south))/2
+  center_lon    = (float(east) + float(west))/2
+  
+  dict = {}
+  for key in query_dict.keys():
+    value = query_dict[key][0]
+    if value is not None and len(str(value))>0:
+      dict[key] = value
+  
+  dict['center_lat'] = center_lat
+  dict['center_lon'] = center_lon
+  
+  return dict
+
+# ================================================= #
+# Nuevos métodos sin uso de Bit.ly    ============= #  
+def get_link_url(str_query, is_user_chared_link = True, slug='', description=''):
+  mLink = None
+  if is_user_chared_link:
+    mLink = Link.new_for_user()
+  else:
+    mLink = Link.new_for_admin()
+  mLink.description   = description
+  mLink.slug          = slug
+  mLink.query_string  = str_query
+  mLink.put()
+   
+  key_name_or_id      = str(mLink.key().id())
+  if description is None or len(description)<1:
+    slug = 'compartido-%s' % key_name_or_id
+  return url_for('frontend/map/slug/key', _full=True, slug=slug, key_name_or_id=key_name_or_id)
+  
+def expand_link_url(key_name_or_id):
+  mLink = Link.get_by_id(int(key_name_or_id))
+  return expand_link_url_ex(mLink)
+
+def expand_link_url_ex(link):
+  return cgi.parse_qs(link.query_string)
+# FIN Funciones para manejo de Links....     ===================================== #
+# ================================================================================ #
+
+
 def get_or_404(key):
     try:
         obj = db.get(key)
@@ -166,6 +242,7 @@ class Jinja2Mixin(object):
     env.filters['addressify']     = do_addressify
     env.filters['descriptify']    = do_descriptify
     env.filters['headlinify']     = do_headlinify
+    env.filters['slugify']        = do_slugify
     env.globals['url_for']        = self.uri_for
     env.globals['app_version_id'] = self.app.config['ultraprop']['app_version_id']
     env.globals['app_version']    = self.app.config['ultraprop']['app_version']

@@ -7,6 +7,24 @@ from re import *
 from backend_forms import status_choices
 from search_helper import config_array, alphabet
 
+_slugify_strip_re = compile(r'[^\w\s-]')
+_slugify_hyphenate_re = compile(r'[-\s]+')
+
+def do_slugify(value):
+  """
+  Normalizes string, converts to lowercase, removes non-alpha characters,
+  and converts spaces to hyphens.
+  
+  From Django's "django/template/defaultfilters.py".
+  """
+  import unicodedata
+  
+  if not isinstance(value, unicode):
+      value = unicode(value)
+  value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+  value = unicode(_slugify_strip_re.sub('', value).strip().lower())
+  return _slugify_hyphenate_re.sub('-', value)
+    
 def do_headlinify(prop):
     
     descs = config_array['multiple_values_properties']['prop_operation_id']['descriptions']

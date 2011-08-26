@@ -1,5 +1,11 @@
   {% extends "frontend/_base.html"%}
-
+  
+  {%block metas%}
+    <title>ULTRAPROP - Mapa {{'- '+title_description if title_description is defined else ''}}</title>
+    <meta name="description" content="Búsqueda pr mapa" />
+    <meta name="keywords" content="" />
+  {%endblock%}
+  
   {%block head%}
     <link href="/css/fb-buttons.css?v={{app_version_id}}" rel="stylesheet" type="text/css" />
     <style type="text/css"> 
@@ -63,6 +69,7 @@
       
       var OPER_SELL             = {{ _OPER_SELL }};
       var OPER_RENT             = {{ _OPER_RENT }};
+      var markers_coords        = {{ markers_coords if markers_coords is defined and markers_coords else 'null' }};
     </script>
     <script src="/js/index.js?v={{app_version_id}}" type="text/javascript"></script>
   {%endblock%}  

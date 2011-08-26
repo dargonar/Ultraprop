@@ -60,6 +60,33 @@ class Ficha(FrontendHandler):
   def form(self):
     return PropertyContactForm()
   
+  def full_page(self, **kwargs):
+    
+    key                   = kwargs['key']
+    price_data_operation  = kwargs['oper']
+    
+    property              = get_or_404(key) 
+    
+    price                 = property.price_sell 
+    cur                   = property.price_sell_currency 
+    
+    if int(price_data_operation) ==  Property._OPER_RENT: 
+      price  = property.price_rent  
+      cur    = property.price_rent_currency 
+
+    context = { 'property': property
+              , 'Property':Property
+              , 'price':price
+              , 'cur':cur
+              , 'config_array':config_array
+              , 'price_data_operation':price_data_operation}
+    
+    
+    context_ex = dict({'form':self.form}, **context)
+    context_ex = dict({'images': ImageFile.all().filter('property =', db.Key(key)).order('position') }, **context_ex)
+    
+    
+    return self.render_response('frontend/ficha.html', **context_ex)  
   
 class Compare(FrontendHandler):
   def get(self, **kwargs):

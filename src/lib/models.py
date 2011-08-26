@@ -384,7 +384,7 @@ class Property(GeoModel):
   
   def getAge(self):
     if self.year_built > 0:
-      return str(self.year_built)
+      return config_array['discrete_range_config']['year_built']['descriptions'][int(self.year_built)]
     return 'Sin datos'
     
     data  = config_array['discrete_range_config']['year_built']
@@ -541,4 +541,15 @@ class Consulta(db.Model):
   is_from_ultraprop         = db.IntegerProperty()
   created_at                = db.DateTimeProperty(auto_now_add=True)
   
-  
+class Link(db.Model):
+  @classmethod
+  def new_for_user(cls):
+    return Link(type='user')
+  @classmethod
+  def new_for_admin(cls):
+    return Link(type='home')
+  type                      = db.StringProperty(required=True, choices=set(['home', 'user']))
+  description               = db.StringProperty()
+  slug                      = db.StringProperty()
+  query_string              = db.TextProperty()
+  created_at                = db.DateTimeProperty(auto_now_add=True)
