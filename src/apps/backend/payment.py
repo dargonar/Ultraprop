@@ -53,7 +53,7 @@ class Download(RequestHandler):
 
     # Parseamos y generamos los Payment
     to_save = []
-    for pay in dom.getElementsByTagName('Pay'):
+    for pay in dom.getElementsByTagName('Credit'):
       p = Payment()
       p.invoice  = None
       p.date     = get_xml_value(pay,'Trx_Date')

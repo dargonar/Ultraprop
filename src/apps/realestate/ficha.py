@@ -68,8 +68,8 @@ class Show(RealestateHandler):
                ,'prop_operation_id':          prop_operation_id}               
                 
     def txn():
-      taskqueue.add(url=self.url_for('frontend/email_task'), params=dict({'action':'requestinfo_user'}, **context), transactional=True)
-      taskqueue.add(url=self.url_for('frontend/email_task'), params=dict({'action':'requestinfo_agent'}, **context), transactional=True)
+      taskqueue.add(url=self.url_for('backend/email_task'), params=dict({'action':'requestinfo_user'}, **context), transactional=True)
+      taskqueue.add(url=self.url_for('backend/email_task'), params=dict({'action':'requestinfo_agent'}, **context), transactional=True)
     
     db.run_in_transaction(txn)
     
