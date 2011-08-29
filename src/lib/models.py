@@ -384,7 +384,8 @@ class Property(GeoModel):
   
   def getAge(self):
     if self.year_built > 0:
-      return config_array['discrete_range_config']['year_built']['descriptions'][int(self.year_built)]
+      index = config_array['discrete_range_config']['year_built']['rangos'].index(int(self.year_built))
+      return config_array['discrete_range_config']['year_built']['descriptions'][index]
     return 'Sin datos'
     
     data  = config_array['discrete_range_config']['year_built']

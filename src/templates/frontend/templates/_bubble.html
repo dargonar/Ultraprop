@@ -19,7 +19,9 @@
   
   <!-- PICTURE BOX -->
   <div class="picturebox">
-      <img id="btnInfo" src="/img/pixel-transp.gif" onclick="jQuery('#data_{{property.key()}}').fadeSliderToggle(); return false;"/>
+      <div class="btnInfo" onclick="jQuery('#data_{{property.key()}}').fadeSliderToggle(); return false;" title="Info">
+        <img src="/img/pixel-transp.gif" title="Info" alt="Info" />
+      </div>
       <div id="data_{{property.key()}}" class="data">
           <p>{{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor','area_outdoor']) }}</p>
           <div class="databg"></div>
@@ -31,22 +33,19 @@
       </div>
       
       <div class="picbox picbox_bubble">
-        <center>
+        
           {% for img in images %}
-          <img id="image_{{loop.index}}" class="popupimg" style="max-width:306px; max-height:230px; {%if loop.index != 1 %} display:none {%endif%}" src="{{ url_for('images/show', key=img.file.key()|string, width=306, height=230) }}" onerror="this.src='/img/picturebox/nophoto_306x230.jpg';" />
+            {% if loop.index == 1 %}
+              <div class="qty">foto <font>1</font> de {{ loop.length }}</div>
+              <center>
+            {% endif %}
+            <img id="image_{{loop.index}}" class="popupimg" style="max-width:306px; max-height:230px; {%if loop.index != 1 %} display:none {%endif%}" src="{{ url_for('images/show', key=img.file.key()|string, width=306, height=230) }}" onerror="this.src='/img/picturebox/nophoto_306x230.jpg';" />
           {% else %}
+          <div class="qty">No hay imagenes.</div>
+          <center>
           <img id="image_no" style="max-width:306px; max-height:230px;" src="/img/picturebox/nophoto_306x230.jpg" />
           {% endfor %}
         </center>
-        
-        {% for img in images %}
-          {% if loop.index == 1 %}
-          <div class="qty">foto <font>1</font> de {{ loop.length }}</div>
-          {% endif %}
-        {%  else: %}
-          <div class="qty">No hay imagenes.</div>
-        {% endfor %}
-        
       </div>
   </div>
   

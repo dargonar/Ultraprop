@@ -748,8 +748,10 @@ function onShowPopup(sender, marker, key){
         hideLoading();
         return false;
       }
-      jQuery('#prop_container').scrollTo(jQuery('[key|='+key+']'), 800 );
-      
+      try{
+        jQuery('#prop_container').scrollTo(jQuery('[key|='+key+']'), 800 );
+      }
+      catch(err){}
       hideLoading();
       return false;
     } 
@@ -761,7 +763,7 @@ function showInfoBox(m_ib_desc, marker, infoHtml, width, mMapPixelOffset)
 {
   var myOptions = {
              content: infoHtml, disableAutoPan:true, maxWidth:0, pixelOffset: mMapPixelOffset, zIndex: 1
-            ,boxStyle:{width: width}
+            ,boxStyle:{width: width, height:'auto'}
             ,closeBoxMargin: "4px 0px 0px 0px", closeBoxURL: "/img/pixel-transp.gif"
             ,infoBoxClearance: new google.maps.Size(1, 1), isHidden: false
             ,enableEventPropagation:true
@@ -1176,12 +1178,90 @@ function setWinTabsDefault(){
   currentTabWidth = defaultTabWidth;
   rules[0].style['width']=defaultTabWidth+'px';
 }
+
+
+/* COMPARE Functions */
+function getNextImage(key, direction)
+  {
+    if( $("#comparebox_"+key+" .thumblnk").length == 0 )
+      return false;
+      
+    var visible = $("#comparebox_"+key+" .thumblnk:visible").hide();
+    
+    var prox = direction > 0 ? visible.next() : visible.prev();
+    if( prox.length == 0 ) prox = direction > 0 ? $("#comparebox_"+key+" .thumblnk:first") : prox = $("#comparebox_"+key+" .thumblnk:last");
+    
+    prox.show();
+    visible.hide();
+
+    $("#comparebox_"+key+" .qty>font").text( prox.attr('id').substring(6) );
+    
+    return false;
+  }
+function closeCompareTabWindow(){
+  jQuery('#tab_compare_content').remove();
+  jQuery('#tab_compare').remove();
+  selectTabMap(null);
+  return false;
+  // closeTabWindow(sender, key) -> chequear si quedan fichas y si es necesario cerrarlas y dejar mapa en full-state.
+}
+function showCompareTabWindow(){
+  jQuery('#tab_compare_content').show();
+  hideCurrentTab();
+  jQuery('#tab_compare').addClass('active');
+  
+}
+
+function onShowCompare(){
+  var winTabs = jQuery('#main_tabs');
+  if(!winTabs.is(':visible'))
+  {
+    enableSearchOnPan(false);
+    jQuery('#foot_map').hide();
+    winTabs.show();
+  }
+  
+  var props    = '';
+  jQuery('#prop_container input.chk:checked').each(
+    function(index, value)
+    {
+      props+=jQuery(value).attr('key')+',';
+    }
+  );
+  
+  // Obtengo comparacion.
+  jQuery.ajax({
+    url: '/compare/'+props+'/'+jQuery('#prop_operation_id').val()
+    , type: 'get'
+    , error: function(jqXHR, textStatus, errorThrown) {
+      showErrorMessageBox(jqXHR.responseText);
+      return false;
+    }
+    , success: function(data){
+      var tab = data.tab;
+      var compare = data.compare;
+      hideCurrentTab();
+      
+      jQuery('#main_tabs .wintabs').append(tab);
+      jQuery('#tabs_container').append(compare);
+      
+      closeBubbles();
+      
+      calculateWinTabsVisibility();
+      
+      return false;
+    } 
+  });
+  return false;
+}
       
 function onShowFicha(sender, key)
 {
   // HACK: para debuggear la apertura de tabs -> comentar las dos lineas siguientes.
   if(jQuery('#ficha_'+key).length>0)
     return showTabWindow(null, key);
+  
+  showLoading();
   
   var winTabs = jQuery('#main_tabs');
   if(!winTabs.is(':visible'))
@@ -1196,6 +1276,7 @@ function onShowFicha(sender, key)
     url: '/service/ficha/'+key+'/'+jQuery('#prop_operation_id').val()
     , type: 'get'
     , error: function(jqXHR, textStatus, errorThrown) {
+      hideLoading();
       showErrorMessageBox(jqXHR.responseText);
       return false;
     }
@@ -1232,8 +1313,14 @@ function onShowFicha(sender, key)
       
       calculateWinTabsVisibility();
       
-      jQuery('#prop_container').scrollTo(jQuery('[key|='+key+']'), 800 );
+      try{
+        jQuery('#prop_container').scrollTo(jQuery('[key|='+key+']'), 800 );
+      }
+      catch(err)
+      {}
       onListedPropertyIsActive(key);
+      
+      hideLoading();
       return false;
     } 
   });
@@ -1514,3 +1601,4 @@ function sendMail(form){
   return false;
 }
 /* ================================================ */
+

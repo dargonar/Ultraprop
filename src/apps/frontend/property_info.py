@@ -6,7 +6,7 @@ from google.appengine.api import mail
 
 from webapp2 import abort, get_app, cached_property # uri_for as url_for
 
-from search_helper import config_array
+from search_helper import config_array, MAX_QUERY_RESULTS
 from models import Property, ImageFile
 
 from utils import get_or_404, FrontendHandler, get_bitly_url
@@ -91,10 +91,54 @@ class Ficha(FrontendHandler):
 class Compare(FrontendHandler):
   def get(self, **kwargs):
     
-    return self.render_response('frontend/compare.html'
-                          , config_array=config_array
-                          , preset={})
-
+    keys = kwargs['keys']
+    oper = int(kwargs['oper'])
+    if keys is None or len(keys)<1:
+      abort(404)
+      
+    properties              = get_or_404(kwargs['keys'][:-1].split(',')) 
+    
+    data = {  #'price':                    {'value':9999999999.9,  'key':'', 'comp':'<'} ,
+              'area_indoor':            {'value':0.0,           'key':'', 'comp':'major_than'}
+              , 'area_outdoor':         {'value':0.0,           'key':'', 'comp':'major_than'}
+              , 'rooms':                {'value':0,             'key':'', 'comp':'major_than'}
+              , 'bedrooms':             {'value':0,             'key':'', 'comp':'major_than'}
+              , 'bathrooms':            {'value':0,             'key':'', 'comp':'major_than'}
+              , 'year_built':           {'value':9999999999,    'key':'', 'comp':'minor_than'}
+              , 'prop_state_id':        {'value':9999999999,    'key':'', 'comp':'minor_than'}
+            }
+    if int(oper)==Property._OPER_SELL:
+      price_field       = 'price_sell'
+      data[price_field] =   {'value':9999999999.9,  'key':'', 'comp':'minor_than'}
+    else:
+      price_field       = 'price_rent'
+      data[price_field] =   {'value':9999999999.9,  'key':'', 'comp':'minor_than'}
+   
+    images = {}
+    for prop in properties:
+      images[str(prop.key())] = ImageFile.all().filter('property =', prop.key()).order('position')
+      for attr in data.keys():
+        prop_attr_value = getattr(prop, attr)
+        if getattr(self, data[attr]['comp'])(prop_attr_value, data[attr]['value']):
+          #data[attr]['key'] = str(prop.key())
+          data[attr]['value'] = prop_attr_value
+          
+    data['price']           = data[price_field]
+    compare                 = self.render_template('frontend/compare.html'
+                                    , properties=properties
+                                    , images = images
+                                    , data=data
+                                    , operation=oper
+                                    , price_field=price_field
+                                    , config_array=config_array, extra_fields=sorted(config_array['binary_values_properties'], key=config_array['binary_values_properties'].get, reverse=False))  
+    tab                     = self.render_template('frontend/templates/_compare_tab.html')
+    
+    return self.render_json_response({'compare': compare, 'tab': tab})
+  
+  def major_than(self, prop_value, current_value):
+    return prop_value>current_value
+  def minor_than(self, prop_value, current_value):
+    return prop_value<current_value
     
 class SendMail(FrontendHandler):
   def get(self, **kwargs):

@@ -157,6 +157,11 @@ def do_currencyfy(number, small=False, **args):
       return temp[:-2]
   return temp
   
+def do_operationfy(operation_id):
+  if operation_id == Property._OPER_SELL:
+    return 'Venta'
+  return 'Alquiler'
+  
 def do_pricefy(property, operation_type = None, small=False, **args):
   number = property.price_rent
   cur = property.price_rent_currency

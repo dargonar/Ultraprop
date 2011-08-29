@@ -36,7 +36,7 @@ def get_rules():
       
       Route('/service/search',                                      name='frontend/search',           handler='apps.frontend.search.Search'),
       
-      Route('/compare',                                             name='compare',                   handler='apps.frontend.property_info.Compare'),
+      Route('/compare/<keys>/<oper>',                               name='compare',                   handler='apps.frontend.property_info.Compare'),
       Route('/<slug>/ficha-<key>/<oper>',                           name='frontend/ficha',            handler='apps.frontend.property_info.Ficha:full_page'),
       Route('/service/popup/<key>/<bubble_css>/<oper>',             name='frontend/property_popup',   handler='apps.frontend.property_info.PopUp'),
       Route('/service/ficha/<key>/<oper>',                          name='frontend/property_ficha',   handler='apps.frontend.property_info.Ficha'),
