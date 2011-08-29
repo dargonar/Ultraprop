@@ -82,7 +82,7 @@ class Remove(BackendHandler):
     # Salvamos y mandamos a remover del indice
     def savetxn():
       for key in keys:
-        taskqueue.add(url=self.url_for('property/update_index'), params={'key': key,'action':'need_remove'})
+        taskqueue.add(url=self.url_for('property/update_index'), params={'key': key,'action':'need_remove'}, transactional=True)
     
     db.run_in_transaction(savetxn)
     
@@ -100,7 +100,7 @@ class Publish(BackendHandler):
     # Updateamos y mandamos a rebuild el indice si es necesario
     def savetxn():
       property.save()
-      taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':'need_rebuild' if property.status == Property._PUBLISHED else 'need_remove'})
+      taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':'need_rebuild' if property.status == Property._PUBLISHED else 'need_remove'}, transactional=True)
     
     db.run_in_transaction(savetxn)
     return self.render_response('backend/includes/prop_list.html', property=property, Property=Property)
@@ -179,7 +179,7 @@ class NewEdit(BackendHandler):
     def savetxn():
       result = property.save() if editing else property.put()
       if result != 'nones' and property.status == Property._PUBLISHED:
-        taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':result})
+        taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':result}, transactional=True)
     
     db.run_in_transaction(savetxn)
     
@@ -197,125 +197,3 @@ class NewEdit(BackendHandler):
   @cached_property
   def form(self):
     return PropertyForm(self.request.POST)
-
-# HACK DE AYUDA PARA EL UPLOAD iNICIAL    
-from taskqueue import Mapper
-from google.appengine.ext.blobstore import BlobInfo
-
-class MyModelMapper(Mapper):
-  #KIND = User
-
-  def map(self, e):
-    # PONER CODIGO ACA
-    return ([], [])
-
-  def finish(self):
-    logging.error('Terminamos...')
-
-class RunMapper(BackendHandler):
-  @need_auth(roles='ultraadmin', code=505)
-  def get(self, **kwargs):
-    from google.appengine.ext import deferred
-    mapper = MyModelMapper()
-    deferred.defer(mapper.run)
-    self.response.write('Defereado!!')
-
-class VerArchivo(BackendHandler):
-  @need_auth(roles='ultraadmin', code=505)
-  def get(self, **kwargs):
-    return self.render_response(kwargs['archivo'].replace('-','/'))
-    
-class TraerFotines(RequestHandler):
-  @need_auth(roles='ultraadmin', code=505)
-  def get(self, **kwargs):
-    for p in Property.all(keys_only=True):
-      taskqueue.add(url=self.url_for('traer_para'), params={'id': int(p.name())})
-
-    self.response.write('listop')
-    
-class TraerPara(RequestHandler):
-  def post(self, **kwargs):
-    import urllib2
-    id   = int(self.request.POST['id'])
-    path ='http://www.ultraprop.com.ar/fotos_para.asp?id=%d' % id
-    req  = urllib2.urlopen(path)
-    try:
-      for imgname in req:
-        imgname = urllib2.quote(imgname[:-1])
-        taskqueue.add(url=self.url_for('asignar_foto'), params={'id': id, 'imgname':imgname})
-    except urllib2.URLError,e:
-      logging.exception(e)
-      logging.error('u:' + str(self.request.POST.mixed()))
-    
-    self.response.write('ok')
-
-from google.appengine.api import images, files
-from google.appengine.ext import db, blobstore
-      
-class AsignarFoto(RequestHandler):
-  def post(self, **kwargs):
-    import urllib2
-    try:
-      id       = int(self.request.POST['id'])
-      imgname  = self.request.POST['imgname']
-      path     = 'http://www.ultraprop.com.ar/fotos/%d/%s' % (id,imgname)
-      property = Property.get_by_key_name(str(id))
-      
-      data = urllib2.urlopen(path).read()
-      
-      try:
-        # Create the file
-        file_name = files.blobstore.create(mime_type='image/jpg', _blobinfo_uploaded_filename=imgname)
-
-        # Open the file and write to it
-        img = images.Image(data)
-        img.resize(width=800, height=600)
-
-        
-        with files.open(file_name, 'a') as f:
-          f.write(img.execute_transforms(output_encoding=images.JPEG, quality=70))
-
-        # Finalize the file. Do this before attempting to read it.
-        files.finalize(file_name)
-
-        # Get the file's blob key
-        blob_key = files.blobstore.get_blob_key(file_name)
-        imgfile = ImageFile()
-        imgfile.title     = ''
-        imgfile.data      = ''
-        imgfile.file      = blob_key
-        imgfile.filename  = imgname
-        imgfile.realestate= property.realestate
-        imgfile.property  = property
-        imgfile.put()
-        
-        #Update property
-        if property.images_count:
-          property.images_count = property.images_count + 1
-        else:
-          property.images_count = 1
-          property.main_image   = imgfile.file
-        
-        result = property.save()
-      except Exception, e:
-        logging.error(e)
-        logging.error('--voy a retry--')
-        self.response.status_int = 500
-        return
-        
-      # if result != 'nones':
-      #  taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':result})
-    except urllib2.URLError,e:
-      logging.exception(e)
-      try:
-        logging.error('1:' + str(self.request.POST.mixed()))
-      except:
-        logging.error('--no pude1--' + str(id))
-    except Exception, e:
-      logging.exception(e)
-      try:
-        logging.error('2:' + str(self.request.POST.mixed()))
-      except:
-        logging.error('--no pude2--' + str(id))
-      
-    self.response.write('ok')

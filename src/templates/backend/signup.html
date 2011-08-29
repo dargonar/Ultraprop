@@ -54,6 +54,9 @@ $(document).ready(function() {
                 <div class="{{ 'errorbox' if form.email.errors else '' }}"> 
                   {{ form_field(form.email, label='email', class="xg long", placeholder="Correo electrónico") }}
                 </div>
+                <div class="{{ 'errorbox' if form.telephone_number.errors else '' }}"> 
+                  {{ form_field(form.telephone_number, label='telefono', class="xg long", placeholder="Teléfono") }}
+                </div>
                 <div class="{{ 'errorbox' if form.password.errors else '' }}"> 
                   {{ form_field(form.password, label='contraseña',  class="xg long", placeholder="Contraseña", id="password") }}
                 </div>

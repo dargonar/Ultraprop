@@ -90,8 +90,8 @@ class SendMail(FrontendHandler):
                ,'prop_operation_id':          self.request.GET.get('prop_operation_id', default='1')}               
                 
     def txn():
-      taskqueue.add(url=self.url_for('frontend/email_task'), params=dict({'action':'requestinfo_user'}, **context))
-      taskqueue.add(url=self.url_for('frontend/email_task'), params=dict({'action':'requestinfo_agent'}, **context))
+      taskqueue.add(url=self.url_for('frontend/email_task'), params=dict({'action':'requestinfo_user'}, **context), transactional=True)
+      taskqueue.add(url=self.url_for('frontend/email_task'), params=dict({'action':'requestinfo_agent'}, **context), transactional=True)
     
     db.run_in_transaction(txn)
     

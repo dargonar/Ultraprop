@@ -13,28 +13,25 @@ from search_helper import build_list, get_index_alphabet , calculate_price, inde
 
 from geo import geocell
 
+class Plan(db.Model):
+  _MONTHLY   = 1
+  _ONE_TIME  = 2
 
-class State(db.Model):
   name                = db.StringProperty()
-  country_code        = db.StringProperty()
+  description         = db.StringProperty()
+  type                = db.IntegerProperty()
+  amount              = db.IntegerProperty()
+  free_days           = db.IntegerProperty()
+
   def __repr__(self):
-    return self.name
+    return 'PLAN: ' + name
     
-class City(db.Model):
-  name                = db.StringProperty()
-  state               = db.ReferenceProperty(State)
-  def __repr__(self):
-    return self.name
-
-class Neighborhood(GeoModel):
-  name                = db.StringProperty()
-  zip_code            = db.StringProperty()
-  city                = db.ReferenceProperty(City)
-  # geo                 = db.ListProperty(db.GeoPt)
-  def __repr__(self):
-    return self.name
-   
 class RealEstate(db.Model):
+  
+  _TRIAL        = 1
+  _TRIAL_END    = 2
+  _ENABLED      = 3
+  _NO_PAYMENT   = 4 
   
   @classmethod
   def new(cls):
@@ -55,9 +52,11 @@ class RealEstate(db.Model):
   updated_at          = db.DateTimeProperty(auto_now=True)
   created_at          = db.DateTimeProperty(auto_now_add=True)
   
-  enable              = db.IntegerProperty()
+  status              = db.IntegerProperty()
   managed_domain      = db.IntegerProperty()
 
+  plan                = db.ReferenceProperty(Plan)
+  
   @staticmethod
   def public_attributes():
     """Returns a set of simple attributes on Immovable Property entities."""
@@ -65,7 +64,27 @@ class RealEstate(db.Model):
   
   def __repr__(self):
     return self.name
-    
+
+class Payment(db.Model):
+  trx_id              = db.StringProperty()
+  date                = db.DateProperty()
+  amount              = db.IntegerProperty()
+  assinged            = db.IntegerProperty()
+  created_at          = db.DateTimeProperty(auto_now_add=True)
+
+class Invoice(db.Model):
+  _NOT_PAID   = 1
+  _INPROCESS  = 2
+  _PAID       = 3
+  
+  realestate          = db.ReferenceProperty(RealEstate)
+  trx_id              = db.StringProperty()
+  amount              = db.IntegerProperty()
+  payment             = db.ReferenceProperty(Payment)
+  state               = db.IntegerProperty()
+  date                = db.DateProperty()
+  created_at          = db.DateTimeProperty(auto_now_add=True)
+     
 class User(db.Model):
   
   @classmethod

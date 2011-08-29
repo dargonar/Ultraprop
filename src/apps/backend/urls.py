@@ -13,10 +13,6 @@ def get_rules():
     """
     rules = [
       Route('/ver/<archivo>'    , name='ver_archivo'  , handler='apps.backend.property.VerArchivo'),
-      Route('/traerfotines'     , name='traer_fotines', handler='apps.backend.property.TraerFotines'),
-      Route('/traer_para'       , name='traer_para'   , handler='apps.backend.property.TraerPara'),
-      Route('/asignarfoto'      , name='asignar_foto' , handler='apps.backend.property.AsignarFoto'),
-      Route('/laplatear'        , name='laplatear'    , handler='apps.backend.property.LaPlatear'),
       
       Route('/admin'                     , name='backend/index/'                  , handler='apps.backend.auth.Index'),
       PathPrefixRoute('/admin', [
@@ -60,6 +56,12 @@ def get_rules():
           Route('/<key>/remove/'         , name='images/remove'     , handler='apps.backend.images.Remove'),
           Route('/<key>/bulkremove/'     , name='images/bulkremove' , handler='apps.backend.images.Remove'),
         ]),
+        
+        PathPrefixRoute('/account', [
+          Route('/status'               , name='backend/account/status'    , handler='apps.backend.account.Status'),
+        ]),
+        
+        
       ])
     ]
 

@@ -8,16 +8,17 @@ from google.appengine.api import mail
 
 from webapp2 import cached_property
 from backend_forms import SignUpForm
-from models import RealEstate, User
+from models import RealEstate, User, Plan
 from utils import get_or_404, BackendHandler
 
 class Index(BackendHandler):
   def get(self, **kwargs):
     if self.is_logged and self.is_enabled:
-      if self.is_realestate_enabled:
-        return self.redirect_to('property/list')
+      if self.session['account.realestate.status'] == RealEstate._NO_PAYMENT:
+        return self.redirect_to('backend/account/status')
       else:
-        return self.redirect_to('backend/realestate/edit')
+        return self.redirect_to('property/list')
+        
     return self.redirect_to('backend/auth/login')
     
 class Login(BackendHandler):
@@ -45,9 +46,13 @@ class Login(BackendHandler):
       
     self.do_login(user)
     
-    if not self.is_realestate_enabled:
-      self.set_info('Debe configurar la inmobiliaria para comenzar a operar.')
-      return self.redirect_to('backend/realestate/edit')
+    # TODO: PENSAR -> status es para mantener el estado de pagos.
+    # deberiamos tener otra bandera para indicar si la informacion del realestate esta completa
+    
+    #if not self.is_realestate_enabled:
+    #  self.set_info('Debe configurar la inmobiliaria para comenzar a operar.')
+    #  return self.redirect_to('backend/realestate/edit')
+    
     return self.redirect_to('property/list')
     
 class Logout(BackendHandler):
@@ -78,8 +83,14 @@ class SignUp(BackendHandler):
       return self.render_response('backend/signup.html', **kwargs)
     
     realEstate = RealEstate.new()
-    realEstate.name   = self.form.name.data
-    realEstate.email  = self.form.email.data
+    realEstate.telephone_number = self.form.telephone_number.data
+    realEstate.name             = self.form.name.data
+    realEstate.email            = self.form.email.data
+    
+    # Aca se esta forzando el plan y se pone como habilitada a la inmo
+    realEstate.plan             = Plan.all().filter('name','promo-lanzamiento').get()
+    realEstate.status           = RealEstate._TRIAL
+    
     realEstate.put()
     
     user = User.new()

@@ -105,7 +105,7 @@ class BackendMixin(object):
     self.session['account.key']                     = str(user.key())
     self.set_realestate_key(str(user.realestate.key()))
     self.session['account.realestate.name']         = user.realestate.name
-    self.session['account.realestate.enabled']      = user.realestate.enable
+    self.session['account.realestate.status']       = user.realestate.status
     self.session['account.roles']                   = map(lambda s: s.strip(), user.rol.split(','))
     
   @property
@@ -113,8 +113,8 @@ class BackendMixin(object):
     return self.is_logged and 'account.enabled' in self.session and self.session['account.enabled'] != 0
   
   @property
-  def is_realestate_enabled(self):
-    return self.is_logged and 'account.enabled' in self.session and self.session['account.realestate.enabled'] != 0
+  def is_no_payment(self):
+    return self.is_enabled and 'account.realestate.status' in self.session and self.session['account.realestate.status'] == 4
   
   def get_user_key(self):
     return self.session['account.key']
@@ -175,6 +175,9 @@ class Jinja2Mixin(object):
     if hasattr(self,'is_logged'):
       env.globals['is_logged'] = self.is_logged
     
+    if hasattr(self,'is_no_payment'):
+      env.globals['is_no_payment'] = self.is_no_payment
+      
     if hasattr(self,'has_role'):
       env.globals['has_role']  = self.has_role
 
