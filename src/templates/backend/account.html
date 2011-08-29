@@ -1,0 +1,37 @@
+{% extends "backend/_base.html" %}
+
+{% block headscript %}
+  <script type="text/javascript">
+  $(document).ready(function() {
+    //init_account();
+  });
+  </script>
+{% endblock %}
+
+{% block content %}
+
+	<div style="overflow:hidden; margin-bottom:20px;">
+		<h1>Estado de cuenta</h1>
+  </div>
+  {% if flash %}
+    <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
+  {% endif %}
+  
+  <h2 class="title">Facturas impagas</h2>
+  <table border="1">
+    {% for invoice in invoices %}
+    {% if loop.first %} 
+    <tr><td>Fecha</td><td>Monto</td><td>Pago</td></tr>
+    {% endif %}
+    <tr><td>{{invoice.date}}</td><td>{{invoice.amount}}</td><td><a href="#">garpar now!</a></td></tr>
+    {% endfor %}
+  </table>
+  
+  <h2 class="title">Plan</h2>
+  <table border="1">
+    <tr><td>Nombre</td><td>Mensual</td><td>Dias gratis</td></tr>
+    <tr><td>{{plan.description}}</td><td>{{plan.amount}}</td><td>{{plan.free_days}}</td></tr>
+  </table>
+  
+    
+{% endblock  %}
