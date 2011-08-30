@@ -125,7 +125,7 @@ class Compare(FrontendHandler):
           data[attr]['value'] = prop_attr_value
           
     data['price']           = data[price_field]
-    comp_key                = str(time.time()).split('.')[0]
+    comp_key                = str(time.time()).replace('.', '')
     compare                 = self.render_template('frontend/compare.html'
                                     , properties=properties
                                     , images = images
@@ -145,7 +145,7 @@ class Compare(FrontendHandler):
     
 class SendMail(FrontendHandler):
   def get(self, **kwargs):
-    self.request.charset = 'utf-8'
+    self.request.charset  = 'utf-8'
     
     key                   = kwargs['key']
     
