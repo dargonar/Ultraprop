@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import time
 from google.appengine.api import taskqueue
 from google.appengine.ext import db
 from google.appengine.api import mail
@@ -124,14 +125,16 @@ class Compare(FrontendHandler):
           data[attr]['value'] = prop_attr_value
           
     data['price']           = data[price_field]
+    comp_key                = str(time.time()).split('.')[0]
     compare                 = self.render_template('frontend/compare.html'
                                     , properties=properties
                                     , images = images
                                     , data=data
                                     , operation=oper
                                     , price_field=price_field
-                                    , config_array=config_array, extra_fields=sorted(config_array['binary_values_properties'], key=config_array['binary_values_properties'].get, reverse=False))  
-    tab                     = self.render_template('frontend/templates/_compare_tab.html')
+                                    , config_array=config_array, extra_fields=sorted(config_array['binary_values_properties'], key=config_array['binary_values_properties'].get, reverse=False)
+                                    , comp_key=comp_key)  
+    tab                     = self.render_template('frontend/templates/_compare_tab.html', comp_key=comp_key)
     
     return self.render_json_response({'compare': compare, 'tab': tab})
   

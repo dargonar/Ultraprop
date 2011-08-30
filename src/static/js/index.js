@@ -1198,17 +1198,17 @@ function getNextImage(key, direction)
     
     return false;
   }
-function closeCompareTabWindow(){
-  jQuery('#tab_compare_content').remove();
-  jQuery('#tab_compare').remove();
+function closeCompareTabWindow(sender, key){
+  jQuery('#tab_compare_'+key).remove();
+  jQuery('#tab_compare_content_'+key).remove();
   selectTabMap(null);
   return false;
   // closeTabWindow(sender, key) -> chequear si quedan fichas y si es necesario cerrarlas y dejar mapa en full-state.
 }
-function showCompareTabWindow(){
-  jQuery('#tab_compare_content').show();
+function showCompareTabWindow(sender, key){
   hideCurrentTab();
-  jQuery('#tab_compare').addClass('active');
+  jQuery('#tab_compare_content_'+key).show();
+  jQuery('#tab_compare_'+key).addClass('active');
   
 }
 
