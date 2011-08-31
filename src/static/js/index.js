@@ -440,6 +440,15 @@ var cursorPosition = 0;
 var cursorsArray = null;
 
 function doSearch() {
+  
+  if(markers_coords!=null)
+  {
+    //do something
+    load_json_result(markers_coords,0, false);
+    markers_coords=null;
+    return false;
+  }
+  
   if (g_currentSearchXHR && 'abort' in g_currentSearchXHR) {
     // console.log("doSearch:: ABORTED");
     g_currentSearchXHR.abort();
@@ -561,71 +570,77 @@ function doSearch() {
       
       jQuery('#loading_sidebar').hide();
       
-      if (obj && obj.status && obj.status == 'success') {
-        // Esto es para debug, muestro LatLon'g en cartel de error y si puedo lo copio al clipboard!
-        
-        if(jQuery('#meta_debug').length>0)
-          jQuery('#meta_debug').append("<p>"+obj.the_box+"</p>");
-        
-        var cursorObject = obj.cursor;
-        // console.log('   Recibi como "next" CURSOR ['+cursorObject+']');
-        if(cursorObject!=null && cursorObject.length>0)
-        {
-          if(cursorStep>=0)
-          {
-            cursorObject = ((cursorObject=='None')?null:cursorObject);
-            cursorsArray[cursorPosition]=new Array();
-            cursorsArray[cursorPosition][1]=cursorObject;
-            if(cursorsArray.length>2)
-              cursorsArray[cursorPosition][-1]=cursorsArray[cursorPosition-2][1];
-            else
-              cursorsArray[cursorPosition][-1]=null;
-          }
-          $('#btnMoreProps_next').attr('disabled', ((cursorObject==null)?'disabled':''));
-          $('#btnMoreProps_next').attr('title',((cursorObject==null)?'':'Ver página '+ (cursorPosition+2)));
-        }
-        else
-        {
-          $('#btnMoreProps_next').attr('disabled', 'disabled');
-          $('#btnMoreProps_next').attr('title','');
-        }
-        
-        if(cursorsArray.length>1)
-        {
-          $('#btnMoreProps_prev').attr('disabled', '');
-          $('#btnMoreProps_prev').attr('title', 'Ver página '+cursorPosition);
-        }
-        else
-        {
-          $('#btnMoreProps_prev').attr('disabled', 'disabled');
-          $('#btnMoreProps_prev').attr('title', '');
-        }
-        
-        jQuery('#prop_container').html(obj.html);
-        
-        $('#tab_viewing_page').html(cursorPosition+1); // en tab1.html
-        $('#tab_viewing_count').html(obj.display_viewing_count); // en tab1.html
-        // $('#display_total_count').html(obj.display_total_count); // en map.html
-        //$('#display_viewing_count').html(obj.display_viewing_count); // en map.html
-                
-        m_last_result_object = obj; 
-        for (var i = 0; i < obj.coords.length; i++) {
-          var coord = obj.coords[i];
-          marker = createResultMarker(coord);
-        }
-        
-        jQuery('#loading_map').hide();
-      } 
-      else 
-      {
-        jQuery('#loading_map').hide();
-        jQuery('#loading_sidebar').hide();
-      }
+      load_json_result(obj, cursorStep, true);
+      
     }
   });
   enableSearchOnPan();
 }
 
+function load_json_result(obj, cursorStep, load_html){
+  if (obj && obj.status && obj.status == 'success') {
+    // Esto es para debug, muestro LatLon'g en cartel de error y si puedo lo copio al clipboard!
+    
+    if(jQuery('#meta_debug').length>0)
+      jQuery('#meta_debug').append("<p>"+obj.the_box+"</p>");
+    var cursorObject = obj.cursor;
+    // console.log('   Recibi como "next" CURSOR ['+cursorObject+']');
+    if(cursorObject!=null && cursorObject.length>0 && cursorObject!='None')
+    {
+      if(cursorStep>=0)
+      {
+        cursorObject = ((cursorObject=='None')?null:cursorObject);
+        cursorsArray[cursorPosition]=new Array();
+        cursorsArray[cursorPosition][1]=cursorObject;
+        if(cursorsArray.length>2)
+          cursorsArray[cursorPosition][-1]=cursorsArray[cursorPosition-2][1];
+        else
+          cursorsArray[cursorPosition][-1]=null;
+      }
+      $('#btnMoreProps_next').attr('disabled', ((cursorObject==null)?'disabled':''));
+      $('#btnMoreProps_next').attr('title',((cursorObject==null)?'':'Ver página '+ (cursorPosition+2)));
+    }
+    else
+    {
+      $('#btnMoreProps_next').attr('disabled', 'disabled');
+      $('#btnMoreProps_next').attr('title','');
+    }
+    
+    if(cursorsArray!=null && cursorsArray.length>1)
+    {
+      $('#btnMoreProps_prev').attr('disabled', '');
+      $('#btnMoreProps_prev').attr('title', 'Ver página '+cursorPosition);
+    }
+    else
+    {
+      $('#btnMoreProps_prev').attr('disabled', 'disabled');
+      $('#btnMoreProps_prev').attr('title', '');
+    }
+    
+    if(load_html)
+    {
+      jQuery('#prop_container').html(obj.html);
+    }
+    
+    $('#tab_viewing_page').html(cursorPosition+1); // en tab1.html
+    $('#tab_viewing_count').html(obj.display_viewing_count); // en tab1.html
+    // $('#display_total_count').html(obj.display_total_count); // en map.html
+    //$('#display_viewing_count').html(obj.display_viewing_count); // en map.html
+            
+    m_last_result_object = obj; 
+    for (var i = 0; i < obj.coords.length; i++) {
+      var coord = obj.coords[i];
+      marker = createResultMarker(coord);
+    }
+    
+    jQuery('#loading_map').hide();
+  } 
+  else 
+  {
+    jQuery('#loading_map').hide();
+    jQuery('#loading_sidebar').hide();
+  }
+}
 /**
  * Enables or disables search-on-pan, which performs new queries upon panning
  * of the map.
@@ -733,8 +748,10 @@ function onShowPopup(sender, marker, key){
         hideLoading();
         return false;
       }
-      jQuery('#prop_container').scrollTo(jQuery('[key|='+key+']'), 800 );
-      
+      try{
+        jQuery('#prop_container').scrollTo(jQuery('[key|='+key+']'), 800 );
+      }
+      catch(err){}
       hideLoading();
       return false;
     } 
@@ -746,7 +763,7 @@ function showInfoBox(m_ib_desc, marker, infoHtml, width, mMapPixelOffset)
 {
   var myOptions = {
              content: infoHtml, disableAutoPan:true, maxWidth:0, pixelOffset: mMapPixelOffset, zIndex: 1
-            ,boxStyle:{width: width}
+            ,boxStyle:{width: width, height:'auto'}
             ,closeBoxMargin: "4px 0px 0px 0px", closeBoxURL: "/img/pixel-transp.gif"
             ,infoBoxClearance: new google.maps.Size(1, 1), isHidden: false
             ,enableEventPropagation:true
@@ -1161,12 +1178,98 @@ function setWinTabsDefault(){
   currentTabWidth = defaultTabWidth;
   rules[0].style['width']=defaultTabWidth+'px';
 }
+
+
+/* COMPARE Functions */
+function getNextImage(key, direction)
+  {
+    if( $("#comparebox_"+key+" .thumblnk").length == 0 )
+      return false;
+      
+    var visible = $("#comparebox_"+key+" .thumblnk:visible").hide();
+    
+    var prox = direction > 0 ? visible.next() : visible.prev();
+    if( prox.length == 0 ) prox = direction > 0 ? $("#comparebox_"+key+" .thumblnk:first") : prox = $("#comparebox_"+key+" .thumblnk:last");
+    
+    prox.show();
+    visible.hide();
+
+    $("#comparebox_"+key+" .qty>font").text( prox.attr('id').substring(6) );
+    
+    return false;
+  }
+function closeCompareTabWindow(sender, key){
+  jQuery('#tab_compare_'+key).remove();
+  jQuery('#tab_compare_content_'+key).remove();
+  selectTabMap(null);
+  return false;
+  // closeTabWindow(sender, key) -> chequear si quedan fichas y si es necesario cerrarlas y dejar mapa en full-state.
+}
+function showCompareTabWindow(sender, key){
+  hideCurrentTab();
+  jQuery('#tab_compare_content_'+key).show();
+  jQuery('#tab_compare_'+key).addClass('active');
+  
+}
+
+function onShowCompare(){
+  var checkeds = jQuery('#prop_container input.chk:checked');
+  
+  if(checkeds.length<2)
+  {
+    showErrorMessageBox('Seleccione al menos 2 propiedades del listado. Debe seleccionar tildando la caja al lado del título del inmueble.');
+    return false;
+  }
+    
+  var winTabs = jQuery('#main_tabs');
+  if(!winTabs.is(':visible'))
+  {
+    enableSearchOnPan(false);
+    jQuery('#foot_map').hide();
+    winTabs.show();
+  }
+  
+  var props    = '';
+  checkeds.each(
+    function(index, value)
+    {
+      props+=jQuery(value).attr('key')+',';
+    }
+  );
+  
+  // Obtengo comparacion.
+  jQuery.ajax({
+    url: '/compare/'+props+'/'+jQuery('#prop_operation_id').val()
+    , type: 'get'
+    , error: function(jqXHR, textStatus, errorThrown) {
+      showErrorMessageBox(jqXHR.responseText);
+      return false;
+    }
+    , success: function(data){
+      var tab = data.tab;
+      var compare = data.compare;
+      hideCurrentTab();
+      
+      jQuery('#main_tabs .wintabs').append(tab);
+      jQuery('#tabs_container').append(compare);
+      
+      closeBubbles();
+      
+      calculateWinTabsVisibility();
+      
+      return false;
+    } 
+  });
+  return false;
+}
       
 function onShowFicha(sender, key)
 {
   // HACK: para debuggear la apertura de tabs -> comentar las dos lineas siguientes.
   if(jQuery('#ficha_'+key).length>0)
     return showTabWindow(null, key);
+  
+  showLoading();
   
   var winTabs = jQuery('#main_tabs');
   if(!winTabs.is(':visible'))
@@ -1181,6 +1284,7 @@ function onShowFicha(sender, key)
     url: '/service/ficha/'+key+'/'+jQuery('#prop_operation_id').val()
     , type: 'get'
     , error: function(jqXHR, textStatus, errorThrown) {
+      hideLoading();
       showErrorMessageBox(jqXHR.responseText);
       return false;
     }
@@ -1217,8 +1321,14 @@ function onShowFicha(sender, key)
       
       calculateWinTabsVisibility();
       
-      jQuery('#prop_container').scrollTo(jQuery('[key|='+key+']'), 800 );
+      try{
+        jQuery('#prop_container').scrollTo(jQuery('[key|='+key+']'), 800 );
+      }
+      catch(err)
+      {}
       onListedPropertyIsActive(key);
+      
+      hideLoading();
       return false;
     } 
   });
@@ -1499,3 +1609,4 @@ function sendMail(form){
   return false;
 }
 /* ================================================ */
+

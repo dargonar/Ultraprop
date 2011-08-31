@@ -1,11 +1,14 @@
+{% set address  = property|addressify %}
+{% set headline = property|headlinify %}
 <ul class="prop_content" key="{{ property.key()|string }}">
   <li class="prop_box" id="prop_box_{{ property.key()|string }}" 
     onmouseout="return onMouseOutProp('{{ property.key()|string }}');" onmouseover="return onMouseOverProp('{{ property.key()|string }}');" >
     <div class="bdrTop"></div>
     <div class="head">
-      <!--img src="/img/misc/transparent.png" class="chk selected"/-->
       <div class="address">
-        <a href="#" onclick="return onShowFicha(this, '{{property.key()}}');" title="Ver ficha de propiedad">{{ property | addressify }}</a>
+        <input type="checkbox" class="chk" key="{{ property.key()|string }}" title="Marque esta propiedad para compararla con otras propiedades" />
+        <a href="{{ url_for('frontend/ficha', slug=(headline+'-'+address)|slugify ,key=property.key(), oper=price_data_operation)}}" onclick="return onShowFicha(this, '{{property.key()}}');" 
+          title="Ver ficha: {{ headline }} - {{address}} " style="overflow:hidden; height: 20px; width: 290px;display:inline-block;" >{{ address }}</a>
         <!--a href="#" onclick="return false;" class="index" title="Indice del paginador">{# {index} #}&nbsp;</a-->
       </div>
       <!--a class="close" title="Quitar de la vista" onclick="return removeProperty('{{property.key()}}');" ></a>
@@ -13,9 +16,10 @@
     </div>
       
     <!-- div class="picbox" onclick="return onShowPopup(this, null, '--key--');"-->
-    <div class="picbox" onclick="return onShowFicha(this, '{{property.key()}}');">
-      <img class="viewBubble pic" {% if property.main_image %} src="{{url_for('images/show',key=property.main_image.key()|string, width=115, height=86)}}" {% else %} src="/img/picturebox/nophoto_115x86.jpg"  {% endif %} onerror="this.src='/pics/small/sample1.jpg';" title="{{property | headlinify}}"/>
-      <div class="qty">{{ property.images_count }}&nbsp;fotos</div>
+    <div class="picbox" onclick="return onShowFicha(this, '{{property.key()}}');" style="position:relative;">
+      <div class="qty" style="position:absolute;bottom:0;" >{{ property.images_count }}&nbsp;fotos</div>
+      <img class="viewBubble pic" {% if property.main_image %} src="{{url_for('images/show',key=property.main_image.key()|string, width=115, height=86)}}" {% else %} src="/img/picturebox/nophoto_115x86.jpg"  {% endif %} onerror="this.src='/pics/small/sample1.jpg';" title="Ver ficha: {{ headline }} - {{address}} "/>
+      
     </div>
         
     <div class="databox">
@@ -31,12 +35,12 @@
         </dt>
         <dd>
             <!-- [property.area_outdoor|int , property.area_indoor|int]|sum -->
-            Superficie cub.<p class="superficie">{{ "%.1f"|format(property.area_indoor) }} m²</p>
+            Superficie tot.<p class="superficie" title="Superficie total">{{ property|totalareafy }}</p>
         </dd>
       </dl>
       <!-- year_built -->
       <p class="detail">{{ property | headlinify }}, 
-        {{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_outdoor']) }}
+        {{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor']) }}
       </p>
     </div>
   </li>

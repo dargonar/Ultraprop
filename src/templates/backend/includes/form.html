@@ -4,19 +4,15 @@
 <script type="text/javascript">
 $(document).ready(function() {
   init_new_property();
-
-
-$('#btnMaximize').toggle(function() {
-	$('#location_box').addClass('fullsize');
-	$(this).removeClass('maximize');
-	$(this).addClass('minimize');
-	}, function() {
-	$('#location_box').removeClass('fullsize');
-	$(this).removeClass('minimize');
-	$(this).addClass('maximize');
-});
-
-
+  $('#btnMaximize').toggle(function() {
+    $('#location_box').addClass('fullsize');
+    $(this).removeClass('maximize');
+    $(this).addClass('minimize');
+    }, function() {
+    $('#location_box').removeClass('fullsize');
+    $(this).removeClass('minimize');
+    $(this).addClass('maximize');
+  });
 });
 </script>
 {% endblock %}
@@ -36,7 +32,7 @@ $('#btnMaximize').toggle(function() {
           {{form.prop_operation_id(type='hidden')}}
           <dd class="operation {% if form.prop_operation_id.errors %}errorbox{% endif %}">
               <p class="h2">Tipo de Operación</p>
-              {{ ff.field_operation(form.rent_yes, form.price_rent_currency, form.price_rent) }}
+              {{ ff.field_operation(form.rent_yes, form.price_rent_currency, form.price_rent, form.price_expensas) }}
               {{ ff.field_operation(form.sell_yes, form.price_sell_currency, form.price_sell) }}
               {% if form.prop_operation_id.errors %}
               <p class="error">{{form.prop_operation_id.errors.0}}</p>
@@ -109,7 +105,7 @@ $('#btnMaximize').toggle(function() {
         <div class="example_box">
         	<a class="close" href="#" title="Cerrar ayuda"></a>
             Ejemplo: <b>Av 44 1100, La Plata, Buenos Aires.</b><br />
-            Busque una zona familiar próxima a la propiedad. <b>ejemplo: La Plata, Buenos Aires, Argentina</b>
+            Si no encuentra la dirección, busque una zona familiar próxima a la propiedad (en el ejemplo: <b> La Plata, Buenos Aires, Argentina</b>).
         </div>
 	</dd>
   </dl>
@@ -133,7 +129,7 @@ $('#btnMaximize').toggle(function() {
     <dd>
     	<div id="location_glass" title="Antes de este paso, debe ubicar la propiedad."></div>
         <div class="location_head border">
-            <span class="indication">De ser necesario, modifique los valores manualmente.</span>
+            <span class="indication">De ser necesario, modifique los campos de la dirección que considere oportuno.</span>
         </div>
         <dl class="form x2col">
 {{ ff.field(form.country, style='width:200px;') }}
@@ -190,8 +186,8 @@ $('#btnMaximize').toggle(function() {
     
   <!-- NAV BUTTONS -->
   <div class="navButtons">
-      <input class="btnWizard prev" name="" type="submit" value="Guardar" />
-      <input id="toimages" class="btnWizard next" name="" type="submit" value="Guardar y Cargar Fotos" />
+      <input class="btnWizard prev" name="" type="submit" value="Guardar" title="Guardar y volver al listado de propiedades" />
+      <input id="toimages" class="btnWizard next" name="" type="submit" value="Guardar y Cargar Fotos" title="Guardar y cargar fotos de la propeidad"/>
   </div>
 </form>
 {% endblock %}

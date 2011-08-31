@@ -46,9 +46,10 @@
   
 <!-- LISTA DE PROPIEDADES -->
 <div class="prop_container" id="prop_container">
+  {{ html_property_list if html_property_list is defined and html_property_list else ''}}
 </div>
 
 <div class="foot_prop_list">
     <div class="qty">Viendo <b id="tab_viewing_count">0</b> propiedades. Página <b id="tab_viewing_page">0</b>.</div>
-     <!--input onclick="return false;" id="btnCompare" class="btnCompare" type="button" value="Comparar"></input-->
+     <a onclick="return onShowCompare();" href="#" id="btnCompare" class="btnCompare">Comparar</a>
 </div>

@@ -1,5 +1,11 @@
   {% extends "frontend/_base.html"%}
   
+  {%block metas%}
+    <title>ULTRAPROP - Inicio</title>
+    <meta name="description" content="Encuentre su propiedad en La Plata y el Gran buenos Aires. Ubique casa, departamento, ph, oficina, local, galpón, consultorio, country, quinta, lote, terreno, cochera o campo en venta y en alquiler." />
+    <meta name="keywords" content="Ultraprop, búsqueda de inmuebles por mapa, casa, departamento, ph, oficina, local, galpón, consultorio, country, quinta, lote, terreno, cochera, campo, en alquiler, en venta" />
+  {%endblock%}
+  
   {%block head%}
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600&v2' rel='stylesheet' type='text/css'>
     <script src="/js/home.js?v={{app_version_id}}" type="text/javascript"></script>
@@ -50,7 +56,7 @@
   {%endblock%}  
   
   {% block body %}
-  
+    
   <body class="frontend_home">
     <div id="container" align="center">
         <!-- /// Container 960 /// -->
@@ -233,6 +239,26 @@ encontrá el tuyo de la forma más Simple.
               </div> 
               <br/>
             </div>
+        </div>
+        <div id="footer">
+          <div class="inner">
+            <div style="height:auto;margin-bottom:5px;width:100%;">
+              <div style="float:left;padding:5px 5px 0px 0px;">
+                <img src="/img/logos/ultraprop_footer.png" alt="Ultraprop" />
+              </div>
+              <div style="color:#FFFFFF;left:200px;margin:8px 0px 5px 5px;">
+                El uso de este sitio web implica la aceptación de los Términos y Condiciones y la Política de Privacidad de ultraprop.com.ar.
+                <br/>Copyright © 2011 - Todos los derechos reservados. Protección de Datos Personales.
+              </div>
+              <br/>
+              <br/>
+            </div>
+            Encontrá la propiedad que estás buscando en <b>ULTRAPROP</b>:
+            {% for link in direct_links %}
+              <a href="{{ url_for('frontend/map/slug/key', slug=link.slug, key_name_or_id=link.key().id()|string) }}">{{link.description}}</a>
+              {{ ',' if loop.index<loop.length else '.'}}
+            {% endfor %}
+          </div>
         </div>
     </div>
   </body>
