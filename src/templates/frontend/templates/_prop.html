@@ -8,7 +8,7 @@
       <div class="address">
         <input type="checkbox" class="chk" key="{{ property.key()|string }}" title="Marque esta propiedad para compararla con otras propiedades" />
         <a href="{{ url_for('frontend/ficha', slug=(headline+'-'+address)|slugify ,key=property.key(), oper=price_data_operation)}}" onclick="return onShowFicha(this, '{{property.key()}}');" 
-          title="Ver ficha: {{ headline }} - {{address}} " style="overflow:hidden; height: 20px; width: 290px;display:inline-block;" >{{ address }}</a>
+          title="Ver ficha: {{ headline }} - {{address}} " class="address_link" >{{ address }}</a>
         <!--a href="#" onclick="return false;" class="index" title="Indice del paginador">{# {index} #}&nbsp;</a-->
       </div>
       <!--a class="close" title="Quitar de la vista" onclick="return removeProperty('{{property.key()}}');" ></a>
