@@ -36,7 +36,7 @@
         
           {% for img in images %}
             {% if loop.index == 1 %}
-              <div class="qty">foto <font>1</font> de {{ loop.length }}</div>
+              <div class="qty">foto <font class="qty_font">1</font> de {{ loop.length }}</div>
               <center>
             {% endif %}
             <img id="image_{{loop.index}}" class="popupimg" style="max-width:306px; max-height:230px; {%if loop.index != 1 %} display:none {%endif%}" src="{{ url_for('images/show', key=img.file.key()|string, width=306, height=230) }}" onerror="this.src='/img/picturebox/nophoto_306x230.jpg';" />

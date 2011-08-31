@@ -858,14 +858,18 @@ body.frontend_search .picbox .qty {
 	position: relative;
 	height:14px;
 	margin-top:-15px;
- *margin-top:-18px !important;
+ /*margin-top:-18px !important;*/
 	border-right:solid 1px #fff;
 	border-top:solid 1px #fff;
 	width:38px;
   position:absolute;
   bottom:0px;
   left:0px;
+  font-size:10px;
 }
+
+.qty_font{ font-size:10px;}
+
 body.frontend_search .databox {
 	float:left;
 	right:0;
