@@ -1217,7 +1217,7 @@ function onShowCompare(){
   
   if(checkeds.length<2)
   {
-    showErrorMessageBox('Seleccione al menos 2 propiedades del listado. Debe seleccionar tildando la caja al lado del título del inmueble.');
+    showErrorMessageBox('Debe seleccionar al menos 2 propiedades del listado.');
     return false;
   }
     

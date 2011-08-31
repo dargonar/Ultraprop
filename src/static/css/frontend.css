@@ -815,16 +815,16 @@ body.frontend_search .favorite.selected {
 	background:url(/img/icons/favorite.png) no-repeat -16px 0px;
 }
 body.frontend_search .chk {
-	background:url(/img/icons/chk.png) no-repeat;
+/*	background:url(/img/icons/chk.png) no-repeat;*/
 	width:16px;
 	height:16px;
 	float:left;
 	margin-left:10px;
-	margin-right:6px;
-	margin-top:2px;
+/*	margin-right:6px;
+	margin-top:2px;*/
 	cursor:pointer;
 }
-body.frontend_search .chk:hover {
+/*body.frontend_search .chk:hover {
 	background:url(/img/icons/chk.png) no-repeat -16px 0px;
 }
 body.frontend_search .chk.selected {
@@ -832,7 +832,7 @@ body.frontend_search .chk.selected {
 }
 body.frontend_search .chk.selected:hover {
 	background:url(/img/icons/chk.png) no-repeat -48px 0px;
-}
+}*/
 body.frontend_search .picbox {
 	width:115px;
 	height:86px;
@@ -1312,6 +1312,9 @@ body.frontend_search .bubble .picbox .qty, body.frontend_search .compare_box .qt
 	width:70px;
 	text-align:center;
 }
+
+.qty_font { font-size: 10px;}
+
 /* ///// BUTTONS MORE PROPS ///// */
 body.frontend_search #btnMoreProps {
 	position:absolute;
@@ -1823,6 +1826,9 @@ body.frontend_search .mnuActions .visit {
 body.frontend_search .infoBox {
 	clear:both;
 }
+
+body.frontend_search .infoBox.file { width:616px;}
+
 body.frontend_search .infoBox h2 {
 	/*	border-bottom:1px solid #65A33A;*/
 	border-bottom:1px solid #EFEFEF;
@@ -1854,7 +1860,8 @@ body.frontend_search ul.detail li {
 }
 
 body.frontend_search .ficha_content ul.detail li {
-  width:146px;
+/*  width:146px;*/ 
+	width:185px;
 }
 /* ///// CONTACT BOX ///// */
 body.frontend_search .contactBox {
