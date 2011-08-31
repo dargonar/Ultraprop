@@ -1251,7 +1251,7 @@ body.frontend_search .btnInfo , body.frontend_search #btnInfo {
   position:absolute;
 	z-index:104; /* En 100 comienza foto y de ahi contamos hacia arriba */
 	cursor:pointer;
-	right:16px;
+	right:5px;
 	margin-top:3px;
 	height:14px;
 	width:14px;

@@ -17,7 +17,7 @@
       
     <!-- div class="picbox" onclick="return onShowPopup(this, null, '--key--');"-->
     <div class="picbox" onclick="return onShowFicha(this, '{{property.key()}}');" style="position:relative;">
-      <div class="qty" style="position:absolute;bottom:0;" >{{ property.images_count }}&nbsp;fotos</div>
+      <div class="qty">{{ property.images_count }}&nbsp;fotos</div>
       <img class="viewBubble pic" {% if property.main_image %} src="{{url_for('images/show',key=property.main_image.key()|string, width=115, height=86)}}" {% else %} src="/img/picturebox/nophoto_115x86.jpg"  {% endif %} onerror="this.src='/pics/small/sample1.jpg';" title="Ver ficha: {{ headline }} - {{address}} "/>
       
     </div>
