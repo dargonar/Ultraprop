@@ -1218,7 +1218,9 @@ body.frontend_search .picbox_bubble {
 	width:306px;
 	height:230px;
 	background-color:#f1f1f1;
-  position:relative;
+	position: absolute; 
+	z-index:101;
+/*  position:relative;*/
 }
 body.frontend_search .picturebox {
 	width:306px;
@@ -1228,13 +1230,16 @@ body.frontend_search .picturebox {
 }
 body.frontend_search .picturebox .data {
 	color:#fff;
-	font-size:1.2em;
+	font-size:12px;
 	height:58px;
 	position:absolute;
-	left:13px;
-	right:13px;
+/*	left:13px;
+	right:13px;*/
+	left:0px;
+	right:0px;
 	display:none;
-  z-index:2;
+	
+  	z-index:103;
 }
 body.frontend_search .picturebox .data p {
 	position:absolute;
@@ -1244,9 +1249,9 @@ body.frontend_search .picturebox .data p {
 	cursor:pointer;
 }
 body.frontend_search .btnInfo , body.frontend_search #btnInfo {
-	z-index:9999;
+	/*z-index:9999;*/
   position:absolute;
-	/*z-index:3;*/
+	z-index:104; /* En 100 comienza foto y de ahi contamos hacia arriba */
 	cursor:pointer;
 	right:16px;
 	margin-top:3px;
@@ -1285,9 +1290,11 @@ body.frontend_search .buttonsSlide {
 	position:absolute;
 	overflow:hidden;
 	width:306px;
+	height:31px;
 	padding-top:99px;
 	/*left:13px;*/
-  z-index:9998;
+  /*z-index:9998;*/
+  z-index:102;
 }
 body.frontend_search .btnSlide {
 	/*	background:url(/img/backgrounds/btnSlide.gif) no-repeat;*/
