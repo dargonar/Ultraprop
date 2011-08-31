@@ -1213,6 +1213,14 @@ function showCompareTabWindow(sender, key){
 }
 
 function onShowCompare(){
+  var checkeds = jQuery('#prop_container input.chk:checked');
+  
+  if(checkeds.length<2)
+  {
+    showErrorMessageBox('Seleccione al menos 2 propiedades del listado. Debe seleccionar tildando la caja al lado del título del inmueble.');
+    return false;
+  }
+    
   var winTabs = jQuery('#main_tabs');
   if(!winTabs.is(':visible'))
   {
@@ -1222,7 +1230,7 @@ function onShowCompare(){
   }
   
   var props    = '';
-  jQuery('#prop_container input.chk:checked').each(
+  checkeds.each(
     function(index, value)
     {
       props+=jQuery(value).attr('key')+',';
