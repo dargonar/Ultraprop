@@ -23,7 +23,7 @@
         <img src="/img/pixel-transp.gif" title="Info" alt="Info" />
       </div>
       <div id="data_{{property.key()}}" class="data">
-          <p>{{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor','area_outdoor']) }}</p>
+          <p>{{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor','area_outdoor'], total_area_included=True) }}</p>
           <div class="databg"></div>
       </div>
       <!-- BOTONES SLIDE PHOTO -->

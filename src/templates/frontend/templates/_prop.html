@@ -35,12 +35,12 @@
         </dt>
         <dd>
             <!-- [property.area_outdoor|int , property.area_indoor|int]|sum -->
-            Superficie cub.<p class="superficie">{{ "%.1f"|format(property.area_indoor) }} m²</p>
+            Superficie tot.<p class="superficie" title="Superficie total">{{ property|totalareafy }}</p>
         </dd>
       </dl>
       <!-- year_built -->
       <p class="detail">{{ property | headlinify }}, 
-        {{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_outdoor']) }}
+        {{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor']) }}
       </p>
     </div>
   </li>

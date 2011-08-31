@@ -70,6 +70,10 @@ def my_float_validator(field, condition):
     if not is_number(field.data):
       raise ValidationError('El precio es invalido')
 
+def my_float_validator_simple(field):
+  if field.data.strip() != '' and not is_number(field.data):
+    raise ValidationError('El precio es invalido')
+      
 def my_int_validator(field):
   if field.data.strip() != '' and not is_int(field.data):
     raise ValidationError('El numero es invalido')
@@ -103,6 +107,7 @@ class PropertyForm(Form):
     prop.price_sell           = to_float(self.price_sell.data)
     prop.price_rent_currency  = self.price_rent_currency.data
     prop.price_rent           = to_float(self.price_rent.data)
+    prop.price_expensas       = to_float(self.price_expensas.data)
     prop.rooms                = to_int(self.rooms.data)
     prop.bedrooms             = to_int(self.bedrooms.data)
     prop.bathrooms            = to_int(self.bathrooms.data)
@@ -176,7 +181,11 @@ class PropertyForm(Form):
   price_rent_currency = SelectField(choices=[('ARS', '$'), ('USD', 'USD')])
   price_rent          = TextField()
   rent_yes            = BooleanField('Alquiler', id='op_' + str(Property._OPER_RENT))
+  price_expensas      = TextField()
   
+  def validate_price_expensas(form, field):
+    my_float_validator_simple(field)
+    
   def validate_price_rent(form, field):
     my_float_validator(field, form.prop_operation_id.data & Property._OPER_RENT != 0)
 

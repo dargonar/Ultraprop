@@ -133,7 +133,8 @@ class Compare(FrontendHandler):
                                     , operation=oper
                                     , price_field=price_field
                                     , config_array=config_array, extra_fields=sorted(config_array['binary_values_properties'], key=config_array['binary_values_properties'].get, reverse=False)
-                                    , comp_key=comp_key)  
+                                    , comp_key=comp_key
+                                    , Property=Property)  
     tab                     = self.render_template('frontend/templates/_compare_tab.html', comp_key=comp_key)
     
     return self.render_json_response({'compare': compare, 'tab': tab})

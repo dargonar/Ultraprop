@@ -163,6 +163,7 @@ class Property(GeoModel):
   # PRICES FIELDS
   price_sell              = db.FloatProperty(indexed=False)
   price_rent              = db.FloatProperty(indexed=False)
+  price_expensas          = db.FloatProperty(indexed=False, default=0.0)
   
   _CURRENCY_RATE          = 4
   _CURRENCY_ARS           = 'ARS'

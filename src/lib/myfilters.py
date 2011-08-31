@@ -38,7 +38,7 @@ def do_headlinify(prop):
     return u'%s en %s' % ( config_array['cells']['prop_type_id']['short_descriptions'][alphabet.index(prop.prop_type_id)]
                                   , '/'.join(ops))
   
-def do_descriptify(prop, cols, small=False):
+def do_descriptify(prop, cols, small=False, total_area_included=False):
   items = { 'rooms'        : { 'desc': 'ambiente'   ,'small':'amb.'       ,'plural': True  },
             'bedrooms'     : { 'desc': 'dormitorio' ,'small':'dorm.'      ,'plural': True  },
             'bathrooms'    : { 'desc': u'baño'      ,'small':u'bano.'     ,'plural': True  },
@@ -69,8 +69,23 @@ def do_descriptify(prop, cols, small=False):
     # Agregamos al arreglo
     parts.append( u'%d %s' % (val, desc) )
   
-  return ', '.join(parts)
+  stringy = ', '.join(parts)
+  
+  if not total_area_included:
+    return stringy
+  
+  total_area = do_totalareafy(prop)
+  
+  if len(total_area)>0:
+    return stringy+', '+total_area+' totales.'
+  
+  return stringy
 
+def do_totalareafy(prop):
+  if prop.area_indoor <= 0.0 and prop.area_outdoor <=0.0:
+    return ''
+  return u'%.1f m²' % (prop.area_outdoor+prop.area_indoor)
+  
 def do_addressify(prop):
 
   parts = []
@@ -169,4 +184,13 @@ def do_pricefy(property, operation_type = None, small=False, **args):
     number = property.price_sell
     cur = property.price_sell_currency
   return '<small>'+cur+'</small>'+do_currencyfy(number, small=small)
-  
+
+def do_expensasfy(property, operation_type = None, small=False, small_if_none=False, **args):
+  number = property.price_expensas
+  cur = property.price_rent_currency
+  if (not property.price_expensas) or int(operation_type) != Property._OPER_RENT:
+    if small_if_none:
+      return '<span class="mth">Sin datos / No tiene</span>'
+    else:
+      return 'Sin datos / No tiene'
+  return '<small>'+cur+'</small>'+do_currencyfy(number, small=small) + (' <span class="mth">/mensual</span>' if not small else '')

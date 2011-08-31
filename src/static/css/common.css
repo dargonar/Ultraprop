@@ -468,6 +468,10 @@ body.backend_simple dl.form dt, body.backend dl.form dt {
 body.backend_simple dl.form dd, body.backend dl.form dd {
 	width: 440px;
 }
+
+body.backend dl.form dd.operation {
+	width:540px;
+}
 /*body.backend_simple .noneBox.logotype,
 body.backend .noneBox.logotype {
     cursor: pointer;

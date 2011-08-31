@@ -4,19 +4,15 @@
 <script type="text/javascript">
 $(document).ready(function() {
   init_new_property();
-
-
-$('#btnMaximize').toggle(function() {
-	$('#location_box').addClass('fullsize');
-	$(this).removeClass('maximize');
-	$(this).addClass('minimize');
-	}, function() {
-	$('#location_box').removeClass('fullsize');
-	$(this).removeClass('minimize');
-	$(this).addClass('maximize');
-});
-
-
+  $('#btnMaximize').toggle(function() {
+    $('#location_box').addClass('fullsize');
+    $(this).removeClass('maximize');
+    $(this).addClass('minimize');
+    }, function() {
+    $('#location_box').removeClass('fullsize');
+    $(this).removeClass('minimize');
+    $(this).addClass('maximize');
+  });
 });
 </script>
 {% endblock %}
@@ -36,7 +32,7 @@ $('#btnMaximize').toggle(function() {
           {{form.prop_operation_id(type='hidden')}}
           <dd class="operation {% if form.prop_operation_id.errors %}errorbox{% endif %}">
               <p class="h2">Tipo de Operación</p>
-              {{ ff.field_operation(form.rent_yes, form.price_rent_currency, form.price_rent) }}
+              {{ ff.field_operation(form.rent_yes, form.price_rent_currency, form.price_rent, form.price_expensas) }}
               {{ ff.field_operation(form.sell_yes, form.price_sell_currency, form.price_sell) }}
               {% if form.prop_operation_id.errors %}
               <p class="error">{{form.prop_operation_id.errors.0}}</p>

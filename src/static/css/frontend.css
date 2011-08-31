@@ -1546,7 +1546,7 @@ body.frontend_search .compare_box .picbox {
 }
 body.frontend_search .compare_box .subhead {
 	height:20px;
-	font-size:1.2em;
+	font-size:12px;
 	overflow:hidden;
 	/*	background:#65a33a;
 	background:#EDF4D9;*/
@@ -1554,10 +1554,9 @@ body.frontend_search .compare_box .subhead {
 	line-height:20px;
 	border-bottom:solid 1px #fff;
 	color:#fff;
-	margin:0 10px;
-	margin-top:2px;
-	/*	width:200px;*/
-	width:190px;
+	margin: 2px 0px 0px 10px;
+	/*width:190px;*/
+  width:100%;
 }
 body.frontend_search .compare_box .subhead .type {
 	/*	width:50px;*/
@@ -1576,26 +1575,47 @@ body.frontend_search .compare_box .logo {
 	height:50px;
 	margin:2px 10px;
 }
+
 body.frontend_search .compare_box dl.properties {
 	border-top:solid 1px #91B635;
-	margin:0 10px;
-	/*font-size:1.2em;*/
-	font-size:12px;
+	margin: 0px 0px 0px 10px;
+	font-size:13px;
 	overflow:hidden;
+  background:#f9f9f9;
 }
-body.frontend_search .compare_box dl.properties dt, body.frontend_search .compare_box dl.properties dd {
+body.frontend_search .compare_box dl.properties  div
+{ 
+  clear:both;
+  display:inline-block;
+  height:auto;
+  min-height:15px;
+  border-bottom:solid 1px #ffffff;
+  width:100%;
+}
+body.frontend_search .compare_box dl.properties  dt
+{ 
+  height:auto;
+  min-height:15px;
+}
+body.frontend_search .compare_box dl.properties  dd
+{ 
+  height:auto;
+  min-height:15px;
+}
+
+body.frontend_search .compare_box dl.properties  dt, body.frontend_search .compare_box dl.properties dd {
 	padding:5px;
-	background:#f9f9f9;
 	cursor:pointer;
 }
-body.frontend_search .compare_box dl.properties dt.alt, body.frontend_search .compare_box dl.properties dd.alt {
-	padding:5px;
+
+body.frontend_search .compare_box dl.properties div.alt{
 	background:#fff;
 }
-body.frontend_search .compare_box dl.properties dt.act, body.frontend_search .compare_box dl.properties dd.act {
-	padding:5px;
+
+body.frontend_search .compare_box dl.properties div.act {
 	background:#e3eec8;
 }
+
 body.frontend_search .compare_box dl.properties dt {
 	width:85px;
 }
@@ -1603,6 +1623,7 @@ body.frontend_search .compare_box dl.properties dd {
 	font-weight:bold;
 	width:85px;
 }
+
 body.frontend_search .compare_box .extra {
 	clear:both;
 	margin:0 10px;
