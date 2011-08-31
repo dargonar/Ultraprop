@@ -24,7 +24,7 @@ class Plan(db.Model):
   free_days           = db.IntegerProperty()
 
   def __repr__(self):
-    return 'PLAN: ' + name
+    return 'PLAN: ' + self.name
     
 class RealEstate(db.Model):
   
@@ -35,7 +35,7 @@ class RealEstate(db.Model):
   
   @classmethod
   def new(cls):
-    return RealEstate(enable=0, managed_domain=1)
+    return RealEstate(status=RealEstate._TRIAL, managed_domain=1)
     
   logo                = blobstore.BlobReferenceProperty()
   name                = db.StringProperty()
@@ -58,7 +58,7 @@ class RealEstate(db.Model):
   domain_id           = db.StringProperty()
   plan                = db.ReferenceProperty(Plan)
   last_email          = db.DateProperty()
-  last_invoice        = db.ReferenceProperty()
+  last_invoice        = db.DateProperty()
   
   @staticmethod
   def public_attributes():

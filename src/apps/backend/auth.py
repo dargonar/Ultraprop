@@ -9,7 +9,7 @@ from google.appengine.api import mail
 
 from webapp2 import cached_property
 from backend_forms import SignUpForm
-from models import RealEstate, User, Plan
+from models import RealEstate, User, Plan, Invoice
 from utils import get_or_404, BackendHandler
 
 class Index(BackendHandler):
@@ -110,7 +110,7 @@ class SignUp(BackendHandler):
     invoice.put()
     
     # Volvemos a guardar el realEstate con los datos nuevos
-    realEstate.last_invoice = invoice
+    realEstate.last_invoice = invoice.date
     realEstate.save()
     
     # Generamos el usuario y le asignamos la realestate
