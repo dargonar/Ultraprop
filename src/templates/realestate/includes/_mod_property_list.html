@@ -17,7 +17,7 @@
         </li>
         <li class="detail">
           <p class="headline">{{ property|headlinify }}, 
-            {{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor','area_outdoor']) }}</font>
+            {{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor','area_outdoor'], total_area_included=True) }}</font>
           </p>
 
             <p class="price">
@@ -25,9 +25,15 @@
                 <span class="value price">{{ property|pricefy(operation_type=oper_id, small=False) }}</span>
             </p>
             <p class="sup">
-                <span class="label">Superficie Cub.</span>
-                <span class="value sup">{{property.area_indoor}} m2</span>
+                <span class="label">Superficie Total</span>
+                <span class="value sup">{{ property|totalareafy }}</span>
             </p>
+            {% if oper_id|int == Property._OPER_RENT %}
+            <p class="sup">
+                <span class="label">Expensas</span>
+                <span class="value sup">{{ property|expensasfy(operation_type=oper_id, small=False)}}</span>
+            </p>
+            {% endif %}
             
             <p class="detail">
               {{ property.main_description | truncate(172) }}

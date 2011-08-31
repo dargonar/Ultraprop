@@ -5,6 +5,6 @@
   <div class="info">
       <div class="price"><small>{{ cur }}</small> {{ price|currencyfy }}</div>
       <div class="headline">{{ property | headlinify }} </div>
-      <div class="extra">{{property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor'], small=True) }}</div>
+      <div class="extra">{{property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor'], small=True, total_area_included=True) }}</div>
   <div class="mini_point bubble_css"></div>
 </div>

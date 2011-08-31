@@ -1090,7 +1090,8 @@ body.backend ul.features li input {
 /* ///// JQUERY TRANSFORM ///// */
 body.backend div .ex-label {
 	float: left;
-	line-height: 20px;
+	/*line-height: 20px;*/
+  line-height:36px;
 	margin-right: 10px;
 }
 /* ///// PICTUREBOX ///// */
@@ -1387,9 +1388,7 @@ body.backend ul.tabs_admin li.active {
 body.backend div .ex-label.chk {
 	line-height:30px;
 }
-body.backend .operation {
-	width:400px;
-}
+
 body.backend .operation .typebox {
 	overflow:hidden;
 	clear:both;
@@ -1415,16 +1414,28 @@ body.backend .operation .typebox .chkname {
 	height:28px;
 	margin-bottom:1px;
 	float:left;
-	width:200px;
+	/*width:200px;*/
+  width:125px;
 }
 body.backend .operation .pricebox {
 	float:left;
-	width:205px;
+	/*width:205px;*/
+  width:395px;
 	margin-left:20px;
 	color: #3E8924;
 	font-size: 18px;
 	font-weight: bold;
 }
+body.backend .operation .pricebox  span.small,
+body.backend .operation .pricebox  span.small2{
+	font-size: 12px;
+	font-weight: bold;
+  padding-top:5px;
+}
+body.backend .operation .pricebox  span.small{
+  margin: 0px 5px 0px 10px;
+}
+
 body.backend .operation .pricebox select {
 	color: #3E8924;
 	font-size: 16px;
@@ -1440,6 +1451,9 @@ body.backend .operation .pricebox input {
 	font-size: 18px;
 	font-weight: bold;
 	font-family:Arial, Helvetica, sans-serif;
+}
+body.backend .operation .pricebox input.short {
+  width:60px !important;
 }
 body.backend ul.seller {
 	list-style:none;
@@ -2345,7 +2359,8 @@ dl.location dd {
 }
 
 #location_glass {
-	height:200px;
+	/*height:200px;*/
+  height:0px;
 	position:absolute;
 	z-index:2;
 	background:#fff;

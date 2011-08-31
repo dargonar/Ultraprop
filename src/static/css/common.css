@@ -451,7 +451,7 @@ body.backend h2.title, body.backend_simple h2.title {
 /* =======================================================================================================  */
 /* Eliminar en backend.css, editar los nombres de los estilos(agregando body.backend) desde aca hasta....   */
 body.backend_simple dl.form, body.backend dl.form {
-	max-width: 800px;
+	max-width: 825px;
 	overflow: hidden;
 	padding: 5px;
 	width: inherit;
@@ -467,6 +467,10 @@ body.backend_simple dl.form dt, body.backend dl.form dt {
 }
 body.backend_simple dl.form dd, body.backend dl.form dd {
 	width: 440px;
+}
+
+body.backend dl.form dd.operation {
+	width:570px;
 }
 /*body.backend_simple .noneBox.logotype,
 body.backend .noneBox.logotype {

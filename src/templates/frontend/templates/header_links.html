@@ -5,6 +5,9 @@
       <li><a href="{{ url_for('frontend/map') }}" title="Búsqueda por mapa" >Mapa</a></li>
       <li><a href="{{ url_for('backend/auth/login') }}" title="Iniciar sesión como inmobiliaria">Soy inmobiliaria</a></li>
       {% endif %}
+      {% if ficha is defined %}
+        <li><a href="{{ url_for('frontend/map') }}" title="Búsqueda por mapa" >Mapa</a></li>
+      {% endif %}
     {% else %}
       <li><a href="{{ url_for('frontend/map') }}" title="Búsqueda por mapa" >Mapa</a></li>
       <li><a href="{{ url_for('backend/auth/login') }}" title="Iniciar sesión como inmobiliaria">Soy inmobiliaria</a></li>
