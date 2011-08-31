@@ -105,7 +105,7 @@ $(document).ready(function() {
         <div class="example_box">
         	<a class="close" href="#" title="Cerrar ayuda"></a>
             Ejemplo: <b>Av 44 1100, La Plata, Buenos Aires.</b><br />
-            Busque una zona familiar próxima a la propiedad. <b>ejemplo: La Plata, Buenos Aires, Argentina</b>
+            Si no encuentra la dirección, busque una zona familiar próxima a la propiedad (en el ejemplo: <b> La Plata, Buenos Aires, Argentina</b>).
         </div>
 	</dd>
   </dl>
@@ -129,7 +129,7 @@ $(document).ready(function() {
     <dd>
     	<div id="location_glass" title="Antes de este paso, debe ubicar la propiedad."></div>
         <div class="location_head border">
-            <span class="indication">De ser necesario, modifique los valores manualmente.</span>
+            <span class="indication">De ser necesario, modifique los campos de la dirección que considere oportuno.</span>
         </div>
         <dl class="form x2col">
 {{ ff.field(form.country, style='width:200px;') }}
@@ -186,8 +186,8 @@ $(document).ready(function() {
     
   <!-- NAV BUTTONS -->
   <div class="navButtons">
-      <input class="btnWizard prev" name="" type="submit" value="Guardar" />
-      <input id="toimages" class="btnWizard next" name="" type="submit" value="Guardar y Cargar Fotos" />
+      <input class="btnWizard prev" name="" type="submit" value="Guardar" title="Guardar y volver al listado de propiedades" />
+      <input id="toimages" class="btnWizard next" name="" type="submit" value="Guardar y Cargar Fotos" title="Guardar y cargar fotos de la propeidad"/>
   </div>
 </form>
 {% endblock %}

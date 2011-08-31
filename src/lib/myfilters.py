@@ -193,4 +193,4 @@ def do_expensasfy(property, operation_type = None, small=False, small_if_none=Fa
       return '<span class="mth">Sin datos / No tiene</span>'
     else:
       return 'Sin datos / No tiene'
-  return '<small>'+cur+'</small>'+do_currencyfy(number, small=small) + (' <span class="mth">/mensual</span>' if not small else '')
+  return '<small>'+cur+'</small>'+do_currencyfy(number, small=small) + (' <span class="mth">/mes</span>' if not small else '')
