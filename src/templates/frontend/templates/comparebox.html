@@ -52,7 +52,7 @@
             <dd>{{ prop|expensasfy(operation_type=operation, small=False)}}</dd>
           </div>
         {% endif %}
-        <div>
+        <div class="alt {{'act' if data['area_total']['value']==prop.area_total else ''}}">
           <dt>Sup. Total:</dt>
           <dd>{{ prop|totalareafy }}</dd>
         </div>

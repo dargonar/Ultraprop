@@ -102,6 +102,7 @@ class Compare(FrontendHandler):
     data = {  #'price':                    {'value':9999999999.9,  'key':'', 'comp':'<'} ,
               'area_indoor':            {'value':0.0,           'key':'', 'comp':'major_than'}
               , 'area_outdoor':         {'value':0.0,           'key':'', 'comp':'major_than'}
+              , 'area_total':           {'value':0.0,           'key':'', 'comp':'major_than'}
               , 'rooms':                {'value':0,             'key':'', 'comp':'major_than'}
               , 'bedrooms':             {'value':0,             'key':'', 'comp':'major_than'}
               , 'bathrooms':            {'value':0,             'key':'', 'comp':'major_than'}
@@ -118,6 +119,7 @@ class Compare(FrontendHandler):
     images = {}
     for prop in properties:
       images[str(prop.key())] = ImageFile.all().filter('property =', prop.key()).order('position')
+      prop.area_total = prop.area_indoor+prop.area_outdoor
       for attr in data.keys():
         prop_attr_value = getattr(prop, attr)
         if getattr(self, data[attr]['comp'])(prop_attr_value, data[attr]['value']):
