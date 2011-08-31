@@ -863,7 +863,8 @@ body.frontend_search .picbox .qty {
  /*margin-top:-18px !important;*/
 	border-right:solid 1px #fff;
 	border-top:solid 1px #fff;
-	width:38px;
+	/*width:38px;*/
+	max-width:80px;
   position:absolute;
   bottom:0px;
   left:0px;
