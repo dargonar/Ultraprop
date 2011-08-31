@@ -69,7 +69,10 @@ body.backend ul.tabs li {
 	margin-bottom: -1px;
 	overflow: hidden;
 	/*	position: relative;*/
-	background: #CADF93;
+	/*background: #CADF93;*/
+	background: #EDF4D9; 
+	font-weight:bold;
+	
 	-webkit-border-top-left-radius: 4px;
 	-webkit-border-top-right-radius: 4px;
 	-moz-border-radius-topleft: 4px;
