@@ -12,13 +12,10 @@ def get_rules():
         A list of class.`tipfy.Rule` instances.
     """
     rules = [
-      # Hacko para EMI
-      Route('/ver/<archivo>', name='ver_archivo', handler='apps.backend.property.VerArchivo'),
-
       Route('/email_task', name='backend/email_task', handler='apps.backend.email.SendTask'),
       
       # Todas las rutas de billing
-      PathPrefixRoute('/billing', 
+      PathPrefixRoute('/billing', [
           
         PathPrefixRoute('/payment', [
           Route('/download'              , name='billing/payment/download'       , handler='apps.backend.payment.Download'),

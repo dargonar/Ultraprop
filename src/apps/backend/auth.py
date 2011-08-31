@@ -4,6 +4,7 @@
     ~~~~~~~~
 """
 import logging
+from datetime import datetime, date, timedelta
 from google.appengine.api import mail
 
 from webapp2 import cached_property
@@ -82,26 +83,42 @@ class SignUp(BackendHandler):
       
       return self.render_response('backend/signup.html', **kwargs)
     
+    # Aca traemos el plan por defecto
+    plan = Plan.all().filter('name','promo-lanzamiento').get()
+
+    # Generamos la inmo en estado TRIAL y le ponemos el Plan
     realEstate = RealEstate.new()
     realEstate.telephone_number = self.form.telephone_number.data
     realEstate.name             = self.form.name.data
     realEstate.email            = self.form.email.data
-    
-    # Aca se esta forzando el plan y se pone como habilitada a la inmo
-    realEstate.plan             = Plan.all().filter('name','promo-lanzamiento').get()
+    realEstate.plan             = plan
     realEstate.status           = RealEstate._TRIAL
-    
     realEstate.put()
     
+    # Generamos la primer factura con fecha hoy+dias_gratis
+    # Utilizamos el indicador I para indicar 'id' en vez de 'name'
+    first_date = (datetime.utcnow() + timedelta(days=plan.free_days)).date()
+    if first_date.day > 28:
+      first_date = date(first_date.year, first_date.month, 28)
+    
+    invoice = Invoice()
+    invoice.realestate = realEstate
+    invoice.trx_id     = '%sI%d' % ( first_date.strftime('%Y%m'), realEstate.key().id() )
+    invoice.amount     = plan.amount
+    invoice.state      = Invoice._NOT_PAID
+    invoice.date       = first_date
+    invoice.put()
+    
+    # Volvemos a guardar el realEstate con los datos nuevos
+    realEstate.last_invoice = invoice
+    realEstate.save()
+    
+    # Generamos el usuario y le asignamos la realestate
     user = User.new()
     user.email            = self.form.email.data
     user.password         = self.form.password.data
     user.rol              = 'owner'
-    
-    # Asigno inmobiliaria al Usuario.
-    user.realestate = realEstate
-    
-    # Salvo los objetos.
+    user.realestate       = realEstate
     user.put()
     
     # Mando Correo de bienvenida y validación de eMail.

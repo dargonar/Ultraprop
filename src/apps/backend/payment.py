@@ -6,7 +6,7 @@
 import logging
 from google.appengine.api import taskqueue
 
-from datetime import datetime, timedelta
+from datetime import datetime, date, timedelta
 from xml.dom import minidom
 
 from models import RealEstate, Payment, Invoice
@@ -14,12 +14,26 @@ from webapp2 import url_for, RequestHandler
 from dm import ipn_download
 from taskqueue import Mapper
 
+def send_mail(template, re, invoice=None):
+  
+  params={'template': template, 
+          'rekey'   : str(re.key())}
+  
+  if invoice:
+    params['invoice'] = str(invoice.key())
+    
+  taskqueue.add(url=url_for('backend/email_task'), params=params)
+
+def create_transaction_number(the_date, re):
+  key = re.key()
+  if key.id():
+    return '%sI%d' % ( the_date.strftime('%Y%m'), int(key.id()) )
+    
+  return '%sN%d' % ( the_date.strftime('%Y%m'), int(re.key().name()) )
+
 class InvoicerMapper(Mapper):
   KIND    = RealEstate
 
-  def send_mail(template, re):
-    taskqueue.add(url=url_for('backend/email_task'), params={'template':template, 'rekey':str(re.key())})
-    
   def map(self, re):
     
     if re.status == RealEstate._TRIAL:
@@ -27,35 +41,57 @@ class InvoicerMapper(Mapper):
       delta = datetime.utcnow() - re.created_at
       if delta.days >= int(re.plan.free_days*0.80):
         re.state = RealEstate._TRIAL_END
-        self.send_mail('trial_end', re)
+        send_mail('trial_will_expire', re)
+        return ([re], []) # update/delete
       
     elif: re.state == RealEstate._TRIAL_END:
       # Llegamos a los free_days del Plan y todavia no pago?
       delta = datetime.utcnow() - re.created_at
       if delta.days >= re.plan.free_days:
         re.state = RealEstate._NO_PAYMENT
-        self.send_mail('no_payment', re)
+        send_mail('trial_ended', re)
+        return ([re], []) # update/delete
     
     elif: re.state == RealEstate._ENABLED:
       
-      # Obtenemos el dia de ciclo
-      cycle_day = re.created_at.day
-      if cycle_day > 28:
-        cycle_day = 28
-
-      # Es el dia del ciclo?
-      if datetime.utcnow().day == cycle_day:
-        self.send_mail('new_invoice', re)
+      # Today
+      today = datetime.utcnow().date()
       
+      next_month = re.last_invoice.month + 1
+      next_year  = re.last_invoice.year
       
-      delta = datetime.utcnow() - re.created_at
-      if delta.days >= re.plan.free_days:
+      if next_month == 13:
+        next_month = 1
+        next_year  = next_year + 1
+      
+      next_date = date(next_year, next_month, re.last_invoice.day)
+      
+      invoice = None
+      if next_date > today:
+        invoice = Invoice()
+        invoice.realestate = re
+        invoice.trx_id     = create_transaction_number(next_date, re)
+        invoice.amount     = re.plan.amount
+        invoice.state      = Invoice._NOT_PAID
+        invoice.date       = next_date
+        invoice.put()
+        
+        re.last_invoice = next_date
+        
+      # Contamos las facturas impagas, si son mas que dos, ponemos en disabled
+      # Si son menos que dos y le acabo de facturar, le envio la factura
+      not_paid_invoices = len(Invoice().all(keys_only=True).filter('realestate', re.key()).filter('status', Invoice._NOT_PAID).fetch(10))
+      if not_paid_invoices > 2:
         re.state = RealEstate._NO_PAYMENT
-        self.send_mail('no_payment', re)
+        send_mail('no_payment', re)
+        # TODO: mandar a deshablitiar
+        return ([re], [])
+      
+      elif invoice:
+        send_mail('new_invoice', re, invoice)
+        return ([re], [])
     
-    elif: re.state == RealEstate._NO_PAYMENT:
-    
-    return ([re], []) # update/delete
+    return ([], []) # update/delete
     
 
 class PaymentAssingMapper(Mapper):
@@ -67,14 +103,46 @@ class PaymentAssingMapper(Mapper):
     # Traemos la factura que este pago cancela el pago (payment)
     invoice = Invoice.all().filter('trx_id', payment.trx_id).get()
     if not invoice:
-      logging.warning('No encontre factura para el pago %s' % str(payment.key()))
+      logging.error('No encontre factura para el pago %s' % str(payment.key()))
+      return ([],[])
+    
+    # Obtenemos el realestate en funcion del trx_id
+    id_or_name = payment.trx_id[7:] #YYYYMM[NI]ddddddd
+    
+    re = None
+    if payment.trx_id[6] == 'I':
+      re = RealEstate.get_by_id(int(id_or_name))
     else:
-      # Ponemos la factura como pagada y dejamos asignado el pago
-      invoice.state        = Invoice._PAID
-      invoice.payment      = payment
-      invoice.save()
+      re = RealEstate.get_by_key_name(id_or_name)
+    
+    if re is None:
+      logging.error('No encontre el realestate para %s' % payment.trx_id)
+      return ([],[])
+    
+    invoice.realestate = re
+    
+    # Ponemos la factura en estado pagada
+    invoice.state   = Invoice._PAID
+    invoice.payment = payment
+    invoice.save()
+    
+    # Acabamos de asignar un pago, deberiamos automaticamente 
+    # poner en ENABLED a la inmo si es que no estaba en ese estado
+    # Si esta volviendo a ENABLE desde NO_PAYMENT debemos comunicarle que 'las props estan publicadas nuevamente'
+    
+    oldst = re.status
+    
+    # payment_received
+    if re.status == RealEstate._ENABLED:
+      send_mail('payment_received', re)
+    else:
+      re.status = RealEstate._ENABLED
+      re.save()
 
-    payment.assigned = 1
+      if oldst == RealEstate._NO_PAYMENT:
+        send_mail('enabled_again', re)
+    
+    payment.assigned = 1      
     return ([payment], []) # update/delete
   
 # XML Helper
@@ -99,7 +167,7 @@ class Download(RequestHandler):
 
     # Parseamos y generamos los Payment
     to_save = []
-    for pay in dom.getElementsByTagName('Credit'):
+    for pay in dom.getElementsByTagName('Pays'):
       p = Payment()
       p.invoice  = None
       p.date     = get_xml_value(pay,'Trx_Date')

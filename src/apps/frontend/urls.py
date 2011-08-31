@@ -10,14 +10,20 @@ def get_rules():
         A list of class:`tipfy.Rule` instances.
     """
     rules = [
+    
+      #-------------------------------URL HACKS VAN ACA----------------------------------------
       # Esta la pongo aca por puta
-      Route('/webclient/index.asp',   name='oldredir',            handler='apps.realestate.handlers.Redirect'),
+      Route('/webclient/index.asp',   name='oldredir',            handler='apps.backend.hacks.OldRealEstateRedirect'),
 
       # HACK: Urls de old ultraprop.
-      Route('/Integrantes.asp',       name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
-      Route('/institucional.html',    name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
-      Route('/Contactenos.html',      name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
-      Route('/Centro.asp',            name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
+      Route('/Integrantes.asp',       name='redir/frontend/home', handler='apps.backend.hacks.IndexRedir'),
+      Route('/institucional.html',    name='redir/frontend/home', handler='apps.backend.hacks.IndexRedir'),
+      Route('/Contactenos.html',      name='redir/frontend/home', handler='apps.backend.hacks.IndexRedir'),
+      Route('/Centro.asp',            name='redir/frontend/home', handler='apps.backend.hacks.IndexRedir'),
+      
+      # Hacko para EMI
+      Route('/ver/<archivo>',         name='ver_archivo',         handler='apps.backend.hacks.VerArchivo'),
+      #----------------------------------------------------------------------------------------
       
       Route('/',                                                    name='frontend/home',             handler='apps.frontend.home.Index'),
       

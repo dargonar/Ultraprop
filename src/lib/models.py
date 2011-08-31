@@ -54,10 +54,9 @@ class RealEstate(db.Model):
   
   status              = db.IntegerProperty()
   managed_domain      = db.IntegerProperty()
+  
   domain_id           = db.StringProperty()
-  
   plan                = db.ReferenceProperty(Plan)
-  
   last_email          = db.DateProperty()
   last_invoice        = db.ReferenceProperty()
   
@@ -77,7 +76,7 @@ class Payment(db.Model):
   created_at          = db.DateTimeProperty(auto_now_add=True)
 
 class Invoice(db.Model):
-  _INCOMING   = 0
+  _INVALID    = 0
   _NOT_PAID   = 1
   _INPROCESS  = 2
   _PAID       = 3

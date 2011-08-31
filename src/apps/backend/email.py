@@ -24,13 +24,6 @@ class SendTask(MyBaseHandler):
 
   def common_context(self):
     context = { 'server_url':                 'http://'+self.request.headers.get('host', 'no host')
-               ,'realestate_name':            realestate.name
-               ,'realestate_website':         realestate.website
-               ,'property_link':              property_link
-               ,'sender_name':                self.request.POST.get('sender_name')
-               ,'sender_email':               self.request.POST.get('sender_email')
-               ,'sender_comment':             self.request.POST.get('sender_comment')
-               ,'prop_operation_id':          prop_operation_id
               , 'support_url' :               'http://'+self.request.headers.get('host', 'no host')}
     
   def trial_will_expire(self, params):
@@ -45,12 +38,12 @@ class SendTask(MyBaseHandler):
   def enabled_again(self, params):
     pass
 
+  def payment_received(self, params):
+    pass
+    
   def new_invoice(self, params):
     pass
-  
-  def pending_invoices(self, params):
-    pass
-  
+    
   def requestinfo_user(self, params):
     key                   = params['propery_key']
     property              = db.get(key) 

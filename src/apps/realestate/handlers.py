@@ -16,12 +16,6 @@ from utils import get_or_404, RealestateHandler
 from google.appengine.api import mail
 from models import User
 
-# Redireccion por si alguien entra con url vieja
-class Redirect(RealestateHandler):
-  def get(self, **kwargs):
-    realestate = self.request.GET['INM_Id']
-    self.redirect_to('realestate/search', realestate=realestate)
-
 # Index va a ser la homepage de la inmobiliaria, creo que quedará obsoleto.    
 class Index(RealestateHandler):
   def get(self, **kwargs):
