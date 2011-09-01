@@ -70,9 +70,8 @@ body.backend ul.tabs li {
 	overflow: hidden;
 	/*	position: relative;*/
 	/*background: #CADF93;*/
-	background: #EDF4D9; 
+	background: #EDF4D9;
 	font-weight:bold;
-	
 	-webkit-border-top-left-radius: 4px;
 	-webkit-border-top-right-radius: 4px;
 	-moz-border-radius-topleft: 4px;
@@ -226,8 +225,7 @@ body.backend #filterbox {
 
 body.backend #searchbox2 {
 	/*	display:block;*/
-	overflow:hidden; 
-	/*	margin:10px 0;
+	overflow:hidden;/*	margin:10px 0;
 	margin-bottom:2px;
 	background:#090;
 	background:#65A33A;
@@ -917,7 +915,7 @@ body.backend .container .colLeft {
 	width:1%;
 }
 body.backend h3 {
-/*	color: #65A33A;*/
+	/*	color: #65A33A;*/
 	font-size: 14px;
 }
 /*h2.title {
@@ -1388,7 +1386,6 @@ body.backend ul.tabs_admin li.active {
 body.backend div .ex-label.chk {
 	line-height:30px;
 }
-
 body.backend .operation .typebox {
 	overflow:hidden;
 	clear:both;
@@ -1426,16 +1423,14 @@ body.backend .operation .pricebox {
 	font-size: 18px;
 	font-weight: bold;
 }
-body.backend .operation .pricebox  span.small,
-body.backend .operation .pricebox  span.small2{
+body.backend .operation .pricebox span.small, body.backend .operation .pricebox span.small2 {
 	font-size: 12px;
 	font-weight: bold;
-  padding-top:5px;
+	padding-top:5px;
 }
-body.backend .operation .pricebox  span.small{
-  margin: 0px 5px 0px 10px;
+body.backend .operation .pricebox span.small {
+	margin: 0px 5px 0px 10px;
 }
-
 body.backend .operation .pricebox select {
 	color: #3E8924;
 	font-size: 16px;
@@ -1453,7 +1448,7 @@ body.backend .operation .pricebox input {
 	font-family:Arial, Helvetica, sans-serif;
 }
 body.backend .operation .pricebox input.short {
-  width:60px !important;
+	width:60px !important;
 }
 body.backend ul.seller {
 	list-style:none;
@@ -2338,26 +2333,21 @@ dl.location dd {
 	background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -720px -170px transparent;
 	float:right;
 }
-
 #location_box {
 	border:solid 1px #ccc;
 }
 .fullsize {
 	position:absolute;
-	
 	left:10px;
 	right:10px;
-	top:10px; 
+	top:10px;
 	bottom:10px;
-
 	z-index:1000;
 	background:#fff;
-	
 	-moz-box-shadow:0px 0px 5px #000000;
 	-webkit-box-shadow:0px 0px 5px #000000;
-	box-shadow:0px 0px 5px #000000; 
+	box-shadow:0px 0px 5px #000000;
 }
-
 #location_glass {
 	/*height:200px;*/
   height:0px;
@@ -2384,25 +2374,132 @@ dl.location dd {
 	background-color: #9C6;
 	background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -693px -279px transparent;
 }
-
 /* ///// MY ACCOUNT ///// */
-.tbl_billing { margin-bottom:30px;}
-.tbl_billing th { border:solid 1px #ccc; border-left:solid 1px #e5e5e5; border-right: none; background:#F9F9F9; padding:4px 8px; text-align:left;}
-.tbl_billing th:first-child {border-left:solid 1px #ccc;}
-.tbl_billing th:last-child {border-right:solid 1px #ccc;}
+.tbl_billing {
+	margin-bottom:2px;
+}
+
+.tbl_billing th {
+	border:solid 1px #ccc;
+	border-left:solid 1px #e5e5e5;
+	border-right: none;
+	background:#F9F9F9;
+	padding:4px 8px;
+	text-align:left;
+}
+.tbl_billing th:first-child {
+	border-left:solid 1px #ccc;
+}
+.tbl_billing th:last-child {
+	border-right:solid 1px #ccc;
+}
+.tbl_billing td {
+	padding:8px;
+	font-weight:bold;
+	border:solid 1px;
+	border-left:none;
+	border-right:none;
+	vertical-align:middle;
+}
+
+.tbl_billing th.status, .tbl_billing td.status { width:130px;}
+.tbl_billing th.number, .tbl_billing td.number { width:110px;}
+.tbl_billing th.date, .tbl_billing td.date { width:110px;}
+.tbl_billing th.expiration, .tbl_billing td.expiration{ width:110px;}
+.tbl_billing th.amount, .tbl_billing td.amount {width:120px;}
+.tbl_billing th.action, .tbl_billing td.action {width: auto;}
+
+
 
 /* PENDING */
-.tbl_billing tr.pending td {background-color:#fee2e2; padding:8px; font-weight:bold; border:solid 1px #fea8a8; border-left:none; border-right:none; vertical-align:middle;}
-.tbl_billing tr.pending td:first-child {border-left:solid 1px #fea8a8;}
-.tbl_billing tr.pending td:last-child {border-right:solid 1px #fea8a8;}
-td.status span { display:block; float:left;}
-.tbl_billing tr.pending td.status span.icon { height:16px; width:16px; margin-right:3px; background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -472px -598px transparent;}
+.tbl_billing tr.pending td {
+	background-color:#fee2e2;
+	border-color:#fea8a8;
+}
+.tbl_billing tr.pending td:first-child {
+	border-left:solid 1px #fea8a8;
+}
+.tbl_billing tr.pending td:last-child {
+	border-right:solid 1px #fea8a8;
+}
+td.status span {
+	display:block;
+	float:left;
+}
+.tbl_billing tr.pending td.status {
+	color:#CC0033;
+}
 
-.tbl_billing .btnWizard { margin:0 !important; font-size:15px !important; font-weight:bold; font-family:Arial, Helvetica, sans-serif; padding:8px 25px !important;}
+.tbl_billing tr td.status span.icon {
+	height:16px;
+	width:16px;
+	margin-right:3px;
+}
+
+.tbl_billing tr.pending td.status span.icon {
+	background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -472px -598px transparent;
+}
+.tbl_billing .btnWizard {
+	margin:0 !important;
+	font-size:15px !important;
+	font-weight:bold;
+	font-family:Arial, Helvetica, sans-serif;
+	padding:8px 25px !important;
+}
+
 
 /* APPROVED */
-.tbl_billing tr.approved td {background-color:#fff; padding:8px; font-weight:bold; border:solid 1px #fff; border-left:none; border-right:none; vertical-align:middle;}
-.tbl_billing tr.approved td.status span.icon { height:16px; width:16px; margin-right:3px; background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -552px -598px transparent;}
+.tbl_billing tr.approved td {
+	background-color:#fff;
+	padding:8px;
+	font-weight:bold;
+	border:solid 1px #fff;
+	border-left:none;
+	border-right:none;
+	vertical-align:middle;
+}
+.tbl_billing tr.approved td.status span.icon {
+	background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -552px -598px transparent;
+}
+.tbl_account {
+	padding:20px;
+}
+.tbl_account h3 {
+	margin-bottom:20px;
+}
 
-.tbl_account { padding:20px;}
-.tbl_account h3{margin-bottom:20px;}
+/* ///// IN DATE ///// */
+.tbl_billing tr.indate td {
+	background:#fff;
+	border-color:#ccc;
+}
+.tbl_billing tr.indate td:first-child {
+	border-left:solid 1px #ccc;
+}
+.tbl_billing tr.indate td:last-child {
+	border-right:solid 1px #ccc;
+}
+.tbl_billing tr.indate td.status span.icon {
+	background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -584px -597px transparent;
+}
+
+
+/* ///// IN PROCESS ///// */
+.tbl_billing tr.inprocess td {
+	background:#f6e596;
+	border-color:#e8ae3c;
+}
+.tbl_billing tr.inprocess td:first-child {
+	border-left:solid 1px #e8ae3c;
+}
+.tbl_billing tr.inprocess td:last-child {
+	border-right:solid 1px #e8ae3c;
+}
+.tbl_billing tr.inprocess td.status span.icon {
+	background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -568px -597px transparent;
+}
+
+/* ///// HELP ///// */
+.invoice_help { padding:8px; font-weight:bold;}
+.invoice_help .ico  { display:inline-block; height:16px; width:16px; margin-right:3px; background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -536px -597px transparent;}
+.invoice_help a { color:#000 !important;}
