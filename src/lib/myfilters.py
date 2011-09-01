@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from models import Property
 from re import *
 from backend_forms import status_choices
@@ -9,6 +9,9 @@ from search_helper import config_array, alphabet
 
 _slugify_strip_re = compile(r'[^\w\s-]')
 _slugify_hyphenate_re = compile(r'[-\s]+')
+
+def do_add_days(date, days):
+  return date + timedelta(days=days)
 
 def do_slugify(value):
   """

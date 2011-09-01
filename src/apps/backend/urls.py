@@ -12,9 +12,19 @@ def get_rules():
         A list of class.`tipfy.Rule` instances.
     """
     rules = [
-      Route('/ver/<archivo>'    , name='ver_archivo'  , handler='apps.backend.property.VerArchivo'),
+      Route('/email_task', name='backend/email_task', handler='apps.backend.email.SendTask'),
       
-      Route('/admin'                     , name='backend/index/'                  , handler='apps.backend.auth.Index'),
+      # Todas las rutas de billing
+      PathPrefixRoute('/billing', [
+          
+        PathPrefixRoute('/payment', [
+          Route('/download'              , name='billing/payment/download'       , handler='apps.backend.payment.Download'),
+        ]),
+        
+      ]),
+      
+      # Todas las rutas de administracion
+      Route('/admin'                     , name='backend/index/'                 , handler='apps.backend.auth.Index'),
       PathPrefixRoute('/admin', [
         
         Route('/'                        , name='backend/auth/'                  , handler='apps.backend.auth.Index'),
@@ -58,7 +68,10 @@ def get_rules():
         ]),
         
         PathPrefixRoute('/account', [
-          Route('/status'               , name='backend/account/status'    , handler='apps.backend.account.Status'),
+          Route('/status'               , name='backend/account/status'         , handler='apps.backend.account.Status'),
+          Route('/payment-cancel'       , name='backend/account/payment-cancel' , handler='apps.backend.account.PaymentCancel'),
+          Route('/payment-done'         , name='backend/account/payment-done'   , handler='apps.backend.account.PaymentDone'),
+          Route('/payment-pending'      , name='backend/account/payment-pending', handler='apps.backend.account.PaymentPending'),
         ]),
         
         

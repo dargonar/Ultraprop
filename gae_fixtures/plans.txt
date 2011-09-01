@@ -1,0 +1,9 @@
+from models import *
+
+p = Plan()
+p.name = 'promo-lanzamiento'
+p.description = u'Promoción lanzamiento $99+iva'
+p.type = Plan._MONTHLY
+p.amount = 99
+p.free_days = 15
+p.save()
