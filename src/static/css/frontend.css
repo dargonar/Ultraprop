@@ -1102,6 +1102,7 @@ body.frontend_search .bubble {
 	padding-top:8px;
  *padding-top:12px !important;
 	z-index:99;
+  cursor:pointer;
 }
 /* a la derecha y debajo del marcador. */
 body.frontend_search .bubble.right_bottom {
@@ -1201,6 +1202,7 @@ body.frontend_search .bubble .subhead {
 	line-height:20px;
 	border-bottom:solid 1px #fff;
 	color:#fff;
+  cursor:default;
 }
 body.frontend_search .bubble .subhead .type {
 	width:194px;
@@ -1228,6 +1230,7 @@ body.frontend_search .picturebox {
 	height:230px;
 	overflow:hidden;
   position:relative;
+  cursor:default;
 }
 body.frontend_search .picturebox .data {
 	color:#fff;
@@ -1269,6 +1272,7 @@ body.frontend_search .picturebox .databg {
 }
 body.frontend_search .bubble ul.prop_actions {
 	padding-top:4px;
+  cursor:default;
 }
 body.frontend_search .bubble ul.prop_actions .detail {
 	float:right;

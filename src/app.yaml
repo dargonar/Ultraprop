@@ -39,10 +39,14 @@ handlers:
   static_files: static/robots.txt
   upload: static/robots.txt
 
+- url: /js/(index|home)(.*).js
+  static_files: static/js/\1.js
+  upload: static/js/(index|home).js
+  
 - url: /(css|img|js|pics)/(.*)
   static_files: static/\1/\2
   upload: static/(.*)
-
+  
 - url: /re/(.*)
   static_files: static_realestate/\1
   upload: static_realestate/(.*)

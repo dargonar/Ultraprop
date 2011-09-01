@@ -446,6 +446,7 @@ function doSearch() {
     //do something
     load_json_result(markers_coords,0, false);
     markers_coords=null;
+    getSearchParameters(null, null);
     return false;
   }
   
@@ -487,6 +488,31 @@ function doSearch() {
   }
   /* ==================================== */
   
+  searchParameters = getSearchParameters(cursor, cursorPosition);
+  
+  // Perform proximity or bounds search.
+  g_currentSearchXHR = jQuery.ajax({
+    url: '/service/search',
+    type: 'get',
+    data: searchParameters,
+    dataType: 'json',
+    error: function(jqXHR, textStatus, errorThrown) {
+      return false;
+    },
+    success: function(obj) {
+      g_currentSearchXHR = null;
+      
+      jQuery('#loading_sidebar').hide();
+      
+      load_json_result(obj, cursorStep, true);
+      
+    }
+  });
+  enableSearchOnPan();
+}
+
+function getSearchParameters(cursor, cursorPosition)
+{
   var oldSearchOptions = g_searchOptions;
   
   var price_values = jQuery('#price_slider').slider('values');
@@ -555,28 +581,8 @@ function doSearch() {
   searchParameters = updateObject(searchParameters,getMoreFilterOptions());  
   
   g_searchOptions = searchParameters;
-  
-  // Perform proximity or bounds search.
-  g_currentSearchXHR = jQuery.ajax({
-    url: '/service/search',
-    type: 'get',
-    data: searchParameters,
-    dataType: 'json',
-    error: function(jqXHR, textStatus, errorThrown) {
-      return false;
-    },
-    success: function(obj) {
-      g_currentSearchXHR = null;
-      
-      jQuery('#loading_sidebar').hide();
-      
-      load_json_result(obj, cursorStep, true);
-      
-    }
-  });
-  enableSearchOnPan();
+  return searchParameters;
 }
-
 function load_json_result(obj, cursorStep, load_html){
   if (obj && obj.status && obj.status == 'success') {
     // Esto es para debug, muestro LatLon'g en cartel de error y si puedo lo copio al clipboard!
@@ -742,7 +748,7 @@ function onShowPopup(sender, marker, key){
     },
     success: function(data){
       var infoHtml = data;
-      showInfoBox('bubble_ib', marker, infoHtml, "391px", bubbleData[1]);
+      showInfoBox('bubble_ib', marker, infoHtml, "391px", bubbleData[1], BIG_BUBBLE);
       if(!scrollToListItem)
       { 
         hideLoading();
@@ -759,14 +765,14 @@ function onShowPopup(sender, marker, key){
   return false;
 }
 
-function showInfoBox(m_ib_desc, marker, infoHtml, width, mMapPixelOffset)
+function showInfoBox(m_ib_desc, marker, infoHtml, width, mMapPixelOffset, bubble_type)
 {
   var myOptions = {
              content: infoHtml, disableAutoPan:true, maxWidth:0, pixelOffset: mMapPixelOffset, zIndex: 1
-            ,boxStyle:{width: width, height:'auto'}
+            ,boxStyle:{width: width, height:'auto', cursor:'pointer'}
             ,closeBoxMargin: "4px 0px 0px 0px", closeBoxURL: "/img/pixel-transp.gif"
             ,infoBoxClearance: new google.maps.Size(1, 1), isHidden: false
-            ,enableEventPropagation:true
+            ,enableEventPropagation:(bubble_type==SMALL_BUBBLE)
             ,pane: "floatPane"};
   
   var m_ib = bubble_ib;
@@ -829,7 +835,7 @@ function onMouseOverMarker(marker){
   /* Esto del compute marker position lo voy a tener que sacary meter en el infobox */
   var bubble_data = computeMarkerPosition(marker, SMALL_BUBBLE);
   infoHtml = infoHtml.replace(/bubble_css/g,bubble_data[0]);
-  showInfoBox('minibubble_ib', marker, infoHtml, "222px", bubble_data[1]);
+  showInfoBox('minibubble_ib', marker, infoHtml, "222px", bubble_data[1], SMALL_BUBBLE);
   return false;
 }
 function onMouseOutMarker(marker){
