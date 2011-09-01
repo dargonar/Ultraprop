@@ -10,15 +10,20 @@ def get_rules():
         A list of class:`tipfy.Rule` instances.
     """
     rules = [
+    
+      #-------------------------------URL HACKS VAN ACA----------------------------------------
       # Esta la pongo aca por puta
-      Route('/run/mapper',            name='run/mapper',          handler='apps.backend.property.RunMapper'),
-      Route('/webclient/index.asp',   name='oldredir',            handler='apps.realestate.handlers.Redirect'),
-      Route('/manda_bienvenida',      name='mandabien',           handler='apps.realestate.handlers.LaunchEmail'),
+      Route('/webclient/index.asp',   name='oldredir',            handler='apps.backend.hacks.OldRealEstateRedirect'),
+
       # HACK: Urls de old ultraprop.
-      Route('/Integrantes.asp',       name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
-      Route('/institucional.html',    name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
-      Route('/Contactenos.html',      name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
-      Route('/Centro.asp',            name='redir/frontend/home', handler='apps.frontend.home.IndexRedir'),
+      Route('/Integrantes.asp',       name='redir/frontend/home', handler='apps.backend.hacks.IndexRedir'),
+      Route('/institucional.html',    name='redir/frontend/home', handler='apps.backend.hacks.IndexRedir'),
+      Route('/Contactenos.html',      name='redir/frontend/home', handler='apps.backend.hacks.IndexRedir'),
+      Route('/Centro.asp',            name='redir/frontend/home', handler='apps.backend.hacks.IndexRedir'),
+      
+      # Hacko para EMI
+      Route('/ver/<archivo>',         name='ver_archivo',         handler='apps.backend.hacks.VerArchivo'),
+      #----------------------------------------------------------------------------------------
       
       Route('/',                                                    name='frontend/home',             handler='apps.frontend.home.Index'),
       
@@ -41,10 +46,6 @@ def get_rules():
       Route('/service/popup/<key>/<bubble_css>/<oper>',             name='frontend/property_popup',   handler='apps.frontend.property_info.PopUp'),
       Route('/service/ficha/<key>/<oper>',                          name='frontend/property_ficha',   handler='apps.frontend.property_info.Ficha'),
       Route('/service/ficha/email/<key>/<oper>',                    name='frontend/ficha/sendemail',  handler='apps.frontend.property_info.SendMail'),
-      Route('/email_task',                                          name='frontend/email_task',       handler='apps.frontend.email.SendTask'),
-      #A borrar estos!!!!
-      #Route('/ver/user/email/<key>/<realestate_key>/<oper>',        name='frontend/ver/useremail',    handler='apps.frontend.property_info.VerUserMail'),
-      #Route('/ver/agent/email/<key>/<realestate_key>/<oper>',       name='frontend/ver/agentemail',   handler='apps.frontend.property_info.VerAgentMail'),
     ]
     
     return rules

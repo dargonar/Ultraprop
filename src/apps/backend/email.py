@@ -20,6 +20,29 @@ class SendTask(MyBaseHandler):
     getattr(self, action)(params)
     
     return
+
+
+  def common_context(self):
+    context = { 'server_url':                 'http://'+self.request.headers.get('host', 'no host')
+              , 'support_url' :               'http://'+self.request.headers.get('host', 'no host')}
+    
+  def trial_will_expire(self, params):
+    pass
+  
+  def trial_ended(self, params):
+    pass
+
+  def no_payment(self, params):
+    pass
+  
+  def enabled_again(self, params):
+    pass
+
+  def payment_received(self, params):
+    pass
+    
+  def new_invoice(self, params):
+    pass
     
   def requestinfo_user(self, params):
     key                   = params['propery_key']

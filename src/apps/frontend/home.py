@@ -17,9 +17,3 @@ class Index(FrontendHandler):
                 , _OPER_SELL      = Property._OPER_SELL
                 , _OPER_RENT      = Property._OPER_RENT
                 , direct_links    = direct_links)
-
-class IndexRedir(FrontendHandler):
-  def get(self, **kwargs):
-    return self.redirect_to('frontend/home')
-  
-    
