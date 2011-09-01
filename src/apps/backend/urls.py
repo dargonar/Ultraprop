@@ -68,7 +68,10 @@ def get_rules():
         ]),
         
         PathPrefixRoute('/account', [
-          Route('/status'               , name='backend/account/status'    , handler='apps.backend.account.Status'),
+          Route('/status'               , name='backend/account/status'         , handler='apps.backend.account.Status'),
+          Route('/payment-cancel'       , name='backend/account/payment-cancel' , handler='apps.backend.account.PaymentCancel'),
+          Route('/payment-done'         , name='backend/account/payment-done'   , handler='apps.backend.account.PaymentDone'),
+          Route('/payment-pending'      , name='backend/account/payment-pending', handler='apps.backend.account.PaymentPending'),
         ]),
         
         

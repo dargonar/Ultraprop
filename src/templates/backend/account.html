@@ -27,19 +27,39 @@
         <th>Factura #</th>
         <th>Fecha</th>
         <th>Vencimiento</th>
-        <th>Total</th>
-        <th>Balance</th>
+        <th>Monto</th>
         <th>&nbsp;</th>
     </tr>
+    {% for invoice in invoices %}
     <tr class="pending">
     	<td class="status"><span class="icon"></span><span>Pendiente</span></td>
-        <td>#458547</td>
-        <td>01/01/2012</td>
-        <td>15/01/2012</td>
-        <td>$99 + IVA</td>
-        <td>$120,02</td>
-        <td><input type="submit" class="btnWizard" name="" value="Pagar Ahora!"></td>
+        <td>{{invoice.trx_id}}</td>
+        <td>{{invoice.date.strftime('%d/%m/%Y')}}</td>
+        <td>{{(invoice.date|add_days(15)).strftime('%d/%m/%Y')}}</td>
+        <td>${{ (invoice.amount * 1.21) | currencyfy}}</td>
+        <td>
+          <form onsubmit="$('input[type=submit]').disable(); return true;" action="https://checkout.dineromail.com/CheckOut" method="post" > 
+            <!--data nuestra-->
+            <input type="hidden" name="merchant" value="2267637" />  
+            <input type="hidden" name="country_id" value="1" /> 
+            <input type="hidden" name="payment_method_available" value="7,13,4" /> 
+            <input type="hidden" name="item_name_1" value="Abono mensual {{invoice.date.strftime('%m/%Y')}}" />
+            <input type="hidden" name="item_quantity_1" value="1" /> 
+            <input type="hidden" name="item_ammount_1" value="{{invoice.amount * 1.21}}" />
+            <input type="hidden" name="seller_name" value="Ultraprop" /> 
+            <input type="hidden" name="header_image" value="https://ultraprop.appspot.com/img/logo.gif"/>
+            <input type="hidden" name="transaction_id" value="{{invoice.trx_id}}"/>
+            <input type="hidden" name="error_url" value="{{error_url}}"/>
+            <input type="hidden" name="ok_url" value="{{ok_url}}"/>
+            <input type="hidden" name="pending_url" value="{{pending_url}}"/>
+            <input type="hidden" name="url_redirect_enabled" value="1"/>
+            <input type="hidden" name="change_quantity" value="0"/>
+            
+            <input type="submit" class="btnWizard" name="" value="Pagar Ahora">
+          </form>
+        </td>
     </tr>
+    {% else %}
     <tr class="approved">
     	<td class="status"><span class="icon"></span><span>Al día</span></td>
         <td>No registra facturas impagas</td>
@@ -47,43 +67,32 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td>&nbsp;</td>
     </tr>
+    {% endfor %}
 </table>
   
-  <!--table border="1">
-    {% for invoice in invoices %}
-    {% if loop.first %} 
-    <tr><td>Fecha</td><td>Monto</td><td>Pago</td></tr>
-    {% endif %}
-    <tr><td>{{invoice.date}}</td><td>{{invoice.amount}}</td><td><a href="#">garpar now!</a></td></tr>
-    {% endfor %}
-  </table-->
-
 <h2 class="title">Información de cuenta</h2>
 <table class="tbl_account" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td width="235">
     	<h3>Titular</h3>
-        <p><b>Inmo Nombre</b></p>
+        <p><b>{{re.name}}</b></p>
         <p style="width:220px;">
-        	11 entre 52 y 54 - Punta Lara<br />
-            Ensenada, Buenos Aires, 1925, Argentina<br />
-            emiliomaull@gmail.com
+        	{{re.address}}<br />
+          {{re.email}}
         </p>
     </td>
     <td width="225">
    	  <h3>Facturación</h3>
         <p>
         	Facturas impagas<br />
-            <b>$0,00 ARS</b>
+            <b>${{total_debt|float|currencyfy}}</b>
         </p>
     </td>
     <td width="225">
     <h3>Plan</h3>
             <p>
-        	Promoción Lanzamiento<br />
-            <b>$99 ARS + IVA / mes</b>
+        	{{plan.description}}<br />
         </p>
     </td>
   </tr>
