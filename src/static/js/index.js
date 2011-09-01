@@ -444,6 +444,15 @@ function doSearch() {
   jQuery('#error').hide();
   showLoading();
   
+  // Reseteo Cursor.
+  if (arguments.length != 1)
+  {
+    cursorPosition = 0;
+    cursorsArray = new Array();
+    $('#btnMoreProps_next').attr('disabled','disabled');
+    $('#btnMoreProps_prev').attr('disabled','disabled');
+  }
+  
   if(markers_coords!=null)
   {
     //do something
@@ -451,6 +460,7 @@ function doSearch() {
     markers_coords=null;
     getSearchParameters(null, null);
     hideLoading();
+    enableSearchOnPan();
     return false;
   }
   
@@ -482,14 +492,6 @@ function doSearch() {
     // console.log('   Voy a mandar CURSOR ['+cursor+']');
   }
   
-  // Reseteo Cursor.
-  if (arguments.length != 1)
-  {
-    cursorPosition = 0;
-    cursorsArray = new Array();
-    $('#btnMoreProps_next').attr('disabled','disabled');
-    $('#btnMoreProps_prev').attr('disabled','disabled');
-  }
   /* ==================================== */
   
   searchParameters = getSearchParameters(cursor, cursorPosition);
