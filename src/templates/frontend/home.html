@@ -1,7 +1,7 @@
   {% extends "frontend/_base.html"%}
   
   {%block metas%}
-    <title>ULTRAPROP - Inicio</title>
+    <title>Alquiler y Venta de Casas, Departamentos, Locales y Lotes en La Plata y Buenos Aires Zona Norte - ULTRAPROP</title>
     <meta name="description" content="Encuentre su propiedad en La Plata y el Gran buenos Aires. Ubique casa, departamento, ph, oficina, local, galpón, consultorio, country, quinta, lote, terreno, cochera o campo en venta y en alquiler." />
     <meta name="keywords" content="Ultraprop, búsqueda de inmuebles por mapa, casa, departamento, ph, oficina, local, galpón, consultorio, country, quinta, lote, terreno, cochera, campo, en alquiler, en venta" />
   {%endblock%}
@@ -33,9 +33,9 @@
       
       jQuery(document).ready(function(){
         direct_zone_links                     = new Array();
-        direct_zone_links['la_plata']           = new Array('-34.921127', '-57.954626', -1);
-        direct_zone_links['gonnet']             = new Array('-34.888536', '-58.02259', -1);
-        direct_zone_links['city_bell']          = new Array('-34.879453', '-58.061228', -1);
+        direct_zone_links['la_plata']           = new Array('-34.921127', '-57.954626', 13);
+        direct_zone_links['gonnet']             = new Array('-34.888536', '-58.02259', 14);
+        direct_zone_links['city_bell']          = new Array('-34.879453', '-58.061228', 14);
         direct_zone_links['bsas_zona_norte']    = new Array('-34.51469',  '-58.486061', 13);
       });
       
@@ -90,13 +90,13 @@ encontrá el tuyo de la forma más Simple.
                   <input name="center_lon" id="center_lon" type="hidden" value="0" />
                   <input name="zoom_level" id="zoom_level" type="hidden" value="15" />
                   <div id="searchbox">
-                    <input class="search" name="searchmap" id="searchmap" placeholder="ej: av 44 829, La Plata, Buenos Aires, Argentina" type="text" value="" />                    
+                    <input class="search" name="searchmap" id="searchmap" placeholder="ej: La Plata, Buenos Aires, Argentina" type="text" value="" />                    
                     <input type="button" id="btnSearchHome" value="Buscar" style="border:none;"/>
                     <ul id="locations">
-                      <li><a href="#" onclick="return onDirectLink('la_plata');" title="La Plata (centro)">La Plata,</a></li>
-                      <li><a href="#" onclick="return onDirectLink('gonnet');" title="Manuel B. Gonnet">Gonnet,</a></li>
-                      <li><a href="#" onclick="return onDirectLink('city_bell');" title="City Bell">City Bell,</a></li>
-                      <li><a href="#" onclick="return onDirectLink('bsas_zona_norte');" title="Vicente López, Florida, Olivos, La Lucila, Martínez, Acasusso, San Isidro">Buenos Aires Zona Norte</a></li>
+                      <li><a href="#" onClick="return onDirectLink('la_plata');" title="La Plata (centro)">La Plata,</a></li>
+                      <li><a href="#" onClick="return onDirectLink('gonnet');" title="Manuel B. Gonnet">Gonnet,</a></li>
+                      <li><a href="#" onClick="return onDirectLink('city_bell');" title="City Bell">City Bell,</a></li>
+                      <li><a href="#" onClick="return onDirectLink('bsas_zona_norte');" title="Vicente López, Florida, Olivos, La Lucila, Martínez, Acasusso, San Isidro">Buenos Aires Zona Norte</a></li>
                     </ul>
                     <div class="hr"></div>
                   </div>
@@ -159,7 +159,7 @@ encontrá el tuyo de la forma más Simple.
                         <!--<h3>Buscá por mapa</h3>-->
                     <h3>Buscá en el mapa</h3>
                         <p>
-                            ¿Cerca del subte? ¿Cerca de una plaza? ¿Cerca de la autopista?<br/> 
+                            ¿Cerca de la autopista? ¿Cerca de la terminal, un parque o una plaza? <br/> 
                             Encontrá la propiedad que estás buscando de la forma más simple.
                       </p>
                     </div>
@@ -240,8 +240,98 @@ encontrá el tuyo de la forma más Simple.
               <br/>
             </div>
         </div>
-        <div id="footer">
-          <div class="inner">
+        
+<div id="footer">
+
+<div class="top_search">
+	<h3>Sugerencias de Búsqueda:</h3>
+
+    <div>
+        
+        <ul class="lnk_search">
+        		<div>Más buscados</div>
+                
+                <li><a href="#"> Casas en Venta</a></li>
+                <li><a href="#"> Casa en Venta La Plata </a></li>
+                <li><a href="#"> Casa en Venta Gonnet </a></li>
+                <li><a href="#"> Casas en Venta en City Bell</a></li>
+                <li><a href="#"> Departamento en La Plata </a></li>
+                <li><a href="#"> Departamento en Alquiler La Plata </a></li>
+                <li><a href="#"> Alquiler en La Plata </a></li>
+                <li><a href="#"> Alquileres La Plata </a></li>
+                <li><a href="#"> Alquilar en La Plata </a></li>
+                <li><a href="#"> Terreno en Venta La Plata </a></li>
+                <li><a href="#"> Terreno en Venta City Bell </a></li>
+                <li><a href="#"> Terreno en Venta Gonnet </a></li>
+                <li><a href="#"> Casa en Venta en Zona Norte</a></li>
+                <li><a href="#"> Casas en Zona Norte</a></li>
+                <li><a href="#"> Departamentos en Zona Norte</a></li>
+                <li><a href="#"> Departamentos en Barrio Norte</a></li>
+                <li><a href="#"> Casas en Vicente López</a></li>
+                <li><a href="#"> Casa en Venta Vicente López</a></li>
+                <li><a href="#"> Depto en Venta Vicente López</a></li>
+                <li><a href="#"> Alquiler en Vicente López</a></li>
+                <li><a href="#"> Departamento en Vicente López</a></li>
+                <li><a href="#"> Local en Alquiler La Plata</a></li>
+                <li><a href="#"> Locales en La Plata</a></li>
+                <li><a href="#"> Oficina en Alquiler La Plata</a></li>
+                
+            </ul>
+            
+        <ul class="lnk_search">
+        		<div>Por tipo de propiedad</div>
+                
+                <li><a href="#"> Casa </a></li>
+                <li><a href="#"> Departamento </a></li>
+                <li><a href="#"> PH </a></li>
+                <li><a href="#"> Oficina </a></li>
+                <li><a href="#"> Local </a></li>
+                <li><a href="#"> Fondo de comercio </a></li>
+                <li><a href="#"> Galpon </a></li>
+                <li><a href="#"> Consultorio </a></li>
+                <li><a href="#"> Casa en Country o Barrio Cerrado </a></li>
+                <li><a href="#"> Quinta </a></li>
+                <li><a href="#"> Lote o Terreno </a></li>
+                <li><a href="#"> Cochera </a></li>
+            </ul>
+            
+			<ul class="lnk_search">
+        		<div>Por Zona</div>
+                
+                
+                <li><a href="#"> Propiedades en Buenos Aires </a></li>
+                <li><a href="#"> Propiedades en Zona Norte </a></li>
+                <li><a href="#"> Propiedades en Vicente López </a></li>
+                <li><a href="#"> Propiedades en La Lucila</a></li>
+                <li><a href="#"> Propiedades en Martínez </a></li>
+                <li><a href="#"> Propiedades en Acasusso </a></li>
+				<li><a href="#"> Propiedades en Zona Sur </a></li>
+                <li><a href="#"> Propiedades en La Plata </a></li>
+                <li><a href="#"> Propiedades en Gonnet </a></li>
+                <li><a href="#"> Propiedades en City Bell </a></li>
+                <li><a href="#"> Propiedades en Berisso </a></li>
+                <li><a href="#"> Propiedades en Ensenada </a></li>
+            </ul>
+            
+            
+            
+        </div>
+    </div>
+    
+<p class="skill">ULTRAPROP es el portal inmobiliario líder en oferta de inmuebles en La Plata,  Gran La Plata y Buenos Aires Zona Norte, a diferencia de los demás portales inmobiliarios, ULTRAPROP es el primero en su tipo en utilizar un sistema de Geolocalización Real en Latinoamérica, esto quiere decir que con sólo ubicar una zona en el mapa, automáticamente se muestra la oferta disponible en esa zona y alrededores. Encuentra la mayor oferta de propiedades filtradas por venta y alquiler de departamentos, casas, PH, oficinas, locales comerciales, fondos de comercio, galpones, consultorios, casa en country o barrio privado, quintas, lotes y terrenos, cocheras y mucho más. <br> 
+En ULTRAPROP solamente hay que seleccionar la zona de interés en el mapa para conocer la oferta disponible de casas en alquiler, casas en venta, departamentos en alquiler en La Plata, terrenos en Gonnet, terrenos en City Bell, casas en Zona Norte, Vicente López, Florida, Olivos, La Lucila, Martínez, Acasusso, San Isidro y mucho más.  
+</p>
+
+
+<!-- Foot -->
+<div class="foot">
+  <img class="logo_foot" src="/img/pixel-transp.gif" alt="Ultraprop" />
+  <p>El uso de este sitio web implica la aceptación de los Términos y Condiciones y la Política de Privacidad de ultraprop.com.ar.<br/>
+  Copyright © 2011 - Todos los derechos reservados. Protección de Datos Personales.</p>       
+</div>
+
+        
+          <div class="inner" style="display:none;">
             <div style="height:auto;margin-bottom:5px;width:100%;">
               <div style="float:left;padding:5px 5px 0px 0px;">
                 <img src="/img/logos/ultraprop_footer.png" alt="Ultraprop" />
@@ -259,6 +349,10 @@ encontrá el tuyo de la forma más Simple.
               {{ ',' if loop.index<loop.length else '.'}}
             {% endfor %}
           </div>
+          
+          
+          
+          
         </div>
     </div>
   </body>
