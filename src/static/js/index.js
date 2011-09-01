@@ -441,12 +441,16 @@ var cursorsArray = null;
 
 function doSearch() {
   
+  jQuery('#error').hide();
+  showLoading();
+  
   if(markers_coords!=null)
   {
     //do something
     load_json_result(markers_coords,0, false);
     markers_coords=null;
     getSearchParameters(null, null);
+    hideLoading();
     return false;
   }
   
@@ -558,10 +562,6 @@ function getSearchParameters(cursor, cursorPosition)
 
   // Updeteo el objeto master.
   searchParameters = updateObject(searchParameters, main_options_array);
-  
-  jQuery('#error').hide();
-  jQuery('#loading_map').show();
-  jQuery('#loading_sidebar').show();
   
   if (searchParameters.query_type == 'bounds') {
     var current_bounds = map.getBounds();
