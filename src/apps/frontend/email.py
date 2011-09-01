@@ -183,7 +183,7 @@ class SendTask(MyBaseHandler):
     #logging.debug('save_consulta:: llamada')          
     try:
       consulta                            = Consulta()
-      consulta.realestate_name            = str(context['realestate_name'])
+      consulta.realestate_name            = context['realestate_name']
       consulta.realestate                 = realestate
       consulta.property                   = property
       
