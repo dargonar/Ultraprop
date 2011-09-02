@@ -5,8 +5,8 @@
         
     <!-- PICTURE -->
         {% if property.main_image %}
-        <a href="{{url_for('property/edit',key=property.key())}}">
-        	<img title="{{property.images_count}} fotos" class="pic" src="{{url_for('images/show',key=property.main_image.key()|string, width=140, height=105)}}" /> 
+        <a href="{{url_for('property/images',key=property.key())}}">
+        	<img title="{{property.images_count}} fotos" class="pic" src="{{property.main_image}}" wh="140x105" /> 
         </a>
         {% else %}  
         <a href="{{url_for('property/edit',key=property.key())}}" class="noelement proplist pic"><span>Sin Fotos</span></a>

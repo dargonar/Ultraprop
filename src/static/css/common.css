@@ -296,6 +296,7 @@ body.backend_simple input.fancy_button.login, body.backend_simple a.fancy_button
 	margin:0;
 	margin-top:1px;
 }
+
 .login_window a.fancy_button.restore {
 	margin-top:10px;
 }
@@ -674,6 +675,9 @@ body.backend_simple .btnWizard, body.backend .btnWizard {
 	text-decoration: none;
 	text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.25);
 }
+
+body.backend_simple .btnWizard.start, body.backend .btnWizard.start  { padding:15px; margin-top:10px;}
+
 /* ... acá!                                                                                   */
 /* ========================================================================================== */
 
@@ -836,19 +840,29 @@ body.backend_simple .gray, body.backend .gray {
 }
 /* ///// REGISTER ///// */
 ul.skills {
-	width:400px;
+	width:345px;
 	text-align:left;
 	margin-top:18px;
+	margin-right: 54px; 
 }
 ul.skills li {
 	float:none;
 	font-size:16px;
 	min-height:28px;
-	background:url(/img/backgrounds/very.png) no-repeat;
+/*	background:url(/img/backgrounds/very.png) no-repeat;*/
+	background:url(/img/icons/signup.gif) no-repeat;
 	padding-left:35px;
 	padding-top:3px;
 	color:#0A5278;
 }
+
+ul.skills li.props { background-position: 0px 0px;}
+ul.skills li.pictures {background-position: 0px -32px;}
+ul.skills li.web {background-position: 0px -63px;}
+ul.skills li.email {background-position: 0px -95px;}
+
+ul.skills li p { border-bottom:solid 1px #dcdcdc; padding-bottom:8px; padding-top:3px;}
+
 ul.skills li em {
 	font-size:11px;
 	font-style:normal;
@@ -986,3 +1000,52 @@ body.backend #searchbox2 input.search:-moz-placeholder{
 
 /* ICONS */
 .icon16 { height:16px; width:16px; display:inline-block;}
+
+/* ///// SIGNIN ///// */
+
+.skill_detail {width:900px; margin:auto; margin-top:40px; margin-bottom:30px; padding:30px; overflow:hidden; background:#e4f1ff; border:1px solid #99c7f8;}
+
+.skill_detail h1 {font-weight:normal; margin-bottom:10px; letter-spacing:normal; color:#000; font-size:24px;}
+.skill_detail .col_left {width:430px; float:left;}
+.skill_detail .col_right{width:430px; float:right;}
+
+ul.three_columns {width:940px; margin:auto; overflow:hidden;}
+ul.three_columns li {float:left; width:300px; margin-right:20px;}
+ul.three_columns li:last-child, ul.three_columns li.last {margin-right:0px;}
+
+ul.three_columns li ul.features {width:240px; list-style:disc; padding:20px;}
+ul.three_columns li ul.features li { margin-bottom:15px; width:220px;}
+
+ul.three_columns img { padding:20px; padding-bottom:0;}
+
+/* ///// FOOTER ///// */
+
+#footer {
+    border-top: 1px dotted #ccc;
+    font-size: 12px;
+    width: 960px; 
+	margin:auto;
+}
+
+.foot { 
+	clear:both;
+	overflow:hidden;
+	font-size:12px;
+	color:#666;
+	margin-top:30px;
+	border-top:dotted 1px #ccc;
+	padding-top:20px; 
+	padding-bottom:15px;
+	text-align:left;
+}
+.foot img, .foot p {
+	float:left;
+}
+.foot p {
+	text-align:left;
+}
+.foot img {
+	margin-right:20px;
+}
+
+.foot .logo_foot { width:168px; height:41px; background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -544px -547px transparent;}
