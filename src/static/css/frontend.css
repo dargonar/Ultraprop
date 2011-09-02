@@ -2846,6 +2846,7 @@ body.frontend_search .uibutton.icon16.filters {
 	line-height:16px;
 	font-size:12px;
 }
+
 body.frontend_search .uibutton.filters:before {
 	background-position: -78px 0px;
 }
@@ -2856,6 +2857,7 @@ body.frontend_search .uibutton.filters.selected {
 	background-color:#EDF4D9 !important;
 	border-radius: 4px 4px 4px 4px !important;
 	border:1px solid #BACF83 !important;
+  width:auto;
 }
 /* ///// MESSAGEBOX ///// */
 body.frontend_search .messagebox {

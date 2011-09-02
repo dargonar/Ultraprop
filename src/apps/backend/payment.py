@@ -5,14 +5,16 @@
 """
 import logging
 from google.appengine.api import taskqueue
+from google.appengine.ext import db
 
 from datetime import datetime, date, timedelta
 from xml.dom import minidom
 
 from models import RealEstate, Payment, Invoice
-from webapp2 import url_for, RequestHandler
+from webapp2 import uri_for as url_for, RequestHandler
 from dm import ipn_download
 from taskqueue import Mapper
+from utils import get_or_404, need_auth, BackendHandler
 
 def send_mail(template, re, invoice=None):
   
@@ -31,6 +33,35 @@ def create_transaction_number(the_date, re):
     
   return '%sN%d' % ( the_date.strftime('%Y%m'), int(re.key().name()) )
 
+# Handler para la vuelta de dinero mail
+class Cancel(BackendHandler):
+  @need_auth()
+  def get(self, **kwargs):
+    invoice = self.mine_or_404( kwargs['invoice'] )
+    
+    self.set_info('Se cancelo el pago para la factura #%s' % invoice.trx_id )
+    self.redirect_to('backend/account/status')
+
+class Done(BackendHandler):
+  @need_auth()
+  def get(self, **kwargs):
+    invoice = self.mine_or_404( kwargs['invoice'] )
+    invoice.state = Invoice._PAID
+    invoice.save()
+    
+    self.set_ok('El pago fue realizado con exito para la factura #%s' % invoice.trx_id)
+    self.redirect_to('backend/account/status')
+
+class Pending(BackendHandler):
+  @need_auth()
+  def get(self, **kwargs):
+    invoice = self.mine_or_404( kwargs['invoice'] )
+    invoice.state = Invoice._INPROCESS
+    invoice.save()
+
+    self.set_ok('La factura #%s quedara en estado pendiente hasta que se acredite el pago' % invoic.trx_id)
+    self.redirect_to('backend/account/status')
+  
 class InvoicerMapper(Mapper):
   KIND    = RealEstate
 
@@ -44,7 +75,7 @@ class InvoicerMapper(Mapper):
         send_mail('trial_will_expire', re)
         return ([re], []) # update/delete
       
-    elif: re.state == RealEstate._TRIAL_END:
+    elif re.state == RealEstate._TRIAL_END:
       # Llegamos a los free_days del Plan y todavia no pago?
       delta = datetime.utcnow() - re.created_at
       if delta.days >= re.plan.free_days:
@@ -52,7 +83,7 @@ class InvoicerMapper(Mapper):
         send_mail('trial_ended', re)
         return ([re], []) # update/delete
     
-    elif: re.state == RealEstate._ENABLED:
+    elif re.state == RealEstate._ENABLED:
       
       # Today
       today = datetime.utcnow().date()

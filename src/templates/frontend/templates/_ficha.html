@@ -1,6 +1,7 @@
   <!-- AREA UNDER WINDOW TABS -->
-  {% set realestate_logo = url_for('images/show',key=property.realestate.logo.key()|string, width=133, height=47) if property.realestate and property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
-  {% set realestate_logo_big = url_for('images/show',key=property.realestate.logo.key()|string, width=230, height=80) if property.realestate and property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
+  <!-- wh=133,47 , wh=230,80 -->
+  {% set realestate_logo = property.realestate.logo if property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
+  {% set realestate_logo_big = property.realestate.logo if property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
   <div class="innerContent detail" id="ficha_{{property.key()}}">
     <div id="detailBox">
       <h2>Ficha de Propiedad</h2>

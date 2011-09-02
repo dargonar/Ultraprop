@@ -74,9 +74,9 @@
             <input type="hidden" name="seller_name" value="Ultraprop" /> 
             <input type="hidden" name="header_image" value="https://ultraprop.appspot.com/img/logo.gif"/>
             <input type="hidden" name="transaction_id" value="{{invoice.trx_id}}"/>
-            <input type="hidden" name="error_url" value="{{error_url}}"/>
-            <input type="hidden" name="ok_url" value="{{ok_url}}"/>
-            <input type="hidden" name="pending_url" value="{{pending_url}}"/>
+            <input type="hidden" name="error_url" value="{{url_for('billing/payment/cancel', invoice=invoice.key()|string, _full=True)}}"/>
+            <input type="hidden" name="ok_url" value="{{url_for('billing/payment/done', invoice=invoice.key()|string, _full=True)}}"/>
+            <input type="hidden" name="pending_url" value="{{url_for('billing/payment/pending', invoice=invoice.key()|string, _full=True)}}"/>
             <input type="hidden" name="url_redirect_enabled" value="1"/>
             <input type="hidden" name="change_quantity" value="0"/>
             
