@@ -18,7 +18,10 @@ def get_rules():
       PathPrefixRoute('/billing', [
           
         PathPrefixRoute('/payment', [
-          Route('/download'              , name='billing/payment/download'       , handler='apps.backend.payment.Download'),
+          Route('/download'                   , name='billing/payment/download'   , handler='apps.backend.payment.Download'),
+          Route('/<invoice>/payment-cancel'   , name='billing/payment/cancel'     , handler='apps.backend.payment.Cancel'),
+          Route('/<invoice>/payment-done'     , name='billing/payment/done'       , handler='apps.backend.payment.Done'),
+          Route('/<invoice>/payment-pending'  , name='billing/payment/pending'    , handler='apps.backend.payment.Pending'),
         ]),
         
       ]),
@@ -60,8 +63,6 @@ def get_rules():
         
         PathPrefixRoute('/images', [
           Route('/reorder'               , name='images/reorder'    , handler='apps.backend.images.Reorder'),
-          Route('/<key>'                 , name='images/original'   , handler='apps.backend.images.Show:original'),
-          Route('/<key>/<width>/<height>', name='images/show'       , handler='apps.backend.images.Show'),
           Route('/<key>/upload/'         , name='images/upload'     , handler='apps.backend.images.Upload'),
           Route('/<key>/remove/'         , name='images/remove'     , handler='apps.backend.images.Remove'),
           Route('/<key>/bulkremove/'     , name='images/bulkremove' , handler='apps.backend.images.Remove'),
@@ -69,9 +70,6 @@ def get_rules():
         
         PathPrefixRoute('/account', [
           Route('/status'               , name='backend/account/status'         , handler='apps.backend.account.Status'),
-          Route('/payment-cancel'       , name='backend/account/payment-cancel' , handler='apps.backend.account.PaymentCancel'),
-          Route('/payment-done'         , name='backend/account/payment-done'   , handler='apps.backend.account.PaymentDone'),
-          Route('/payment-pending'      , name='backend/account/payment-pending', handler='apps.backend.account.PaymentPending'),
         ]),
         
         

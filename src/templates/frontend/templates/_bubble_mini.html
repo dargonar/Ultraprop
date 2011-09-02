@@ -1,6 +1,6 @@
 <div id="mini_bubble" class="mini_bubble bubble_css" onclick="onShowPopup(this, null, '{{ property.key()|string }}');return false;" >
   <div class="picture">
-      <img {% if property.main_image %} src="{{url_for('images/show',key=property.main_image.key()|string, width=80, height=60)}}" {% else %} src="/img/picturebox/nophoto_80x60.jpg"  {% endif %} onerror="this.src='/pics/small/sample1.jpg';" title="{{property | headlinify}}"/>
+      <img {% if property.main_image %} src="{{property.main_image}}" wh="80,60" {% else %} src="/img/picturebox/nophoto_80x60.jpg"  {% endif %} onerror="this.src='/pics/small/sample1.jpg';" title="{{property | headlinify}}"/>
   </div>
   <div class="info">
       <div class="price"><small>{{ cur }}</small> {{ price|currencyfy }}</div>

@@ -25,7 +25,8 @@ class Edit(BackendHandler):
     kwargs['form']                = RealEstateForm(obj=realestate)
     kwargs['key']                 = self.get_realestate_key()
     kwargs['mnutop']              = 'inmobiliaria'
-    kwargs['realestate_logo']     = get_serving_url(realestate.logo) if realestate.logo else None
+    kwargs['realestate_logo']     = realestate.logo
+    
     return self.render_response('backend/realestate.html', **kwargs)
   
   #Create/Save RealEstate & User.
@@ -38,7 +39,7 @@ class Edit(BackendHandler):
     if not rs_validated:
       kwargs['form']                = self.form
       kwargs['key']                 = self.get_realestate_key()
-      kwargs['realestate_logo']     = get_serving_url(realestate.logo) if realestate.logo else None
+      kwargs['realestate_logo']     = realestate.logo
       if self.form.errors:
         kwargs['flash']         = self.build_error(u'Verifique los datos ingresados:')
         # + '<br/>'.join(reduce(lambda x, y: str(x)+' '+str(y), t) for t in self.form.errors.values()))
@@ -51,7 +52,7 @@ class Edit(BackendHandler):
     if fs is not None and not isinstance(fs,unicode):
       if fs.filename is not None:
         # Create the file
-        file_name = files.blobstore.create(mime_type='image/jpg', _blobinfo_uploaded_filename=fs.filename)
+        file_name = files.blobstore.create(mime_type='image/png', _blobinfo_uploaded_filename=fs.filename)
         # Open the file and write to it
         img = images.Image(fs.file.getvalue())
         
@@ -66,10 +67,25 @@ class Edit(BackendHandler):
           f.write(data)
         # Finalize the file. Do this before attempting to read it.
         files.finalize(file_name)
-        # Get the file's blob key
-        blob_key            = files.blobstore.get_blob_key(file_name)
         
-        realestate.logo      = blob_key
+        # Get the file's blob key
+        blob_key = files.blobstore.get_blob_key(file_name)
+        
+        # ------ BEGIN HACK -------- #
+        # GAE BUG => http://code.google.com/p/googleappengine/issues/detail?id=5142
+        for i in range(1,10):
+          if not blob_key:
+            time.sleep(0.05)
+            blob_key = files.blobstore.get_blob_key(file_name)
+          else:
+            break
+        
+        if not blob_key:
+          logging.error("no pude obtener el blob_key, hay un leak en el blobstore!")
+          abort(500)
+        # ------ END HACK -------- #
+        
+        realestate.logo = get_serving_url(blob_key)
     
     realestate.save()
     
