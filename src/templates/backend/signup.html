@@ -26,14 +26,18 @@ $(document).ready(function() {
 
 {% block content %}
 
-  <table width="960" border="0" cellpadding="0" cellspacing="0"  align="center">
+
+<div style="width:960px; margin:auto;">
+
+  <table width="960" border="0" cellpadding="0" cellspacing="0">
     <tr>
       <td width="50%" align="center" style="padding-top:20px;" valign="top">
-        <img src="/img/dashboard.jpg" width="343" height="269" />
+        <img src="/img/frontend_promo.jpg"/>
         <ul class="skills">
-          <li>Inmuebles ilimitados</li>
-          <li>Fotos ilimitadas</li>
-          <li>Web propia y dominio.com<em>(Sujeta a disponibilidad)</em><p class="detail">Sólida, robusta y confiable, garantía 100% en el aire.</p></li>
+          <li class="props"><p>Propiedades ilimitadas</p></li>
+          <li class="pictures"><p>Fotos ilimitadas</p></li>
+          <li class="web"><p>Pagina web con dominio propio</p></li>
+          <li class="email"><p>Email @su_inmobiliaria</p></li>
         </ul>
       </td>
       <td align="center" valign="top" style="padding-top:20px; border-left: dotted 1px #000; " >
@@ -41,8 +45,8 @@ $(document).ready(function() {
         <div id="login_container" class="login_window" style="padding-top:0;">
           <div class="popup" style="border:none; width: 400px; text-align:left;">
             <div id="login" class="popup_box" style="padding:0;"> 
-              <h1 style="font-size:24px; margin-left:5px;">Registre su Inmobiliaria</h1>
-              <h2 style="color:#0A5278; font-weight:normal; margin-left:5px;">Es Fácil y Rápido</h2>
+              <h1 style="font-size:24px; margin-left:5px;">Comience a Publicar Ahora!</h1>
+              <h2 style="color:#0A5278; font-weight:normal; margin-left:5px;">Pruébelo GRATIS por un período de 15 días.</h2>
               {# % if flash %}
                 <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
               {% endif % #}
@@ -64,9 +68,11 @@ $(document).ready(function() {
                   {{ form_field(form.confirm, label='repetir', class="xg long", placeholder="Repetir contraseña", placeholder="Repetir contraseña", id="confirm_password") }}
                 </div>
                 {{form.ketchup(id='ketchup')}}
-                <div class="navButtons" style="text-align:left;">
-                  <a href="#" class="fancy_button login"><input type="submit" value="REGISTRARME" name="" class="btnWizard"></a>
-                </div> 
+                
+                <input type="submit" value="COMENZAR A PUBLICAR!" name="" class="btnWizard start">
+                <!--div class="navButtons" style="text-align:left;">
+                  <a href="#" class="fancy_button start"><input type="submit" value="COMENZAR!" name="" class="btnWizard"></a>
+                </div--> 
               </form>  
             </div>
           </div>
@@ -75,5 +81,88 @@ $(document).ready(function() {
     </tr>
   </table>
 
+
+
+<div class="skill_detail">
+	<h1>Diferente!</h1>
+	<div class="col_left">
+		<h3>ULTRAPROP es Diferente!</h3>
+    	<p>
+        A diferencia de los demás portales inmobiliarios, ULTRAPROP es el primero en su tipo en utilizar un Sistema de Geolocalización Real, eso quiere decir que con sólo ubicar una zona de interés en el mapa, automáticamente se muestra la oferta disponible en esa zona y alrededores.<br />
+        </p>
+        <br />
+        <h3>Búsquedas más simples:</h3>
+        <p>Otros portales combinan infinidad de filtros dificultando las búsquedas que terminan por frustrar al usuario. En ULTRAPROP solamente hay que seleccionar la zona de interés en el mapa para conocer la oferta disponible.</p>
+    </div>
+    
+    <div class="col_right">
+   		<h3>Más contactos</h3>
+        <p>
+En ULTRAPROP queremos que recibas la mayor cantidad de contactos posibles, por eso solamente le pedimos a los usuarios los datos mínimos para establecer contacto contigo, sin exigir suscripciones ni extensos formularios de registro, porque a mayor cantidad de contactos mayor cantidad de negocios concretados.
+</p>
+	<br />
+
+		<h3>Sin Límites:</h3>
+        <p>Publique toda su oferta inmobiliaria, ULTRAPROP No limita la cantidad de avisos ni la cantidad de fotos por propiedad.</p>
+    </div>
+</div>
+
+
+
+<ul class="three_columns">
+	<li>
+    	<h3>Más es más...</h3>
+		<img src="/img/email/map.jpg" />
+        <ul class="features">
+            <li><b>Sin Límites:</b> En ULTRAPROP nada tiene límites, publique la cantidad de propiedades que desee sin limitar la cantidad de fotografías que la propiedad requiere. Porque los límites son para los pequeños y ULTRAPROP es Grande, muy Grande!</li>
+            
+            <li><b>Más visitas:</b> ULTRAPROP crece día a día, por eso hoy podemos anunciar que somos el portal inmobiliario más visitado de La Plata y Gran La plata.</li>
+            
+            <li><b>Innovación:</b> Somos el primer portal inmobiliario con búsquedas por Geolocalización Real de Latinoamérica.</li>
+            
+            <li><b>Seguridad:</b> Garantía 100% en el aire, ULTRAPROP se encuentra alojado en la mayor infraestructura de servidores replicados del mundo.</li>
+        </ul>
+    </li>
+    
+    <li>
+    	<h3>Fácil y rápido</h3>
+   	  <img src="/img/email/admin.jpg" />
+      <ul class="features">
+            <li><b>Fácil de usar, rápido de implementar</b>: La carga de información no debe ser nunca una barrera entre usted y sus clientes, por eso hemos desarrollado un sistema ágil que le permite mantener su oferta actualizada de forma ágil y amena.</li>
+            
+            <li><b>La imagen es todo:</b> Suba la cantidad de fotografías que desee, sin tener que procesarlas, tal como las obtuvo de su cámara o teléfono celular, no es necesario que modifique su tamaño, rote su posición, ni renombre para ordenarlas, una vez arriba podrá ordenarlas mediante drag & drop.</li>
+            
+            <li><b>Ubicación:</b> Los usuarios buscan propiedades por zonas de interés. Ubique los inmuebles en el mapa de la forma más sencilla.</li>
+    </ul>
+    </li>
+    
+    <li class="last">
+    	<h3>Identidad</h3>
+    	<img src="/img/email/site.jpg" />
+        <ul class="features">
+            <li><b>Mi Web Propia:</b> Su cartera de inmuebles más completa e impactante. Mejoras y actualizaciones Gratuitas.</li>
+            
+            <li><b>Con Nombre Propio:</b><br /> 
+<b>"Si aún no tiene su dominio propio"</b>, lo registramos y alojamos en nuestros servidores. Gestionamos su correo @su_inmobiliaria.com.ar<br /><br />
+<b>"Si ya dispone de uno"</b>, lo alojamos en nuestros servidores, implementando la tecnología de ULTRAPROP para su web propia.<br /><br />
+<b>"Si ya tiene su web propia"</b> y desea mantener su diseño original, le ofrecemos un script para administrar y mostrar su oferta inmobiliaria dentro de su web. </li>
+            
+            <li><b>Email @su_inmobiliaria:</b> Permita que sus clientes lo contacten a una cuenta más confiable y profesional.</li>
+        </ul>
+    </li>
+</ul>
+
+<!-- Foot -->
+
+  <div class="foot">
+    <img class="logo_foot" src="/img/pixel-transp.gif" alt="Ultraprop" />
+    <p>El uso de este sitio web implica la aceptación de los Términos y Condiciones y la Política de Privacidad de ultraprop.com.ar.<br/>
+    Copyright © 2011 - Todos los derechos reservados. Protección de Datos Personales.</p>       
+  </div>
+  
+  
+
+
+</div>  
 
 {% endblock  %}
