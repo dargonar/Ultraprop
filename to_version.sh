@@ -20,3 +20,6 @@ rm -f src/static/js/backend.min-*.js
 # Copiamos los min JS y min CSS a sus folders
 mv backend.min-$1.js src/static/js
 mv backend.min-$1.css src/static/css
+
+# Compilamos los templates jinja2
+/c/Python25/python.exe compile_templates.py

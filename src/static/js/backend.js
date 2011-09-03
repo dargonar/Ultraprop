@@ -526,6 +526,7 @@ function init_pictures(bulk_remove_url, img_reorder_url, img_upload_url)
     button_placeholder_id  : "addphoto",
     
     swfupload_load_failed_handler : function() { 
+      //TODO: poner lo que nos de emo
       alert('error cargando flash');
     },
     
