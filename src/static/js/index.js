@@ -404,7 +404,8 @@ function onMainFilterChange(obj)
 {
   if(m_initializing)
     return false;
-  doSearch();
+  //doSearch();
+  checkFiltersOptions();
   return false;
 }
 
@@ -1047,13 +1048,17 @@ function closeBubbles()
   
   function applyFilterOptions(){
     toggleFilter();
+    checkFiltersOptions();
+    doSearch();
+  }
+  
+  function checkFiltersOptions(){
     var selectedItems = getMoreFilterOptions();
     //console.log(selectedItems);
     if(!jQuery.isEmptyObject(selectedItems))
       jQuery('#btnFilters').addClass('selected');
     else
       jQuery('#btnFilters').removeClass('selected');
-    doSearch();
   }
   
   function getMoreFilterOptions() {
