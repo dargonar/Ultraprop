@@ -2337,7 +2337,7 @@ dl.location dd {
 	border:solid 1px #ccc;
 }
 .fullsize {
-	position:absolute;
+	position:fixed;
 	left:10px;
 	right:10px;
 	top:10px;

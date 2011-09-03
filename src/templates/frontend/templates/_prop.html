@@ -18,7 +18,7 @@
     <!-- div class="picbox" onclick="return onShowPopup(this, null, '--key--');"-->
     <div class="picbox" onclick="return onShowFicha(this, '{{property.key()}}');" style="position:relative;">
       <div class="qty">{{ property.images_count }}&nbsp;fotos</div>
-      <img class="viewBubble pic" {% if property.main_image %} src="{{property.main_image}}" wh="115,86" {% else %} src="/img/picturebox/nophoto_115x86.jpg"  {% endif %} onerror="this.src='/pics/small/sample1.jpg';" title="Ver ficha: {{ headline }} - {{address}} "/>
+      <img class="viewBubble pic" style="max-width:115px; max-height:86px;" {% if property.main_image %} src="{{property.main_image}}=s115" wh="115,86" {% else %} src="/img/picturebox/nophoto_115x86.jpg"  {% endif %} onerror="this.src='/img/picturebox/nophoto_115x86.jpg';" title="Ver ficha: {{ headline }} - {{address}} "/>
       
     </div>
         

@@ -3,12 +3,14 @@
     backend forms
     ~~~~~~~~
 """
+import re
 import logging
 
 from wtforms import Form, BooleanField, SelectField, TextField, FloatField , PasswordField, FileField, DateField
 from wtforms import HiddenField, TextAreaField, IntegerField, validators, ValidationError
 from wtforms.widgets import TextInput
 from wtforms.ext.appengine.fields import GeoPtPropertyField
+from wtforms.validators import regexp
 from google.appengine.ext import db
 
 from models import Property, RealEstate, User
@@ -273,7 +275,7 @@ class RealEstateForm(Form):
   
   logo                = FileField('')
   name                = TextField('',[validators.Required(message=u'Debe ingresar un nombre de Inmobiliaria.')])
-  website             = TextField('',[validators.url(message=u'La URL no es válida.')], default='')
+  website             = TextField('', default='')
   email               = TextField('',[validators.email(message=u'Debe ingresar un correo válido.')
                                       , validators.Required(message=u'Debe ingresar un correo electrónico.')], default='')
   
@@ -285,9 +287,24 @@ class RealEstateForm(Form):
   address             = TextField('',[validators.Required(message=u'Debe ingresar una dirección.')])
   zip_code            = TextField('',[validators.Required(message=u'Debe ingresar un código postal.')])
   
+  def validate_website(form, field):
+    tld_part = ur'\.[a-z]{2,10}'
+    if 'http://' in field.data:
+      regex = ur'^[a-z]+://([^/:]+%s|([0-9]{1,3}\.){3}[0-9]{1,3})(:[0-9]+)?(\/.*)?$' % tld_part
+      mRegexp = regexp(regex, re.IGNORECASE, message=u'Dirección inválida.')
+    else:
+      regex = ur'([^/:]+%s|([0-9]{1,3}\.){3}[0-9]{1,3})(:[0-9]+)?(\/.*)?$' % tld_part
+      mRegexp = regexp(regex, re.IGNORECASE, message=u'Dirección inválida.')
+    mRegexp.__call__(form, field)
+    
   def update_object(self, rs):
     rs.name               = self.name.data
-    rs.website            = self.website.data
+    
+    _website              = self.website.data
+    if 'http://' not in _website:
+      _website = 'http://%s' % self.website.data
+    
+    rs.website            = _website
     rs.email              = self.email.data
     rs.title              = self.title.data
     rs.fax_number         = self.fax_number.data

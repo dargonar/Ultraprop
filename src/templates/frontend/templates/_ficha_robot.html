@@ -1,7 +1,7 @@
   <!-- AREA UNDER WINDOW TABS -->
   <!-- wh=133,47 , wh=230,80 -->
-  {% set realestate_logo = property.realestate.logo if property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
-  {% set realestate_logo_big = property.realestate.logo if property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
+  {% set realestate_logo = property.realestate.logo+'=s133' if property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
+  {% set realestate_logo_big = property.realestate.logo+'=s230' if property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
   <div class="innerContent detail" id="ficha_{{property.key()}}">
     <div id="detailBox">
       <h2>Ficha de Propiedad</h2>
@@ -18,7 +18,7 @@
           {%include "frontend/templates/_prop_details.html"%}
           <!-- LOGO / BTN CONTACT -->
           <div class="agent">
-              <img class="logo" src="{{realestate_logo}}" title="{{property.realestate.name}}" />
+              <img class="logo" src="{{realestate_logo}}" style="max-width:133px;max-height:47px;" title="{{property.realestate.name}}" />
               {% if ficha is defined %}
                 <a class="btnContact" title="Ver información del agente inmobiliario" href="#" onclick="jQuery(body).scrollTo(jQuery('#ficha_{{property.key()}} .contactBox'), 800 ); return false;">Contactar Agente</a>
               {% else %}
@@ -66,7 +66,7 @@
           <!-- AGENT INFO -->
           <div id="agent_info" class="agentbox">
           
-              <img class="logo" src="{{realestate_logo_big}}" title="{{property.realestate.name}}"/>
+              <img class="logo" src="{{realestate_logo_big}}" style="max-width:230px;max-height:80px;" title="{{property.realestate.name}}"/>
               {% if property.realestate %}  
               <div class="data">
                 <h1>{{property.realestate.name}}</h1>

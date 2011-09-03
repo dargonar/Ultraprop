@@ -20,7 +20,7 @@
                   <div class="qty">foto <font class="qty_font">1</font> de {{ loop.length }}</div>
                   <center>
                 {% endif %}
-                <img id="image_{{loop.index}}" class="thumblnk" style="max-width:190px; max-height:142px; {%if loop.index != 1 %} display:none {%endif%}" src="{{img.title}}" wh="306,230" onerror="this.src='/img/picturebox/nophoto_306x230.jpg';" />
+                <img id="image_{{loop.index}}" class="thumblnk" style="max-width:190px; max-height:142px; {%if loop.index != 1 %} display:none {%endif%}" src="{{img.title}}=s190" wh="190,142" onerror="this.src='/img/picturebox/nophoto_306x230.jpg';" />
               {% else %}
               <div class="qty">No hay imagenes.</div>
               <center>
@@ -39,7 +39,7 @@
       <!-- LOGO -->
       <!-- wh="133,47" -->
       {% set realestate_logo = prop.realestate.logo if prop.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
-      <div class="logo"><img src="{{realestate_logo}}" title="{{prop.realestate.name}}"/></div>
+      <div class="logo"><img src="{{realestate_logo}}=s133" style="max-width:133px; max-height:47px;" title="{{prop.realestate.name}}"/></div>
       
       <!-- PROPERTIES -->
       <dl class="properties">
@@ -77,7 +77,7 @@
           <dt>Estado:</dt>
           <dd>{{prop.getPropState()}}</dd>
         </div>
-        <div class="{{'act' if data['year_built']['value']==prop.year_built else ''}}">  
+        <div class="{{'act' if data['year_built']['value']==prop.year_built else ''}}" style="min-height:42px;">  
           <dt>Antigüedad</dt>
           <dd>{{prop.getAge()}}</dd>
        </div>  
