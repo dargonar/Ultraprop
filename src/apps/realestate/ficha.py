@@ -18,7 +18,8 @@ class Show(RealestateHandler):
     
     realestate            = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
     kwargs['realestate']  = realestate
-    kwargs['realestate_logo'] = get_serving_url(realestate.logo) if realestate.logo else None
+    _logo = get_serving_url(realestate.logo) if 'http://' not in realestate.logo and realestate.logo else realestate.logo
+    kwargs['realestate_logo'] =  _logo
     
     key                   = kwargs['key']
     price_data_operation  = kwargs['oper']

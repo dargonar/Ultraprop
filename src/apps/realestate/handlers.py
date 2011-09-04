@@ -21,7 +21,8 @@ class Index(RealestateHandler):
   def get(self, **kwargs):
     realestate            = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
     kwargs['realestate']  = realestate
-    kwargs['realestate_logo'] = get_serving_url(realestate.logo) if realestate.logo else None
+    _logo = get_serving_url(realestate.logo) if 'http://' not in realestate.logo and realestate.logo else realestate.logo
+    kwargs['realestate_logo'] =  _logo
     kwargs['menu_item']='index'
       
     return self.render_response('realestate/index.html', **kwargs)
@@ -31,7 +32,8 @@ class Info(RealestateHandler):
   def get(self, **kwargs):
     realestate            = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
     kwargs['realestate']  = realestate
-    kwargs['realestate_logo'] = get_serving_url(realestate.logo) if realestate.logo else None
+    _logo = get_serving_url(realestate.logo) if 'http://' not in realestate.logo and realestate.logo else realestate.logo
+    kwargs['realestate_logo'] =  _logo
     kwargs['menu_item']   = 'info'
     kwargs['form']        =  self.form
     
