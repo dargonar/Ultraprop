@@ -7,9 +7,9 @@
     <ul class="data">
         <li class="picture">
             <!--wh="147,110"-->
-            {% set image_src = property.main_image if property.main_image else '/img/picturebox/nophoto_150x113.jpg' %} 
+            {% set image_src = (property.main_image_url+'=s147') if property.main_image_url else '/img/picturebox/nophoto_150x113.jpg' %} 
             <a href="{{url_for('realestate/ficha', key=property.key()|string, oper=oper_id|string, realestate=realestate.key()|string)}}">
-                <img class="pic" src="{{image_src}}" onerror="this.src='/pics/small/sample1.jpg';" title="{{property|headlinify}}"/>
+                <img class="pic" src="{{image_src}}" style="max-width:147px;max-height:110px;" onerror="this.src='/pics/small/sample1.jpg';" title="{{property|headlinify}}"/>
             </a> 
             <p class="pic_qty">{{ property.images_count|string + ' fotos' if property.images_count>0 else 'No hay imagenes'}}</p>
         </li>

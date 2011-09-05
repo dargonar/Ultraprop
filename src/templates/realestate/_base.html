@@ -52,7 +52,7 @@
         <div id="logo" class="grid_3">
           <a href="{{realestate.website if realestate.website and realestate.website|wordcount>0 else url_for('realestate/home', realestate=realestate.key()|string)}}">
             {% if realestate_logo %}
-            <img src="{{realestate_logo}}" alt="{{realestate.name}}" border="0" />
+            <img src="{{realestate_logo}}=s133" style="max-width:133px;max-height:47px;" alt="{{realestate.name}}" border="0" />
             {% else %}
             {{ realestate.name }}
             {% endif %}

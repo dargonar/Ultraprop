@@ -9,8 +9,8 @@
         {% for img in images %}
           {% if img.title %}
           <li>
-            <a href="{{img.title}}" wh="_width,_height">
-              <img id="image_{{loop.index}}" src="{{img.title}}" wh="72,55" style="max-height:55px;" title="" alt="" class="popupimg class{{loop.index}}"> 
+            <a href="{{img.title}}=s{{_width}}" wh="_width,_height">
+              <img id="image_{{loop.index}}" src="{{img.title}}=s72" wh="72,55" style="max-height:55px;" title="" alt="" class="popupimg class{{loop.index}}"> 
             </a>
           </li>
           {% endif %}
