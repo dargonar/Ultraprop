@@ -142,9 +142,9 @@ class Compare(FrontendHandler):
     return self.render_json_response({'compare': compare, 'tab': tab})
   
   def major_than(self, prop_value, current_value):
-    return prop_value>current_value
+    return prop_value>current_value 
   def minor_than(self, prop_value, current_value):
-    return prop_value<current_value
+    return prop_value<current_value and prop_value>0
     
 class SendMail(FrontendHandler):
   def get(self, **kwargs):
