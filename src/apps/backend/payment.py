@@ -4,16 +4,18 @@
     ~~~~~~~~
 """
 import logging
-from google.appengine.api import taskqueue
-from google.appengine.ext import db
-
 from datetime import datetime, date, timedelta
 from xml.dom import minidom
+
+from google.appengine.api import taskqueue
+from google.appengine.ext import db
+from google.appengine.ext import deferred
 
 from models import RealEstate, Payment, Invoice
 from webapp2 import uri_for as url_for, RequestHandler
 from dm import ipn_download
 from taskqueue import Mapper
+
 from utils import get_or_404, need_auth, BackendHandler
 
 def send_mail(template, re, invoice=None):
@@ -211,5 +213,5 @@ class Download(RequestHandler):
     db.put(to_save)
     
     # Mandamos a correr la tarea de mapeo
-    defered.run(PaymentAssingMapper.run)
+    deferred.defer(PaymentAssingMapper.run)
     self.response.write('ok')
