@@ -2263,7 +2263,7 @@ body.frontend_search a.fancy_button span.cpy_lnk {
 	float:left;
 }
 /* ///// Link Box ///// */
-body.frontend_search .dialog {
+/*body.frontend_search .dialog {
 	background: none repeat scroll 0 0 #FFFFFF;
 	border: 1px solid #63A23C;
 	-moz-box-shadow:0px 0px 0px 5px rgba(0, 0, 0, 0.25);
@@ -2282,8 +2282,8 @@ body.frontend_search .dialog .btnClose {
 	height:22px;
 	width:22px;
 	background:url(/img/icons/close_popup.png);
-}
-body.frontend_search .dialog.link {
+}*/
+/*body.frontend_search .dialog.link {
 	right:8px;
 	top:40px;
 }
@@ -2299,7 +2299,7 @@ body.frontend_search .dialog .inner .label {
 	font-weight:bold;
 	text-shadow:0 1px 0 white;
 	margin-bottom:3px;
-}
+}*/
 body.frontend_search .search_meddium {
 	border: 1px solid #9CACBF;
 	box-shadow: 0 2px #D4D4D4 inset;
