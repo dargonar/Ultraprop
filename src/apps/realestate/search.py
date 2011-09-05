@@ -28,8 +28,7 @@ class Search(RealestateHandler, PropertyPaginatorMixin):
     self.response.headers["P3P"] = 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"'
     kwargs['menu_item']       = 'search'
     kwargs['realestate']      = self.realestate
-    _logo = get_serving_url(self.realestate.logo) if 'http://' not in self.realestate.logo and self.realestate.logo else self.realestate.logo
-    kwargs['realestate_logo'] =  _logo
+    kwargs['realestate_logo'] =  self.realestate.logo_url
     
     return self.render_response('realestate/search.html', **kwargs)
 

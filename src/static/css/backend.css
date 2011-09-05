@@ -2378,7 +2378,6 @@ dl.location dd {
 .tbl_billing {
 	margin-bottom:2px;
 }
-
 .tbl_billing th {
 	border:solid 1px #ccc;
 	border-left:solid 1px #e5e5e5;
@@ -2401,16 +2400,24 @@ dl.location dd {
 	border-right:none;
 	vertical-align:middle;
 }
-
-.tbl_billing th.status, .tbl_billing td.status { width:130px;}
-.tbl_billing th.number, .tbl_billing td.number { width:110px;}
-.tbl_billing th.date, .tbl_billing td.date { width:110px;}
-.tbl_billing th.expiration, .tbl_billing td.expiration{ width:110px;}
-.tbl_billing th.amount, .tbl_billing td.amount {width:120px;}
-.tbl_billing th.action, .tbl_billing td.action {width: auto;}
-
-
-
+.tbl_billing th.status, .tbl_billing td.status {
+	width:130px;
+}
+.tbl_billing th.number, .tbl_billing td.number {
+	width:110px;
+}
+.tbl_billing th.date, .tbl_billing td.date {
+	width:110px;
+}
+.tbl_billing th.expiration, .tbl_billing td.expiration {
+	width:110px;
+}
+.tbl_billing th.amount, .tbl_billing td.amount {
+	width:120px;
+}
+.tbl_billing th.action, .tbl_billing td.action {
+	width: auto;
+}
 /* PENDING */
 .tbl_billing tr.pending td {
 	background-color:#fee2e2;
@@ -2429,13 +2436,11 @@ td.status span {
 .tbl_billing tr.pending td.status {
 	color:#CC0033;
 }
-
 .tbl_billing tr td.status span.icon {
 	height:16px;
 	width:16px;
 	margin-right:3px;
 }
-
 .tbl_billing tr.pending td.status span.icon {
 	background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -472px -598px transparent;
 }
@@ -2446,8 +2451,6 @@ td.status span {
 	font-family:Arial, Helvetica, sans-serif;
 	padding:8px 25px !important;
 }
-
-
 /* APPROVED */
 .tbl_billing tr.approved td {
 	background-color:#fff;
@@ -2467,7 +2470,6 @@ td.status span {
 .tbl_account h3 {
 	margin-bottom:20px;
 }
-
 /* ///// IN DATE ///// */
 .tbl_billing tr.indate td {
 	background:#fff;
@@ -2482,8 +2484,6 @@ td.status span {
 .tbl_billing tr.indate td.status span.icon {
 	background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -584px -597px transparent;
 }
-
-
 /* ///// IN PROCESS ///// */
 .tbl_billing tr.inprocess td {
 	background:#f6e596;
@@ -2498,8 +2498,35 @@ td.status span {
 .tbl_billing tr.inprocess td.status span.icon {
 	background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -568px -597px transparent;
 }
-
 /* ///// HELP ///// */
-.invoice_help { padding:8px; font-weight:bold;}
-.invoice_help .ico  { display:inline-block; height:16px; width:16px; margin-right:3px; background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -536px -597px transparent;}
-.invoice_help a { color:#000 !important;}
+.invoice_help {
+	padding:8px;
+	font-weight:bold;
+}
+.invoice_help .ico {
+	display:inline-block;
+	height:16px;
+	width:16px;
+	margin-right:3px;
+	background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -536px -597px transparent;
+}
+.invoice_help a {
+	color:#000 !important;
+}
+/* ///// LOADING DM ///// */
+.loading_dm {
+	background:#EDF4D9;
+	padding:14px;
+	margin:30px 70px;
+	text-align:center;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+	font-weight:bold;
+}
+.loading_square {
+	background:url(/img/dm_loader.gif) no-repeat;
+	width:43px;
+	height:11px; 
+	margin-top:6px; margin-left:4px; 
+}

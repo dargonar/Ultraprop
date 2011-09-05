@@ -7,10 +7,25 @@
   });
   </script>
 {% endblock %}
-
 {% block content %}
 
-	<div style="overflow:hidden; margin-bottom:20px;">
+<div class="bg_popup">&nbsp;</div>
+<!--<div class="popupbox">-->
+<div class="dialog account">
+<div class="btnClose"></div>
+<div align="center" style="margin-top:40px;"><img src="/img/logos/dm.gif" /></div>
+  <div class="loading_dm">Aguarde un instante, iniciando aplicación
+    <img class="loading_square" src="/img/pixel-transp.gif" />
+  </div>
+    <p style="background:#e2f2ff; padding:14px 20px;">
+    DineroMail es la aplicación que le permite imprimir su factura y realizar pagos mediante págofacil, rapipago, pagomiscuentas o realizar transferencias online.
+    </p>
+
+  
+</div>
+
+
+<div style="overflow:hidden; margin-bottom:20px;">
 		<h1>Estado de cuenta</h1>
   </div>
   {% if flash %}
@@ -18,9 +33,6 @@
   {% endif %}
   
   <h2 class="title">Mis Facturas</h2>
-  
-  
-  
 <table class="tbl_billing" width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <th class="status">Estado</th>
