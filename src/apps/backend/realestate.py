@@ -25,7 +25,7 @@ class Edit(BackendHandler):
     kwargs['form']                = RealEstateForm(obj=realestate)
     kwargs['key']                 = self.get_realestate_key()
     kwargs['mnutop']              = 'inmobiliaria'
-    kwargs['realestate_logo']     = realestate.logo
+    kwargs['realestate_logo']     = realestate.logo_url
     
     return self.render_response('backend/realestate.html', **kwargs)
   
@@ -39,7 +39,7 @@ class Edit(BackendHandler):
     if not rs_validated:
       kwargs['form']                = self.form
       kwargs['key']                 = self.get_realestate_key()
-      kwargs['realestate_logo']     = realestate.logo
+      kwargs['realestate_logo']     = realestate.logo_url
       if self.form.errors:
         kwargs['flash']         = self.build_error(u'Verifique los datos ingresados:')
         # + '<br/>'.join(reduce(lambda x, y: str(x)+' '+str(y), t) for t in self.form.errors.values()))
@@ -85,7 +85,7 @@ class Edit(BackendHandler):
           abort(500)
         # ------ END HACK -------- #
         
-        realestate.logo = get_serving_url(blob_key)
+        realestate.logo_url = get_serving_url(blob_key)
     
     realestate.save()
     

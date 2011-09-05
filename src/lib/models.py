@@ -37,7 +37,8 @@ class RealEstate(db.Model):
   def new(cls):
     return RealEstate(status=RealEstate._TRIAL, managed_domain=1)
     
-  logo                = db.StringProperty(indexed=False)
+  logo                = blobstore.BlobReferenceProperty() #--Borrar--
+  logo_url            = db.StringProperty(indexed=False)
   name                = db.StringProperty()
   website             = db.LinkProperty(indexed=False)
   email               = db.EmailProperty(indexed=False)
@@ -52,6 +53,7 @@ class RealEstate(db.Model):
   updated_at          = db.DateTimeProperty(auto_now=True)
   created_at          = db.DateTimeProperty(auto_now_add=True)
   
+  enable              = db.IntegerProperty() #--borrar--
   status              = db.IntegerProperty()
   managed_domain      = db.IntegerProperty()
   
@@ -279,7 +281,8 @@ class Property(GeoModel):
         # Venta	        1
         # Alquiler	    2
   
-  main_image                    = db.StringProperty(indexed=False)
+  main_image                    = blobstore.BlobReferenceProperty() #--Borrar--
+  main_image_url                = db.StringProperty(indexed=False)
   # # ======================================================= #
   # # PROPIEDADES PARA DEFINIR RANGOS A PARTIR DE OTRAS PROPS #
   # area_indoor_id          = db.IntegerProperty() # 0-40
