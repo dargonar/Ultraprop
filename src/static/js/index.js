@@ -1490,7 +1490,7 @@ function copyLink(){
   
   showLoading();
   var tabs    = '';
-  jQuery('#main_tabs .wintabs [id*="tab_"]').each(
+  jQuery('#main_tabs .wintabs [id*="tab_"][key]').each(
     function(index, value)
     {
       tabs+=jQuery(value).attr('key')+',';
