@@ -14,12 +14,17 @@ from utils import get_or_404, RealestateHandler
 
 # Mail de bienvenida
 from google.appengine.api import mail
-from models import User
+from models import User, RealEstate
 
 # Index va a ser la homepage de la inmobiliaria, creo que quedará obsoleto.    
 class Index(RealestateHandler):
   def get(self, **kwargs):
-    realestate            = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
+    realestate = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
+    
+    # Ponemos la pantalla de disabled si esta en NO_PAYMENT
+    if realestate.status == RealEstate._NO_PAYMENT:
+      return self.render_response('realestate/disabled.html', realestate=realestate)
+
     kwargs['realestate']  = realestate
     kwargs['realestate_logo'] = realestate.logo_url
     kwargs['menu_item']   = 'index'
@@ -29,7 +34,12 @@ class Index(RealestateHandler):
 # Info de la propiedad, creo que quedará obsoleto.    
 class Info(RealestateHandler):
   def get(self, **kwargs):
-    realestate            = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
+    realestate = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
+    
+    # Ponemos la pantalla de disabled si esta en NO_PAYMENT
+    if realestate.status == RealEstate._NO_PAYMENT:
+      return self.render_response('realestate/disabled.html', realestate=realestate)
+    
     kwargs['realestate']  = realestate
     kwargs['realestate_logo'] = realestate.logo_url
     kwargs['menu_item']   = 'info'
@@ -41,6 +51,10 @@ class Info(RealestateHandler):
     self.request.charset = 'utf-8'
     realestate            = kwargs['realestate']
     
+    # Ponemos la pantalla de disabled si esta en NO_PAYMENT
+    if self.realestate.status == RealEstate._NO_PAYMENT:
+      return self.render_response('realestate/disabled.html', realestate=self.realestate)
+
     if not self.form.validate():
       kwargs['flash'] = self.build_error('Verifique los datos ingresados:' + '<br/>'.join(reduce(lambda x, y: str(x)+' '+str(y), t) for t in self.form.errors.values()))
       

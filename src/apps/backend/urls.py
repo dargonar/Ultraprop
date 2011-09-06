@@ -12,16 +12,17 @@ def get_rules():
         A list of class.`tipfy.Rule` instances.
     """
     rules = [
-      Route('/email_task', name='backend/email_task', handler='apps.backend.email.SendTask'),
+      Route('/tsk/email_task'    , name='backend/email_task'           , handler='apps.backend.email.SendTask'),
+      Route('/tsk/run_ipn'       , name='billing/payment/download'     , handler='apps.backend.payment.Download'),
+      Route('/tsk/run_invoicer'  , name='billing/payment/run_invoicer' , handler='apps.backend.payment.RunInvoicer'),
       
       # Todas las rutas de billing
       PathPrefixRoute('/billing', [
           
         PathPrefixRoute('/payment', [
-          Route('/download'                   , name='billing/payment/download'   , handler='apps.backend.payment.Download'),
-          Route('/<invoice>/payment-cancel'   , name='billing/payment/cancel'     , handler='apps.backend.payment.Cancel'),
-          Route('/<invoice>/payment-done'     , name='billing/payment/done'       , handler='apps.backend.payment.Done'),
-          Route('/<invoice>/payment-pending'  , name='billing/payment/pending'    , handler='apps.backend.payment.Pending'),
+          Route('/<invoice>/payment-cancel'   , name='billing/payment/cancel'       , handler='apps.backend.payment.Cancel'),
+          Route('/<invoice>/payment-done'     , name='billing/payment/done'         , handler='apps.backend.payment.Done'),
+          Route('/<invoice>/payment-pending'  , name='billing/payment/pending'      , handler='apps.backend.payment.Pending'),
         ]),
         
       ]),

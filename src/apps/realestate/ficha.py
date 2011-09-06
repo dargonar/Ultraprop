@@ -7,7 +7,7 @@ from google.appengine.api.images import get_serving_url
 
 from webapp2 import cached_property
 
-from models import Property, ImageFile
+from models import Property, ImageFile, RealEstate
 from search_helper import config_array
 from backend_forms import PropertyFilterForm, PropertyContactForm
 
@@ -16,7 +16,13 @@ from utils import get_or_404, RealestateHandler
 class Show(RealestateHandler):
   def get(self, **kwargs):
     
-    realestate            = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
+    realestate = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
+    
+    # Ponemos la pantalla de disabled si esta en NO_PAYMENT
+    if realestate.status == RealEstate._NO_PAYMENT:
+      return self.render_response('realestate/disabled.html', realestate=realestate)
+
+    
     kwargs['realestate']  = realestate
     kwargs['realestate_logo'] =  realestate.logo_url
     
