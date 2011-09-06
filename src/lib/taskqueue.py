@@ -48,9 +48,7 @@ class Mapper(object):
         if self.to_delete:
             db.delete(self.to_delete)
             self.to_delete = []
-        
-        logging.info('Te meti un write' )
-
+            
     def _continue(self, start_key, batch_size):
         q = self.get_query()
         # If we're resuming, pick up where we left off last time.
@@ -70,14 +68,13 @@ class Mapper(object):
                 start_key = entity.key()
             self._batch_write()
         except Error:
-            logging.info('Vino un timeout de datastore' )
+            logging.error('Mapper: vino un timeout de datastore' )
             # Write any unfinished updates to the datastore.
             self._batch_write()
             # Queue a new task to pick up where we left off.
             deferred.defer(self._continue, start_key, batch_size)
             return
         except DeadlineExceededError:
-            logging.info('Vino un herenstein de datastore' )
             # Write any unfinished updates to the datastore.
             self._batch_write()
             # Queue a new task to pick up where we left off.
