@@ -38,6 +38,7 @@ config['ultraprop'] = {
     'trial_ended':        {'sender':'info@ultraprop.com.ar', 'template':'trial_ended'},
     'no_payment':         {'sender':'info@ultraprop.com.ar', 'template':'no_payment'},
     'enabled_again':      {'sender':'info@ultraprop.com.ar', 'template':'enabled_again'},
+    'payment_received':   {'sender':'info@ultraprop.com.ar', 'template':'payment_received'},
     'new_invoice':        {'sender':'info@ultraprop.com.ar', 'template':'new_invoice'},
     'pending_invoices':   {'sender':'info@ultraprop.com.ar', 'template':'pending_invoices'},
     'contact_agent':      {'sender':'info@ultraprop.com.ar', 'template':'contact_agent'},

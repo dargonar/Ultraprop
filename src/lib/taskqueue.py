@@ -1,6 +1,9 @@
+import logging
+
 from google.appengine.ext import db
 from google.appengine.ext import deferred
 from google.appengine.runtime import DeadlineExceededError
+from google.appengine.ext.db import Error
 
 class Mapper(object):
     # Subclasses should replace this with a model class (eg, model.Person).
@@ -38,13 +41,14 @@ class Mapper(object):
 
     def _batch_write(self):
         """Writes updates and deletes entities in a batch."""
+
         if self.to_put:
             db.put(self.to_put)
             self.to_put = []
         if self.to_delete:
             db.delete(self.to_delete)
             self.to_delete = []
-
+            
     def _continue(self, start_key, batch_size):
         q = self.get_query()
         # If we're resuming, pick up where we left off last time.
@@ -63,6 +67,13 @@ class Mapper(object):
                 # Record the last entity we processed.
                 start_key = entity.key()
             self._batch_write()
+        except Error:
+            logging.error('Mapper: vino un timeout de datastore' )
+            # Write any unfinished updates to the datastore.
+            self._batch_write()
+            # Queue a new task to pick up where we left off.
+            deferred.defer(self._continue, start_key, batch_size)
+            return
         except DeadlineExceededError:
             # Write any unfinished updates to the datastore.
             self._batch_write()

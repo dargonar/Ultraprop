@@ -786,3 +786,16 @@ function init_user()
     jQuery("#actual_password").css({ opacity: 1 });
   });
 }
+
+//----------------------------------
+//         ACCOUNT
+//---------------------------------- 
+
+function init_account()
+{
+  $('.action>form').submit( function() {
+    $('#msg1').show();
+    $('#msg2').show();
+    return true;
+  });
+}

@@ -50,6 +50,9 @@ class Login(BackendHandler):
     # TODO: PENSAR -> status es para mantener el estado de pagos.
     # deberiamos tener otra bandera para indicar si la informacion del realestate esta completa
     
+    if user.realestate.status == RealEstate._NO_PAYMENT:
+      return self.redirect_to('backend/account/status')
+    
     #if not self.is_realestate_enabled:
     #  self.set_info('Debe configurar la inmobiliaria para comenzar a operar.')
     #  return self.redirect_to('backend/realestate/edit')
@@ -97,24 +100,22 @@ class SignUp(BackendHandler):
     
     # Generamos la primer factura con fecha hoy+dias_gratis
     # Utilizamos el indicador I para indicar 'id' en vez de 'name'
-    try:
-      first_date = (datetime.utcnow() + timedelta(days=plan.free_days)).date()
-      if first_date.day > 28:
-        first_date = date(first_date.year, first_date.month, 28)
-      
-      invoice = Invoice()
-      invoice.realestate = realEstate
-      invoice.trx_id     = '%sI%d' % ( first_date.strftime('%Y%m'), realEstate.key().id() )
-      invoice.amount     = plan.amount
-      invoice.state      = Invoice._NOT_PAID
-      invoice.date       = first_date
-      invoice.put()
-      
-      # Volvemos a guardar el realEstate con los datos nuevos
-      realEstate.last_invoice = invoice.date
-      realEstate.save()
-    except Exception, e:
-      pass
+    first_date = (datetime.utcnow() + timedelta(days=plan.free_days)).date()
+    if first_date.day > 28:
+      first_date = date(first_date.year, first_date.month, 28)
+    
+    invoice = Invoice()
+    invoice.realestate = realEstate
+    invoice.trx_id     = '%sI%d' % ( first_date.strftime('%Y%m'), realEstate.key().id() )
+    invoice.amount     = plan.amount
+    invoice.state      = Invoice._NOT_PAID
+    invoice.date       = first_date
+    invoice.put()
+    
+    # Volvemos a guardar el realEstate con los datos nuevos
+    realEstate.last_invoice = invoice.date
+    realEstate.save()
+
     # Generamos el usuario y le asignamos la realestate
     user = User.new()
     user.email            = self.form.email.data

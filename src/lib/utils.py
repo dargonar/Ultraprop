@@ -190,7 +190,7 @@ class BackendMixin(object):
   
   @property
   def is_no_payment(self):
-    return self.is_enabled and 'account.realestate.status' in self.session and self.session['account.realestate.status'] == 4
+    return 'account.realestate.status' in self.session and self.session['account.realestate.status'] == 4
   
   def get_user_key(self):
     return self.session['account.key']

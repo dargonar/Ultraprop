@@ -1,10 +1,13 @@
 {% extends "email/_base.txt"%}
 
 {%block content%}
-    !Bienvenido a ULTRAPROP, {{realestate_name}}!
-    Estamos contentos por contar con su membrecía, esperamos que encuentre en ULTRAPROP una herramienta indispensable para concretar sus negocios inmobiliarios. Esa es nuestra misión.
+    Estimado usuario de Ultraprop.
+
+    Su período de prueba en Ultraprop finaliza el {{expire_date.strftime('%d/%m/%Y')}}, dentro de {{expire_span}} días.
+    Pasados estos {{expire_span}} días sus propiedades publicadas serán desactivadas de los resultados de búsqueda.
+
+    Para continuar deberá realizar el pago de la factura correspondiente al mes en curso.
+    Puede acceder entrando en "Mi Cuenta" en el panel de control de Ultraprop.
+    Para acceder al panel ahora ingrese en http://www.utraprop.com.ar/admin/account/status.
     
-    Comienza a utilizar ULTRAPROP ingresando a este enlace {{validate_user_link}} para validar su cuenta.
-    
-    Recuerde completar su perfil, es indispensable para que los usuarios lo contacten.
 {% endblock %}

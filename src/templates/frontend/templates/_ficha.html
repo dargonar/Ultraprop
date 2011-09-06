@@ -19,11 +19,7 @@
           <!-- LOGO / BTN CONTACT -->
           <div class="agent">
               <img class="logo" src="{{realestate_logo}}" style="max-width:133px;max-height:47px;" title="{{property.realestate.name}}" />
-              {% if ficha is defined %}
-                <a class="btnContact" title="Ver información del agente inmobiliario" href="#" onclick="jQuery(body).scrollTo(jQuery('#ficha_{{property.key()}} .contactBox'), 800 ); return false;">Contactar Agente</a>
-              {% else %}
-                <a class="btnContact" title="Ver información del agente inmobiliario" href="#" onclick="return scrollFichaToBottom('ficha_{{property.key()}}');">Contactar Agente</a -->
-              {% endif %}
+               <a class="btnContact" title="Ver información del agente inmobiliario" href="#" onclick="return scrollFichaToBottom('ficha_{{property.key()}}');">Contactar Agente</a -->
           </div>
         </div>
       </div>
@@ -47,8 +43,8 @@
             {% endfor%}
           </ul>
           <h2>Ubicación de la propiedad</h2>
-          {% set map_width  = '920' if ficha is defined else '625' %}
-          {% set map_height = '320' if ficha is defined else '320' %}
+          {% set map_width  = '625' %}
+          {% set map_height = '320' %}
           {% set img_map_src  = 'http://maps.google.com/maps/api/staticmap?center='+property.latitude|string+', '+property.longitude|string+'&zoom=14&size='+map_width+'x'+map_height+'&maptype=roadmap&markers=icon:http://ultraprop.appspot.com/img/icons/map/icong.png|'+property.latitude|string+', '+property.longitude|string+'&sensor=false' %}
           {% set map_img_id   = 'map_image_'+property.key()|string%}
           {% set map_buttons  = 'mapButtons_'+property.key()|string%}
@@ -59,7 +55,7 @@
             <span onclick="return swithPropertyLocationMap(this,'{{map_img_id}}','{{img_map_src}}','hybrid','{{map_buttons}}');">Híbrido</span>
           </div>
           <!-- ////// MAP 625 x 302 ////// -->
-          <div style="{{ 'text-align:center;' if ficha is defined else '' }}">
+          <div>
             <img id="{{ map_img_id }}" src="{{img_map_src}}"/>
           </div>
           <h2>Información de Contacto</h2>

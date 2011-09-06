@@ -2,14 +2,25 @@
 import logging
 from google.appengine.ext import db
 from google.appengine.api import mail
+from datetime import datetime, timedelta
 
 from webapp2 import abort, get_app # uri_for as url_for
 
-from models import Property, Consulta
+from models import Property, Consulta, Invoice
 
 from utils import get_bitly_url, MyBaseHandler
 
 class SendTask(MyBaseHandler):
+  
+  # def get(self, **kwargs):
+    # self.request.charset = 'utf-8'
+    
+    # # TODO: Security hazard (think)
+    # params = self.request.GET.mixed()
+    # action = self.request.GET.get('action')
+    # getattr(self, action)(params)
+    # # params: { rekey, invoice=None }
+    # return
   
   def post(self, **kwargs):
     self.request.charset = 'utf-8'
@@ -18,31 +29,83 @@ class SendTask(MyBaseHandler):
     params = self.request.POST.mixed()
     action = self.request.POST.get('action')
     getattr(self, action)(params)
-    
+    # params: { rekey, invoice=None }
     return
 
 
   def common_context(self):
     context = { 'server_url':                 'http://'+self.request.headers.get('host', 'no host')
               , 'support_url' :               'http://'+self.request.headers.get('host', 'no host')}
+    return context
     
+  def send_email(self, template, mail_to, subject, **context):
+    
+    data = self.config['ultraprop']['mail'][template]  
+    
+    # Armo el body en plain text.
+    body = self.render_template('email/'+data['template']+'.txt', **context)  
+    # Armo el body en HTML.
+    html = self.render_template('email/'+data['template']+'.html', **context)  
+    
+    # Envío el correo.
+    mail.send_mail(sender="www.ultraprop.com.ar <%s>" % data['sender'], 
+                 to       = mail_to,
+                 subject  = "%s - ULTRAPROP" % subject,
+                 body     = body,
+                 html     = html)
+    # --------------------------------------------------------------------------------
+      
   def trial_will_expire(self, params):
-    pass
+    re = db.get(params['rekey'])
+    expires_at = re.created_at + timedelta(days=re.plan.free_days)
+    
+    context_ex = self.common_context()
+    context_ex = dict({'expire_date':expires_at, 'expire_span':(expires_at-datetime.utcnow()).days}, **context_ex)
+    
+    self.send_email('trial_will_expire', re.email, u'Su período de prueba en Ultraprop está a punto de finalizar', **context_ex)
   
   def trial_ended(self, params):
-    pass
+    re = db.get(params['rekey'])
+    context_ex = self.common_context()
+    
+    self.send_email('trial_ended', re.email, u'Su período de prueba en Ultraprop ha finalizado', **context_ex)
 
   def no_payment(self, params):
-    pass
+    re = db.get(params['rekey'])
+    invoices_count  = len(Invoice().all(keys_only=True).filter('realestate', re.key()).filter('state', Invoice._NOT_PAID).fetch(10))
+    plural          = 's' if invoices_count>1 else ''
+    
+    context_ex = self.common_context()
+    context_ex = dict({'invoices_count':invoices_count, 'plural':plural}, **context_ex)
+    
+    self.send_email('no_payment', re.email, u'Aviso de factura%s impaga%s' % (plural, plural), **context_ex)
   
   def enabled_again(self, params):
-    pass
+    re        = db.get(params['rekey'])
+    invoice   = db.get(params['invoice'])
+    
+    context_ex = self.common_context()
+    context_ex = dict({'invoice':invoice}, **context_ex)
+    
+    self.send_email('enabled_again', re.email, u'Recepción de pago de factura', **context_ex)
 
   def payment_received(self, params):
-    pass
+    re        = db.get(params['rekey'])
+    invoice   = db.get(params['invoice'])
+    
+    context_ex = self.common_context()
+    context_ex = dict({'invoice':invoice}, **context_ex)
+    
+    self.send_email('payment_received', re.email, u'Recepción de pago de factura', **context_ex)
     
   def new_invoice(self, params):
-    pass
+    re        = db.get(params['rekey'])
+    invoice   = db.get(params['invoice'])
+    
+    context_ex = self.common_context()
+    context_ex = dict({'invoice':invoice}, **context_ex)
+    
+    self.send_email('new_invoice', re.email, u'Nueva factura', **context_ex)
     
   def requestinfo_user(self, params):
     key                   = params['propery_key']

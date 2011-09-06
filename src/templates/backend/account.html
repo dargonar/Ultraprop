@@ -3,15 +3,14 @@
 {% block headscript %}
   <script type="text/javascript">
   $(document).ready(function() {
-    //init_account();
+    init_account();
   });
   </script>
 {% endblock %}
 {% block content %}
 
-<div class="bg_popup">&nbsp;</div>
-<!--<div class="popupbox">-->
-<div class="dialog account">
+<div id="msg1" class="bg_popup" style="display:none">&nbsp;</div>
+<div id="msg2" class="dialog account" style="display:none">
 <div class="btnClose"></div>
 <div align="center" style="margin-top:40px;"><img src="/img/logos/dm.gif" /></div>
   <div class="loading_dm">Aguarde un instante, iniciando aplicación
@@ -20,8 +19,6 @@
     <p style="background:#e2f2ff; padding:14px 20px;">
     DineroMail es la aplicación que le permite imprimir su factura y realizar pagos mediante págofacil, rapipago, pagomiscuentas o realizar transferencias online.
     </p>
-
-  
 </div>
 
 
@@ -44,38 +41,16 @@
     </tr>
 </table> 
 
-<table class="tbl_billing" width="100%" border="0" cellpadding="0" cellspacing="0">
-    <tr class="indate">
-    	<td class="status"><span class="icon"></span><span>Pendiente</span></td>
-        <td class="number">201109I8001</td>
-        <td class="date">16/09/2011</td>
-        <td class="expiration">01/10/2011</td>
-        <td class="amount">$119,8</td>
-        <td class="action"><input type="submit" class="btnWizard" name="" value="Pagar Ahora"></td>
-    </tr>
-</table>  
-    
-<table class="tbl_billing" width="100%" border="0" cellpadding="0" cellspacing="0">
-    <tr class="inprocess">
-    	<td class="status"><span class="icon"></span><span>En proceso</span></td>
-        <td class="number">201109I8001</td>
-        <td class="date">16/09/2011</td>
-        <td class="expiration">01/10/2011</td>
-        <td class="amount">$119,8</td>
-        <td class="action"><input type="submit" class="btnWizard" name="" value="Iniciar Pago"></td>
-    </tr>
-</table>
-
 {% for invoice in invoices %}
 <table class="tbl_billing" width="100%" border="0" cellpadding="0" cellspacing="0">  
-    <tr class="pending">
-    	<td class="status"><span class="icon"></span><span>Vencida</span></td>
+    <tr class="{{invoice.str_state()}}">
+    	<td class="status"><span class="icon"></span><span>{{invoice.str_state(css=False)}}</span></td>
         <td class="number">{{invoice.trx_id}}</td>
         <td class="date">{{invoice.date.strftime('%d/%m/%Y')}}</td>
         <td class="expiration">{{(invoice.date|add_days(15)).strftime('%d/%m/%Y')}}</td>
         <td class="amount">${{ (invoice.amount * 1.21) | currencyfy}}</td>
         <td class="action">
-          <form onsubmit="$('input[type=submit]').disable(); return true;" action="https://checkout.dineromail.com/CheckOut" method="post" > 
+          <form action="https://checkout.dineromail.com/CheckOut" method="post" > 
             <!--data nuestra-->
             <input type="hidden" name="merchant" value="2267637" />  
             <input type="hidden" name="country_id" value="1" /> 
@@ -92,7 +67,7 @@
             <input type="hidden" name="url_redirect_enabled" value="1"/>
             <input type="hidden" name="change_quantity" value="0"/>
             
-            <input type="submit" class="btnWizard" name="" value="Pagar Ahora">
+            <input type="submit" class="btnWizard" name="" value="{{'Pagar Ahora' if invoice.state == Invoice._NOT_PAID else ' Reimprimir '}}">
           </form>
         </td>
     </tr>
@@ -112,8 +87,10 @@
 </table> 
    
 {% endfor %}
-
-<div class="invoice_help"><a href="mailto:ayuda@ultraprop.com.ar"><span class="ico"></span>Necesita ayuda con su factura, haga click aqui!</a></div>
+<br/>
+<div class="invoice_help">
+<a href="mailto:ayuda@ultraprop.com.ar"><span class="ico"></span>Necesita ayuda con el pago de su factura? Haga click aqui!</a>
+</div>
 
 <div class="divider"></div> 
 <h2 class="title">Información de cuenta</h2>

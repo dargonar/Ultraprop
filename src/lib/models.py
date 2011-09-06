@@ -91,7 +91,16 @@ class Invoice(db.Model):
   state               = db.IntegerProperty()
   date                = db.DateProperty()
   created_at          = db.DateTimeProperty(auto_now_add=True)
-     
+
+  def str_state(self, css=True):
+    if self.state == Invoice._INPROCESS:
+      return ('inprocess' if css else 'En Proceso')
+    
+    if (datetime.now().date() - self.date).days > 15:
+      return ('pending' if css else 'Vencida')
+    
+    return ('indate' if css else 'Pendiente')
+    
 class User(db.Model):
   
   @classmethod
