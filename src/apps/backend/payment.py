@@ -192,7 +192,7 @@ class PaymentAssingMapper(Mapper):
       re.save()
 
       if oldst == RealEstate._NO_PAYMENT:
-        send_mail('enabled_again', re)
+        send_mail('enabled_again', re, invoice)
     
     payment.assigned = 1      
     return ([payment], []) # update/delete
