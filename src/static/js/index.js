@@ -404,8 +404,8 @@ function onMainFilterChange(obj)
 {
   if(m_initializing)
     return false;
-  //doSearch();
   checkFiltersOptions();
+  doSearch();
   return false;
 }
 
