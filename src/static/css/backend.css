@@ -2530,3 +2530,6 @@ td.status span {
 	height:11px; 
 	margin-top:6px; margin-left:4px; 
 }
+
+.filename {clear:both; padding:10px 0; padding-bottom:5px; font-weight:bold !important;}
+.icon16.file {background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -600px -597px transparent; margin-right:4px; margin-top:3px;}

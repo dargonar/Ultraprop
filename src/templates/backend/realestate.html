@@ -72,9 +72,7 @@
             </div>
            
 
-            <div style="clear:both;"></div>
-            <span id="filename"></span>
-            <br/>
+            <div class="filename"><span class="icon16 file"></span><span id="filename">Nombre_de_Archivo</span></div>
             <small class="gray">
             Tamaño recomendado: 280 pixeles de ancho x 75 de alto.<br /> 
             Ancho máx. 300 pixeles, Altura Máx. 100 pixeles.
@@ -131,10 +129,41 @@
     <dl class="form">
       <dt></dt>
       <dd>
-        <div class="navButtons" style="text-align:left;">
-          <input type="submit" value="Guardar Inmobiliaria" name="" class="btnWizard">
-        </div>
+        <!--div class="navButtons" style="text-align:left;"-->
+          <input type="submit" value="Guardar" name="" class="btnWizard">
+        <!--/div-->
       </dd>
     </dl>  
   </form>  
+  
+  
+  
+<h2 class="title">Página web</h2>
+<dl class="form">
+        <dt>
+        Mi dirección web
+        <p style="font-weight:normal; font-size:11px; color:#666;">Ya dispongo de un dominio propio</p>
+        </dt>
+		<dd>
+			<input type="text" value="" title="www.sudominio.com.ar" placeholder="www.sudominio.com.ar" name="" id="" class="">
+            <div jqtransform="true">
+                <div class="ex-label">
+                    <input id="live_work" type="checkbox" value="y" name="live_work">
+                    <label for="live_work">Quiero utilizar ULTRAPROP como mi web <a href="http://www.jorgemaull.com.ar" target="_blank">(ver ejemplo)</a></label>
+                </div>
+            </div>
+        </dd>
+        
+        <dt>Mi dirección en ULTRAPROP</dt>
+		<dd>
+        <span>http://www.ultraprop.com.ar/</span>
+        <input style="width:140px;" type="text" value="" title="su_inmobiliaria" placeholder="su_inmobiliaria" name="" id="" class="">
+        <a class="uibutton" id="" href="#">&nbsp;Validar&nbsp;</a>
+        
+        <input type="submit" class="btnWizard" name="" value="Guardar">
+        </dd>
+    </dl>  
+ 
+ 
+  
 {% endblock  %}
