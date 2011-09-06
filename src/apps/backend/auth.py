@@ -50,6 +50,9 @@ class Login(BackendHandler):
     # TODO: PENSAR -> status es para mantener el estado de pagos.
     # deberiamos tener otra bandera para indicar si la informacion del realestate esta completa
     
+    if user.realestate.status == RealEstate._NO_PAYMENT:
+      return self.redirect_to('backend/account/status')
+    
     #if not self.is_realestate_enabled:
     #  self.set_info('Debe configurar la inmobiliaria para comenzar a operar.')
     #  return self.redirect_to('backend/realestate/edit')

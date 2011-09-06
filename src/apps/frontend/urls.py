@@ -12,9 +12,9 @@ def get_rules():
     rules = [
     
       #-------------------------------URL HACKS VAN ACA----------------------------------------
-      Route('/h/fix_images',   name='fiximages',            handler='apps.backend.hacks.FixImages'),
-      Route('/h/fix_re',       name='fixre',            handler='apps.backend.hacks.FixRealEstates'),
-      Route('/h/fix_prop',     name='fixprop',            handler='apps.backend.hacks.FixProperty'),
+      #Route('/h/fix_images',   name='fiximages',          handler='apps.backend.hacks.FixImages'),
+      #Route('/h/fix_re',       name='fixre',              handler='apps.backend.hacks.FixRealEstates'),
+      #Route('/h/fix_prop',     name='fixprop',            handler='apps.backend.hacks.FixProperty'),
       
       # Esta la pongo aca por puta
       Route('/webclient/index.asp',   name='oldredir',            handler='apps.backend.hacks.OldRealEstateRedirect'),

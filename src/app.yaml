@@ -55,6 +55,10 @@ handlers:
   script: main.py
   login: admin
 
+- url: /tsk/.*
+  script: main.py
+  login: admin
+
 - url: /shell.*
   script: shell.py
   login: admin

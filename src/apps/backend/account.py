@@ -14,20 +14,21 @@ class Status(BackendHandler):
   @need_auth()
   def get(self, **kwargs):
     re          = db.get(self.get_realestate_key())
-    invoices    = Invoice.all().filter('realestate', re.key()).filter('state', Invoice._NOT_PAID)
-    total_debt  = reduce(lambda x,i: x+i.amount, invoices, 0)*1.21
-    mnutop      = 'cuenta'
+    invoices    = []
     
-    #flash = None
-    #if re.status == RealEstate._TRIAL or re.status == RealEstate._TRIAL_END:
-    #  flash = self.build_info('Para continuar luego del periodo de prueba debe abonar la factura que aparece debajo.')
+    invoices.extend( Invoice.all().filter('realestate', re.key()).filter('state', Invoice._INPROCESS) )
+    invoices.extend( Invoice.all().filter('realestate', re.key()).filter('state', Invoice._NOT_PAID) )
+    
+    total_debt  = reduce(lambda x,i: x + (i.amount if i.state == Invoice._NOT_PAID else 0), invoices, 0)*1.21
 
+    
     params = {
       're'        :re,
       'invoices'  :invoices,
       'total_debt':total_debt,
-      'mnutop'    :mnutop,
+      'mnutop'    :'cuenta',
       'plan'      :re.plan,
+      'Invoice'   :Invoice,
     }
       
     return self.render_response('backend/account.html', **params)

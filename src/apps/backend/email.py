@@ -27,22 +27,22 @@ class SendTask(MyBaseHandler):
               , 'support_url' :               'http://'+self.request.headers.get('host', 'no host')}
     
   def trial_will_expire(self, params):
-    pass
+    logging.error('>>>>>>>>>>trial_will_expire')
   
   def trial_ended(self, params):
-    pass
+    logging.error('>>>>>>>>>>trial_ended')
 
   def no_payment(self, params):
-    pass
+    logging.error('>>>>>>>>>>no_payment')
   
   def enabled_again(self, params):
-    pass
+    logging.error('>>>>>>>>>>enabled_again')
 
   def payment_received(self, params):
-    pass
+    logging.error('>>>>>>>>>>payment_received')
     
   def new_invoice(self, params):
-    pass
+    logging.error('>>>>>>>>>>new_invoice')
     
   def requestinfo_user(self, params):
     key                   = params['propery_key']
