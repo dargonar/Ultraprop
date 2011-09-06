@@ -391,8 +391,9 @@ class SignUpForm(KetchupForm):
     
   def validate_email(form, field):
     # Chequeo que el correo no este repetido
-    user = User.all().filter('email =', field.data).get()
-    if user:
+    user        = User.all().filter('email =', field.data).get()
+    realestate  = RealEstate.all().filter('email =', field.data).get()
+    if user or realestate:
       raise ValidationError(u'Este correo ya esta siendo utilizado.')
   
   def validate_name(form, field):
