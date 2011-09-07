@@ -6,16 +6,28 @@
 from __future__ import with_statement
 
 import logging
+import re
 
 from google.appengine.api import files
 from google.appengine.ext import db
 from google.appengine.api import images 
 from google.appengine.api.images import get_serving_url
 
-from backend_forms import RealEstateForm 
+from backend_forms import RealEstateForm, validate_domain_id
 from utils import get_or_404, need_auth, BackendHandler
 from webapp2 import cached_property
+from models import RealEstate
 
+
+class CheckDomainId(BackendHandler):
+  @need_auth()
+  def get(self, **kwargs):
+    self.request.charset = 'utf-8'
+    domain_id = self.request.GET['did'].strip()
+    
+    res = validate_domain_id(domain_id, self.get_realestate_key())
+    return self.render_json_response(res)
+    
 class Edit(BackendHandler):
   #Edit/New
   @need_auth()
@@ -35,6 +47,11 @@ class Edit(BackendHandler):
     self.request.charset = 'utf-8'
     
     realestate = get_or_404(self.get_realestate_key())
+    
+    #HACK: Hack? le pongo un miembro para que la validacion del slug sepa cual es la key actual de la RealEste
+    #de otra forma va a decir que ya esta siendo utilizada
+    self.form.thekey = self.get_realestate_key()
+    
     rs_validated = self.form.validate()
     if not rs_validated:
       kwargs['form']                = self.form

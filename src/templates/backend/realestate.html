@@ -32,7 +32,7 @@
 {% block headscript %}
   <script type="text/javascript">
   $(document).ready(function() {
-    init_realestate();
+    init_realestate('{{url_for('backend/realestate/check_domain_id')}}');
   });
   </script>
 {% endblock %}
@@ -71,8 +71,8 @@
                 </span>
             </div>
            
-
-            <div class="filename"><span class="icon16 file"></span><span id="filename">Nombre_de_Archivo</span></div>
+            <div style="display:none" class="filename"><span class="icon16 file"></span><span id="filename">&nbsp;</span></div>
+            
             <small class="gray">
             Tamaño recomendado: 280 pixeles de ancho x 75 de alto.<br /> 
             Ancho máx. 300 pixeles, Altura Máx. 100 pixeles.
@@ -143,10 +143,14 @@
 </dl>
     <dl class="form">
       <dt>Mi dirección en ULTRAPROP</dt>
-      <dd>
+      <dd id="did_dd" {% if form.domain_id.errors %} class="errorbox" {% endif %}>
         <span>http://www.ultraprop.com.ar/</span>
         {{form.domain_id(style='width:140px;', placeholder='')}}
-        <a class="uibutton" id="" href="#">&nbsp;Validar&nbsp;</a>
+        <a class="uibutton" id="validate_domain_id" href="#">&nbsp;Validar&nbsp;</a>
+        {{ form_error(form.domain_id) }}
+        {% if not form.domain_id.errors %}
+          <p style="display:none" class="ok">&nbsp;</p>
+        {% endif %}
       </dd>
     </dl>  
 

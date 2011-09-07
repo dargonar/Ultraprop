@@ -737,6 +737,16 @@ body.backend p.error, body.backend_simple p.error {
 	clear:both;
 	background:url(/img/icons/exclamation.png) no-repeat 0px 7px;
 }
+
+body.backend p.ok, body.backend_simple p.ok {
+	color:#000;
+	font-weight:bold;
+	padding:8px;
+	padding-left:20px;
+	clear:both;
+	background:url(/img/icons/done.gif) no-repeat 0px 7px;
+}
+
 body.backend input.error, body.backend_simple input.error {
 	border:solid 1px #cc0033;
 	background:#fff3f3;

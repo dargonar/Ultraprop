@@ -80,6 +80,18 @@ def my_int_validator(field):
   if field.data.strip() != '' and not is_int(field.data):
     raise ValidationError('El numero es invalido')
 
+def validate_domain_id(domain_id, mykey=None):
+    # Primero validamos que sea tipo regex
+    SLUG_REGEX = re.compile('^[-\w]+$')
+    if not re.match(SLUG_REGEX, domain_id):
+      return {'result':'noslug','msg':'El nombre solo puede contener letras, numeros y guiones'}
+    
+    tmp = RealEstate.all(keys_only=True).filter('domain_id', domain_id).get()
+    if tmp and (mykey is None or str(tmp) != mykey):
+      return {'result':'used','msg':'El nombre ya esta siendo utilizado'}
+    
+    return {'result':'free','msg':'El nombre se encuentra disponible'}
+
 #Form to filter properties
 class PropertyFilterForm(Form):
   def __repr__(self):
@@ -303,6 +315,14 @@ class RealEstateForm(Form):
       regex = ur'([^/:]+%s|([0-9]{1,3}\.){3}[0-9]{1,3})(:[0-9]+)?(\/.*)?$' % tld_part
       mRegexp = regexp(regex, re.IGNORECASE, message=u'Dirección inválida.')
     mRegexp.__call__(form, field)
+
+  def validate_domain_id(form, field):
+    res = validate_domain_id(field.data.strip(), form.thekey)
+    if res['result'] == 'free':
+      return
+      
+    raise ValidationError(res['msg'])
+    
     
   def update_object(self, rs):
     rs.name               = self.name.data

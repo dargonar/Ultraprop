@@ -703,7 +703,7 @@ function init_property_list(property_new_url)
 //----------------------------------
 //         PROFILE->REALESTATE
 //---------------------------------- 
-function init_realestate()
+function init_realestate(didurl)
 {
   //////// ADD NEW PHONE //////////
   $("#btnAddPhone").click(function()
@@ -719,6 +719,47 @@ function init_realestate()
     $('#phone2').slideUp('slow', function() {
       // Animation complete.
     });
+    return false;
+  });
+  
+  $('#form_logo_input').change( function() {
+    var tmp = $(this).val();
+    var inx = tmp.lastIndexOf('\\') + 1;
+    $('#filename').html(tmp.substr(inx));
+    $('div.filename').show();
+  });
+  
+  //Validar slug de domain id
+  $('#validate_domain_id').click( function() {
+    
+    $(this).addClass('disable');
+    
+    $.ajax({
+      url:  didurl,
+      type: "GET",
+      data: {did:$('#domain_id').val()},
+      success: function(res) {
+        $('#validate_domain_id').removeClass('disable');
+        if(res.result=='free')
+        {
+          $('#did_dd>p').attr('class','ok');
+          $('#did_dd').attr('class',false);
+        }
+        else
+        {
+          $('#did_dd>p').attr('class','error');
+          $('#did_dd').attr('class','errorbox');
+        }
+
+        $('#did_dd>p').html(res.msg);
+        $('#did_dd>p').show();
+      },
+      error: function(xml, txt, err) {
+        $('#validate_domain_id').removeClass('disable');
+        alert('Error verificando');
+      } 
+    }); 
+    
     return false;
   });
 }

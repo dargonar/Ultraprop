@@ -8,9 +8,10 @@ from datetime import datetime, date, timedelta
 from google.appengine.api import mail
 
 from webapp2 import cached_property
-from backend_forms import SignUpForm
+from backend_forms import SignUpForm, validate_domain_id
 from models import RealEstate, User, Plan, Invoice
 from utils import get_or_404, BackendHandler
+from myfilters import do_slugify
 
 class Index(BackendHandler):
   def get(self, **kwargs):
@@ -96,6 +97,12 @@ class SignUp(BackendHandler):
     realEstate.email            = self.form.email.data
     realEstate.plan             = plan
     realEstate.status           = RealEstate._REGISTERED
+    
+    # Ya tenemos registrado ese domain_id
+    realEstate.domain_id = do_slugify(realEstate.name)
+    if validate_domain_id(realEstate.domain_id) != 'free':
+      realEstate.domain_id = realEstate.domain_id + datetime.now().strftime('%Y%m%d%H%M')
+    
     realEstate.put()
     
     # Generamos la primer factura con fecha hoy+dias_gratis

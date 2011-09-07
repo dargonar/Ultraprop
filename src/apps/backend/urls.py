@@ -42,7 +42,8 @@ def get_rules():
         Route('/validate/<key>'          , name='backend/validate/user'          , handler='apps.backend.auth.ValidateUser'),
         
         PathPrefixRoute('/realestate', [
-          Route('/edit'                  , name='backend/realestate/edit'   , handler='apps.backend.realestate.Edit'),
+          Route('/edit'                  , name='backend/realestate/edit'             , handler='apps.backend.realestate.Edit'),
+          Route('/validate_domain_id'    , name='backend/realestate/check_domain_id'  , handler='apps.backend.realestate.CheckDomainId'),
         ]),
         
         PathPrefixRoute('/user', [
