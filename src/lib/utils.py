@@ -124,14 +124,20 @@ def get_or_404(key):
     abort(404)
 
 class need_auth(object):
-  def __init__(self, roles=None, code=0, url='backend/auth/login'):
-    self.roles = roles
-    self.url   = url
-    self.code  = code
+  def __init__(self, roles=None, code=0, url='backend/auth/login', checkpay=True):
+    self.roles    = roles
+    self.url      = url
+    self.code     = code
+    self.checkpay = checkpay
 
   def __call__(self, f):
     def validate_user(handler, *args, **kwargs):
       if handler.is_logged and (not self.roles or sum(map(lambda r: 1 if r in self.roles else 0, handler.roles)) ):
+        
+        # Trapeamos que no esta pagando
+        if self.checkpay and handler.is_no_payment:
+          return handler.redirect_to('backend/account/status')
+
         return f(handler, *args, **kwargs)
       
       if self.code:

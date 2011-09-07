@@ -181,7 +181,7 @@ def best_bbox_search_cells(bbox, cost_function):
   
   the_primo = p0cell + '.' + primo_prefix+ str(primoX0)+str(primoY0)
 
-  logging.error('SIEMPRE ENCUENTRO EL PRIMO %s' % the_primo)
+  #logging.error('SIEMPRE ENCUENTRO EL PRIMO %s' % the_primo)
 
   return the_primo , boxprimo
     

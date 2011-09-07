@@ -122,47 +122,44 @@
         <dt>Correo electrónico</dt>
         {{ form_field2(form.email, placeholder="correo electrónico", title="correo electrónico") }}
     </dl>  
-    <dl class="form">
-        <dt>Sitio Web</dt>
-        {{ form_field2(form.website, title="url", placeholder="url") }}
-    </dl>
-    <dl class="form">
-      <dt></dt>
-      <dd>
-        <!--div class="navButtons" style="text-align:left;"-->
-          <input type="submit" value="Guardar" name="" class="btnWizard">
-        <!--/div-->
-      </dd>
-    </dl>  
-  </form>  
-  
   
   
 <h2 class="title">Página web</h2>
 <dl class="form">
         <dt>
         Mi dirección web
-        <p style="font-weight:normal; font-size:11px; color:#666;">Ya dispongo de un dominio propio</p>
+        <p style="font-weight:normal; font-size:11px; color:#666;">Ingrese su direccion si ya posee un dominio propio</p>
         </dt>
-		<dd>
-			<input type="text" value="" title="www.sudominio.com.ar" placeholder="www.sudominio.com.ar" name="" id="" class="">
-            <div jqtransform="true">
-                <div class="ex-label">
-                    <input id="live_work" type="checkbox" value="y" name="live_work">
-                    <label for="live_work">Quiero utilizar ULTRAPROP como mi web <a href="http://www.jorgemaull.com.ar" target="_blank">(ver ejemplo)</a></label>
-                </div>
+
+        {{ form_field2(form.website, title="www.sudominio.com.ar", placeholder="www.sudominio.com.ar") }}
+        <dt></dt>
+        <dd>
+            <div class="ex-label">
+                {{form.managed_domain}}
+                <label for="live_work">Quiero utilizar ULTRAPROP como mi web <a href="http://www.jorgemaull.com.ar" target="_blank">(ver ejemplo)</a></label>
             </div>
         </dd>
         
-        <dt>Mi dirección en ULTRAPROP</dt>
-		<dd>
+</dl>
+    <dl class="form">
+      <dt>Mi dirección en ULTRAPROP</dt>
+      <dd>
         <span>http://www.ultraprop.com.ar/</span>
-        <input style="width:140px;" type="text" value="" title="su_inmobiliaria" placeholder="su_inmobiliaria" name="" id="" class="">
+        {{form.domain_id(style='width:140px;', placeholder='')}}
         <a class="uibutton" id="" href="#">&nbsp;Validar&nbsp;</a>
-        
-        <input type="submit" class="btnWizard" name="" value="Guardar">
-        </dd>
+      </dd>
     </dl>  
+
+    <dl class="form">
+      <dt></dt>
+      <dd>
+          <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
+      </dd>
+    </dl>  
+  </form>
+<br/>  
+<br/>
+<br/>
  
  
   

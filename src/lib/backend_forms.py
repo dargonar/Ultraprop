@@ -287,7 +287,14 @@ class RealEstateForm(Form):
   address             = TextField('',[validators.Required(message=u'Debe ingresar una dirección.')])
   zip_code            = TextField('',[validators.Required(message=u'Debe ingresar un código postal.')])
   
+  managed_domain      = BooleanField('')
+  domain_id           = TextField('')
+  
   def validate_website(form, field):
+    
+    if field.data.strip() == '':
+      return
+    
     tld_part = ur'\.[a-z]{2,10}'
     if 'http://' in field.data:
       regex = ur'^[a-z]+://([^/:]+%s|([0-9]{1,3}\.){3}[0-9]{1,3})(:[0-9]+)?(\/.*)?$' % tld_part
@@ -300,11 +307,13 @@ class RealEstateForm(Form):
   def update_object(self, rs):
     rs.name               = self.name.data
     
-    _website              = self.website.data
-    if 'http://' not in _website:
-      _website = 'http://%s' % self.website.data
+    # _website              = self.website.data.strip()
+    # if 'http://' not in _website and _website != '':
+      # _website = 'http://%s' % self.website.data
     
-    rs.website            = _website
+    rs.website            = self.website.data
+    rs.managed_domain     = to_int(self.managed_domain.data)
+    rs.domain_id          = self.domain_id.data
     rs.email              = self.email.data
     rs.title              = self.title.data
     rs.fax_number         = self.fax_number.data
@@ -392,8 +401,11 @@ class SignUpForm(KetchupForm):
   def validate_email(form, field):
     # Chequeo que el correo no este repetido
     user        = User.all().filter('email =', field.data).get()
-    realestate  = RealEstate.all().filter('email =', field.data).get()
-    if user or realestate:
+    
+    #TODO: NO HAY INDICE PARA ESTO POR ESO NO SE PUEDE VALIDAR
+    #realestate  = RealEstate.all().filter('email =', field.data).get()
+    
+    if user:
       raise ValidationError(u'Este correo ya esta siendo utilizado.')
   
   def validate_name(form, field):

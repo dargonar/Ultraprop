@@ -4,7 +4,7 @@ import logging
 # ============================================================ #
 # PRIVATE ==================================================== #
 alphabet                              = '0123456789abcdef'
-MAX_QUERY_RESULTS                     = 20
+MAX_QUERY_RESULTS                     = 100
 
 config_array = {
   # 'cells' contiene la configuración de los atributos de tipo 'geocell' de una Propiedad para generar StringList de conbinaciones binarias 

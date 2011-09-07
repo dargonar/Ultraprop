@@ -15,6 +15,7 @@ def get_rules():
       Route('/tsk/email_task'    , name='backend/email_task'           , handler='apps.backend.email.SendTask'),
       Route('/tsk/run_ipn'       , name='billing/payment/download'     , handler='apps.backend.payment.Download'),
       Route('/tsk/run_invoicer'  , name='billing/payment/run_invoicer' , handler='apps.backend.payment.RunInvoicer'),
+      Route('/tsk/update_ipn'    , name='billing/payment/update_ipn'   , handler='apps.backend.payment.UpdateIPN'),
       
       # Todas las rutas de billing
       PathPrefixRoute('/billing', [

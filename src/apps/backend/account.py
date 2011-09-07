@@ -11,7 +11,8 @@ from models import Invoice, RealEstate
 from utils import need_auth, BackendHandler 
 
 class Status(BackendHandler):
-  @need_auth()
+  
+  @need_auth(checkpay=False)
   def get(self, **kwargs):
     re          = db.get(self.get_realestate_key())
     invoices    = []

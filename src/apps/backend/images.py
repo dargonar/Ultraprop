@@ -36,7 +36,7 @@ class Reorder(BackendHandler):
     
     db.save(to_save)
     property = self.mine_or_404(str(to_save[0].property.key()))
-    property.main_image = to_save[0].title
+    property.main_image_url = to_save[0].title
     property.save()
     
     self.response.write('ok')
@@ -103,12 +103,12 @@ class Remove(BackendHandler):
       property.images_count = property.images_count - len(blobkeys)
       if property.images_count > 0:
         fi = ImageFile.all().filter('property =',property.key()).order('position').get()
-        property.main_image = fi.title if fi else None
+        property.main_image_url = fi.title if fi else None
       else:
-        property.main_image = None
+        property.main_image_url = None
     else:
       property.images_count = 0
-      property.main_image   = None
+      property.main_image_url   = None
       
     result = property.save()
     if result != 'nones':
@@ -187,7 +187,7 @@ class Upload(BackendHandler):
       property.images_count = property.images_count + 1
     else:
       property.images_count = 1
-      property.main_image   = imgfile.title
+      property.main_image_url   = imgfile.title
     
     result = property.save()
     # HACK: No mandamos a regenerar el PropertyIndex

@@ -37,7 +37,7 @@ def create_transaction_number(the_date, re):
 
 # Handler para la vuelta de dinero mail
 class Cancel(BackendHandler):
-  @need_auth()
+  @need_auth(checkpay=False)
   def get(self, **kwargs):
     invoice = self.mine_or_404( kwargs['invoice'] )
     
@@ -45,7 +45,7 @@ class Cancel(BackendHandler):
     self.redirect_to('backend/account/status')
 
 class Done(BackendHandler):
-  @need_auth()
+  @need_auth(checkpay=False)
   def get(self, **kwargs):
     invoice = self.mine_or_404( kwargs['invoice'] )
     invoice.state = Invoice._PAID
@@ -55,7 +55,7 @@ class Done(BackendHandler):
     self.redirect_to('backend/account/status')
 
 class Pending(BackendHandler):
-  @need_auth()
+  @need_auth(checkpay=False)
   def get(self, **kwargs):
     invoice = self.mine_or_404( kwargs['invoice'] )
     invoice.state = Invoice._INPROCESS
@@ -195,7 +195,19 @@ class PaymentAssingMapper(Mapper):
     
     payment.assigned = 1      
     return ([payment], []) # update/delete
-  
+
+# Handler para guardar el IPN
+class UpdateIPN(RequestHandler):
+  def post(self, **kwargs):
+    self.request.charset = 'utf-8'
+    tmp = self.request.POST.get('date')
+    
+    upcfg = UPConfig.get_or_insert('main-config')
+    upcfg.last_ipn = date(int(tmp[0:4]), int(tmp[4:6]), int(tmp[6:8]))
+    upcfg.save()
+    
+    self.response.write('ok')
+
 # XML Helper
 def get_xml_value(parent, name):
   firstChild = parent.getElementsByTagName(name)[0].firstChild
@@ -244,16 +256,16 @@ class Download(RequestHandler):
       
       to_save.append(p)
     
-    # Salvamos todos los payments juntos
+    # Algun pago?
     if len(to_save):
       logging.info('Se recibieron %d pagos' % len(to_save) )
       
-      # TODO: Puede haber un 'write contention', ver que hacer
-      db.put(to_save)
-      
-      # Guardamos la ultima vez que corrimos
-      upcfg.last_ipn = _to
-      upcfg.save()
+      # Salvamos todos los payments juntos y la ultima vez que corrimos en una transaccion
+      def txn():
+        db.put(to_save)
+        taskqueue.add(url='/tsk/update_ipn', params={'date': _to.strftime('%Y%m%d')}, transactional=True)
+    
+      db.run_in_transaction(txn)
     
       # Mandamos a correr la tarea de mapeo de pagos
       tmp = PaymentAssingMapper()

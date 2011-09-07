@@ -95,7 +95,7 @@ class SignUp(BackendHandler):
     realEstate.name             = self.form.name.data
     realEstate.email            = self.form.email.data
     realEstate.plan             = plan
-    realEstate.status           = RealEstate._TRIAL
+    realEstate.status           = RealEstate._REGISTERED
     realEstate.put()
     
     # Generamos la primer factura con fecha hoy+dias_gratis
@@ -155,15 +155,23 @@ class SignUp(BackendHandler):
 class ValidateUser(BackendHandler):
   def get(self, **kwargs):
     user = get_or_404(kwargs.get('key'))
-    if user.enabled>0:
+    
+    if user.enabled:
       return self.redirect_to('backend/auth/login')
     
     user.enabled = 1
     user.save()
     
+    re = user.realestate
+    # NOTE: Ja! me querias cagar!!??? clickeaste el link del mail cuando estabas en no_payment???
+    # Ja! no te pongo ni en pedo en trial!!! ... mm creo que arriba ya se validaba
+    if re.status == RealEstate._REGISTERED:
+      re.status = RealEstate._TRIAL
+      re.save()
+    
     self.do_login(user)
     
-    self.set_ok('Su correo ha sido validado. Por favor complete la información de la inmobiliaria para comenzar a operar con ULTRAPROP.<br/> Si no encuentra el correo en INBOX, búsquelo en SPAM.')
+    self.set_ok('Su correo ha sido validado. Por favor complete la información de la inmobiliaria para comenzar a operar con ULTRAPROP.')
     
     return self.redirect_to('backend/realestate/edit')
 
@@ -252,5 +260,5 @@ class RestorePasswordRequest(BackendHandler):
     user.enabled          = 0
     user.save()
     
-    self.set_ok(u'Un correo ha sido enviado a su casilla de email. Modifique su contraseña ingresando a ULTRAPROP a través de link recibido.<br/> Si no encuentra el correo en INBOX, búsquelo en SPAM.')
+    self.set_ok(u'Un correo ha sido enviado a su casilla de email.<br/> Si no encuentra el correo en INBOX, búsquelo en SPAM.')
     return self.redirect_to('backend/auth/login')    

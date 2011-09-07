@@ -59,7 +59,7 @@ class Remove(BackendHandler):
   
   @need_auth(code=404)
   def post(self, **kwargs):
-    
+   
     page      = int(self.request.POST['page'])
     newstatus = int(self.request.POST['newstatus'])
     
@@ -93,6 +93,7 @@ class Publish(BackendHandler):
   
   @need_auth(code=404)
   def get(self, **kwargs):
+    
     property = self.mine_or_404(kwargs['key'])
     property.status = Property._PUBLISHED if int(kwargs['yes']) else Property._NOT_PUBLISHED
     property.save()

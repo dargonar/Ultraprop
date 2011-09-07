@@ -31,6 +31,7 @@ class Plan(db.Model):
     
 class RealEstate(db.Model):
   
+  _REGISTERED   = 0
   _TRIAL        = 1
   _TRIAL_END    = 2
   _ENABLED      = 3
@@ -38,12 +39,12 @@ class RealEstate(db.Model):
   
   @classmethod
   def new(cls):
-    return RealEstate(status=RealEstate._TRIAL, managed_domain=1)
+    return RealEstate(status=RealEstate._TRIAL, managed_domain=0)
     
   logo                = blobstore.BlobReferenceProperty() #--Borrar--
   logo_url            = db.StringProperty(indexed=False)
   name                = db.StringProperty()
-  website             = db.LinkProperty(indexed=False)
+  website             = db.StringProperty(indexed=False)
   email               = db.EmailProperty(indexed=False)
   
   title               = db.StringProperty()
@@ -64,6 +65,7 @@ class RealEstate(db.Model):
   plan                = db.ReferenceProperty(Plan)
   last_email          = db.DateProperty()
   last_invoice        = db.DateProperty()
+  last_login          = db.DateTimeProperty()
   
   @staticmethod
   def public_attributes():
