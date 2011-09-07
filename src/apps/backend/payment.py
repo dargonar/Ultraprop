@@ -11,7 +11,7 @@ from google.appengine.api import taskqueue
 from google.appengine.ext import db
 from google.appengine.ext import deferred
 
-from models import RealEstate, Payment, Invoice
+from models import RealEstate, Payment, Invoice, UPConfig
 from webapp2 import uri_for as url_for, RequestHandler
 from dm import ipn_download
 from taskqueue import Mapper
@@ -69,10 +69,10 @@ class InvoicerMapper(Mapper):
   
   def map(self, re):
     
-    logging.error('----------------entro al mapper para %s:%d' % (re.name, re.status) )
+    #logging.error('----------------entro al mapper para %s:%d' % (re.name, re.status) )
     
     if re.status == RealEstate._TRIAL:
-      logging.error('-----------------entro en trial')
+      #logging.error('-----------------entro en trial')
       # Uso el 80% del free_days del Plan?
       delta = datetime.utcnow() - re.created_at
       if delta.days >= int(re.plan.free_days*0.80):
@@ -81,7 +81,7 @@ class InvoicerMapper(Mapper):
         return ([re], []) # update/delete
       
     elif re.status == RealEstate._TRIAL_END:
-      logging.error('---------------entro en trial end')
+      #logging.error('---------------entro en trial end')
       # Llegamos a los free_days del Plan y todavia no pago?
       delta = datetime.utcnow() - re.created_at
       if delta.days >= re.plan.free_days:
@@ -91,7 +91,7 @@ class InvoicerMapper(Mapper):
     
     elif re.status == RealEstate._ENABLED:
 
-      logging.error('-----------------------entro en ENABLED')
+      #logging.error('-----------------------entro en ENABLED')
       
       # Today
       today = datetime.utcnow().date()
@@ -105,10 +105,9 @@ class InvoicerMapper(Mapper):
       
       next_date = date(next_year, next_month, re.last_invoice.day)
 
-      logging.error('--------------next date ' + str(next_date) )
-      logging.error('--------------today ' + str(today) )
+      #logging.error('--------------next date ' + str(next_date) )
+      #logging.error('--------------today ' + str(today) )
 
-      
       invoice = None
       if today > next_date:
         invoice = Invoice()
@@ -124,12 +123,12 @@ class InvoicerMapper(Mapper):
       # Contamos las facturas impagas, si son mas que dos, ponemos en disabled
       # Si son menos que dos y le acabo de facturar, le envio la factura
       not_paid_invoices = len(Invoice().all(keys_only=True).filter('realestate', re.key()).filter('state', Invoice._NOT_PAID).fetch(10))
-      logging.error('----------- Lleva %d sin pagar' % not_paid_invoices)
+      #logging.error('----------- Lleva %d sin pagar' % not_paid_invoices)
       
       if not_paid_invoices > 2:
         re.status = RealEstate._NO_PAYMENT
         send_mail('no_payment', re)
-        # TODO: mandar a deshablitiar
+        # TODO: mandar a deshablitiar?
         return ([re], [])
       
       elif invoice:
@@ -183,7 +182,7 @@ class PaymentAssingMapper(Mapper):
     # Si esta volviendo a ENABLE desde NO_PAYMENT debemos comunicarle que 'las props estan publicadas nuevamente'
     
     oldst = re.status
-    
+
     # payment_received
     if re.status == RealEstate._ENABLED:
       send_mail('payment_received', re)
@@ -206,10 +205,18 @@ class Download(RequestHandler):
   def get(self, **kwargs):
     self.request.charset  = 'utf-8'
     
+    # Nos fijamos la ultima vez que lo pedimos, pedimos hasta hoy si estamos dentro de un mes max
+    # Sino bajaremos en dos dias (probabilidad muy baja)
+    upcfg = UPConfig.get_or_insert('main-config', last_ipn=datetime.now().date())
+    
+    _from = upcfg.last_ipn
+    _to   = datetime.utcnow().date()
+
+    if (_to - _from).days > 28:
+      _to = _from + timedelta(days=28)
+    
     # Bajamos el xml con la api de IPN
-    today     = datetime.utcnow()
-    yesterday = today - timedelta(days=1)
-    dom = minidom.parseString(ipn_download(today, yesterday))
+    dom = minidom.parseString(ipn_download(_from, _to))
     
     # Verificamos que este todo bien el xml de vuelta
     state = int(get_xml_value(dom, 'State'))
@@ -218,23 +225,40 @@ class Download(RequestHandler):
       self.response.write('ok')
       return
 
-    logging.error('----------traje joya')
+    #logging.error('----------traje joya')
       
     # Parseamos y generamos los Payment
     to_save = []
-    for pay in dom.getElementsByTagName('Pays'):
-      logging.info('PAGARON!')
+    for pay in dom.getElementsByTagName('Pay'):
+      
       p = Payment()
-      p.invoice  = None
-      p.date     = get_xml_value(pay,'Trx_Date')
-      p.amount   = get_xml_value(pay,'Trx_Payment')
+      p.trx_id  = pay.attributes['trx_id']
+      
+      # Rompemos la fecha (la esperamos en formato YYYYMMDD)
+      tmp = get_xml_value(pay,'Trx_Date')
+      p.date = date(int(tmp[0:4]),int(tmp[4:6]),int(tmp[6:8]))
+      
+      # El monto lo ponemos en int por 10
+      p.amount = int(float(get_xml_value(pay,'Trx_Payment'))*10)
       p.assinged = 0
       
       to_save.append(p)
     
     # Salvamos todos los payments juntos
-    db.put(to_save)
+    if len(to_save):
+      logging.info('Se recibieron %d pagos' % len(to_save) )
+      
+      # TODO: Puede haber un 'write contention', ver que hacer
+      db.put(to_save)
+      
+      # Guardamos la ultima vez que corrimos
+      upcfg.last_ipn = _to
+      upcfg.save()
     
-    # Mandamos a correr la tarea de mapeo
-    deferred.defer(PaymentAssingMapper.run)
+      # Mandamos a correr la tarea de mapeo de pagos
+      tmp = PaymentAssingMapper()
+      deferred.defer(tmp.run)
+    else:
+      logging.info('No hubo ningun pago en el XML')
+      
     self.response.write('ok')

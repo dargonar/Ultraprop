@@ -13,6 +13,9 @@ from search_helper import build_list, get_index_alphabet , calculate_price, inde
 
 from geo import geocell
 
+class UPConfig(db.Model):
+  last_ipn = db.DateProperty()
+
 class Plan(db.Model):
   _MONTHLY   = 1
   _ONE_TIME  = 2
