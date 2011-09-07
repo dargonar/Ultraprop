@@ -100,7 +100,8 @@ class SignUp(BackendHandler):
     
     # Ya tenemos registrado ese domain_id
     realEstate.domain_id = do_slugify(realEstate.name)
-    if validate_domain_id(realEstate.domain_id) != 'free':
+    tmp = validate_domain_id(realEstate.domain_id)
+    if tmp['result'] != 'free':
       realEstate.domain_id = realEstate.domain_id + datetime.now().strftime('%Y%m%d%H%M')
     
     realEstate.put()

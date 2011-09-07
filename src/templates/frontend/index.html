@@ -2,43 +2,18 @@
   
   {%block metas%}
     <title>ULTRAPROP - Mapa {{'- '+title_description if title_description is defined else ''}}</title>
-    <meta name="description" content="Búsqueda pr mapa" />
+    <meta name="description" content="Búsqueda por mapa" />
     <meta name="keywords" content="" />
   {%endblock%}
   
   {%block head%}
-    <link href="/css/fb-buttons.css?v={{app_version_id}}" rel="stylesheet" type="text/css" />
     <style type="text/css"> 
         html { width:100%; heigh:100%; overflow:hidden;}
     </style>
-    <link href="/css/mapa_tabs.css?v={{app_version_id}}" rel="stylesheet" type="text/css" /> 
+    <link href="/css/mapa_tabs{{app_version_id}}.css" rel="stylesheet" type="text/css" /> 
   {%endblock%}  
   
   {%block js%}
-    <script src="/js/_infobox_packed.js" type="text/javascript"></script>
-    <script src="/js/ZeroClipboard.js" type="text/javascript"></script>
-    <!-- Plugin para mostrar overlay. -->
-    <script src="/js/jquery.tools.min.js" type="text/javascript"></script>
-    <script src="/js/jquery.ketchup.js?v={{app_version_id}}" type="text/javascript"></script>
-    
-    <script type="text/javascript">
-        jQuery(document).ready(function() {
-          //////// ACCORDION //////////
-          jQuery( "#accordion" ).accordion({ autoHeight: false });
-          jQuery(".tab_content").hide();
-          jQuery("#sidebar ul.tabs li:first").addClass("active").show();
-          jQuery("#sidebar .tab_content:first").show();
-          /*jQuery("ul.tabs li").click(function(){
-            jQuery("ul.tabs li").removeClass("active");
-            jQuery(this).addClass("active");
-            jQuery(".tab_content").hide();
-            var activeTab = jQuery(this).find("a").attr("href");
-            jQuery(activeTab).show();
-            return false;	
-          });*/
-      });
-    </script>
-    
     <script type="text/javascript">
       var config_array          = {{ config_arrayJSON }};
       var max_results           = {{ max_results }};
@@ -70,8 +45,16 @@
       var OPER_SELL             = {{ _OPER_SELL }};
       var OPER_RENT             = {{ _OPER_RENT }};
       var markers_coords        = {{ markers_coords if markers_coords is defined and markers_coords else 'null' }};
+      
+      //Marku lo puso aca
+      var MAX_PROXIMITY_SEARCH_RESULTS = max_results;
+      var MAX_BOUNDS_SEARCH_RESULTS = max_results;
+
+      jQuery(document).ready(function() {
+        init_index();
+      });
     </script>
-    <script src="/js/index.{{app_version_id}}.js" type="text/javascript"></script>
+    
   {%endblock%}  
 
   {% block body %}

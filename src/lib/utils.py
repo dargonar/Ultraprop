@@ -76,7 +76,7 @@ def get_dict_from_querystring_dict(query_dict):
   dict = {}
   for key in query_dict.keys():
     value = query_dict[key][0]
-    if value is not None and len(str(value))>0:
+    if value is not None and len(value):
       dict[key] = value
   
   dict['center_lat'] = center_lat

@@ -8,7 +8,6 @@
   
   {%block head%}
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600&v2' rel='stylesheet' type='text/css'>
-    <script src="/js/home.{{app_version_id}}.js" type="text/javascript"></script>
   {%endblock%}  
   
   {%block js%}
@@ -52,6 +51,10 @@
         jQuery('#home_search_form').submit();
         return false;
       }
+      
+      $(document).ready( function() {
+        init_home();
+      });
     </script>
   {%endblock%}  
   

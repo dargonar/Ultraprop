@@ -41,7 +41,6 @@ config['ultraprop'] = {
     'payment_received':   {'sender':'info@ultraprop.com.ar', 'template':'payment_received'},
     'new_invoice':        {'sender':'info@ultraprop.com.ar', 'template':'new_invoice'},
     'pending_invoices':   {'sender':'info@ultraprop.com.ar', 'template':'pending_invoices'},
-    'contact_agent':      {'sender':'info@ultraprop.com.ar', 'template':'contact_agent'},
 
     'reply_consultas':    {'mail':'consultas@ultraprop.com.ar'},
 
