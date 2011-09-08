@@ -67,6 +67,12 @@ SCRIPTS = {
       ],
       
       're':[
+        'src/static_realestate/js/jquery.min.js',
+        'src/static_realestate/js/jquery.ad-gallery.js',
+        'src/static/js/utils.js',
+        'src/static/js/jquery.addplaceholder.js',
+        'src/static/js/jquery.ketchup.js',
+        'src/static_realestate/js/realestate.js',
       ],
       
 }
@@ -89,6 +95,10 @@ STYLESHEETS = {
     ],
     
     're':[
+      'src/static_realestate/css/960.css',
+      'src/static_realestate/css/theme.css',
+      'src/static_realestate/css/fb-buttons.css',
+      'src/static_realestate/css/jquery.ad-gallery.css',
     ]
 }
 
