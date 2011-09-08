@@ -15,7 +15,18 @@
         <li><a href="{{url_for('backend/auth/login')}}" title="Inicio de sesión">Ingresar</a></li>
         <li class="btnLight"><a href="{{url_for('backend/auth/signup')}}" title="Regístrese">Regístrese</a></li>
       {% endif %}
+      
+      
+
+      
+      {% if is_logged is defined and is_logged %}
       <li class="btnLight" style="border-left:none;"><a href="{{url_for('frontend/map')}}" target="_blank" title="Ver todas las propiedades">Ir a UltraProp</a></li>
+      {% else %}
+      <li style="border-left:none;"><a href="{{url_for('frontend/map')}}" target="_blank" title="Ver todas las propiedades">Ir a UltraProp</a></li>
+      {% endif %}
+      
+      
+      
       {% if is_logged is defined %}
         {% if is_logged %}
         <li style="border-left:none;">
