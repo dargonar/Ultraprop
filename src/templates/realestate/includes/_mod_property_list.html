@@ -6,18 +6,16 @@
     </div>
     <ul class="data">
         <li class="picture">
-            {% set image_src = '/img/picturebox/nophoto_150x113.jpg' %} 
-            {% if property.main_image %}
-              {% set image_src = url_for('images/show',key=property.main_image.key()|string, width=147, height=110) %}
-            {% endif  %} 
+            <!--wh="147,110"-->
+            {% set image_src = (property.main_image_url+'=s147') if property.main_image_url else '/img/picturebox/nophoto_150x113.jpg' %} 
             <a href="{{url_for('realestate/ficha', key=property.key()|string, oper=oper_id|string, realestate=realestate.key()|string)}}">
-                <img class="pic" src="{{image_src}}" onerror="this.src='/pics/small/sample1.jpg';" title="{{property|headlinify}}"/>
+                <img class="pic" src="{{image_src}}" style="max-width:147px;max-height:110px;" onerror="this.src='/pics/small/sample1.jpg';" title="{{property|headlinify}}"/>
             </a> 
             <p class="pic_qty">{{ property.images_count|string + ' fotos' if property.images_count>0 else 'No hay imagenes'}}</p>
         </li>
         <li class="detail">
           <p class="headline">{{ property|headlinify }}, 
-            {{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor','area_outdoor']) }}</font>
+            {{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor','area_outdoor'], total_area_included=True) }}</font>
           </p>
 
             <p class="price">
@@ -25,9 +23,15 @@
                 <span class="value price">{{ property|pricefy(operation_type=oper_id, small=False) }}</span>
             </p>
             <p class="sup">
-                <span class="label">Superficie Cub.</span>
-                <span class="value sup">{{property.area_indoor}} m2</span>
+                <span class="label">Superficie Total</span>
+                <span class="value sup">{{ property|totalareafy }}</span>
             </p>
+            {% if oper_id|int == Property._OPER_RENT %}
+            <p class="sup">
+                <span class="label">Expensas</span>
+                <span class="value sup">{{ property|expensasfy(operation_type=oper_id, small=False)}}</span>
+            </p>
+            {% endif %}
             
             <p class="detail">
               {{ property.main_description | truncate(172) }}

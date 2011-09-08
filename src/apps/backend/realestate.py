@@ -6,16 +6,28 @@
 from __future__ import with_statement
 
 import logging
+import re
 
 from google.appengine.api import files
 from google.appengine.ext import db
 from google.appengine.api import images 
 from google.appengine.api.images import get_serving_url
 
-from backend_forms import RealEstateForm 
+from backend_forms import RealEstateForm, validate_domain_id
 from utils import get_or_404, need_auth, BackendHandler
 from webapp2 import cached_property
+from models import RealEstate
 
+
+class CheckDomainId(BackendHandler):
+  @need_auth()
+  def get(self, **kwargs):
+    self.request.charset = 'utf-8'
+    domain_id = self.request.GET['did'].strip()
+    
+    res = validate_domain_id(domain_id, self.get_realestate_key())
+    return self.render_json_response(res)
+    
 class Edit(BackendHandler):
   #Edit/New
   @need_auth()
@@ -25,7 +37,8 @@ class Edit(BackendHandler):
     kwargs['form']                = RealEstateForm(obj=realestate)
     kwargs['key']                 = self.get_realestate_key()
     kwargs['mnutop']              = 'inmobiliaria'
-    kwargs['realestate_logo']     = get_serving_url(realestate.logo) if realestate.logo else None
+    kwargs['realestate_logo']     = realestate.logo_url
+    
     return self.render_response('backend/realestate.html', **kwargs)
   
   #Create/Save RealEstate & User.
@@ -34,11 +47,16 @@ class Edit(BackendHandler):
     self.request.charset = 'utf-8'
     
     realestate = get_or_404(self.get_realestate_key())
+    
+    #HACK: Hack? le pongo un miembro para que la validacion del slug sepa cual es la key actual de la RealEste
+    #de otra forma va a decir que ya esta siendo utilizada
+    self.form.thekey = self.get_realestate_key()
+    
     rs_validated = self.form.validate()
     if not rs_validated:
       kwargs['form']                = self.form
       kwargs['key']                 = self.get_realestate_key()
-      kwargs['realestate_logo']     = get_serving_url(realestate.logo) if realestate.logo else None
+      kwargs['realestate_logo']     = realestate.logo_url
       if self.form.errors:
         kwargs['flash']         = self.build_error(u'Verifique los datos ingresados:')
         # + '<br/>'.join(reduce(lambda x, y: str(x)+' '+str(y), t) for t in self.form.errors.values()))
@@ -51,7 +69,7 @@ class Edit(BackendHandler):
     if fs is not None and not isinstance(fs,unicode):
       if fs.filename is not None:
         # Create the file
-        file_name = files.blobstore.create(mime_type='image/jpg', _blobinfo_uploaded_filename=fs.filename)
+        file_name = files.blobstore.create(mime_type='image/png', _blobinfo_uploaded_filename=fs.filename)
         # Open the file and write to it
         img = images.Image(fs.file.getvalue())
         
@@ -66,10 +84,25 @@ class Edit(BackendHandler):
           f.write(data)
         # Finalize the file. Do this before attempting to read it.
         files.finalize(file_name)
-        # Get the file's blob key
-        blob_key            = files.blobstore.get_blob_key(file_name)
         
-        realestate.logo      = blob_key
+        # Get the file's blob key
+        blob_key = files.blobstore.get_blob_key(file_name)
+        
+        # ------ BEGIN HACK -------- #
+        # GAE BUG => http://code.google.com/p/googleappengine/issues/detail?id=5142
+        for i in range(1,10):
+          if not blob_key:
+            time.sleep(0.05)
+            blob_key = files.blobstore.get_blob_key(file_name)
+          else:
+            break
+        
+        if not blob_key:
+          logging.error("no pude obtener el blob_key, hay un leak en el blobstore!")
+          abort(500)
+        # ------ END HACK -------- #
+        
+        realestate.logo_url = get_serving_url(blob_key)
     
     realestate.save()
     

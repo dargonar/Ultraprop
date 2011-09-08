@@ -13,36 +13,38 @@ from search_helper import build_list, get_index_alphabet , calculate_price, inde
 
 from geo import geocell
 
+class UPConfig(db.Model):
+  last_ipn = db.DateProperty()
 
-class State(db.Model):
+class Plan(db.Model):
+  _MONTHLY   = 1
+  _ONE_TIME  = 2
+
   name                = db.StringProperty()
-  country_code        = db.StringProperty()
+  description         = db.StringProperty()
+  type                = db.IntegerProperty()
+  amount              = db.IntegerProperty()
+  free_days           = db.IntegerProperty()
+
   def __repr__(self):
-    return self.name
+    return 'PLAN: ' + self.name
     
-class City(db.Model):
-  name                = db.StringProperty()
-  state               = db.ReferenceProperty(State)
-  def __repr__(self):
-    return self.name
-
-class Neighborhood(GeoModel):
-  name                = db.StringProperty()
-  zip_code            = db.StringProperty()
-  city                = db.ReferenceProperty(City)
-  # geo                 = db.ListProperty(db.GeoPt)
-  def __repr__(self):
-    return self.name
-   
 class RealEstate(db.Model):
+  
+  _REGISTERED   = 0
+  _TRIAL        = 1
+  _TRIAL_END    = 2
+  _ENABLED      = 3
+  _NO_PAYMENT   = 4 
   
   @classmethod
   def new(cls):
-    return RealEstate(enable=0, managed_domain=1)
+    return RealEstate(status=RealEstate._TRIAL, managed_domain=0)
     
-  logo                = blobstore.BlobReferenceProperty()
+  logo                = blobstore.BlobReferenceProperty() #--Borrar--
+  logo_url            = db.StringProperty(indexed=False)
   name                = db.StringProperty()
-  website             = db.LinkProperty(indexed=False)
+  website             = db.StringProperty(indexed=False)
   email               = db.EmailProperty(indexed=False)
   
   title               = db.StringProperty()
@@ -55,9 +57,16 @@ class RealEstate(db.Model):
   updated_at          = db.DateTimeProperty(auto_now=True)
   created_at          = db.DateTimeProperty(auto_now_add=True)
   
-  enable              = db.IntegerProperty()
+  enable              = db.IntegerProperty() #--borrar--
+  status              = db.IntegerProperty()
   managed_domain      = db.IntegerProperty()
-
+  
+  domain_id           = db.StringProperty()
+  plan                = db.ReferenceProperty(Plan)
+  last_email          = db.DateProperty()
+  last_invoice        = db.DateProperty()
+  last_login          = db.DateTimeProperty()
+  
   @staticmethod
   def public_attributes():
     """Returns a set of simple attributes on Immovable Property entities."""
@@ -65,6 +74,37 @@ class RealEstate(db.Model):
   
   def __repr__(self):
     return self.name
+
+class Payment(db.Model):
+  trx_id              = db.StringProperty()
+  date                = db.DateProperty()
+  amount              = db.IntegerProperty()
+  assinged            = db.IntegerProperty()
+  created_at          = db.DateTimeProperty(auto_now_add=True)
+
+class Invoice(db.Model):
+  _INVALID    = 0
+  _NOT_PAID   = 1
+  _INPROCESS  = 2
+  _PAID       = 3
+  _INBANK     = 4
+  
+  realestate          = db.ReferenceProperty(RealEstate)
+  trx_id              = db.StringProperty()
+  amount              = db.IntegerProperty()
+  payment             = db.ReferenceProperty(Payment)
+  state               = db.IntegerProperty()
+  date                = db.DateProperty()
+  created_at          = db.DateTimeProperty(auto_now_add=True)
+
+  def str_state(self, css=True):
+    if self.state == Invoice._INPROCESS:
+      return ('inprocess' if css else 'En Proceso')
+    
+    if (datetime.now().date() - self.date).days > 15:
+      return ('pending' if css else 'Vencida')
+    
+    return ('indate' if css else 'Pendiente')
     
 class User(db.Model):
   
@@ -163,6 +203,7 @@ class Property(GeoModel):
   # PRICES FIELDS
   price_sell              = db.FloatProperty(indexed=False)
   price_rent              = db.FloatProperty(indexed=False)
+  price_expensas          = db.FloatProperty(indexed=False, default=0.0)
   
   _CURRENCY_RATE          = 4
   _CURRENCY_ARS           = 'ARS'
@@ -228,7 +269,7 @@ class Property(GeoModel):
   realestate              = db.ReferenceProperty(RealEstate)
   	
   # PROPERTY TYPES
-  prop_type_id	                    = db.StringProperty(indexed=False)
+  prop_type_id	                = db.StringProperty(indexed=False)
   #prop_type_id_cell                 = db.StringListProperty()  
   
   # PROPERTY STATE & OPERATION & OWNER
@@ -254,7 +295,8 @@ class Property(GeoModel):
         # Venta	        1
         # Alquiler	    2
   
-  main_image              = blobstore.BlobReferenceProperty()
+  main_image                    = blobstore.BlobReferenceProperty() #--Borrar--
+  main_image_url                = db.StringProperty(indexed=False)
   # # ======================================================= #
   # # PROPIEDADES PARA DEFINIR RANGOS A PARTIR DE OTRAS PROPS #
   # area_indoor_id          = db.IntegerProperty() # 0-40
@@ -384,7 +426,8 @@ class Property(GeoModel):
   
   def getAge(self):
     if self.year_built > 0:
-      return str(self.year_built)
+      index = config_array['discrete_range_config']['year_built']['rangos'].index(int(self.year_built))
+      return config_array['discrete_range_config']['year_built']['descriptions'][index]
     return 'Sin datos'
     
     data  = config_array['discrete_range_config']['year_built']
@@ -541,4 +584,15 @@ class Consulta(db.Model):
   is_from_ultraprop         = db.IntegerProperty()
   created_at                = db.DateTimeProperty(auto_now_add=True)
   
-  
+class Link(db.Model):
+  @classmethod
+  def new_for_user(cls):
+    return Link(type='user')
+  @classmethod
+  def new_for_admin(cls):
+    return Link(type='home')
+  type                      = db.StringProperty(required=True, choices=set(['home', 'user']))
+  description               = db.StringProperty()
+  slug                      = db.StringProperty()
+  query_string              = db.TextProperty()
+  created_at                = db.DateTimeProperty(auto_now_add=True)

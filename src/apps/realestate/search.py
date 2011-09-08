@@ -5,7 +5,7 @@ from google.appengine.api.images import get_serving_url
 
 from utils import get_or_404, RealestateHandler
 from search_helper_func import PropertyPaginatorMixin
-from models import Property
+from models import Property, RealEstate
 
 class Search(RealestateHandler, PropertyPaginatorMixin):
   
@@ -13,11 +13,21 @@ class Search(RealestateHandler, PropertyPaginatorMixin):
   
   def get(self, **kwargs):
     self.realestate = get_or_404( self.get_realestate_key_ex(kwargs.get('realestate')) )
+
+    # Ponemos la pantalla de disabled si esta en NO_PAYMENT
+    if self.realestate.status == RealEstate._NO_PAYMENT:
+      return self.render_response('realestate/disabled.html', realestate=self.realestate)
+      
     return self.get2(**kwargs)
   
   def post(self, **kwargs):
     self.request.charset = 'utf-8'
     self.realestate = get_or_404( self.get_realestate_key_ex(kwargs.get('realestate')) )
+      
+    # Ponemos la pantalla de disabled si esta en NO_PAYMENT
+    if self.realestate.status == RealEstate._NO_PAYMENT:
+      return self.render_response('realestate/disabled.html', realestate=self.realestate)
+    
     return self.post2(**kwargs)
 
   def add_extra_filter(self, base_query):
@@ -28,7 +38,7 @@ class Search(RealestateHandler, PropertyPaginatorMixin):
     self.response.headers["P3P"] = 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"'
     kwargs['menu_item']       = 'search'
     kwargs['realestate']      = self.realestate
-    kwargs['realestate_logo'] = get_serving_url(self.realestate.logo) if self.realestate.logo else None
+    kwargs['realestate_logo'] =  self.realestate.logo_url
     
     return self.render_response('realestate/search.html', **kwargs)
 

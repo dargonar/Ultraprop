@@ -11,6 +11,7 @@ import time
 from datetime import datetime
 from google.appengine.api import images, files, taskqueue
 from google.appengine.ext import db, blobstore
+from google.appengine.api.images import get_serving_url
 
 from models import ImageFile, Property
 from utils import need_auth, BackendHandler
@@ -35,7 +36,7 @@ class Reorder(BackendHandler):
     
     db.save(to_save)
     property = self.mine_or_404(str(to_save[0].property.key()))
-    property.main_image = to_save[0].file
+    property.main_image_url = to_save[0].title
     property.save()
     
     self.response.write('ok')
@@ -43,23 +44,23 @@ class Reorder(BackendHandler):
 
 # Este es un handler global para retornar imagenes
 # No necesita validacion de ningun tipo
-class Show(RequestHandler):
-  def render_img(self, data):
-    self.response.headers['Cache-Control'] = "public"
-    self.response.expires = datetime(2028,3,28)
-    self.response.write(data)
+# class Show(RequestHandler):
+  # def render_img(self, data):
+    # self.response.headers['Cache-Control'] = "public"
+    # self.response.expires = datetime(2028,3,28)
+    # self.response.write(data)
  
-  def original(self, **kwargs):
-    self.response.headers['Content-Type'] = "image/png"
-    img = images.Image(blob_key=kwargs['key'])
-    img.rotate(0)
-    self.render_img(img.execute_transforms(output_encoding=images.PNG))
+  # def original(self, **kwargs):
+    # self.response.headers['Content-Type'] = "image/png"
+    # img = images.Image(blob_key=kwargs['key'])
+    # img.rotate(0)
+    # self.render_img(img.execute_transforms(output_encoding=images.PNG))
     
-  def get(self, **kwargs):
-    self.response.headers['Content-Type'] = "image/jpg"
-    img = images.Image(blob_key=kwargs['key'])
-    img.resize(width=int(kwargs['width']), height=int(kwargs['height']))
-    self.render_img(img.execute_transforms())
+  # def get(self, **kwargs):
+    # self.response.headers['Content-Type'] = "image/jpg"
+    # img = images.Image(blob_key=kwargs['key'])
+    # img.resize(width=int(kwargs['width']), height=int(kwargs['height']))
+    # self.render_img(img.execute_transforms())
 
 class Remove(BackendHandler):
   @need_auth(code=500)
@@ -102,12 +103,12 @@ class Remove(BackendHandler):
       property.images_count = property.images_count - len(blobkeys)
       if property.images_count > 0:
         fi = ImageFile.all().filter('property =',property.key()).order('position').get()
-        property.main_image = fi.file if fi is not None else None
+        property.main_image_url = fi.title if fi else None
       else:
-        property.main_image = None
+        property.main_image_url = None
     else:
       property.images_count = 0
-      property.main_image   = None
+      property.main_image_url   = None
       
     result = property.save()
     if result != 'nones':
@@ -174,8 +175,7 @@ class Upload(BackendHandler):
     # ------ END HACK -------- #
       
     imgfile = ImageFile()
-    imgfile.title     = ''
-    imgfile.data      = ''
+    imgfile.title     = get_serving_url(blob_key)
     imgfile.file      = blob_key
     imgfile.filename  = fs.filename
     imgfile.realestate= property.realestate.key()
@@ -187,10 +187,11 @@ class Upload(BackendHandler):
       property.images_count = property.images_count + 1
     else:
       property.images_count = 1
-      property.main_image   = imgfile.file
+      property.main_image_url   = imgfile.title
     
     result = property.save()
-    if result != 'nones':
-      taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':result})
+    # HACK: No mandamos a regenerar el PropertyIndex
+    #if result != 'nones':
+    #  taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':result})
     
     return self.render_response('backend/includes/img_box.html', image=imgfile)

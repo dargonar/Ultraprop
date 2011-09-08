@@ -4,20 +4,23 @@
     ~~~~~~~~
 """
 import logging
+from datetime import datetime, date, timedelta
 from google.appengine.api import mail
 
 from webapp2 import cached_property
-from backend_forms import SignUpForm
-from models import RealEstate, User
+from backend_forms import SignUpForm, validate_domain_id
+from models import RealEstate, User, Plan, Invoice
 from utils import get_or_404, BackendHandler
+from myfilters import do_slugify
 
 class Index(BackendHandler):
   def get(self, **kwargs):
     if self.is_logged and self.is_enabled:
-      if self.is_realestate_enabled:
-        return self.redirect_to('property/list')
+      if self.session['account.realestate.status'] == RealEstate._NO_PAYMENT:
+        return self.redirect_to('backend/account/status')
       else:
-        return self.redirect_to('backend/realestate/edit')
+        return self.redirect_to('property/list')
+        
     return self.redirect_to('backend/auth/login')
     
 class Login(BackendHandler):
@@ -45,9 +48,16 @@ class Login(BackendHandler):
       
     self.do_login(user)
     
-    if not self.is_realestate_enabled:
-      self.set_info('Debe configurar la inmobiliaria para comenzar a operar.')
-      return self.redirect_to('backend/realestate/edit')
+    # TODO: PENSAR -> status es para mantener el estado de pagos.
+    # deberiamos tener otra bandera para indicar si la informacion del realestate esta completa
+    
+    if user.realestate.status == RealEstate._NO_PAYMENT:
+      return self.redirect_to('backend/account/status')
+    
+    #if not self.is_realestate_enabled:
+    #  self.set_info('Debe configurar la inmobiliaria para comenzar a operar.')
+    #  return self.redirect_to('backend/realestate/edit')
+    
     return self.redirect_to('property/list')
     
 class Logout(BackendHandler):
@@ -77,20 +87,49 @@ class SignUp(BackendHandler):
       
       return self.render_response('backend/signup.html', **kwargs)
     
+    # Aca traemos el plan por defecto
+    plan = Plan.all().filter('name','promo-lanzamiento').get()
+
+    # Generamos la inmo en estado TRIAL y le ponemos el Plan
     realEstate = RealEstate.new()
-    realEstate.name   = self.form.name.data
-    realEstate.email  = self.form.email.data
+    realEstate.telephone_number = self.form.telephone_number.data
+    realEstate.name             = self.form.name.data
+    realEstate.email            = self.form.email.data
+    realEstate.plan             = plan
+    realEstate.status           = RealEstate._REGISTERED
+    
+    # Ya tenemos registrado ese domain_id
+    realEstate.domain_id = do_slugify(realEstate.name)
+    tmp = validate_domain_id(realEstate.domain_id)
+    if tmp['result'] != 'free':
+      realEstate.domain_id = realEstate.domain_id + datetime.now().strftime('%Y%m%d%H%M')
+    
     realEstate.put()
     
+    # Generamos la primer factura con fecha hoy+dias_gratis
+    # Utilizamos el indicador I para indicar 'id' en vez de 'name'
+    first_date = (datetime.utcnow() + timedelta(days=plan.free_days)).date()
+    if first_date.day > 28:
+      first_date = date(first_date.year, first_date.month, 28)
+    
+    invoice = Invoice()
+    invoice.realestate = realEstate
+    invoice.trx_id     = '%sI%d' % ( first_date.strftime('%Y%m'), realEstate.key().id() )
+    invoice.amount     = plan.amount
+    invoice.state      = Invoice._NOT_PAID
+    invoice.date       = first_date
+    invoice.put()
+    
+    # Volvemos a guardar el realEstate con los datos nuevos
+    realEstate.last_invoice = invoice.date
+    realEstate.save()
+
+    # Generamos el usuario y le asignamos la realestate
     user = User.new()
     user.email            = self.form.email.data
     user.password         = self.form.password.data
     user.rol              = 'owner'
-    
-    # Asigno inmobiliaria al Usuario.
-    user.realestate = realEstate
-    
-    # Salvo los objetos.
+    user.realestate       = realEstate
     user.put()
     
     # Mando Correo de bienvenida y validación de eMail.
@@ -124,15 +163,23 @@ class SignUp(BackendHandler):
 class ValidateUser(BackendHandler):
   def get(self, **kwargs):
     user = get_or_404(kwargs.get('key'))
-    if user.enabled>0:
+    
+    if user.enabled:
       return self.redirect_to('backend/auth/login')
     
     user.enabled = 1
     user.save()
     
+    re = user.realestate
+    # NOTE: Ja! me querias cagar!!??? clickeaste el link del mail cuando estabas en no_payment???
+    # Ja! no te pongo ni en pedo en trial!!! ... mm creo que arriba ya se validaba
+    if re.status == RealEstate._REGISTERED:
+      re.status = RealEstate._TRIAL
+      re.save()
+    
     self.do_login(user)
     
-    self.set_ok('Su correo ha sido validado. Por favor complete la información de la inmobiliaria para comenzar a operar con ULTRAPROP.<br/> Si no encuentra el correo en INBOX, búsquelo en SPAM.')
+    self.set_ok('Su correo ha sido validado. Por favor complete la información de la inmobiliaria para comenzar a operar con ULTRAPROP.')
     
     return self.redirect_to('backend/realestate/edit')
 
@@ -221,5 +268,5 @@ class RestorePasswordRequest(BackendHandler):
     user.enabled          = 0
     user.save()
     
-    self.set_ok(u'Un correo ha sido enviado a su casilla de email. Modifique su contraseña ingresando a ULTRAPROP a través de link recibido.<br/> Si no encuentra el correo en INBOX, búsquelo en SPAM.')
+    self.set_ok(u'Un correo ha sido enviado a su casilla de email.<br/> Si no encuentra el correo en INBOX, búsquelo en SPAM.')
     return self.redirect_to('backend/auth/login')    

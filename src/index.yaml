@@ -223,3 +223,9 @@ indexes:
   - name: location_geocells
   - name: realestate
   - name: price_sell_computed
+
+- kind: Invoice
+  properties:
+  - name: realestate
+  - name: state
+  - name: date

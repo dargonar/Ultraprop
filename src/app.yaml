@@ -1,5 +1,5 @@
 application: ultraprop
-version: 1-1-9
+version: 1-2-4
 runtime: python
 api_version: 1
 
@@ -39,15 +39,23 @@ handlers:
   static_files: static/robots.txt
   upload: static/robots.txt
 
+- url: /css/mapa_tabs(.*).css
+  static_files: static/css/mapa_tabs.css
+  upload: static/css/mapa_tabs.css
+  
 - url: /(css|img|js|pics)/(.*)
   static_files: static/\1/\2
   upload: static/(.*)
-
+  
 - url: /re/(.*)
   static_files: static_realestate/\1
   upload: static_realestate/(.*)
   
 - url: /_ah/queue/deferred
+  script: main.py
+  login: admin
+
+- url: /tsk/.*
   script: main.py
   login: admin
 

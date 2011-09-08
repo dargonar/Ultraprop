@@ -3,12 +3,14 @@
     backend forms
     ~~~~~~~~
 """
+import re
 import logging
 
 from wtforms import Form, BooleanField, SelectField, TextField, FloatField , PasswordField, FileField, DateField
 from wtforms import HiddenField, TextAreaField, IntegerField, validators, ValidationError
 from wtforms.widgets import TextInput
 from wtforms.ext.appengine.fields import GeoPtPropertyField
+from wtforms.validators import regexp
 from google.appengine.ext import db
 
 from models import Property, RealEstate, User
@@ -70,9 +72,25 @@ def my_float_validator(field, condition):
     if not is_number(field.data):
       raise ValidationError('El precio es invalido')
 
+def my_float_validator_simple(field):
+  if field.data.strip() != '' and not is_number(field.data):
+    raise ValidationError('El precio es invalido')
+      
 def my_int_validator(field):
   if field.data.strip() != '' and not is_int(field.data):
     raise ValidationError('El numero es invalido')
+
+def validate_domain_id(domain_id, mykey=None):
+    # Primero validamos que sea tipo regex
+    SLUG_REGEX = re.compile('^[-\w]+$')
+    if not re.match(SLUG_REGEX, domain_id):
+      return {'result':'noslug','msg':'El nombre solo puede contener letras, numeros y guiones'}
+    
+    tmp = RealEstate.all(keys_only=True).filter('domain_id', domain_id).get()
+    if tmp and (mykey is None or str(tmp) != mykey):
+      return {'result':'used','msg':'El nombre ya esta siendo utilizado'}
+    
+    return {'result':'free','msg':'El nombre se encuentra disponible'}
 
 #Form to filter properties
 class PropertyFilterForm(Form):
@@ -103,6 +121,7 @@ class PropertyForm(Form):
     prop.price_sell           = to_float(self.price_sell.data)
     prop.price_rent_currency  = self.price_rent_currency.data
     prop.price_rent           = to_float(self.price_rent.data)
+    prop.price_expensas       = to_float(self.price_expensas.data)
     prop.rooms                = to_int(self.rooms.data)
     prop.bedrooms             = to_int(self.bedrooms.data)
     prop.bathrooms            = to_int(self.bathrooms.data)
@@ -176,7 +195,11 @@ class PropertyForm(Form):
   price_rent_currency = SelectField(choices=[('ARS', '$'), ('USD', 'USD')])
   price_rent          = TextField()
   rent_yes            = BooleanField('Alquiler', id='op_' + str(Property._OPER_RENT))
+  price_expensas      = TextField()
   
+  def validate_price_expensas(form, field):
+    my_float_validator_simple(field)
+    
   def validate_price_rent(form, field):
     my_float_validator(field, form.prop_operation_id.data & Property._OPER_RENT != 0)
 
@@ -264,7 +287,7 @@ class RealEstateForm(Form):
   
   logo                = FileField('')
   name                = TextField('',[validators.Required(message=u'Debe ingresar un nombre de Inmobiliaria.')])
-  website             = TextField('',[validators.url(message=u'La URL no es válida.')], default='')
+  website             = TextField('', default='')
   email               = TextField('',[validators.email(message=u'Debe ingresar un correo válido.')
                                       , validators.Required(message=u'Debe ingresar un correo electrónico.')], default='')
   
@@ -276,9 +299,41 @@ class RealEstateForm(Form):
   address             = TextField('',[validators.Required(message=u'Debe ingresar una dirección.')])
   zip_code            = TextField('',[validators.Required(message=u'Debe ingresar un código postal.')])
   
+  managed_domain      = BooleanField('')
+  domain_id           = TextField('')
+  
+  def validate_website(form, field):
+    
+    if field.data.strip() == '':
+      return
+    
+    tld_part = ur'\.[a-z]{2,10}'
+    if 'http://' in field.data:
+      regex = ur'^[a-z]+://([^/:]+%s|([0-9]{1,3}\.){3}[0-9]{1,3})(:[0-9]+)?(\/.*)?$' % tld_part
+      mRegexp = regexp(regex, re.IGNORECASE, message=u'Dirección inválida.')
+    else:
+      regex = ur'([^/:]+%s|([0-9]{1,3}\.){3}[0-9]{1,3})(:[0-9]+)?(\/.*)?$' % tld_part
+      mRegexp = regexp(regex, re.IGNORECASE, message=u'Dirección inválida.')
+    mRegexp.__call__(form, field)
+
+  def validate_domain_id(form, field):
+    res = validate_domain_id(field.data.strip(), form.thekey)
+    if res['result'] == 'free':
+      return
+      
+    raise ValidationError(res['msg'])
+    
+    
   def update_object(self, rs):
     rs.name               = self.name.data
+    
+    # _website              = self.website.data.strip()
+    # if 'http://' not in _website and _website != '':
+      # _website = 'http://%s' % self.website.data
+    
     rs.website            = self.website.data
+    rs.managed_domain     = to_int(self.managed_domain.data)
+    rs.domain_id          = self.domain_id.data
     rs.email              = self.email.data
     rs.title              = self.title.data
     rs.fax_number         = self.fax_number.data
@@ -364,13 +419,31 @@ class SignUpForm(KetchupForm):
     return 'SignUpForm'
     
   def validate_email(form, field):
-    # Chequeo que el correo sea válido.
-    user         = User.all().filter('email =', field.data).get()
+    # Chequeo que el correo no este repetido
+    user        = User.all().filter('email =', field.data).get()
+    
+    #TODO: NO HAY INDICE PARA ESTO POR ESO NO SE PUEDE VALIDAR
+    #realestate  = RealEstate.all().filter('email =', field.data).get()
+    
     if user:
       raise ValidationError(u'Este correo ya esta siendo utilizado.')
   
+  def validate_name(form, field):
+    # Chequeo que el nombre de la inmo no este repetido
+    name = RealEstate.all().filter('name', field.data.strip()).get()
+    if name:
+      raise ValidationError(u'Ese nombre ya esta siendo utilizado.')
+  
+  # TODO: NO HAY INDICE PARA ESTO POR ESO NO SE PUEDE VALIDAR!!!!
+  # def validate_telephone_number(form, field):
+    # # Chequeo que el teléfono de la inmo no este repetido
+    # name = RealEstate.all().filter('telephone_number', field.data.strip()).get()
+    # if name:
+      # raise ValidationError(u'Ese teléfono ya esta siendo utilizado.')
+
   name                = TextField('',[validators.Required(message=u'Debe ingresar un nombre de Inmobiliaria.')])
   email               = TextField('',[validators.email(message=u'Debe ingresar un correo válido.')], default='')
+  telephone_number    = TextField('',[validators.Required(message=u'Debe ingresar un número de teléfono.')])
   password            = PasswordField(u'Contraseña', [
                             validators.Length(message=u'La contraseña debe tener al menos %(min)d caracteres.', min=6),
                             validators.Required(message=u'Debe ingresar una contraseña.'),

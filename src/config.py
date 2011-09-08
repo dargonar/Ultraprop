@@ -15,6 +15,10 @@ config['webapp2_extras.sessions'] = {
 }
 
 config['webapp2_extras.jinja2'] = {
+  'template_path': 'templates',
+  'compiled_path': 'templates_compiled',
+  'force_compiled': False,
+
   'environment_args': {
     'autoescape': False,
   }
@@ -29,6 +33,15 @@ config['ultraprop'] = {
     'share_link':         {'sender':'info@ultraprop.com.ar', 'template':'share_link'},
     'contact_user':       {'sender':'info@ultraprop.com.ar', 'template':'contact_to_user'},
     'contact_agent':      {'sender':'info@ultraprop.com.ar', 'template':'contact_to_agent'},
+    
+    'trial_will_expire':  {'sender':'info@ultraprop.com.ar', 'template':'trial_will_expire'},
+    'trial_ended':        {'sender':'info@ultraprop.com.ar', 'template':'trial_ended'},
+    'no_payment':         {'sender':'info@ultraprop.com.ar', 'template':'no_payment'},
+    'enabled_again':      {'sender':'info@ultraprop.com.ar', 'template':'enabled_again'},
+    'payment_received':   {'sender':'info@ultraprop.com.ar', 'template':'payment_received'},
+    'new_invoice':        {'sender':'info@ultraprop.com.ar', 'template':'new_invoice'},
+    'pending_invoices':   {'sender':'info@ultraprop.com.ar', 'template':'pending_invoices'},
+
     'reply_consultas':    {'mail':'consultas@ultraprop.com.ar'},
 
   },

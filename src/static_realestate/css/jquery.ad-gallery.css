@@ -25,7 +25,7 @@
       z-index: 10;
       top: 48%;
       left: 48%;
-      border: 1px solid #CCC;
+/*      border: 1px solid #CCC;*/
     }
     .ad-gallery .ad-image-wrapper .ad-next {
       position: absolute;
@@ -52,22 +52,20 @@
       background: url(non-existing.jpg)\9
     }
       .ad-gallery .ad-image-wrapper .ad-prev .ad-prev-image, .ad-gallery .ad-image-wrapper .ad-next .ad-next-image {
-/*        background: url(/re/img/slideshow/ad_prev.png);*/
-		background: url("/re/img/backgrounds/btnSlide.gif") no-repeat scroll 0 0 transparent;
-        width: 16px;
-        height: 31px;
+		background: url("/re/img/slideshow/btnSlide.gif") no-repeat scroll 0 0 transparent;
+        width: 31px;
+        height: 66px;
         display: none;
         position: absolute;
         top: 50%; 
-		margin-top:-15px;
+		margin-top:-33px; 
         left: 0;
         z-index: 101;
       }
       .ad-gallery .ad-image-wrapper .ad-next .ad-next-image {
-/*        background: url(/re/img/slideshow/ad_next.png);*/
-		background: url("/re/img/backgrounds/btnSlide.gif") no-repeat scroll -16px 0 transparent;
-        width: 16px;
-        height: 31px;
+		background: url("/re/img/slideshow/btnSlide.gif") no-repeat scroll -31px 0 transparent;
+        width: 31px;
+        height: 66px;
         right: 0;
         left: auto;
       }
@@ -179,7 +177,8 @@
   .ad-gallery .ad-nav {
     width: 100%;
     position: relative;
-    height:55px;
+/*    height:55px;*/
+    height:65px;
     overflow:hidden;
   }
     .ad-gallery .ad-forward, .ad-gallery .ad-back {
@@ -201,7 +200,7 @@
 		background: url(/re/img/slideshow/adBtns.gif) 0px 0px no-repeat;
     }
     .ad-gallery .ad-forward {
-      cursor: pointer;
+/*      cursor: pointer;*/
       display: block;
       right: 0px;
       width: 15px;
@@ -228,11 +227,9 @@
           }
             .ad-gallery .ad-thumbs li a img {
               border: 1px solid #ccc;
-              display: block;
-			  
-			  /*width:72px; */
-			  width:100px; 
-/*			  height:54px;*/
+/*            display: block;
+			  width:100px; */
+
             }
             .ad-gallery .ad-thumbs li a.ad-active img {
               border: 1px solid #999;
