@@ -1,5 +1,5 @@
 application: ultraprop
-version: test-links
+version: 1-2-4
 runtime: python
 api_version: 1
 
@@ -39,9 +39,9 @@ handlers:
   static_files: static/robots.txt
   upload: static/robots.txt
 
-- url: /js/(index|home)(.*).js
-  static_files: static/js/\1.js
-  upload: static/js/(index|home).js
+- url: /css/mapa_tabs(.*).css
+  static_files: static/css/mapa_tabs.css
+  upload: static/css/mapa_tabs.css
   
 - url: /(css|img|js|pics)/(.*)
   static_files: static/\1/\2

@@ -52,8 +52,9 @@ class Info(RealestateHandler):
     realestate            = kwargs['realestate']
     
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
-    if self.realestate.status == RealEstate._NO_PAYMENT:
-      return self.render_response('realestate/disabled.html', realestate=self.realestate)
+    re = get_or_404(self.get_realestate_key_ex(realestate))
+    if re.status == RealEstate._NO_PAYMENT:
+      return self.render_response('realestate/disabled.html', realestate=re)
 
     if not self.form.validate():
       kwargs['flash'] = self.build_error('Verifique los datos ingresados:' + '<br/>'.join(reduce(lambda x, y: str(x)+' '+str(y), t) for t in self.form.errors.values()))

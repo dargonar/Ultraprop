@@ -100,9 +100,9 @@ function map_initialize() {
   }
   else
   {
-    // latlng = new google.maps.LatLng(-34.397, 150.644);
-    // LatLong del hint (Aguirre 276...).
-    latlng = new google.maps.LatLng(-34.59962,-58.433897);
+    // LatLong del centro de laplata
+    latlng = new google.maps.LatLng(-34.921267,-57.954597);
+    //$('#location').val(latlng.lat() + ',' + latlng.lng());
     zoom = 15;
   }
   
@@ -582,7 +582,7 @@ function init_pictures(bulk_remove_url, img_reorder_url, img_upload_url)
     
     upload_complete_handler       : function(file) {
       //alert('cuando se llama esto??');
-    },
+    }
   });
   
   if( $('#masterpic>li').length > 1 ) 

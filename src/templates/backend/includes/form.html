@@ -16,8 +16,8 @@ $(document).ready(function() {
     $(this).addClass('maximize');
     $('#map_canvas').css('width','740px').css('height','300px');
     google.maps.event.trigger(map, 'resize');
-    var point = new google.maps.LatLng($('#location').val().split(',')[0], $('#location').val().split(',')[1]);
-    map.setCenter(point);
+    //var point = new google.maps.LatLng($('#location').val().split(',')[0], $('#location').val().split(',')[1]);
+    map.setCenter(marker.getPosition());
   });
 });
 </script>

@@ -17,8 +17,8 @@ class Status(BackendHandler):
     re          = db.get(self.get_realestate_key())
     invoices    = []
     
-    invoices.extend( Invoice.all().filter('realestate', re.key()).filter('state', Invoice._INPROCESS) )
-    invoices.extend( Invoice.all().filter('realestate', re.key()).filter('state', Invoice._NOT_PAID) )
+    invoices.extend( Invoice.all().filter('realestate', re.key()).filter('state', Invoice._INPROCESS).order('date') )
+    invoices.extend( Invoice.all().filter('realestate', re.key()).filter('state', Invoice._NOT_PAID).order('date') )
     
     total_debt  = reduce(lambda x,i: x + (i.amount if i.state == Invoice._NOT_PAID else 0), invoices, 0)*1.21
 
