@@ -1,6 +1,7 @@
 <div id="header">
     <!--img class="logo" src="/img/logo_meddium.gif" /-->
-    <a href="/admin/property/list" title="Inicio">
+    <!--a href="/admin/property/list" title="Inicio"-->
+    <a href="/" title="Inicio">
         <img class="logo" src="/img/pixel-transp.gif">
     </a>
     
@@ -12,9 +13,9 @@
       {% endif %}
       {% if not is_logged %}
         <li><a href="{{url_for('backend/auth/login')}}" title="Inicio de sesión">Ingresar</a></li>
-        <li><a href="{{url_for('backend/auth/signup')}}" title="Regístrese">Registrarse</a></li>
+        <li class="btnLight"><a href="{{url_for('backend/auth/signup')}}" title="Regístrese">Regístrese</a></li>
       {% endif %}
-      <li><a href="{{url_for('frontend/map')}}" target="_blank" title="Búsqueda por mapa">Mapa</a></li>
+      <li style="border-left:none;"><a href="{{url_for('frontend/map')}}" target="_blank" title="Búsqueda por mapa">Mapa</a></li>
       {% if is_logged is defined %}
         {% if is_logged %}
         <li>
