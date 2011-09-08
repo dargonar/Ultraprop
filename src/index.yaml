@@ -212,6 +212,12 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: Invoice
+  properties:
+  - name: realestate
+  - name: state
+  - name: date
+
 - kind: PropertyIndex
   properties:
   - name: location_geocells
@@ -223,9 +229,3 @@ indexes:
   - name: location_geocells
   - name: realestate
   - name: price_sell_computed
-
-- kind: Invoice
-  properties:
-  - name: realestate
-  - name: state
-  - name: date
