@@ -1327,7 +1327,9 @@ body.frontend_search .btnMoreProps {
 	cursor:pointer;
 	font-weight:bold;
 	font-size:1.2em;
-	color:#3E8924;
+/*	color:#3E8924;*/
+	color:#000;
+	text-shadow: 0 1px 0 white;
 	width:115px;
 	border:none;
 	font-family:Arial, Helvetica, sans-serif;
@@ -1345,12 +1347,12 @@ body.frontend_search .btnMoreProps.next {
 	margin-left:-1px;
 }
 body.frontend_search .btnMoreProps:disabled {
-	color:#b1d09d;
+	color:#86b66a;
 	/*	background-position:0px -28px;*/
 	background-position: -336px -402px;
 }
 body.frontend_search .btnMoreProps.next:disabled {
-	color:#b1d09d;
+	color:#86b66a;
 	/*	background-position:-114px -28px;*/
 	background-position: -451px -402px;
 }
