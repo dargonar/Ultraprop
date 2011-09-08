@@ -706,7 +706,7 @@ dl.properties dt.price, dl.properties dd.price small {
 
 .detailBox {
 	padding-bottom: 20px;
-	padding-left: 20px;
+/*	padding-left: 20px;*/
 	width: 625px;
 }
 .infoBox h2 {

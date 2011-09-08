@@ -12,13 +12,24 @@ def get_rules():
         A list of class.`tipfy.Rule` instances.
     """
     rules = [
-      Route('/ver/<archivo>'    , name='ver_archivo'  , handler='apps.backend.property.VerArchivo'),
-      Route('/traerfotines'     , name='traer_fotines', handler='apps.backend.property.TraerFotines'),
-      Route('/traer_para'       , name='traer_para'   , handler='apps.backend.property.TraerPara'),
-      Route('/asignarfoto'      , name='asignar_foto' , handler='apps.backend.property.AsignarFoto'),
-      Route('/laplatear'        , name='laplatear'    , handler='apps.backend.property.LaPlatear'),
+      Route('/tsk/email_task'    , name='backend/email_task'           , handler='apps.backend.email.SendTask'),
+      Route('/tsk/run_ipn'       , name='billing/payment/download'     , handler='apps.backend.payment.Download'),
+      Route('/tsk/run_invoicer'  , name='billing/payment/run_invoicer' , handler='apps.backend.payment.RunInvoicer'),
+      Route('/tsk/update_ipn'    , name='billing/payment/update_ipn'   , handler='apps.backend.payment.UpdateIPN'),
       
-      Route('/admin'                     , name='backend/index/'                  , handler='apps.backend.auth.Index'),
+      # Todas las rutas de billing
+      PathPrefixRoute('/billing', [
+          
+        PathPrefixRoute('/payment', [
+          Route('/<invoice>/payment-cancel'   , name='billing/payment/cancel'       , handler='apps.backend.payment.Cancel'),
+          Route('/<invoice>/payment-done'     , name='billing/payment/done'         , handler='apps.backend.payment.Done'),
+          Route('/<invoice>/payment-pending'  , name='billing/payment/pending'      , handler='apps.backend.payment.Pending'),
+        ]),
+        
+      ]),
+      
+      # Todas las rutas de administracion
+      Route('/admin'                     , name='backend/index/'                 , handler='apps.backend.auth.Index'),
       PathPrefixRoute('/admin', [
         
         Route('/'                        , name='backend/auth/'                  , handler='apps.backend.auth.Index'),
@@ -31,7 +42,8 @@ def get_rules():
         Route('/validate/<key>'          , name='backend/validate/user'          , handler='apps.backend.auth.ValidateUser'),
         
         PathPrefixRoute('/realestate', [
-          Route('/edit'                  , name='backend/realestate/edit'   , handler='apps.backend.realestate.Edit'),
+          Route('/edit'                  , name='backend/realestate/edit'             , handler='apps.backend.realestate.Edit'),
+          Route('/validate_domain_id'    , name='backend/realestate/check_domain_id'  , handler='apps.backend.realestate.CheckDomainId'),
         ]),
         
         PathPrefixRoute('/user', [
@@ -54,12 +66,16 @@ def get_rules():
         
         PathPrefixRoute('/images', [
           Route('/reorder'               , name='images/reorder'    , handler='apps.backend.images.Reorder'),
-          Route('/<key>'                 , name='images/original'   , handler='apps.backend.images.Show:original'),
-          Route('/<key>/<width>/<height>', name='images/show'       , handler='apps.backend.images.Show'),
           Route('/<key>/upload/'         , name='images/upload'     , handler='apps.backend.images.Upload'),
           Route('/<key>/remove/'         , name='images/remove'     , handler='apps.backend.images.Remove'),
           Route('/<key>/bulkremove/'     , name='images/bulkremove' , handler='apps.backend.images.Remove'),
         ]),
+        
+        PathPrefixRoute('/account', [
+          Route('/status'               , name='backend/account/status'         , handler='apps.backend.account.Status'),
+        ]),
+        
+        
       ])
     ]
 

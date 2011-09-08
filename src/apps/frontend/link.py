@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 import logging
 import urllib
-import cgi
+
 
 from webapp2 import cached_property, Response
 from webapp2_extras.json import json, decode
 
-from google.appengine.api import urlfetch
-from google.appengine.api import mail
+from google.appengine.api import urlfetch, mail
 
 from search_helper import config_array, MAX_QUERY_RESULTS
 from forms import EmailLinkForm
-from utils import FrontendHandler, get_bitly_url
+from utils import FrontendHandler, get_bitly_url, expand_bitly_url, get_dict_from_querystring_dict
+from utils import get_link_url
 from models import Property
 
 # Dummy Handler, por si chequea bit.ly.
@@ -19,55 +19,18 @@ class SearchShare(FrontendHandler):
   def get(self, **kwargs):
     return self.redirect_to('frontend/map')
 
+# ============================================================ #
+# Share busqueda a través de bitly.  ======================== #
+
 class LoadSearchLink(FrontendHandler):
   def get(self, **kwargs):
     bitly_hash = kwargs.get('bitly_hash', '')
     if len(bitly_hash)<1:
       return redirect('frontend/map')
     
-    url = 'http://bit.ly/' + bitly_hash
-    expander_params =   { "login"    : "diventiservices",
-                         "apiKey"   : "R_3a5d98588cb05423c22de21292cd98d6",
-                         "shortUrl"  : url, 
-                         "format"   : "json"
-                         }
+    query_dict = expand_bitly_url(bitly_hash)
 
-                         
-    form_data = urllib.urlencode(expander_params)             
-    
-    post_url='http://api.bitly.com/v3/expand?'+form_data
-    
-    result = urlfetch.fetch(url=post_url,
-                            method=urlfetch.GET)
-    
-    bitlydata = decode(result.content)
-
-    if 'expand' not in bitlydata['data']:
-      return redirect('frontend/map')
-    if 'long_url' not in bitlydata['data']['expand'][0]:
-      return redirect('frontend/map')
-    
-    long_url = bitlydata['data']['expand'][0]['long_url']
-    
-    query_string = long_url.split('?')[1]
-    
-    query_dict = cgi.parse_qs(query_string)
-    
-    south         = query_dict['south'][0]
-    north         = query_dict['north'][0]
-    west          = query_dict['west'][0]
-    east          = query_dict['east'][0]
-    center_lat    = (float(north) + float(south))/2
-    center_lon    = (float(east) + float(west))/2
-    
-    dict = {}
-    for key in query_dict.keys():
-      value = query_dict[key][0]
-      if value is not None and len(str(value))>0:
-        dict[key] = value
-    
-    dict['center_lat'] = center_lat
-    dict['center_lon'] = center_lon
+    dict = get_dict_from_querystring_dict(query_dict)
     
     return self.render_response('frontend/index.html'
                           , config_arrayJSON=json.dumps(config_array)
@@ -83,12 +46,12 @@ class EmailShortenedLink(FrontendHandler):
     self.request.charset = 'utf-8'
     if self.form.validate():
     
-      # ----------------    
-      # Mando Correo para compartir link.
+      # ---------------------------------------------------------------- #    
+      # Mando Correo para compartir link.     -------------------------- #
       context = {'link':                urllib.unquote(self.form.link.data), 
                  'email_to':            self.form.email.data
                , 'support_url' :        'http://'+self.request.headers.get('host', 'no host') 
-               , 'server_url':                 'http://'+self.request.headers.get('host', 'no host')}
+               , 'server_url':          'http://'+self.request.headers.get('host', 'no host')}
       # Armo el body en plain text.
       body = self.render_template('email/'+self.config['ultraprop']['mail']['share_link']['template']+'.txt', **context)  
       # Armo el body en HTML.
@@ -101,7 +64,7 @@ class EmailShortenedLink(FrontendHandler):
                    body=body,
                    html=html
                    )
-      # ----------------
+      # ---------------------------------------------------------------- #    
       
       self.response.write('Correo enviado satisfactoriamente.')
       return 
@@ -122,6 +85,21 @@ class ShortenLink(FrontendHandler):
     str_query     += '&version=1' 
     
     link_url      = get_bitly_url(str_query)
+    
+    # Armo URL con 
+    return self.render_json_response({ 'bitly':link_url })
+
+
+# ============================================================ #
+# Share busqueda a través de Link local Model Class.  ======== #
+
+class ShortenLocalLink(FrontendHandler):
+  def get(self, **kwargs):
+    
+    str_query     = self.request.query_string 
+    str_query     += '&version=2' 
+    
+    link_url      = get_link_url(str_query)
     
     # Armo URL con 
     return self.render_json_response({ 'bitly':link_url })

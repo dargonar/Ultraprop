@@ -1,17 +1,16 @@
 {% extends "realestate/_base.html" %}
 
 {%block head%}
-  <script type="text/javascript" src="/js/jquery.ketchup.js"></script>
-  <script type="text/javascript" src="/js/jquery.ketchup.run.js"></script>
+  <script type="text/javascript">
+  $(document).ready( function() {
+    init_ficha();
+  });
+  </script>
 {%endblock%}  
-  
+
 {% block content %}
   <div id="content">
-
-  {% set realestate_logo = url_for('images/show',key=property.realestate.logo.key()|string, width=133, height=47) if property.realestate and property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
-  {% set realestate_logo_big = url_for('images/show',key=property.realestate.logo.key()|string, width=230, height=80) if property.realestate and property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
   <div class="innerContent detail" id="ficha_{{property.key()}}">
- 
  
  <!-- CONTACT --> 
  <div class="rightColumn"> 
@@ -96,9 +95,6 @@
           </div>
           <!-- ////// MAP 625 x 302 ////// -->
           <img id="{{ map_img_id }}" src="{{img_map_src}}" />
-
-
-
      </div>
     </div>
   </div>

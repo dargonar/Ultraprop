@@ -12,8 +12,11 @@
 {%- endmacro -%}
 
 {%block head%}
-  <script type="text/javascript" src="/js/jquery.ketchup.js"></script>
-  <script type="text/javascript" src="/js/jquery.ketchup.run.js"></script>
+  <script type="text/javascript">
+  $(document).ready( function() {
+    init_contact();
+  });
+  </script>
 {%endblock%}  
 
 

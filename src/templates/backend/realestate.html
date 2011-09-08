@@ -32,7 +32,7 @@
 {% block headscript %}
   <script type="text/javascript">
   $(document).ready(function() {
-    init_realestate();
+    init_realestate('{{url_for('backend/realestate/check_domain_id')}}');
   });
   </script>
 {% endblock %}
@@ -71,10 +71,8 @@
                 </span>
             </div>
            
-
-            <div style="clear:both;"></div>
-            <span id="filename"></span>
-            <br/>
+            <div style="display:none" class="filename"><span class="icon16 file"></span><span id="filename">&nbsp;</span></div>
+            
             <small class="gray">
             Tamaño recomendado: 280 pixeles de ancho x 75 de alto.<br /> 
             Ancho máx. 300 pixeles, Altura Máx. 100 pixeles.
@@ -124,17 +122,49 @@
         <dt>Correo electrónico</dt>
         {{ form_field2(form.email, placeholder="correo electrónico", title="correo electrónico") }}
     </dl>  
+  
+  
+<h2 class="title">Página web</h2>
+<dl class="form">
+        <dt>
+        Mi dirección web
+        <p style="font-weight:normal; font-size:11px; color:#666;">Ingrese su direccion si ya posee un dominio propio</p>
+        </dt>
+
+        {{ form_field2(form.website, title="www.sudominio.com.ar", placeholder="www.sudominio.com.ar") }}
+        <dt></dt>
+        <dd>
+            <div class="ex-label">
+                {{form.managed_domain}}
+                <label for="live_work">Quiero utilizar ULTRAPROP como mi web <a href="http://www.jorgemaull.com.ar" target="_blank">(ver ejemplo)</a></label>
+            </div>
+        </dd>
+        
+</dl>
     <dl class="form">
-        <dt>Sitio Web</dt>
-        {{ form_field2(form.website, title="url", placeholder="url") }}
-    </dl>
+      <dt>Mi dirección en ULTRAPROP</dt>
+      <dd id="did_dd" {% if form.domain_id.errors %} class="errorbox" {% endif %}>
+        <span>http://www.ultraprop.com.ar/</span>
+        {{form.domain_id(style='width:140px;', placeholder='')}}
+        <a class="uibutton" id="validate_domain_id" href="#">&nbsp;Validar&nbsp;</a>
+        {{ form_error(form.domain_id) }}
+        {% if not form.domain_id.errors %}
+          <p style="display:none" class="ok">&nbsp;</p>
+        {% endif %}
+      </dd>
+    </dl>  
+
     <dl class="form">
       <dt></dt>
       <dd>
-        <div class="navButtons" style="text-align:left;">
-          <input type="submit" value="Guardar Inmobiliaria" name="" class="btnWizard">
-        </div>
+          <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
       </dd>
     </dl>  
-  </form>  
+  </form>
+<br/>  
+<br/>
+<br/>
+ 
+ 
+  
 {% endblock  %}

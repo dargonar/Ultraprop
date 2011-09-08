@@ -32,7 +32,7 @@
                        onStart: false,
                        onStop: false
                      },
-                     effect: 'slide-hori', // or 'slide-vert', 'fade', or 'resize', 'none'
+                     effect: 'fade', // or 'slide-hori', 'slide-vert', 'fade', or 'resize', 'none'
                      enable_keyboard_move: true,
                      cycle: true,
                      callbacks: {
