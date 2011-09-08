@@ -67,6 +67,8 @@ class RealEstate(db.Model):
   last_invoice        = db.DateProperty()
   last_login          = db.DateTimeProperty()
   
+  def is_in_trial(self):
+    return self.status==RealEstate._TRIAL
   @staticmethod
   def public_attributes():
     """Returns a set of simple attributes on Immovable Property entities."""
