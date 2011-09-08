@@ -41,7 +41,7 @@
     </tr>
 </table> 
 
-{% for invoice in invoices %}
+{% for invoice in invoices if (not re.is_in_trial()) %}
 <table class="tbl_billing" width="100%" border="0" cellpadding="0" cellspacing="0">  
     <tr class="{{invoice.str_state()}}">
     	<td class="status"><span class="icon"></span><span>{{invoice.str_state(css=False)}}</span></td>
@@ -108,7 +108,11 @@
    	  <h3>Facturación</h3>
         <p>
         	Facturas impagas<br />
-            <b>${{total_debt|float|currencyfy}}</b>
+            {% if re.is_in_trial() %}
+              <b>$0.00</b>
+            {% else %}
+              <b>${{total_debt|float|currencyfy}}</b>
+            {% endif %}
         </p>
     </td>
     <td width="225">
