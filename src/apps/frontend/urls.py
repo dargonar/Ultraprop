@@ -29,6 +29,10 @@ def get_rules():
       
       # Hacko para EMI
       Route('/ver/<archivo>',         name='ver_archivo',         handler='apps.backend.hacks.VerArchivo'),
+      
+      # HACKO Unsubscribe campagna la plata
+      Route('/unsubscribe/<email>',   name='unsubscribe',         handler='apps.backend.hacks.Unsubscribe'),
+      Route('/la-plata-campaign/1114',name='la_plata_11114',      handler='apps.backend.hacks.LaPlataCampaign'),
       #----------------------------------------------------------------------------------------
       
       Route('/',                                                    name='frontend/home',             handler='apps.frontend.home.Index'),

@@ -32,7 +32,23 @@ class SendTask(MyBaseHandler):
     # params: { rekey, invoice=None }
     return
 
-
+  def laplata_campaign(self, params):
+    mail_to = params['email']
+    context = self.common_context()
+    context['mail_to'] = mail_to
+    # Armo el body en plain text.
+    body = self.render_template('email/campaign_start_v1.txt', **context)  
+    # Armo el body en HTML.
+    html = self.render_template('email/campaign_start_v1.html', **context)  
+    
+    # Envío el correo.
+    mail.send_mail(sender="www.ultraprop.com.ar <info@ultraprop.com.ar>", 
+                 to       = mail_to,
+                 subject  = "ULTRAPROP: Llegue a miles de clientes en La Plata y Gran La Plata",
+                 body     = body,
+                 html     = html)
+    # --------------------------------------------------------------------------------
+    
   def common_context(self):
     context = { 'server_url':                 'http://'+self.request.headers.get('host', 'no host')
               , 'support_url' :               'http://'+self.request.headers.get('host', 'no host')}

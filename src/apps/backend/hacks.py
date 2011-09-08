@@ -16,6 +16,99 @@ from models import Property, ImageFile, RealEstate, Plan, RealEstate, Invoice, P
 from myfilters import do_slugify
 from apps.backend.payment import create_transaction_number
 
+from google.appengine.api import taskqueue
+
+class Unsubscribe(BackendHandler):
+  def get(self, **kwargs):
+    return self.render_response('backend/unsubscribe.html', email=kwargs['email'])
+
+class LaPlataCampaign(BackendHandler):
+  def get(self, **kwargs):
+    emails = [
+      'info@daufi.com.ar',
+      'info@grupo-urbano.com.ar',
+      'info@buildinginmobiliaria.com',
+      'consultas@marcelojalilycia.com.ar',
+      'info@penayopropiedades.com.ar',
+      'info@cortipropiedades.com.ar',
+      'info@marenaprop.com.ar',
+      'contacto@franciscoinmob.com.ar',
+      'consultas@tempesta.com.ar',
+      'info@bellagamba.com',
+      'info@silviaposca.com.ar',
+      'info@camuscentro.com.ar',
+      'info@siluscapital.com',
+      'info@agostinelli.com.ar',
+      'info@alvarezprop.com.ar',
+      'info@oterorossi.com.ar',
+      'info@danieljakus.com.ar',
+      'info@dacal.com.ar',
+      'info@rivaspropiedades.com.ar',
+      'info@valverdepropiedades.com.ar',
+      'info@depinagaramon.com.ar',
+      'info@capitalpropiedades.com.ar',
+      'info@estudiomandon.com.ar',
+      'info@horaciovarela.com',
+      'ventas@incopropiedades.com.ar',
+      'ventas@jjyacoub.com.ar',
+      'administracion@jjyacoub.com.ar',
+      'info@danieljuarez.com.ar',
+      'info@betancorpropiedades.com.ar',
+      'info@andreatava.com.ar',
+      'info@andreatava.com.ar',
+      'info@menachopropiedades.com.ar',
+      'info@ringueletprop.com.ar',
+      'info@debonapropiedades.com.ar',
+      'info@lundin.com.ar',
+      'consultas@romeropropiedades.com',
+      'info@urquiza.com.ar',
+      'consultas@mooneybienesraices.com.ar',
+      'info@gruporandrup.com.ar',
+      'info@mirtalibera.com.ar',
+      'info@montesantiprop.com.ar',
+      'info@verainmobiliaria.com.ar',
+      'consultas@montesantiprop.com.ar',
+      'info@tapiamartinoli.com.ar',
+      'info@donatteri.com.ar',
+      'info@ramospropiedades.com.ar',
+      'consultas@axionpropiedades.com.ar',
+      'info@boscpropiedades.com.ar',
+      'info@vendodpto.com.ar',
+      'admin@cambroneroinmuebles.com.ar',
+      'info@cantisanoprop.com.ar',
+      'info@estudiomgherrera.com.ar',
+      'info@francopropiedadeslp.com',
+      'info@inmobiliariavision.com',
+      'contacto@dinardopropiedades.com.ar',
+      'contacto@villalvapropiedades.com.ar',
+      'info@licainmobiliaria.com.ar',
+      'info@javiermoragues.com',
+      'info@speranzapropiedades.com.ar',
+      'info@laplatapropiedades.net',
+      'info@marianopasini.com.ar',
+      'info@mirtalibera.com.ar',
+      'consultas@mooneybienesraices.com.ar',
+      'info@nicolasmoron.com.ar',
+      'info@patriciabellotti.com.ar',
+      'info@grupomorenolp.com.ar',
+      'info@tapiamartinoli.com.ar',
+      'consultas@urquiza.com.ar',
+      'info@juradobienesraices.com.ar',
+      'info@andreatava.com.ar',
+      'contacto@carinopropiedades.com.ar',
+      'info@ceciliacordero.com.ar',
+      'info@dedich.com.ar']
+    
+    # emails = ['ptutino@gmail.com', 'ptutino@gmail.com']
+    sent = []
+    for email in emails:
+      if email in sent:
+        continue
+      params = {'action': 'laplata_campaign', 'email':email}
+      taskqueue.add(url='/tsk/email_task', params=params)
+      sent.append(email)
+      
+    
 class VerArchivo(BackendHandler):
   @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
