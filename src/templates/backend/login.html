@@ -1,10 +1,14 @@
 {% extends "backend/_base2.html" %}
 
 {% block content %}
-    <div id="login_container" class="login_window" align="center">
-    <div class="popup">
-      <div id="login" class="popup_box" align="left"> 
-        <div class="header">Inicie sesión en su cuenta o <a style="font-size:14px; font-weight:bold;" href="{{url_for('backend/auth/signup')}}">Regístrese</a>.</div>
+    <div id="login_container" class="login_window" align="center" style="overflow:hidden; width:900px; margin:auto;">
+    
+    
+    
+    
+    <div class="popup" style="float:left; width:435px;">
+      <div id="login" class="popup_box" align="left" style="height:245px;" > 
+        <div class="header" style="font-size:14px; font-weight:bold; color:#3E8924;">Usuario Registrado</div>
         <form action="{{url_for('backend/auth/login')}}" method="post">
           <p class="first"> 
             <span class="field">
@@ -44,6 +48,44 @@
       </form>
         
     </div>
+
+    
+    
+    <div class="popup" style="float:right; width:435px;">
+      <div id="login" class="popup_box" align="center" style="height:245px;"> 
+        <div class="header">
+        	<a style="font-size:14px; font-weight:bold;" href="{{url_for('backend/auth/signup')}}">¿No estas registrado?</a>				 		</div>
+            
+        <p style="margin-top: 40px; margin-bottom:15px;">Regístrese ahora y comience a vender, es fácil y rápido.</p>
+            
+        <div style="background:#EEEEEE; border-radius: 5px; -webkit-border-radius: 5px;	-moz-border-radius: 5px; overflow:hidden; padding:20px;">
+        
+        
+        <form method="get" action="{{ url_for('backend/auth/signup') }}">
+            <a class="fancy_button login" href="#" style="margin-left:57px;">
+                	<input style="width:235px" type="submit" name="" value="Registrarme Ahora!">
+            </a>
+        </form>
+
+        </div>
+
+
+      </div>       
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     <!--div class="bgpopup"></div-->
   </div>

@@ -70,7 +70,7 @@ class SignUp(BackendHandler):
   def get(self, **kwargs):
     
     if self.is_logged:
-      return self.redirect_to('backend/realestate/edit')
+      return self.redirect_to('property/list')
     
     kwargs['form']   = self.form
     return self.render_response('backend/signup.html', **kwargs)
@@ -181,7 +181,7 @@ class ValidateUser(BackendHandler):
     
     self.set_ok('Su correo ha sido validado. Por favor complete la información de la inmobiliaria para comenzar a operar con ULTRAPROP.')
     
-    return self.redirect_to('backend/realestate/edit')
+    return self.redirect_to('property/list')
 
 class UnRestorePassword(BackendHandler):
   def get(self, **kwargs):

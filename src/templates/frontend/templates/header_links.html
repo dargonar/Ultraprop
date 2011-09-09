@@ -1,17 +1,18 @@
-  <ul class="mnuTop">
-    <li><a href="{{ url_for('frontend/home') }}" title="Inicio">Inicio</a></li>
+<ul class="mnuTop"> 
+    <!-- ///// INICIO ///// -->
     {% if in_map is defined %}
-      {% if in_map != 1 %}
-      <li><a href="{{ url_for('frontend/map') }}" title="Búsqueda por mapa" >Mapa</a></li>
-      <li class="btnLight"><a href="{{ url_for('backend/auth/login') }}" title="Iniciar Sesión como inmobiliaria o Registrarme">Soy inmobiliaria</a></li>
-      {% endif %}
-      {% if ficha is defined %}
-        <li><a href="{{ url_for('frontend/map') }}" title="Búsqueda por mapa" >Mapa</a></li>
-      {% endif %}
-    {% else %}
-      <li><a href="{{ url_for('frontend/map') }}" title="Búsqueda por mapa" >Mapa</a></li>
-      <li class="btnLight"><a href="{{ url_for('backend/auth/login') }}" title="Iniciar Sesión como inmobiliaria o Registrarme">Soy inmobiliaria</a></li>
+    <li><a href="{{ url_for('frontend/home') }}" title="Inicio">Inicio</a></li>
     {% endif %}
-    <li style="border-left:none;"><a href="mailto:ayuda@ultraprop.com.ar" title="Mandanos un correo. Estamos armando la ayuda online.">Ayuda</a></li>
-    <li><a href="http://www.youtube.com/watch?v=QTIXl9ZKyUs" onclick="jQuery('#help_video').show(); return false;" title="Ver video de ayuda online.">Video</a></li>
-  </ul>
+    
+	<!-- ///// PUBLICAR ///// -->
+	{% if is_logged is defined and is_logged %}
+    	<li class="btnLight"><a href="{{ url_for('property/list') }}" title="Publicar propiedades">Publicar propiedades</a></li>
+    {% else %}
+    	<li class="btnLight"><a href="{{ url_for('backend/auth/login') }}" title="Publicar propiedades">Publicar propiedades</a></li>
+    {% endif %}
+    
+    <li style="border-left:none;"><a href="mailto:ayuda@ultraprop.com.ar" title="Ayuda">Ayuda</a></li>
+    
+    <li><a href="http://www.youtube.com/watch?v=QTIXl9ZKyUs" onclick="jQuery('#help_video').show(); return false;" title="Ver video de ayuda">Video</a></li>
+    
+</ul>
