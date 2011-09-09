@@ -7,7 +7,7 @@
     
     
     <div class="popup" style="float:left; width:435px;">
-      <div id="login" class="popup_box" align="left" style="height:245px;" > 
+      <div id="login" class="popup_box" align="left"> 
         <div class="header" style="font-size:14px; font-weight:bold; color:#3E8924;">Usuario Registrado</div>
         <form action="{{url_for('backend/auth/login')}}" method="post">
           <p class="first"> 
@@ -26,12 +26,12 @@
           {% endif %}
           <a href="#" class="fancy_button login"><input type="submit" value="INGRESAR" name=""></a>
         </form>
-        <div jqtransform="true">
+        <!--div jqtransform="true">
           <div class="ex-label"> 
             <input type="checkbox" checked="checked" id="" name="">
             &nbsp;Recordarme en este equipo 
           </div>
-        </div>
+        </div-->
       </div>
       
       <form action="{{url_for('backend/auth/restore/request')}}" method="post" id="restore_pass">
@@ -52,7 +52,7 @@
     
     
     <div class="popup" style="float:right; width:435px;">
-      <div id="login" class="popup_box" align="center" style="height:245px;"> 
+      <div id="login" class="popup_box" align="center" style="height:232px;"> 
         <div class="header">
         	<a style="font-size:14px; font-weight:bold;" href="{{url_for('backend/auth/signup')}}">¿No estas registrado?</a>				 		</div>
             
