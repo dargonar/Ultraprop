@@ -7,7 +7,7 @@
     
     
     <div class="popup" style="float:left; width:435px;">
-      <div id="login" class="popup_box" align="left"> 
+      <div id="login" class="popup_box" align="left" style="min-height:232px;"> 
         <div class="header" style="font-size:14px; font-weight:bold; color:#3E8924;">Usuario Registrado</div>
         <form action="{{url_for('backend/auth/login')}}" method="post">
           <p class="first"> 
@@ -36,13 +36,13 @@
       
       <form action="{{url_for('backend/auth/restore/request')}}" method="post" id="restore_pass">
         <div class="popup_box" align="left"> 
-            <div class="header">¿Olvidó su contraseña? Le enviaremos un email para recuperarla.</div>
+            <div class="header"><b>¿Olvidó su contraseña?</b> Le enviaremos un email para recuperarla.</div>
             <p class="first">
                 <span class="field">
                     <input class="xg long" type="input" value="" placeholder="Ingrese su Email" title="Ingrese su Email" tabindex="1" name="useremail" id="useremail">
                 </span> 
             </p>
-            <a href="#" class="fancy_button restore"><input type="submit" value="MODIFICAR CONTRASEÑA" name=""></a>
+            <a href="#" class="fancy_button restore"><input type="submit" value="MODIFICAR CONTRASEÑA" name="" style="*width:250px !important;"></a>
             <a id="btnLogin" style="float:left; height:42px; display:inline; margin-top:10px; line-height:42px; margin-left:10px;" href="#" onclick="jQuery('#restore_pass').hide();jQuery('#login').show(); return false;">Volver a Login</a> 
         </div>
       </form>
@@ -52,7 +52,7 @@
     
     
     <div class="popup" style="float:right; width:435px;">
-      <div id="login" class="popup_box" align="center" style="height:232px;"> 
+      <div id="login" class="popup_box" align="center" style="min-height:232px;"> 
         <div class="header">
         	<a style="font-size:14px; font-weight:bold;" href="{{url_for('backend/auth/signup')}}">¿No estas registrado?</a>				 		</div>
             
