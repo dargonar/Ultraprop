@@ -180,14 +180,17 @@ def do_operationfy(operation_id):
     return 'Venta'
   return 'Alquiler'
   
-def do_pricefy(property, operation_type = None, small=False, **args):
+def do_pricefy(property, operation_type = None, small=False, extended_format=False, **args):
   number = property.price_rent
   cur = property.price_rent_currency
-  if (operation_type is None and property.price_sell_computed>0.0) or int(operation_type) == Property._OPER_SELL:
+  #if (operation_type is None and property.price_sell_computed>0.0) or int(operation_type) == Property._OPER_SELL:
+  if property.prop_operation_id == Property._OPER_SELL:
     number = property.price_sell
     cur = property.price_sell_currency
+  if extended_format:
+    return '<span class="value price"><small>%s</small> %s</span>' % (cur, do_currencyfy(number))
   return '<small>'+cur+'</small>'+do_currencyfy(number, small=small)
-
+  
 def do_expensasfy(property, operation_type = None, small=False, small_if_none=False, **args):
   number = property.price_expensas
   cur = property.price_rent_currency

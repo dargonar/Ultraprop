@@ -17,8 +17,10 @@ def get_rules():
           Route('/<realestate>/busqueda/<page>',      name='realestate/search/page',    handler='apps.realestate.search.Search'),
           Route('/<realestate>/ficha/<key>/<oper>',   name='realestate/ficha',          handler='apps.realestate.ficha.Show'),
           Route('/<realestate>/info',                 name='realestate/info',           handler='apps.realestate.handlers.Info'),
-        ]
-      )
+        ]),
+      # RealEstate Home por slug
+      Route('/<realestate_slug>',                     name='realestate/search_slug',    handler='apps.realestate.search.Search:by_slug'),
+        
     ]
 
     return rules

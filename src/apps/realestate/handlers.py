@@ -30,7 +30,7 @@ class Index(RealestateHandler):
     kwargs['menu_item']   = 'index'
       
     return self.render_response('realestate/index.html', **kwargs)
- 
+  
 # Info de la propiedad, creo que quedará obsoleto.    
 class Info(RealestateHandler):
   def get(self, **kwargs):
