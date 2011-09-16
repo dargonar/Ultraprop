@@ -1,0 +1,45 @@
+{% extends "backend/_base.html" %}
+
+{% block menuleft %}
+<div id="mnuLeft">
+  
+</div>
+{% endblock %}
+
+{% block headscript %}
+<script type="text/javascript">
+$(document).ready(function() {
+  setTimeout("hideFlashMessageSlow()", 5000);
+});
+</script>
+{% endblock %}
+
+{% block content %}
+	<h1>Inmobiliarias Amigas</h1>
+  <p class="msg_warning" align="center">
+    <span class="title">
+      Estamos actualizando los servidores. Este servicio estará disponible a la brevedad para Usted.
+    </span>
+  </p>
+  {% if flash %}
+  <div class="msg_{{flash.type}}" id="flash_message">{{flash.message}}</div>
+  {% endif %}
+  <br/>
+  <center>
+    <a href="{{url_for('backend/realestatebook/wants_poke')}}" class="btnWizard" style="text-align:center;">Avisarme cuando esté disponible</a>
+	</center>
+  <!--
+    <div id="sort_by">
+      <div class="sortbox">
+         <label>Listado</label> 
+      </div>
+    </div>
+    {# % include "backend/includes/realestatebook_navbar.html" % #}
+    <div class="divider"></div>
+    <div class="noelement proplist txt">
+      <span>Estamos actualizando los servidores. Disculpe las molestias.</span>
+    </div>
+    <div class="divider"></div>
+    {# % include "backend/includes/realestatebook_navbar.html" % #}
+  -->
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends "backend/_base.html" %}
+
+{%- macro form_field(field, class='') -%}
+		{% if field.errors %}
+      {{field(class=class+' error', **kwargs)}}
+    {% else %}
+      {{field(class=class, **kwargs)}}
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro form_field2(field) -%}
+  <dd {% if field.errors %} class="errorbox" {% endif %} >
+    {{ form_field(field, **kwargs)}}
+    {{ form_error(field) }}
+  </dd>  
+{%- endmacro -%}
+
+{%- macro form_error(field) -%}
+    {% if field.description != '' %}<span class="m2">{{field.description}}</span>{% endif %}
+    {% if field.errors %} <p class="error">{{ field.errors.0 }}</p> {% endif %}
+{%- endmacro -%}
+
+
+{%- macro form_field2_container_double(field1, field2) -%}
+  <dd {% if field1.errors or field2.errors %} class="errorbox" {% endif %} >
+{%- endmacro -%}
+
+{%- macro form_field2_container(field) -%}
+  <dd {% if field.errors %} class="errorbox" {% endif %} >
+{%- endmacro -%}
+
+{% block headscript %}
+  <script type="text/javascript">
+  $(document).ready(function() {
+    init_realestate_website('{{url_for('backend/realestate_website/check_domain_id')}}');
+  });
+  </script>
+{% endblock %}
+
+{% block content %}
+
+	<div style="overflow:hidden; margin-bottom:20px;">
+		<h1>Sitio Web <i style="font-size:14px;">edición de sitio web</i><h1>
+  </div>
+  {% if flash %}
+    <div class="msg_{{flash.type}}" id="flash_message"><b>{{flash.message}}</b></div>
+  {% endif %}
+    
+  <form id="website_form" action="{{url_for('backend/realestate_website/edit')}}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="key" value="{{key}}" />
+    <!-- ///// IDENTITY ///// -->    
+    
+<h2 class="title">Sitio web: Su portal inmobiliario</h2>
+<dl class="form">
+        <dt>
+        Mi sitio web actual
+        <p style="font-weight:normal; font-size:11px; color:#666;">Ingrese la dirección de su sitio web si ya posee un dominio propio</p>
+        </dt>
+
+        {{ form_field2(form.website, title="www.sudominio.com.ar", placeholder="www.sudominio.com.ar") }}
+        
+        <dt>
+        Dominio alojado en Ultraprop
+        <p style="font-weight:normal; font-size:11px; color:#666;">Muestre su oferta inmobiliaria en ULTRAPROP dentro de su web y obtenga dominio propio para sus correo.</p>
+        </dt>
+        <dd>
+            <div class="ex-label" style="width:365px;">
+                {{form.managed_domain}}
+                <label for="website">
+                    <b>Utilizar ULTRAPROP como mi web</b> <a href="http://www.jorgemaull.com.ar" target="_blank">(ver ejemplo)</a>
+                    <a href="#" style="float:right; line-height:40px;" onclick="jQuery('#own_website_help').toggle();return false;" title="Ver ayuda">Ayuda</a>
+                </label>
+            </div>
+            <div id="own_website_help" style="margin-top:10px;display:none;clear:both;">
+              <div style="padding:20px;opacity:1;background: none repeat scroll 0 0 #E4F1FF;border: 1px solid #99C7F8;;height:auto;width:325px;">
+                <ul>
+                	<li style="padding-top:4px;">
+                    &raquo;&nbsp;<b>Si aún no tiene su dominio propio</b>, lo registramos y alojamos en nuestros servidores. Gestionamos su correo @su_inmobiliaria.com.ar.<br/>
+                  </li>
+                	<li style="padding-top:4px;">
+                    &raquo;&nbsp;<b>Si ya dispone de uno</b>, lo alojamos en nuestros servidores, implementando la tecnología de ULTRAPROP para su web propia.<br/>
+                  </li>
+                	<li style="padding-top:4px;padding-bottom:5px;">
+                    &raquo;&nbsp;<b>Si ya tiene su web propia</b> y desea mantener su diseño original, mantenemos este diseño y agregamos su oferta inmobiliaria en ULTRAPROP dentro de su web. <br/>
+                  </li>
+                </ul>
+                Seleccione la opción <b><i>Utilizar ULTRAPROP como mi web</i></b> y un agente de ULTRAPROP se comunicará con Ud. a la brevedad.<br/>
+                <p style="margin-top: 3px;">
+                  <small>Asegúrese de haber configurado correctamente la información de <a href="{{ url_for('backend/realestate/edit') }}">contacto aquí</a> antes de guardar los cambios.</small>
+                </p>
+              </div>
+            </div>
+        </dd>
+        
+</dl>
+    <dl class="form">
+      <dt>
+        Mi dirección en ULTRAPROP
+         <p style="font-weight:normal; font-size:11px; color:#666;">Su oferta inmobiliaria siempre visible desde ULTRAPROP.</p>
+      </dt>
+      <dd id="did_dd" {% if form.domain_id.errors %} class="errorbox" {% endif %}>
+        <span>http://www.ultraprop.com.ar/</span>
+        {{form.domain_id(style='width:140px;', placeholder='')}}
+        <a class="uibutton" id="validate_domain_id" href="#">&nbsp;Validar&nbsp;</a>
+        {{ form_error(form.domain_id) }}
+        {% if not form.domain_id.errors %}
+          <p style="display:none" class="ok">&nbsp;</p>
+        {% endif %}
+      </dd>
+    </dl>  
+
+    <dl class="form">
+      <dt></dt>
+      <dd>
+          <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
+      </dd>
+    </dl>  
+  </form>
+<br/>  
+<br/>
+<br/>
+ 
+ 
+  
+{% endblock  %}

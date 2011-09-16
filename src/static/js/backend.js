@@ -703,7 +703,7 @@ function init_property_list(property_new_url)
 //----------------------------------
 //         PROFILE->REALESTATE
 //---------------------------------- 
-function init_realestate(didurl)
+function init_realestate()
 {
   //////// ADD NEW PHONE //////////
   $("#btnAddPhone").click(function()
@@ -729,6 +729,15 @@ function init_realestate(didurl)
     $('div.filename').show();
   });
   
+  $("#goto_website").click( function(e) {
+    $("input[name=goto]").val('website');
+  });
+  
+}
+//----------------------------------
+//         PROFILE->REALESTATE WEBSITE
+//---------------------------------- 
+function init_realestate_website(didurl){
   //Validar slug de domain id
   $('#validate_domain_id').click( function() {
     
@@ -762,6 +771,13 @@ function init_realestate(didurl)
     
     return false;
   });
+  //
+  setTimeout("hideFlashMessageSlow()", 5000);
+}
+
+function hideFlashMessageSlow(){
+  if (jQuery('#flash_message').length>0)
+    jQuery('#flash_message').fadeOut('slow');
 }
 
 //----------------------------------

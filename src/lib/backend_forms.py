@@ -81,6 +81,12 @@ def my_int_validator(field):
     raise ValidationError('El numero es invalido')
 
 def validate_domain_id(domain_id, mykey=None):
+    if domain_id.strip()=='':
+      return {'result':'used','msg':u'El nombre no puede ser vacío'}
+    
+    if domain_id.strip()=='mapa':
+      return {'result':'used','msg':u'El nombre no puede ser "mapa"'}
+      
     # Primero validamos que sea tipo regex
     SLUG_REGEX = re.compile('^[-\w]+$')
     if not re.match(SLUG_REGEX, domain_id):
@@ -287,18 +293,32 @@ class RealEstateForm(Form):
   
   logo                = FileField('')
   name                = TextField('',[validators.Required(message=u'Debe ingresar un nombre de Inmobiliaria.')])
-  website             = TextField('', default='')
   email               = TextField('',[validators.email(message=u'Debe ingresar un correo válido.')
                                       , validators.Required(message=u'Debe ingresar un correo electrónico.')], default='')
-  
   title               = TextField()
   fax_number          = TextField('')
   telephone_number    = TextField('',[validators.Required(message=u'Debe ingresar un número de teléfono.')])
   telephone_number2   = TextField('')
-  
   address             = TextField('',[validators.Required(message=u'Debe ingresar una dirección.')])
   zip_code            = TextField('',[validators.Required(message=u'Debe ingresar un código postal.')])
   
+  def update_object(self, rs):
+    rs.name               = self.name.data
+    rs.email              = self.email.data
+    rs.title              = self.title.data
+    rs.fax_number         = self.fax_number.data
+    rs.telephone_number   = self.telephone_number.data
+    rs.telephone_number2  = self.telephone_number2.data
+    rs.address            = self.address.data
+    rs.zip_code           = self.zip_code.data
+    return rs
+    
+
+class RealEstateWebSiteForm(Form):
+  def __repr__(self):
+    return 'RealEstateWebSiteForm'
+  
+  website             = TextField('', default='')
   managed_domain      = BooleanField('')
   domain_id           = TextField('')
   
@@ -325,23 +345,13 @@ class RealEstateForm(Form):
     
     
   def update_object(self, rs):
-    rs.name               = self.name.data
+    rs.website                  = self.website.data
+    tmp_current_managed_domain  = rs.managed_domain
+    rs.managed_domain           = to_int(self.managed_domain.data)
+    rs.domain_id                = self.domain_id.data
     
-    # _website              = self.website.data.strip()
-    # if 'http://' not in _website and _website != '':
-      # _website = 'http://%s' % self.website.data
+    return rs, (tmp_current_managed_domain!=rs.managed_domain)
     
-    rs.website            = self.website.data
-    rs.managed_domain     = to_int(self.managed_domain.data)
-    rs.domain_id          = self.domain_id.data
-    rs.email              = self.email.data
-    rs.title              = self.title.data
-    rs.fax_number         = self.fax_number.data
-    rs.telephone_number   = self.telephone_number.data
-    rs.telephone_number2  = self.telephone_number2.data
-    rs.address            = self.address.data
-    rs.zip_code           = self.zip_code.data
-    return rs
     
 class UserForm(Form):
   def __repr__(self):

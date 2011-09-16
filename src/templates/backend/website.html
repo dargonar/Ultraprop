@@ -32,7 +32,7 @@
 {% block headscript %}
   <script type="text/javascript">
   $(document).ready(function() {
-    init_realestate();
+    init_realestate('{{url_for('backend/realestate/check_domain_id')}}');
   });
   </script>
 {% endblock %}
@@ -40,7 +40,7 @@
 {% block content %}
 
 	<div style="overflow:hidden; margin-bottom:20px;">
-		<h1>Inmobiliaria <i style="font-size:14px;">modificación de datos</i><h1>
+		<h1>Editar Inmobiliaria</h1>
   </div>
   {% if flash %}
     <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
@@ -123,12 +123,41 @@
         {{ form_field2(form.email, placeholder="correo electrónico", title="correo electrónico") }}
     </dl>  
   
-    
+  
+<h2 class="title">Página web</h2>
+<dl class="form">
+        <dt>
+        Mi dirección web
+        <p style="font-weight:normal; font-size:11px; color:#666;">Ingrese su direccion si ya posee un dominio propio</p>
+        </dt>
+
+        {{ form_field2(form.website, title="www.sudominio.com.ar", placeholder="www.sudominio.com.ar") }}
+        <dt></dt>
+        <dd>
+            <div class="ex-label">
+                {{form.managed_domain}}
+                <label for="live_work">Quiero utilizar ULTRAPROP como mi web <a href="http://www.jorgemaull.com.ar" target="_blank">(ver ejemplo)</a></label>
+            </div>
+        </dd>
+        
+</dl>
     <dl class="form">
-      <dd style="margin-left:200px;width:100%;">
-          <input name="goto" type="hidden" value=""/>
+      <dt>Mi dirección en ULTRAPROP</dt>
+      <dd id="did_dd" {% if form.domain_id.errors %} class="errorbox" {% endif %}>
+        <span>http://www.ultraprop.com.ar/</span>
+        {{form.domain_id(style='width:140px;', placeholder='')}}
+        <a class="uibutton" id="validate_domain_id" href="#">&nbsp;Validar&nbsp;</a>
+        {{ form_error(form.domain_id) }}
+        {% if not form.domain_id.errors %}
+          <p style="display:none" class="ok">&nbsp;</p>
+        {% endif %}
+      </dd>
+    </dl>  
+
+    <dl class="form">
+      <dt></dt>
+      <dd>
           <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
-          <input type="submit" value="Guardar Cambios y configurar Sitio Web" name="" class="btnWizard" id="goto_website">
       </dd>
     </dl>  
   </form>

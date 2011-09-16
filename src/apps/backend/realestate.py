@@ -19,15 +19,6 @@ from webapp2 import cached_property
 from models import RealEstate
 
 
-class CheckDomainId(BackendHandler):
-  @need_auth()
-  def get(self, **kwargs):
-    self.request.charset = 'utf-8'
-    domain_id = self.request.GET['did'].strip()
-    
-    res = validate_domain_id(domain_id, self.get_realestate_key())
-    return self.render_json_response(res)
-    
 class Edit(BackendHandler):
   #Edit/New
   @need_auth()
@@ -111,6 +102,8 @@ class Edit(BackendHandler):
     
     # Set Flash
     self.set_ok('Inmobiliaria guardada satisfactoriamente.')
+    if self.request.POST['goto'] == 'website':
+      return self.redirect_to('backend/realestate_website/edit')
     return self.redirect_to('backend/realestate/edit')
     
   @cached_property
