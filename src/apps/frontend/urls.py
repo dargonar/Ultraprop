@@ -40,9 +40,6 @@ def get_rules():
       Route('/mapa',                                                name='frontend/map',              handler='apps.frontend.map.Index'),
       Route('/mapa/',                                               name='frontend/map/',             handler='apps.frontend.map.Index'),
       
-      # RealEstate Home por slug
-      Route('/<realestate_slug>',                                   name='realestate/search_slug',    handler='apps.realestate.search.Search:by_slug'),
-      
       Route('/mapa/<slug>/<key_name_or_id>',                        name='frontend/map/slug/key',     handler='apps.frontend.map.Index:slugged_link'),
       Route('/mapa/<realestate>',                                   name='frontend/map/realestate',   handler='apps.frontend.map.Index:realesate_filtered'),
       

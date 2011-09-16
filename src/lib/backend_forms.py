@@ -84,8 +84,8 @@ def validate_domain_id(domain_id, mykey=None):
     if domain_id.strip()=='':
       return {'result':'used','msg':u'El nombre no puede ser vacío'}
     
-    if domain_id.strip()=='mapa':
-      return {'result':'used','msg':u'El nombre no puede ser "mapa"'}
+    if domain_id.strip()in['mapa', 'admin', '']:
+      return {'result':'used','msg':u'Este nombre está restringido'}
       
     # Primero validamos que sea tipo regex
     SLUG_REGEX = re.compile('^[-\w]+$')
