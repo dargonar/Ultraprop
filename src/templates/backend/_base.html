@@ -34,7 +34,7 @@
     
     <li class="{{ 'active' if mnutop == 'website' else '' }}"><a href="{{url_for('backend/realestate_website/edit') if not is_no_payment else '#' }}" title="" >Mi Web</a></li> 
     
-    <li class="{{ 'active' if mnutop == 'realestatebook' else '' }}"><a href="{{url_for('backend/realestatebook/list') }}" title="" >Inmobiliarias amigas</a></li>
+    <li class="{{ 'active' if mnutop == 'realestatebook' else '' }}"><a href="{{url_for('backend/realestatebook/list') }}" title="" >Inmobiliarias amigas <span style="color:#ff0000;">[Nuevo]</span></a></li>
     
     <li class="{{ 'active' if mnutop == 'cuenta' else '' }}"><a href="{{url_for('backend/account/status')}}">Mi Cuenta</a></li>
     
