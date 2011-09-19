@@ -46,6 +46,8 @@ class RealEstate(db.Model):
   name                = db.StringProperty()
   website             = db.StringProperty(indexed=False)
   email               = db.EmailProperty(indexed=False)
+  tpl_title           = db.StringProperty(indexed=False)
+  tpl_text            = db.TextProperty(indexed=False)
   
   title               = db.StringProperty()
   fax_number          = db.StringProperty(indexed=False)

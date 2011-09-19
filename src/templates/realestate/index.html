@@ -6,93 +6,37 @@
     
       <!-- INSTITUTIONAL AREA -->
       <div class="txt_welcome">
-          <h2>Escriba su texto institucional aquí</h2>
-          <h4>Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi.</h4>
-      </div>
-        
-        <!-- SEARCH AREA -->
-        <div id="searchbox_form_area">
-          <ul class="property_type">
-              <li><label><input type="radio" name="property_type" value="" id="property_type_0" />Casa</label></li>
-              <li><label><input type="radio" name="property_type" value="" id="property_type_1" />Departamento</label></li>
-              <li><label><input type="radio" name="property_type" value="" id="property_type_1" />Oficinas</label></li>
-              <li><label><input type="radio" name="property_type" value="" id="property_type_1" />Edificios en block</label></li>
-              <li><label><input type="radio" name="property_type" value="" id="property_type_1" />Locales</label></li>
-              <li><label><input type="radio" name="property_type" value="" id="property_type_1" />Industrias</label></li>
-              <li><label><input type="radio" name="property_type" value="" id="property_type_1" />Terrenos</label></li>
-              <li><label><input type="radio" name="property_type" value="" id="property_type_1" />Depósitos</label></li>
-          </ul>
-          
-          <div>
-              <div style="float:left; width:125px;">
-                  <label><input type="radio" name="property_modality" value="" id="property_modality_0" />en Venta</label><br />
-                  <label><input type="radio" name="property_modality" value="" id="property_modality_1" />en Alquiler</label><br />
-                  <a href="#" style="padding-left:24px;">más »</a>
-                  <br />
-                  <br />
-                  <br />
-                  <label><input type="radio" name="property_currency" value="" id="property_currency_0" />U$S</label>
-                  <label><input type="radio" name="property_currency" value="" id="property_currency_1" />$</label><br />
-              </div>
-              
-              <div style="float:left; width:275px;">
-                  <dl class="form">
-                      <dt>Provincia</dt>
-                      <dd><select name=""></select></dd>
-                      
-                      <dt>Localidad</dt>
-                      <dd>
-                          <select name=""></select>
-                      </dd>
-                      
-                      <dt>Area / Barrio</dt>
-                      <dd>
-                          <select name=""></select>
-                      </dd>
-                      
-                      <dt>Dormitorios</dt>
-                      <dd>
-                          <select name=""></select>
-                      </dd>
-                      
-                      <dt>Valor Hasta</dt>
-                      <dd>
-                          <select name=""></select>
-                      </dd>
-                      
-                      <dt></dt>
-                      <dd>
-                          <input onclick="location.href='{{url_for('realestate/search', realestate=realestate.key()|string)}}'" class="btnSend" name="" type="submit" value="Iniciar Búsqueda" />
-                      </dd>
-                  </dl>
-              </div>
-          </div>
+          <h2>{{ realestate.tpl_title if realestate.tpl_title else '--título institucional--' }}</h2>
+          <h4>{{ realestate.tpl_text if realestate.tpl_text else '--texto institucional--' }}</h4>
       </div>
     </div> 
     
     <!-- ///// CONTENT ///// -->
     <div id="content" style="padding:10px 0; overflow:hidden;">
         <div id="left_content"> 
-              <h2>Tasaciones</h2>
-              <p>Describa las características de su propiedad para que uno de nuestros tasadores la evalúe y se ponga en contacto con usted a la brevedad.</p>
-              <hr />
-              <h2>Búsqueda Automática</h2>
-              <p>Seleccione sus preferencias de búsqueda y el sistema le avisará cuando ingrese una propiedad coincidente.</p>
+              <h2 style="padding-bottom: 8px;margin-bottom: 25px;margin-top: 5px;">{{realestate.name}}</h2>
+              <p>Visítenos en {{realestate.address}}.</p>
               <hr />
               <p>Llámenos al</p>
-              <h2>427-0000</h2>
+              <h2>{{realestate.telephone_number}}</h2>
+              <hr />
+              <p>O escríbanos a</p>
+              <h3>{{realestate.email}}</h3>
         </div>
         
         <div id="right_content"> 
           <div id="center_column_home">
               <h3 class="section">Inmuebles Destacados</h3>
-              {%include "realestate/includes/mod_property_home.html"%}
+              {% for property in properties %}
+                {% set last='last' if loop.index==loop.count else ''%}
+                {%include "realestate/includes/mod_property_home.html"%}
+              {% endfor %}
           </div>
           
-          <div id="right_column_home">
+          <!--div id="right_column_home">
               <h3 class="section">Noticias del sector</h3>
-              {%include "realestate/includes/mod_news.html"%}
-          </div>
+              {# %include "realestate/includes/mod_news.html"% #}
+          </div-->
         </div>
         
     </div>
