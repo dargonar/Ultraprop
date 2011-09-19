@@ -1,9 +1,9 @@
 {% extends "backend/_base.html" %}
 
 {% block menuleft %}
-<div id="mnuLeft">
+<!--div id="mnuLeft">
   
-</div>
+</div-->
 {% endblock %}
 
 {% block headscript %}
@@ -15,7 +15,82 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content %}
-	<h1>Inmobiliarias Amigas</h1>
+
+
+<h1 style="margin-bottom:20px;">Inmobiliarias Amigas</h1>
+
+    
+<ul class="tabs_admin">
+    <li><a href="#">inmobiliarias Amigas</a></li>
+    <li><a href="#">Solicitudes</a></li>
+    <li class="active">
+        <a href="javascript:alert('Debe guardar la propiedad para subir las fotos')">Buscar inmobiliarias</a>
+    </li>
+</ul>
+
+
+<div class="uibutton-toolbar picture" style="margin-bottom:0px; margin-top:10px;">
+    <span class="label">Seleccionar:</span>
+    <div class="uibutton-group">
+        <a id="selectall" class="uibutton" href="#">Todo</a>
+        <a id="deselectall"class="uibutton" href="#">Nada</a>
+    </div>
+    <a id="delselected" class="uibutton" href="#">Eliminar</a>
+    <img id="wait" src="/img/ajax-loader.gif" style="display:none"/>    
+</div>
+    
+<div class="viewPicBox">
+  <ul id="masterpic" class="picturebox_admin">
+
+  {% for realestate in realestates %}
+  	<li> 
+        <div style="display:none" class="confirm">
+            <div class="actions">
+                <p class="msg">Seguro desea eliminar?</p>
+                <a class="no" href="#">NO</a>
+                <a class="yes" href="#">SI</a>
+            </div>
+            <div class="bg"></div>
+        </div>
+        
+        <img title="Eliminar imagen" src="/img/icons/btnClose.png" class="btnClose"> 
+        <div style="display: table-cell; vertical-align: middle; text-align:center; width:160px; height:120px" id="imgbox">
+          <!--img src="http://localhost:8080/_ah/img/SkkNYovRBfyJWn5fkmXUhA===s160" class="propImg" title="DSCF8511.JPG" alt="DSCF8511.JPG" style="max-width:160px; max-height:120px"-->         
+              {% if realestate.logo_url %}
+                <img class="logo" src="{{realestate.logo_url+'=s160'}}" style="max-width:160px;max-height:120px;" title="{{realestate.name}}"/>
+              {% else %}
+                <div style="width:160px;height:120px;float:left;"></div>
+              {% endif %}
+          
+        </div>
+        
+        <p class="name">DSCF8511.JPG</p>
+        <div jqtransform="true">
+            <div class="ex-label">
+              <input type="checkbox" name="ag1kZXZ-dWx0cmFwcm9wchALEglJbWFnZUZpbGUYkk4M" id="main_filter-proptype-departamento">
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+
+  </ul>
+</div>
+
+<span id="addphoto"></span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <p class="msg_warning" align="center">
     <span class="title">
       Estamos actualizando los servidores. Este servicio estará disponible a la brevedad para Usted.
