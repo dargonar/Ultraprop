@@ -1,0 +1,37 @@
+  {% extends "frontend/_base.html"%}  
+  
+  {%block metas%}
+    <title>ULTRAPROP - Red de inmobiliarias</title>
+    <meta name="description" content="Inmobiliarias que forman parte de ULTRAPROP " />
+    <meta name="keywords" content="ULTRAPROP, red, inmobiliaria" />
+  {%endblock%}
+  
+  
+  {% block body %}
+  
+    <body class="frontend_search" style="overflow-y:auto;">
+      {% set ficha = 1 %}
+      {%include "frontend/templates/header.html"%}
+      <div id="content" class="ficha_content" > 
+        <div class="innerContent detail" >
+          <h1>Inmobiliarias de la Red ULTRAPROP</h1>
+          <br/>
+          {% for realestate in realestates %}
+            {% for n in range(5) %}
+              {% if realestate.logo_url %}
+                <div id="agent_info" class="agentbox" style="width: 480px;float: left;">
+                  <img class="logo" src="{{realestate.logo_url+'=s230'}}" style="max-width:230px;max-height:80px;" title="{{realestate.name}}"/>
+                  <div class="data">
+                    <h1>{{realestate.name}}</h1>
+                    <span>{{realestate.address if realestate.address else ''}}</span><br/>
+                    <span>{{realestate.telephone_number if realestate.telephone_number else ''}}</span><br/>
+                    <a href="{{realestate.website if realestate.website else '#'}}" target="_blank">{{realestate.website if realestate.website else ''}}</a><br/>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+    </body>
+  {% endblock %}

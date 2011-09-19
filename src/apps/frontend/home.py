@@ -4,7 +4,7 @@ import logging
 from webapp2_extras.json import json
 from search_helper import config_array
 from utils import FrontendHandler
-from models import Property, Link
+from models import Property, Link, RealEstate
 
 class Index(FrontendHandler):
   def get(self, **kwargs):
@@ -17,3 +17,9 @@ class Index(FrontendHandler):
                 , _OPER_SELL      = Property._OPER_SELL
                 , _OPER_RENT      = Property._OPER_RENT
                 , direct_links    = direct_links)
+
+class Red(FrontendHandler):
+  def get(self, **kwargs):
+    realestates   = RealEstate.all().fetch(100)
+    return self.render_response('frontend/red.html'
+                , realestates     = realestates)

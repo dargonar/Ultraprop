@@ -346,6 +346,8 @@ class RealEstateWebSiteForm(Form):
     
   def update_object(self, rs):
     rs.website                  = self.website.data
+    if 'http://' not in self.website.data:
+      rs.website                  = 'http://'+self.website.data
     tmp_current_managed_domain  = rs.managed_domain
     rs.managed_domain           = to_int(self.managed_domain.data)
     rs.domain_id                = self.domain_id.data
