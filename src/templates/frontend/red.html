@@ -17,17 +17,19 @@
           <h1>Inmobiliarias de la Red ULTRAPROP</h1>
           <br/>
           {% for realestate in realestates %}
-            {% if realestate.logo_url %}
-              <div id="agent_info" class="agentbox" style="width: 480px;float: left;">
+            <div id="agent_info" class="agentbox" style="width: 480px;float: left;">
+              {% if realestate.logo_url %}
                 <img class="logo" src="{{realestate.logo_url+'=s230'}}" style="max-width:230px;max-height:80px;" title="{{realestate.name}}"/>
-                <div class="data">
-                  <h1>{{realestate.name}}</h1>
-                  <span>{{realestate.address if realestate.address else ''}}</span><br/>
-                  <span>{{realestate.telephone_number if realestate.telephone_number else ''}}</span><br/>
-                  <a href="{{realestate.website if realestate.website else '#'}}" target="_blank">{{realestate.website if realestate.website else ''}}</a><br/>
-                </div>
+              {% else %}
+                <div style="width:230px;height:80px;float:left;"></div>
+              {% endif %}
+              <div class="data">
+                <h1>{{realestate.name}}</h1>
+                <span>{{realestate.address if realestate.address else ''}}</span><br/>
+                <span>{{realestate.telephone_number if realestate.telephone_number else ''}}</span><br/>
+                <a href="{{realestate.website if realestate.website else '#'}}" target="_blank">{{realestate.website if realestate.website else ''}}</a><br/>
               </div>
-            {% endif %}
+            </div>
           {% endfor %}
         </div>
       </div>
