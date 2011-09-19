@@ -1,9 +1,9 @@
 {% extends "backend/_base.html" %}
 
 {% block menuleft %}
-<div id="mnuLeft">
+<!--div id="mnuLeft">
   
-</div>
+</div-->
 {% endblock %}
 
 {% block headscript %}
@@ -15,6 +15,63 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content %}
+
+
+<h2 class="title">
+	Fotos
+</h2>
+
+<div class="uibutton-toolbar picture" style="margin-bottom:0px;">
+    <span class="label">Seleccionar:</span>
+    <div class="uibutton-group">
+        <a id="selectall" class="uibutton" href="#">Todo</a>
+        <a id="deselectall"class="uibutton" href="#">Nada</a>
+    </div>
+    <a id="delselected" class="uibutton" href="#">Eliminar</a>
+    <a id="reorder" class="uibutton disable" href="#">Reordenar</a>
+    <img id="wait" src="/img/ajax-loader.gif" style="display:none"/>    
+</div>
+    
+<div class="viewPicBox">
+  <ul id="masterpic" class="picturebox_admin">
+  	<li> 
+        <div style="display:none" class="confirm">
+            <div class="actions">
+                <p class="msg">Seguro desea eliminar?</p>
+                <a class="no" href="#">NO</a>
+                <a class="yes" href="#">SI</a>
+            </div>
+            <div class="bg"></div>
+        </div>
+        
+        <img title="Eliminar imagen" src="/img/icons/btnClose.png" class="btnClose"> 
+        <div style="display: table-cell; vertical-align: middle; text-align:center; width:160px; height:120px" id="imgbox">
+          <img src="http://localhost:8080/_ah/img/SkkNYovRBfyJWn5fkmXUhA===s160" class="propImg" title="DSCF8511.JPG" alt="DSCF8511.JPG" style="max-width:160px; max-height:120px">
+        </div>
+        <p class="name">DSCF8511.JPG</p>
+        <div jqtransform="true">
+            <div class="ex-label">
+              <input type="checkbox" name="ag1kZXZ-dWx0cmFwcm9wchALEglJbWFnZUZpbGUYkk4M" id="main_filter-proptype-departamento">
+            </div>
+        </div>
+    </li>
+  </ul>
+</div>
+
+<span id="addphoto"></span>
+
+
+
+
+
+
+
+
+
+
+
+
+
 	<h1>Inmobiliarias Amigas</h1>
   <p class="msg_warning" align="center">
     <span class="title">
