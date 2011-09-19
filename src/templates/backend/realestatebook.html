@@ -16,16 +16,23 @@ $(document).ready(function() {
 
 {% block content %}
 
-<div id="msg1" class="bg_popup">&nbsp;</div>
+<div id="msg1" class="bg_popup friends">&nbsp;</div>
 <div id="msg2" class="dialog account">
-<div class="btnClose"></div>
-	<h2>Inmobiliarias Amigas</h2>
-    <div class="loading_dm">Aguarde un instante, iniciando aplicación
-    	<img class="loading_square" src="/img/pixel-transp.gif" />
+<!--div class="btnClose"></div-->
+	
+    <div style="padding:14px 20px;">
+    	<h2 style=" color:#0A5278; margin-bottom:10px; font-size:21px;">Inmobiliarias Amigas</h2>
+        <p>
+        Estamos realizando un sondeo de opinión sobre una nueva herramienta que le permitirá compartir su oferta inmobiliaria con sus colegas de confianza, ampliando la exposición, llegando así a un público exponencialmente masivo.</p>
+        <br /><br />
+        
+        <b>Le resulta interesante esta herramienta? considera que la utilizará?</b>
+        <div class="divider_h"></div>
+        <div align="center">
+		<a id="apply" class="uibutton special submit" href="#">SI me interesa</a>
+        <a id="apply" class="uibutton submit" href="#">NO me interesa</a>
+        </div>
     </div>
-    <p style="background:#e2f2ff; padding:14px 20px;">
-    DineroMail es la aplicación que le permite imprimir su factura y realizar pagos mediante págofacil, rapipago, pagomiscuentas o realizar transferencias online.
-    </p>
 </div>
 
 
