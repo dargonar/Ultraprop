@@ -25,10 +25,11 @@ class Index(RealestateHandler):
     if realestate.status == RealEstate._NO_PAYMENT:
       return self.render_response('realestate/disabled.html', realestate=realestate)
 
-    kwargs['realestate']  = realestate
-    kwargs['realestate_logo'] = realestate.logo_url
-    kwargs['menu_item']   = 'index'
-      
+    kwargs['realestate']        = realestate
+    kwargs['realestate_logo']   = realestate.logo_url
+    kwargs['menu_item']         = 'index'
+    kwargs['properties']        = Property.all().filter(' realestate = ', realestate).filter(' status = ', Property._PUBLISHED).fetch(4)
+    
     return self.render_response('realestate/index.html', **kwargs)
   
 # Info de la propiedad, creo que quedará obsoleto.    

@@ -84,7 +84,7 @@ def validate_domain_id(domain_id, mykey=None):
     if domain_id.strip()=='':
       return {'result':'used','msg':u'El nombre no puede ser vacío'}
     
-    if domain_id.strip()in['mapa', 'admin', '']:
+    if domain_id.strip()in['mapa', 'admin', 'red-ultraprop', '']:
       return {'result':'used','msg':u'Este nombre está restringido'}
       
     # Primero validamos que sea tipo regex
@@ -321,6 +321,8 @@ class RealEstateWebSiteForm(Form):
   website             = TextField('', default='')
   managed_domain      = BooleanField('')
   domain_id           = TextField('')
+  tpl_title           = TextField('')
+  tpl_text            = TextAreaField('')
   
   def validate_website(form, field):
     
