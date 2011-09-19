@@ -30,9 +30,11 @@ def get_rules():
       
       # Todas las rutas de administracion
       Route('/admin'                     , name='backend/index/'                 , handler='apps.backend.auth.Index'),
+      
       PathPrefixRoute('/admin', [
         
         Route('/'                        , name='backend/auth/'                  , handler='apps.backend.auth.Index'),
+        Route('/help'                    , name='backend/help'                   , handler='apps.backend.help.Index'),
         Route('/login'                   , name='backend/auth/login'             , handler='apps.backend.auth.Login'),
         Route('/signup'                  , name='backend/auth/signup'            , handler='apps.backend.auth.SignUp'),
         Route('/logout'                  , name='backend/auth/logout'            , handler='apps.backend.auth.Logout'),
