@@ -2533,3 +2533,37 @@ td.status span {
 
 .filename {clear:both; padding:10px 0; padding-bottom:5px; font-weight:bold !important;}
 .icon16.file {background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -600px -597px transparent; margin-right:4px; margin-top:3px;}
+
+
+/* ///// ABC ///// */
+
+.ln-letters {
+    overflow: hidden;
+	margin: 10px 0;
+}
+
+.ln-letters a:hover, .ln-letters a.ln-selected {
+    background-color: #EAEAEA;
+}
+
+.ln-letters a {
+/*    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: silver -moz-use-text-color silver silver;
+    border-style: solid none solid solid;
+    border-width: 1px medium 1px 1px;*/ 
+	border-left: solid 1px #ccc;
+    display: block;
+    float: left;
+    font-size: 12px;
+    padding: 2px 6px;
+    text-decoration: none;
+}
+.ln-letters a.ln-disabled {
+    color: #CCCCCC;
+}
+
+.ln-letters .all { border-left:none;}
