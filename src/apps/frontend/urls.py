@@ -40,8 +40,8 @@ def get_rules():
       Route('/mapa',                                                name='frontend/map',              handler='apps.frontend.map.Index'),
       Route('/mapa/',                                               name='frontend/map/',             handler='apps.frontend.map.Index'),
       
-      Route('/red',                                                 name='frontend/red',              handler='apps.frontend.home.Red'),
-      Route('/red/',                                                name='frontend/red/',             handler='apps.frontend.home.Red'),
+      Route('/red-ultraprop',                                       name='frontend/red',              handler='apps.frontend.home.Red'),
+      Route('/red-ultraprop/',                                      name='frontend/red/',             handler='apps.frontend.home.Red'),
       
       Route('/mapa/<slug>/<key_name_or_id>',                        name='frontend/map/slug/key',     handler='apps.frontend.map.Index:slugged_link'),
       Route('/mapa/<realestate>',                                   name='frontend/map/realestate',   handler='apps.frontend.map.Index:realesate_filtered'),

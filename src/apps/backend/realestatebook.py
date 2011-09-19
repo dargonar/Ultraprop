@@ -22,6 +22,7 @@ class Demo(BackendHandler):
   def get(self, **kwargs):
     kwargs['mnutop']              = 'realestatebook'
     realestate                    = get_or_404(self.get_realestate_key())
+    kwargs['realestates']         = RealEstate.all().fetch(100)
     return self.render_response('backend/realestatebook.html', **kwargs)
 
 class WantsPoke(BackendHandler):
