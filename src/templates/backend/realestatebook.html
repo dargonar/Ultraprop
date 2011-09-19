@@ -17,23 +17,32 @@ $(document).ready(function() {
 {% block content %}
 
 
-<h2 class="title">
-	Fotos
-</h2>
+<h1 style="margin-bottom:20px;">Inmobiliarias Amigas</h1>
 
-<div class="uibutton-toolbar picture" style="margin-bottom:0px;">
+    
+<ul class="tabs_admin">
+    <li><a href="#">inmobiliarias Amigas</a></li>
+    <li><a href="#">Solicitudes</a></li>
+    <li class="active">
+        <a href="javascript:alert('Debe guardar la propiedad para subir las fotos')">Buscar inmobiliarias</a>
+    </li>
+</ul>
+
+
+<div class="uibutton-toolbar picture" style="margin-bottom:0px; margin-top:10px;">
     <span class="label">Seleccionar:</span>
     <div class="uibutton-group">
         <a id="selectall" class="uibutton" href="#">Todo</a>
         <a id="deselectall"class="uibutton" href="#">Nada</a>
     </div>
     <a id="delselected" class="uibutton" href="#">Eliminar</a>
-    <a id="reorder" class="uibutton disable" href="#">Reordenar</a>
     <img id="wait" src="/img/ajax-loader.gif" style="display:none"/>    
 </div>
     
 <div class="viewPicBox">
   <ul id="masterpic" class="picturebox_admin">
+
+  {% for realestate in realestates %}
   	<li> 
         <div style="display:none" class="confirm">
             <div class="actions">
@@ -46,8 +55,15 @@ $(document).ready(function() {
         
         <img title="Eliminar imagen" src="/img/icons/btnClose.png" class="btnClose"> 
         <div style="display: table-cell; vertical-align: middle; text-align:center; width:160px; height:120px" id="imgbox">
-          <img src="http://localhost:8080/_ah/img/SkkNYovRBfyJWn5fkmXUhA===s160" class="propImg" title="DSCF8511.JPG" alt="DSCF8511.JPG" style="max-width:160px; max-height:120px">
+          <!--img src="http://localhost:8080/_ah/img/SkkNYovRBfyJWn5fkmXUhA===s160" class="propImg" title="DSCF8511.JPG" alt="DSCF8511.JPG" style="max-width:160px; max-height:120px"-->         
+              {% if realestate.logo_url %}
+                <img class="logo" src="{{realestate.logo_url+'=s160'}}" style="max-width:160px;max-height:120px;" title="{{realestate.name}}"/>
+              {% else %}
+                <div style="width:160px;height:120px;float:left;"></div>
+              {% endif %}
+          
         </div>
+        
         <p class="name">DSCF8511.JPG</p>
         <div jqtransform="true">
             <div class="ex-label">
@@ -55,6 +71,8 @@ $(document).ready(function() {
             </div>
         </div>
     </li>
+    {% endfor %}
+
   </ul>
 </div>
 
@@ -72,7 +90,7 @@ $(document).ready(function() {
 
 
 
-	<h1>Inmobiliarias Amigas</h1>
+
   <p class="msg_warning" align="center">
     <span class="title">
       Estamos actualizando los servidores. Este servicio estará disponible a la brevedad para Usted.
