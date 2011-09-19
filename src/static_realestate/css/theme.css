@@ -50,7 +50,8 @@ hr {
 /* ///// Global ///// */
 #header {
 	background: url(/re/img/backgrounds/header.gif) bottom repeat-x;
-	padding-bottom:5px;
+	padding-bottom:5px; 
+	min-height:60px;
 }
 #header.container_12 {
 	background:#000;
@@ -866,7 +867,8 @@ ul.detail li {
 .contactform form textarea {
 	font-family:Arial, Helvetica, sans-serif;
 	padding:5px;
-	width:344px;
+	width:344px; 
+	height:80px;
 	font-size:12px;
 }
 .contactform form input.short {
@@ -988,3 +990,5 @@ p.error {
 }
 
 form #ketchup, form #inketchup{display:none;}
+
+#logo a { text-decoration:none; font-size:32px; line-height:57px; font-weight:bold; letter-spacing:-1px; text-shadow: 0 1px 0 #fff;}
