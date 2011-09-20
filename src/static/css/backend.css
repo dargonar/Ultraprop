@@ -2650,7 +2650,7 @@ dl.contact dd {
 	min-width:200px;
 }
 
-.contact_form {min-width:460px; padding-right:10px;}
+.contact_form {padding-right:10px;}
 .contact_form input[type=text] { width:100%; margin-bottom:8px; }
 .contact_form textarea { width:100%; height:100px; margin-bottom:8px;}
 .contact_form label { font-weight:bold; margin-bottom:4px; display:block;}
