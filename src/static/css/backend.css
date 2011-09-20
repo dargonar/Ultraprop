@@ -2598,12 +2598,10 @@ td.status span {
 	border:solid 1px #ccc; 
 	overflow:hidden;
 	
--moz-box-shadow:2px 2px 0px 1px #999;
--webkit-box-shadow:2px 2px 0px 1px #999;
-box-shadow:2px 2px 0px 1px #999;
-filter: progid:DXImageTransform.Microsoft.Shadow(strength=2, direction=135, color='#999');
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(strength=2, Direction=135, Color='#999')"; 
-margin-bottom:15px;
+	-moz-box-shadow:2px 2px 0px 1px #999;
+	-webkit-box-shadow:2px 2px 0px 1px #999;
+	box-shadow:2px 2px 0px 1px #999;
+	margin-bottom:15px;
 }
 .box h2 {padding: 3px 10px;}
 .box h3 {
@@ -2631,7 +2629,6 @@ margin-bottom:15px;
 	overflow:hidden;
 	padding:15px 20px;
 	background:#F9F9F9;
-/*	border:solid 1px #fff;*/
 	border-top:solid 1px #ccc; 
 	margin:2px;
 }
