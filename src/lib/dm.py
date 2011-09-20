@@ -14,7 +14,12 @@ IPN_PARAMS  = {'Email'    :'ptutino@gmail.com',
                'Pin'      :'50XBXYROC5',
                'XML'      :'1'}
 
-def ipn_download(date_from, date_to):
+def ipn_download(account, date_from, date_to):
+  if account == 'emi':
+    IPN_PARAMS['Email']  = 'emiliomaull@gmail.com'
+    IPN_PARAMS['Acount'] = '23218174'
+    IPN_PARAMS['Pin']    = '437EV2RF0K'
+    
   IPN_PARAMS['StartDate'] = date_from.strftime('%Y%m%d')
   IPN_PARAMS['EndDate'  ] = date_to.strftime('%Y%m%d')
 
