@@ -4,9 +4,9 @@
     ~~~~~~~~
 """
 import logging
-from utils import need_auth
+from utils import need_auth, BackendHandler
 
 class Index(BackendHandler):
-  @need_auth
+  @need_auth(code=500)
   def get(self, **kwargs):
     return self.render_response('backend/help.html')

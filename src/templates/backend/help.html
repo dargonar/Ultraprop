@@ -16,131 +16,146 @@ $(document).ready(function() {
 
 {% block content %}
 
-<div id="msg1" class="bg_popup friends">&nbsp;</div>
-<div id="msg2" class="dialog account">
-<!--div class="btnClose"></div-->
-	
-    <div style="padding:14px 20px;">
-    	<h2 style=" color:#0A5278; margin-bottom:10px; font-size:21px;">Inmobiliarias Amigas</h2>
-        <p>
-        Estamos realizando un sondeo de opinión sobre una nueva herramienta que le permitirá compartir su oferta inmobiliaria con sus colegas de confianza, ampliando la exposición, llegando así a un público exponencialmente masivo.</p>
-        <br /><br />
-        
-        <b>Le resulta interesante esta herramienta? considera que la utilizará?</b>
-        <div class="divider_h"></div>
-        <div align="center">
-		<a id="apply" class="uibutton special submit" href="{{url_for('backend/realestatebook/wants_poke')}}">SI me interesa</a>
-        <a id="apply" class="uibutton submit" href="#">NO me interesa</a>
+<h1 style="margin-bottom:20px;">Ayuda</h1>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="30%" style="padding:0 10px">
+        <div class="box">
+          <h2>Encuesta</h2>
+          <div class="block_info">
+                Estamos trabajando día a día para incorporar nuevas funcionalidades.<br />
+                Indique cual de ellas considera más importante.
+            </div>
+
+
+<table class="poll">
+  <tr>
+    <td class="radio"><input type="radio" name="RadioGroup1" value="radio" id="RadioGroup1_0" /></td>
+    <td>
+    <h4>Inmobiliarias Amigas</h4>
+    <p>Esta herramienta le permitirá compartir su oferta inmobiliaria con sus colegas de confianza, ampliando la exposición y llegando así a un público exponencialmente masivo.</p>
+    </td>
+  </tr>
+  
+  <tr>
+    <td class="radio"><input type="radio" name="RadioGroup1" value="radio" id="RadioGroup1_1" /></td>
+    <td>
+		<h4>Búsquedas en modo lista</h4>
+        <p>Mostrar los resultados de búsqueda en modo lista, además del modo mapa ya implementado.</p>
+    </td>
+  </tr>
+  
+  <tr>
+    <td radio><input type="radio" name="RadioGroup1" value="radio" id="RadioGroup1_2" /></td>
+    <td>
+		<h4>Página de inicio</h4>
+        <p>Nuevo look para su página web propia, se mostrarán inmuebles destacados, buscador de propiedades, textos institucionales personalisados y links a tasaciones y contactos.</p>
+    </td>
+  </tr>
+  
+  <tr>
+  	<td></td>
+    <td><input type="submit" class="btnWizard" name="" value="Enviar"></td>
+  </tr>
+  
+</table>
+
+
+        </div>
+
+        <div class="box">
+            <h2>Sugerencias</h2>
+            <div class="block_info">
+                Considero que a ULTRAPROP le falta...
+            </div>
+        </div> 
+    </td>
+    <td style="padding:0 10px">
+		<div class="box">
+	<h2>Consultas</h2>
+    <div class="block_info">
+    	Contáctenos mediante el siguiente formulario y nos comunicaremos a la brevedad.
+    </div>
+
+    <div class="contactbox">  
+		<div class="contact_form">
+        	<h3>{{session['account.realestate.name']}}</h3>
+        	<label>Su Nombre <em>(A quién se debe contactar por esta consulta?)</em></label>
+            <input type="text" value="" placeholder="nombre" name="name" id="name" class="name">
+            
+            <label>Su Email </label>
+            <input type="text" value="" placeholder="email" name="email" id="email">
+            
+            <label>Su teléfono <em>(Preferentemente número de interno o directo)</em></label>
+            <input type="text" value="" placeholder="cód.area número" name="telephone" id="telephone">
+            
+            <label>Asunto</label>
+            <input type="text" value="" placeholder="asunto" name="subject" id="subject">
+            
+            <label>Comentario</label>
+            <textarea placeholder="comentario" name="message" id="message"></textarea>
+            
+            <input type="submit" class="btnWizard" name="" value="Enviar consulta">
         </div>
     </div>
-</div>
 
-
-<h1 style="margin-bottom:20px;">Inmobiliarias Amigas</h1>
-<ul class="tabs_admin">
-  <li><a href="#">inmobiliarias Amigas</a></li>
-  <li><a href="#">Solicitudes</a></li>
-  <li class="active"> <a href="javascript:alert('Debe guardar la propiedad para subir las fotos')">Buscar inmobiliarias</a> </li>
-</ul>
-
-<div class="uibutton-toolbar picture" style="margin-bottom:5px; margin-top:10px;"> <span class="label">Seleccionar:</span>
-  <div class="uibutton-group"> <a id="selectall" class="uibutton" href="#">Todo</a> <a id="deselectall"class="uibutton" href="#">Nada</a> </div>
-  <a id="delselected" class="uibutton" href="#">Eliminar</a>
-  <input style="float:right;" name="" type="text" placeholder="Escriba un nombre" />
-  <img id="wait" src="/img/ajax-loader.gif" style="display:none"/> </div>
-  
-  
-  
-<div class="ln-letters">
-    <!--a href="#" class="all ln-selected">TODO</a-->
-    <a href="#" class="all">TODO</a>
-    <a href="#" class="a">A</a>
-    <a href="#" class="b">B</a>
-    <a href="#" class="c">C</a>
-    <a href="#" class="d">D</a>
-    <a href="#" class="e">E</a>
-    <a href="#" class="f">F</a>
-    <!--a href="#" class="g ln-disabled">G</a-->
-    <a href="#" class="g">G</a>
-    <a href="#" class="h">H</a>
-    <a href="#" class="i">I</a>
-    <a href="#" class="j">J</a>
-    <a href="#" class="k">K</a>
-    <a href="#" class="l">L</a>
-    <a href="#" class="m">M</a>
-    <a href="#" class="n">N</a>
-    <a href="#" class="o">O</a>
-    <a href="#" class="p">P</a>
-    <a href="#" class="q">Q</a>
-    <a href="#" class="r">R</a>
-    <a href="#" class="s">S</a>
-    <a href="#" class="t">T</a>
-    <a href="#" class="u">U</a>
-    <a href="#" class="v">V</a>
-    <a href="#" class="w">W</a>
-    <a href="#" class="x">X</a>
-    <a href="#" class="y">Y</a>
-    <a href="#" class="z ln-last">Z</a>
-</div>
-
-
-
-
-
-<div class="viewPicBox">
-  <ul id="masterpic" class="picturebox_admin">
-    {% for realestate in realestates %}
-    <li>
-      <div style="display:none" class="confirm">
-        <div class="actions">
-          <p class="msg">Seguro desea eliminar?</p>
-          <a class="no" href="#">NO</a> <a class="yes" href="#">SI</a> </div>
-        <div class="bg"></div>
-      </div>
-      <img title="Eliminar imagen" src="/img/icons/btnClose.png" class="btnClose">
-      <div style="display: table-cell; vertical-align: middle; text-align:center; width:160px; height:120px" id="imgbox"> 
-        <!--img src="http://localhost:8080/_ah/img/SkkNYovRBfyJWn5fkmXUhA===s160" class="propImg" title="DSCF8511.JPG" alt="DSCF8511.JPG" style="max-width:160px; max-height:120px"--> 
-        {% if realestate.logo_url %} <img class="logo" src="{{realestate.logo_url+'=s160'}}" style="max-width:160px;max-height:120px;" title="{{realestate.name}}"/> {% else %}
-        <div style="width:160px;height:120px;float:left;"></div>
-        {% endif %} </div>
-      <p class="name">{{realestate.name}}</p>
-      <div jqtransform="true">
-        <div class="ex-label">
-          <input type="checkbox" name="ag1kZXZ-dWx0cmFwcm9wchALEglJbWFnZUZpbGUYkk4M" id="main_filter-proptype-departamento">
-        </div>
-      </div>
-    </li>
-    {% endfor %}
-  </ul>
-</div>
-<span id="addphoto"></span> 
-
-<!--p class="msg_warning" align="center">
-    <span class="title">
-      Estamos actualizando los servidores. Este servicio estará disponible a la brevedad para Usted.
-    </span>
-  </p--> 
-{% if flash %} 
-<!--div class="msg_{{flash.type}}" id="flash_message">{{flash.message}}</div--> 
-{% endif %} <br/>
-<center>
-  <div style="margin:10px 0; border-top: dotted 1px #ccc;"></div>
-  <img src="/img/friends.gif" width="243" height="61" /> 
-  <!--a href="{{url_for('backend/realestatebook/wants_poke')}}" class="btnWizard" style="text-align:center;">Avisarme cuando esté disponible</a-->
-</center>
-
-<!--
-    <div id="sort_by">
-      <div class="sortbox">
-         <label>Listado</label> 
-      </div>
+</div> 
+    </td>
+    <td width="30%" style="padding:0 10px">
+    	<div class="box">
+	<h2>Necesita Ayuda?</h2>
+    <div class="block_info">
+    	Póngase en contacto de la siguiente manera:
     </div>
-    {# % include "backend/includes/realestatebook_navbar.html" % #}
-    <div class="divider"></div>
-    <div class="noelement proplist txt">
-      <span>Estamos actualizando los servidores. Disculpe las molestias.</span>
+
+    <div class="contactbox">  
+        <h3>Consultas técnicas</h3>
+        <dl class="contact">
+            <dt><img src="/img/icons/telephone.png" /></dt>
+            <dd>[011] 4857-9235</dd>
+            
+            <dt><img src="/img/icons/send.gif" /></dt>
+            <dd><a href="mailto:ayuda@ultraprop.com.ar">ayuda@ultraprop.com.ar</a></dd>
+        </dl>
     </div>
-    <div class="divider"></div>
-    {# % include "backend/includes/realestatebook_navbar.html" % #}
-  --> 
+
+    <div class="contactbox"> 
+        <h3>La Plata </h3>
+        <h4>Emilio Maull</h4>
+        <dl class="contact">
+            <dt><img src="/img/icons/telephone.png" /></dt>
+            <dd>[0221] 466-0162</dd>
+            
+            <dt style="width:30px;"><img src="/img/icons/skype.png" /></dt>
+            <dd>maullemilio</dd>
+            
+            <dt><img src="/img/icons/send.gif" /></dt>
+            <dd><a href="mailto:emilio@ultraprop.com.ar">emilio@ultraprop.com.ar</a></dd>
+        </dl>
+    </div>
+    
+    <div class="contactbox">  
+        <h3>Capital Federal</h3>
+        <h4>Pablo Tutino</h4>
+        <dl class="contact">
+            <dt><img src="/img/icons/mobile_phone.png" /></dt>
+            <dd>[011] 15 3127-2458</dd>
+            
+            <dt style="width:30px;"><img src="/img/icons/skype.png" /></dt>
+            <dd>pablo.tutino</dd>
+            
+            <dt><img src="/img/icons/send.gif" /></dt>
+            <dd><a href="mailto:pablo@ultraprop.com.ar">pablo@ultraprop.com.ar</a></dd>
+        </dl>
+    </div>
+
+</div>    
+    </td>
+  </tr>
+</table>
+
+
+
+
 {% endblock %}
