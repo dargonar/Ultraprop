@@ -2598,9 +2598,9 @@ td.status span {
 	border:solid 1px #ccc; 
 	overflow:hidden;
 	
-	-moz-box-shadow:2px 2px 0px 1px #999;
+/*	-moz-box-shadow:2px 2px 0px 1px #999;
 	-webkit-box-shadow:2px 2px 0px 1px #999;
-	box-shadow:2px 2px 0px 1px #999;
+	box-shadow:2px 2px 0px 1px #999;*/
 	margin-bottom:15px;
 }
 .box h2 {padding: 3px 10px;}
@@ -2647,7 +2647,7 @@ dl.contact dt {
 	width:25px;
 }
 dl.contact dd {
-	min-width:200px;
+	min-width:190px;
 }
 
 .contact_form {padding-right:10px;}

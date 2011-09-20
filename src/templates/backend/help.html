@@ -16,58 +16,11 @@ $(document).ready(function() {
 
 {% block content %}
 
-<h1 style="margin-bottom:20px;">Ayuda</h1>
+<!--h1 style="margin-bottom:20px;">Ayuda</h1-->
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="30%" style="padding-right:10px">
-        <div class="box">
-          <h2>Encuesta</h2>
-          <div class="block_info">
-                Estamos trabajando día a día para incorporar nuevas funcionalidades.<br />
-                Indique cual de ellas considera más importante.
-            </div>
-            <table class="poll">
-              <tr>
-                <td class="radio"><input type="radio" name="RadioGroup1" value="radio" id="RadioGroup1_0" /></td>
-                <td>
-                <h4>Inmobiliarias Amigas</h4>
-                <p>Esta herramienta le permitirá compartir su oferta inmobiliaria con sus colegas de confianza, ampliando la exposición y llegando así a un público exponencialmente masivo.</p>
-                </td>
-              </tr>
-              
-              <tr>
-                <td class="radio"><input type="radio" name="RadioGroup1" value="radio" id="RadioGroup1_1" /></td>
-                <td>
-                    <h4>Búsquedas en modo lista</h4>
-                    <p>Mostrar los resultados de búsqueda en modo lista, además del modo mapa ya implementado.</p>
-                </td>
-              </tr>
-              
-              <tr>
-                <td radio><input type="radio" name="RadioGroup1" value="radio" id="RadioGroup1_2" /></td>
-                <td>
-                    <h4>Página de inicio</h4>
-                    <p>Nuevo look para su página web propia, se mostrarán inmuebles destacados, buscador de propiedades, textos personalisados y links a tasaciones y contactos.</p>
-                </td>
-              </tr>
-              
-              <tr>
-                <td></td>
-                <td><input type="submit" class="btnWizard" name="" value="Enviar"></td>
-              </tr>
-              
-            </table>
-        </div>
-
-        <div class="box">
-            <h2>Sugerencias</h2>
-            <div class="block_info">
-                Considero que a ULTRAPROP le falta...
-            </div>
-        </div> 
-    </td>
-    <td style="padding:0 10px">
+    <td valign="top" style="padding-right:15px">
 		<div class="box">
 	<h2>Consultas</h2>
     <div class="block_info">
@@ -76,7 +29,7 @@ $(document).ready(function() {
 
     <div class="contactbox">  
 		<div class="contact_form">
-        	<h3>{{session['account.realestate.name']}}</h3>
+        	<!--h3>{{session['account.realestate.name']}}</h3-->
         	<label>Su Nombre <em>(A quién se debe contactar por esta consulta?)</em></label>
             <input type="text" value="" placeholder="nombre" name="name" id="name" class="name">
             
@@ -98,7 +51,7 @@ $(document).ready(function() {
 
 </div> 
     </td>
-    <td width="30%" style="padding-left:10px">
+    <td width="30%" valign="top" style="padding-right:15px">
     	<div class="box">
 	<h2>Necesita Ayuda?</h2>
     <div class="block_info">
@@ -148,6 +101,67 @@ $(document).ready(function() {
 
 </div>    
     </td>
+    
+    
+    
+    
+    
+    
+    
+    
+    <td width="30%" valign="top" style="padding-right:15px">
+        <div class="box">
+          <h2>Encuesta</h2>
+          <div class="block_info">
+                Estamos trabajando día a día para incorporar nuevas funcionalidades.<br />
+                Indique cual de ellas considera más importante.
+          </div>
+            <table class="poll">
+              <tr>
+                <td class="radio"><input type="radio" name="RadioGroup1" value="radio" id="RadioGroup1_0" /></td>
+                <td>
+                <h4>Inmobiliarias Amigas</h4>
+                <p>Esta herramienta le permitirá compartir su oferta inmobiliaria con sus colegas de confianza, ampliando la exposición y llegando así a un público exponencialmente masivo.</p>
+                </td>
+              </tr>
+              
+              <tr>
+                <td class="radio"><input type="radio" name="RadioGroup1" value="radio" id="RadioGroup1_1" /></td>
+                <td>
+                    <h4>Búsquedas en modo lista</h4>
+                    <p>Mostrar los resultados de búsqueda en modo lista, además del modo mapa ya implementado.</p>
+                </td>
+              </tr>
+              
+              <tr>
+                <td radio><input type="radio" name="RadioGroup1" value="radio" id="RadioGroup1_2" /></td>
+                <td>
+                    <h4>Página de inicio</h4>
+                    <p>Nuevo look para su página web propia, se mostrarán inmuebles destacados, buscador de propiedades, textos personalisados y links a tasaciones y contactos.</p>
+                </td>
+              </tr>
+              
+              <tr>
+                <td></td>
+                <td><input type="submit" class="btnWizard" name="" value="Enviar"></td>
+              </tr>
+              
+            </table>
+        </div>
+
+        <!--div class="box">
+            <h2>Sugerencias</h2>
+            <div class="block_info">
+                Considero que a ULTRAPROP le falta...
+            </div>
+        </div--> 
+    </td> 
+    
+    
+    
+    
+    
+    
   </tr>
 </table>
 
