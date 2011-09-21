@@ -74,7 +74,7 @@ $(document).ready(function() {
             </div>
         </div> 
     </td -->
-    <td style="padding:0 10px; width:600px;">
+    <td valign="top" style="width:600px;">
 		<div class="box">
 	<h2>Consultas</h2>
     <div class="block_info">
@@ -84,7 +84,7 @@ $(document).ready(function() {
     <div class="contactbox">  
       <form class="contact_form" action="{{url_for('backend/help')}}" method="post">
         	<h3>{{session['account.realestate.name']}}</h3>
-        	<label>Su Nombre <em>(¿A quién se contactará ULTRAPROP por esta consulta?)</em></label>
+        	<label>Su Nombre <em>(¿A quién debe contactar ULTRAPROP por esta consulta?)</em></label>
           <!--input type="text" value="" placeholder="nombre" name="name" id="name" class="name"-->
           {{ form_field(form.sender_name,placeholder="nombre") }}
           
@@ -106,7 +106,7 @@ $(document).ready(function() {
 
 </div> 
     </td>
-    <td width="300px" style="padding-left:10px">
+    <td width="300px" valign="top" style="padding-left:15px">
     	<div class="box">
 	<h2>¿Necesita Ayuda?</h2>
     <div class="block_info">
