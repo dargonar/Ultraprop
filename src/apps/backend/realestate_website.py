@@ -10,9 +10,10 @@ import logging
 from google.appengine.ext import db
 from google.appengine.api import mail
 
+from webapp2 import cached_property
+
 from backend_forms import RealEstateWebSiteForm, validate_domain_id
 from utils import get_or_404, need_auth, BackendHandler
-from webapp2 import cached_property
 from models import RealEstate
 
 

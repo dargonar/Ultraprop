@@ -27,6 +27,9 @@
                 <h1>{{realestate.name}}</h1>
                 <span>{{realestate.address if realestate.address else ''}}</span><br/>
                 <span>{{realestate.telephone_number if realestate.telephone_number else ''}}</span><br/>
+                {% if realestate.domain_id %}
+                  <a href="{{url_for('realestate/search_slug', realestate_slug=realestate.domain_id)}}" target="_blank" />http://www.ultraprop.com/{{realestate.domain_id}}<br/>
+                {% endif %}
                 <a href="{{realestate.website if realestate.website else '#'}}" target="_blank">{{realestate.website if realestate.website else ''}}</a><br/>
               </div>
             </div>

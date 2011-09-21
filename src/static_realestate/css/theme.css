@@ -134,7 +134,8 @@ a:hover {
 .txt_welcome {
 	float:left;
   /* HACK color del bg */
-	background:#4E4E4E url(/re/img/backgrounds/about.jpg) no-repeat;
+  /* HACK img bg */
+	background:#4E4E4E /*url(/re/img/backgrounds/about.jpg) no-repeat;*/;
 	/*width:522px;*/ width:100%;
 	height:293px;
 	padding-left:20px;

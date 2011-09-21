@@ -348,11 +348,13 @@ class RealEstateWebSiteForm(Form):
     
   def update_object(self, rs):
     rs.website                  = self.website.data
-    if 'http://' not in self.website.data:
+    if self.website.data.strip() != '' and 'http://' not in self.website.data:
       rs.website                  = 'http://'+self.website.data
     tmp_current_managed_domain  = rs.managed_domain
     rs.managed_domain           = to_int(self.managed_domain.data)
     rs.domain_id                = self.domain_id.data
+    rs.tpl_title                = self.tpl_title.data
+    rs.tpl_text                 = self.tpl_text.data
     
     return rs, (tmp_current_managed_domain!=rs.managed_domain)
     
@@ -475,3 +477,22 @@ class PropertyContactForm(KetchupForm):
   message             = TextAreaField('',[validators.Required(message=u'Debe ingresar un mensaje.')], default='')
   telephone           = TextField('')
   
+class HelpDeskForm(Form):
+  def __repr__(self):
+    return 'HelpDeskForm'
+  
+  sender_name               = TextField('',[validators.Required(message=u'Debe ingresar un nombre.')])
+  sender_email              = TextField('',[validators.email(message=u'Debe ingresar un correo válido.')
+                                      , validators.Required(message=u'Debe ingresar un correo.')], default='')
+  sender_telephone          = TextField('')
+  sender_subject            = TextField('', [validators.Required(message=u'Debe ingresar un Asunto.')])
+  sender_comment            = TextAreaField('',[validators.Required(message=u'Debe ingresar un Comentario.')], default='')
+  
+  def update_object(self, help_desk):
+    help_desk.sender_name       = self.sender_name.data
+    help_desk.sender_email      = self.sender_email.data
+    help_desk.sender_telephone  = self.sender_telephone.data  
+    help_desk.sender_subject  = self.sender_subject.data
+    help_desk.sender_comment  = self.sender_comment.data
+    
+    return help_desk

@@ -38,6 +38,6 @@ class WantsPoke(BackendHandler):
                  subject  = "ULTRAPROP: Una inmobiliaria quiere INMOBILIARIAS AMIGAS",
                  body     = body)
     
-    self.set_ok('Su pedido fue recibido.')
+    self.set_ok(u'Será notificado cuando esté habilitado para utilizar el servicio. Gracias.')
     
     return self.redirect_to('backend/realestatebook/list')

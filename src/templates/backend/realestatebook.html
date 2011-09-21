@@ -9,7 +9,7 @@
 {% block headscript %} 
 <script type="text/javascript">
 $(document).ready(function() {
-  setTimeout("hideFlashMessageSlow()", 5000);
+  //setTimeout("hideFlashMessageSlow()", 5000);
 });
 </script> 
 {% endblock %}
@@ -21,24 +21,29 @@ $(document).ready(function() {
 <!--div class="btnClose"></div-->
 	
     <div style="padding:14px 20px;">
-    	<h2 style=" color:#0A5278; margin-bottom:10px; font-size:21px;">Inmobiliarias Amigas</h2>
-        <p>
-        Estamos realizando un sondeo de opinión sobre una nueva herramienta que le permitirá compartir su oferta inmobiliaria con sus colegas de confianza, ampliando la exposición, llegando así a un público exponencialmente masivo.</p>
+      {% if flash %}
+        <div class="msg_{{flash.type}}" id="flash_message"><b>{{flash.message}}</b></div>
+      {% else %}
+        <h2 style=" color:#0A5278; margin-bottom:10px; font-size:21px;">Red ULTRAPROP</h2>
+        <p style="font-size:16px;">
+        Este servicio le permite ampliar y compartir su oferta inmobiliaria con sus colegas de confianza.<br/>
         <br /><br />
-        
-        <b>Le resulta interesante esta herramienta? considera que la utilizará?</b>
+        <b> ¿Desea habilitar este servicio?</b>
+        </p>
         <div class="divider_h"></div>
         <div align="center">
-		<a id="apply" class="uibutton special submit" href="{{url_for('backend/realestatebook/wants_poke')}}">SI me interesa</a>
-        <a id="apply" class="uibutton submit" href="#">NO me interesa</a>
+          <a id="apply" class="uibutton special submit" href="{{url_for('backend/realestatebook/wants_poke')}}" style="font-size:14px;">SI, habilitar servicio</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <a id="apply" style="text-decoration:underline;" href="#">NO, gracias</a>
         </div>
+      {% endif %}
     </div>
 </div>
 
 
-<h1 style="margin-bottom:20px;">Inmobiliarias Amigas</h1>
+<h1 style="margin-bottom:20px;">Red ULTRAPROP</h1>
 <ul class="tabs_admin">
-  <li><a href="#">inmobiliarias Amigas</a></li>
+  <li><a href="#">Red ULTRAPROP</a></li>
   <li><a href="#">Solicitudes</a></li>
   <li class="active"> <a href="javascript:alert('Debe guardar la propiedad para subir las fotos')">Buscar inmobiliarias</a> </li>
 </ul>
