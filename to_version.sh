@@ -11,14 +11,14 @@ cat src/app.yaml | sed 's/^version: \(.*\)$/version: '$1'/g' > app.yaml.tmp
 mv app.yaml.tmp src/app.yaml
 
 # Borramos los CSS (min) y JS (min) viejos
-rm -f src/static/css/backend.min-*.css
-rm -f src/static/js/backend.min-*.js
+git rm -f src/static/css/backend.min-*.css
+git rm -f src/static/js/backend.min-*.js
 
-rm -f src/static/css/frontend.min-*.css
-rm -f src/static/js/frontend.min-*.js
+git rm -f src/static/css/frontend.min-*.css
+git rm -f src/static/js/frontend.min-*.js
 
-rm -f src/static_realestate/css/realestate.min-*.css
-rm -f src/static_realestate/js/realestate.min-*.js
+git rm -f src/static_realestate/css/realestate.min-*.css
+git rm -f src/static_realestate/js/realestate.min-*.js
 
 # Corremos el compresor de CSS y JS para backend
 /c/Python25/python.exe yuicompress/compress.py $1 be
@@ -31,13 +31,22 @@ rm -f src/static_realestate/js/realestate.min-*.js
 
 # Copiamos los min JS y min CSS a sus folders
 mv backend.min-$1.js src/static/js
+git add src/static/js/backend.min-$1.js
+
 mv backend.min-$1.css src/static/css
+git add src/static/css/backend.min-$1.css
 
 mv frontend.min-$1.js src/static/js
+git add src/static/js/frontend.min-$1.js 
+
 mv frontend.min-$1.css src/static/css
+git add src/static/css/frontend.min-$1.css
 
 mv realestate.min-$1.js src/static_realestate/js
+git add src/static_realestate/js/realestate.min-$1.js 
+
 mv realestate.min-$1.css src/static_realestate/css
+git add src/static_realestate/css/realestate.min-$1.css
 
 # Compilamos los templates jinja2
 /c/Python25/python.exe compile_templates.py

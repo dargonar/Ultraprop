@@ -7,6 +7,6 @@
     Las propiedades publicadas han sido desactivadas de los resultados de búsqueda hasta que efectúe el pago de la{{plural}} factura{{plural}} impaga{{plural}}.
 
     Para regularizar su situación deberá realizar el pago de la{{plural}} factura{{plural}} accediendo a "Mi Cuenta" dentro del panel de control de Ultraprop.
-    Para acceder al panel ahora ingrese en http://www.utraprop.com.ar/admin/account/status.
+    Para acceder al panel ahora ingrese en http://www.ultraprop.com.ar/admin/account/status.
     
 {% endblock %}
