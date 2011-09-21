@@ -8,7 +8,7 @@ from google.appengine.ext import db
 from webapp2 import abort, cached_property, RequestHandler, Response, HTTPException, uri_for as url_for, get_app
 from webapp2_extras import jinja2, sessions, json
 
-from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify, do_headlinify, do_slugify, do_operationfy, do_totalareafy, do_expensasfy, do_add_days
+from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify, do_headlinify, do_slugify, do_operationfy, do_totalareafy, do_expensasfy, do_add_days, do_realestate_linkfy
 
 from models import Link
 # ================================================================================ #
@@ -242,21 +242,22 @@ class Jinja2Mixin(object):
 
   def setup_jinja_enviroment(self, env):
 
-    env.filters['currencyfy']     = do_currencyfy
-    env.filters['statusfy']       = do_statusfy
-    env.filters['pricefy']        = do_pricefy
-    env.filters['addressify']     = do_addressify
-    env.filters['descriptify']    = do_descriptify
-    env.filters['headlinify']     = do_headlinify
-    env.filters['slugify']        = do_slugify
-    env.filters['operationfy']    = do_operationfy
-    env.filters['totalareafy']    = do_totalareafy
-    env.filters['expensasfy']     = do_expensasfy
-    env.filters['add_days']       = do_add_days
-    env.globals['url_for']        = self.uri_for
-    env.globals['app_version_id'] = self.app.config['ultraprop']['app_version_id']
-    env.globals['app_version']    = self.app.config['ultraprop']['app_version']
-    env.globals['is_debug']       = self.app.debug
+    env.filters['currencyfy']         = do_currencyfy
+    env.filters['statusfy']           = do_statusfy
+    env.filters['pricefy']            = do_pricefy
+    env.filters['addressify']         = do_addressify
+    env.filters['descriptify']        = do_descriptify
+    env.filters['headlinify']         = do_headlinify
+    env.filters['slugify']            = do_slugify
+    env.filters['operationfy']        = do_operationfy
+    env.filters['totalareafy']        = do_totalareafy
+    env.filters['expensasfy']         = do_expensasfy
+    env.filters['realestate_linkfy']  = do_realestate_linkfy
+    env.filters['add_days']           = do_add_days
+    env.globals['url_for']            = self.uri_for
+    env.globals['app_version_id']     = self.app.config['ultraprop']['app_version_id']
+    env.globals['app_version']        = self.app.config['ultraprop']['app_version']
+    env.globals['is_debug']           = self.app.debug
     
     
     if hasattr(self,'is_logged'):

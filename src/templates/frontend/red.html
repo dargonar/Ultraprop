@@ -17,6 +17,7 @@
           <h1>Inmobiliarias de la Red ULTRAPROP</h1>
           <br/>
           {% for realestate in realestates %}
+          {% for xx in range(2) %}
             <div id="agent_info" class="agentbox" style="width: 480px;float: left;">
               {% if realestate.logo_url %}
                 <img class="logo" src="{{realestate.logo_url+'=s230'}}" style="max-width:230px;max-height:80px;" title="{{realestate.name}}"/>
@@ -28,11 +29,15 @@
                 <span>{{realestate.address if realestate.address else ''}}</span><br/>
                 <span>{{realestate.telephone_number if realestate.telephone_number else ''}}</span><br/>
                 {% if realestate.domain_id %}
-                  <a href="{{url_for('realestate/search_slug', realestate_slug=realestate.domain_id)}}" target="_blank" />http://www.ultraprop.com/{{realestate.domain_id}}<br/>
+                                                                                       
+                  <a href="{{realestate|realestate_linkfy}}" target="_blank" title="Enlace de {{realestate.name}} en Ultraprop"/><b>{{realestate.name|truncate(length=19, killwords=True)}}</b> en Ultraprop<br/>
                 {% endif %}
-                <a href="{{realestate.website if realestate.website else '#'}}" target="_blank">{{realestate.website if realestate.website else ''}}</a><br/>
+                {% if realestate.website and realestate.website|wordcount>0 %}
+                  <a href="{{'%s%s'|format('http://',realestate.website) if 'http://' not in realestate.website else realestate.website }}" target="_blank">{{realestate.website}}</a><br/>
+                {% endif %}
               </div>
             </div>
+          {% endfor %}
           {% endfor %}
         </div>
       </div>

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
-
+from webapp2 import uri_for as url_for
 from datetime import datetime, timedelta
-from models import Property
+from models import Property, RealEstate
 from re import *
 from backend_forms import status_choices
 from search_helper import config_array, alphabet
@@ -200,3 +200,13 @@ def do_expensasfy(property, operation_type = None, small=False, small_if_none=Fa
     else:
       return 'Sin datos / No tiene'
   return '<small>'+cur+'</small>'+do_currencyfy(number, small=small) + (' <span class="mth">/mes</span>' if not small else '')
+  
+def do_realestate_linkfy(realestate, check_domain=False):
+  if check_domain:
+    if realestate.managed_domain == 1 and realestate.website and realestate.website.strip()!='':
+      return realestate.website
+  
+  if realestate.domain_id and realestate.domain_id.strip()!='' :
+    return url_for('realestate/search_slug', realestate_slug=realestate.domain_id)
+  
+  return url_for('realestate/home', str(realestate=realestate.key()))
