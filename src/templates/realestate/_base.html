@@ -60,9 +60,9 @@
         <div id="logo" class="grid_3">
           <a href="{{realestate.website if realestate.website and realestate.website|wordcount>0 else url_for('realestate/home', realestate=realestate.key()|string)}}">
             {% if realestate_logo %}
-            <img src="{{realestate_logo}}" alt="{{realestate.name}}" border="0" />
+              <img src="{{realestate_logo}}" alt="{{realestate.name}}" border="0" />
             {% else %}
-            {{ realestate.name }}
+              {{ realestate.name }}
             {% endif %}
           </a>
         </div>
@@ -74,7 +74,15 @@
               <a href="{{url_for('realestate/search', realestate=realestate.key()|string)}}" title="Buscar propiedades">Propiedades</a>
             </li>
             <li class="{{ 'selected' if menu_item == 'index' else '' }}">
-              <a href="{{realestate.website if realestate.website and realestate.website|wordcount>0 else url_for('realestate/home', realestate=realestate.key()|string)}}" title="Inicio">Inicio</a>
+              {% if realestate.managed_domain == 1 and realestate.website and realestate.website|wordcount>0 %}
+                <a href="{{realestate.website}}" title="Inicio">Inicio</a>
+              {% else %}
+                {% if realestate.domain_id and realestate.domain_id|wordcount>0 %}
+                  <a href="{{url_for('realestate/search_slug', realestate_slug=realestate.domain_id)}}" title="Inicio">Inicio</a>
+                {% else %}
+                  <a href="{{url_for('realestate/home', realestate=realestate.key()|string)}}" title="Inicio">Inicio</a>
+                {% endif %}
+              {% endif %}
             </li>
           </ul>
       </div>
