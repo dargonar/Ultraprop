@@ -5,10 +5,12 @@
     <div id="searchbox_home">
     
       <!-- INSTITUTIONAL AREA -->
-      <div class="txt_welcome">
+      <div class="txt_welcome" style="position:relative;">
+          <div style="position:absolute;bottom:0;background:url(/re/img/city.png) repeat-x;height:150px;width:100%;"></div>
           <h2>{{ realestate.tpl_title if realestate.tpl_title else '--título institucional--' }}</h2>
           <h4>{{ realestate.tpl_text if realestate.tpl_text else '--texto institucional--' }}</h4>
       </div>
+      
     </div> 
     
     <!-- ///// CONTENT ///// -->

@@ -7,6 +7,6 @@
     Las propiedades publicadas han sido desactivadas de los resultados de búsqueda hasta que efectúe el pago de la factura correspondiente al mes en curso.
 
     Para abonar la factura ingrese en "Mi Cuenta" en el panel de control de Ultraprop.
-    Para acceder al panel ahora ingrese en http://www.utraprop.com.ar/admin/account/status.
+    Para acceder al panel ahora ingrese en http://www.ultraprop.com.ar/admin/account/status.
     
 {% endblock %}

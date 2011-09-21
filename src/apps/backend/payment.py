@@ -200,10 +200,16 @@ class PaymentAssingMapper(Mapper):
 class UpdateIPN(RequestHandler):
   def post(self, **kwargs):
     self.request.charset = 'utf-8'
-    tmp = self.request.POST.get('date')
+    tmp     = self.request.POST.get('date')
+    account = self.request.POST.get('account')
     
     upcfg = UPConfig.get_or_insert('main-config')
-    upcfg.last_ipn = date(int(tmp[0:4]), int(tmp[4:6]), int(tmp[6:8]))
+    
+    if account == 'emi':
+      upcfg.last_ipn_emi = date(int(tmp[0:4]), int(tmp[4:6]), int(tmp[6:8]))
+    else:
+      upcfg.last_ipn = date(int(tmp[0:4]), int(tmp[4:6]), int(tmp[6:8]))
+      
     upcfg.save()
     
     self.response.write('ok')
@@ -217,23 +223,28 @@ class Download(RequestHandler):
   def get(self, **kwargs):
     self.request.charset  = 'utf-8'
     
+    account = kwargs['account']
+    
     # Nos fijamos la ultima vez que lo pedimos, pedimos hasta hoy si estamos dentro de un mes max
     # Sino bajaremos en dos dias (probabilidad muy baja)
-    upcfg = UPConfig.get_or_insert('main-config', last_ipn=datetime.now().date())
-    
+    upcfg = UPConfig.get_or_insert('main-config', last_ipn=datetime.now().date(), last_ipn_emi=datetime.now().date() )
+
     _from = upcfg.last_ipn
-    _to   = datetime.utcnow().date()
+    if account == 'emi':
+      _from = upcfg.last_ipn_emi
+      
+    _to = datetime.utcnow().date()
 
     if (_to - _from).days > 28:
       _to = _from + timedelta(days=28)
     
     # Bajamos el xml con la api de IPN
-    dom = minidom.parseString(ipn_download(_from, _to))
+    dom = minidom.parseString(ipn_download(account, _from, _to))
     
     # Verificamos que este todo bien el xml de vuelta
     state = int(get_xml_value(dom, 'State'))
     if state != 1:
-      logging.error('Error al traer xml: %d' % state)
+      logging.error('Error al traer xml: %d [%s]' % (state,account) )
       self.response.write('ok')
       return
 
@@ -256,21 +267,20 @@ class Download(RequestHandler):
       
       to_save.append(p)
     
-    # Algun pago?
-    if len(to_save):
-      logging.info('Se recibieron %d pagos' % len(to_save) )
+    # Cuantos pagos recibimos?
+    logging.info('Se recibieron %d pagos [%s]' % ( len(to_save), account ) )
       
-      # Salvamos todos los payments juntos y la ultima vez que corrimos en una transaccion
-      def txn():
+    # Salvamos todos los payments juntos y la ultima vez que corrimos en una transaccion
+    def txn():
+      if(len(to_save)):
         db.put(to_save)
-        taskqueue.add(url='/tsk/update_ipn', params={'date': _to.strftime('%Y%m%d')}, transactional=True)
-    
-      db.run_in_transaction(txn)
-    
-      # Mandamos a correr la tarea de mapeo de pagos
-      tmp = PaymentAssingMapper()
-      deferred.defer(tmp.run)
-    else:
-      logging.info('No hubo ningun pago en el XML')
+        
+        tmp = PaymentAssingMapper()
+        deferred.defer(tmp.run, _transactional=True)
       
+      taskqueue.add(url='/tsk/update_ipn/%s' % account, params={'date': _to.strftime('%Y%m%d'), 'account':account}, transactional=True)
+    
+    db.run_in_transaction(txn)
+    
+    # Mandamos a correr la tarea de mapeo de pagos si bajamos alguno nuevo
     self.response.write('ok')

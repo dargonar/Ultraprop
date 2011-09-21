@@ -23,7 +23,7 @@
 
 
 <div style="overflow:hidden; margin-bottom:20px;">
-		<h1>Mi Cuenta <i style="font-size:14px;">estado de cuenta a la fecha</i><h1>
+		<h1>Mi Cuenta <i style="font-size:14px;">estado de cuenta a la fecha</i></h1>
   </div>
   {% if flash %}
     <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
@@ -48,16 +48,34 @@
         <td class="number">{{invoice.trx_id}}</td>
         <td class="date">{{invoice.date.strftime('%d/%m/%Y')}}</td>
         <td class="expiration">{{(invoice.date|add_days(15)).strftime('%d/%m/%Y')}}</td>
+        
+        {% if plan.type == 3 %}
+        <td class="amount">${{ invoice.amount | currencyfy}}</td>
+        {% else %}
         <td class="amount">${{ (invoice.amount * 1.21) | currencyfy}}</td>
+        {% endif %}
+        
+        
         <td class="action">
           <form action="https://checkout.dineromail.com/CheckOut" method="post" > 
             <!--data nuestra-->
-            <input type="hidden" name="merchant" value="2267637" />  
+            {% if plan.type == 3 %}    
+            <input type="hidden" name="merchant" value="2321817" />
+            {% else %}
+            <input type="hidden" name="merchant" value="2267637" />
+            {% endif %}
+            
             <input type="hidden" name="country_id" value="1" /> 
             <input type="hidden" name="payment_method_available" value="7,13,4" /> 
             <input type="hidden" name="item_name_1" value="Abono mensual {{invoice.date.strftime('%m/%Y')}}" />
             <input type="hidden" name="item_quantity_1" value="1" /> 
-            <input type="hidden" name="item_ammount_1" value="{{invoice.amount * 1.21}}" />
+
+            {% if plan.type == 3 %}
+            <input type="hidden" name="item_ammount_1" value="{{"%.02f"|format(invoice.amount)}}" />
+            {% else %}
+            <input type="hidden" name="item_ammount_1" value="{{"%.02f"|format(invoice.amount * 1.21)}}" />
+            {% endif %}
+            
             <input type="hidden" name="seller_name" value="Ultraprop" /> 
             <input type="hidden" name="header_image" value="https://ultraprop.appspot.com/img/logo.gif"/>
             <input type="hidden" name="transaction_id" value="{{invoice.trx_id}}"/>
@@ -111,7 +129,11 @@
             {% if re.is_in_trial() %}
               <b>$0.00</b>
             {% else %}
+              {% if plan.type == 3 %}
               <b>${{total_debt|float|currencyfy}}</b>
+              {% else %}
+              <b>${{(1.21*total_debt)|float|currencyfy}}</b>
+              {% endif %}
             {% endif %}
         </p>
     </td>
