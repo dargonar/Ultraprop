@@ -6,9 +6,13 @@
     
       <!-- INSTITUTIONAL AREA -->
       <div class="txt_welcome" style="position:relative;">
-          <div style="position:absolute;bottom:0;background:url(/re/img/city.png) repeat-x;height:150px;width:100%;"></div>
+          <div style="position:absolute;bottom:0;background:url(/re/img/city.png) repeat-x;height:150px;width:100%;left:-20px"></div>
           <h2>{{ realestate.tpl_title if realestate.tpl_title else '--título institucional--' }}</h2>
           <h4>{{ realestate.tpl_text if realestate.tpl_text else '--texto institucional--' }}</h4>
+          <div id="searchbox_form_area" style="position:absolute; top:0px;right:0px;">
+            {%include "realestate/includes/_property_list_menu_left_min.html"%}
+          <!-- ul class="property_type" -->
+          </div>
       </div>
       
     </div> 
@@ -28,7 +32,7 @@
         
         <div id="right_content"> 
           <div id="center_column_home">
-              <h3 class="section">Inmuebles Destacados</h3>
+              <h3 class="section">Últimos Inmuebles</h3>
               {% for property in properties %}
                 {% set last='last' if loop.index==loop.count else ''%}
                 {%include "realestate/includes/mod_property_home.html"%}
