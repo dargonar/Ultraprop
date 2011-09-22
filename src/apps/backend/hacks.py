@@ -23,6 +23,7 @@ class Unsubscribe(BackendHandler):
     return self.render_response('backend/unsubscribe.html', email=kwargs['email'])
 
 class LaPlataCampaign(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     emails = [
       'info@daufi.com.ar',
@@ -125,6 +126,7 @@ class OldRealEstateRedirect(BackendHandler):
     self.redirect_to('realestate/search', realestate=realestate)
 
 class RemoveRealEstate(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     re = get_or_404(kwargs['key'])
     
@@ -182,6 +184,7 @@ class ImageFixMapper(Mapper):
     return ([img], []) # update/delete
 
 class FixImages(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     # Mandamos a correr la tarea de mapeo
     tmp = ImageFixMapper()
@@ -200,6 +203,7 @@ class RealEstateFixMapper(Mapper):
     return ([re], []) # update/delete
 
 class FixRealEstates(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     # Mandamos a correr la tarea de mapeo
     tmp = RealEstateFixMapper()
@@ -224,6 +228,7 @@ class PropertyFixMapper(Mapper):
     return ([prop], []) # update/delete
 
 class FixProperty(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     # Mandamos a correr la tarea de mapeo
     tmp = PropertyFixMapper()
