@@ -56,45 +56,44 @@
 <h2 class="title">¿Cómo me verán los usuarios?</h2>
 <dl class="form" style="max-width:920px;">
         <dt style="width:380px; margin-right:20px; margin-bottom:15px;">
-            <h3>Ya tengo web con dominio propio</h3>
+            <h3>Ya tengo página web</h3>
             <p style="font-weight:normal;">
-            Si ya posee una web con dominio propio alojada en otro servidor, ingrese la dirección para que figure en nuestros listados y en la página de contacto.</p>
+            Ingrese la dirección para que figure en nuestros listados y en la página de contacto.</p>
         </dt>
 
         {{ form_field2(form.website, title="www.sudominio.com.ar", placeholder="www.sudominio.com.ar") }}
   
         <dt style="width:380px; margin-right:20px; margin-bottom:15px;">
-        	<h3>Mi dominio con UltraProp</h3>
+        	<h3>No tengo página web</h3>
         	<p style="font-weight:normal;">
-            Quiero aprovechar la página que me ofrece UltraProp y además 
-que sea accedida con mi nombre de dominio.<br />
-<a href="http://www.jorgemaull.com.ar" target="_blank"> (ver ejemplo)</a>
+            Si desea tener su página web con dominio propio seleccione esta opción.&nbsp;&nbsp;
+            <a href="http://www.jorgemaull.com.ar" target="_blank"> (ver ejemplo)</a>
 			</p>
         </dt>
         <dd>
    	  <div class="block_info" style="margin-bottom:15px;">
-            	<p>Este proceso debe ser realizado con cierto grado de conocimiento técnico, seleccione el siguiente casillero si quiere que un responsable del área técnica se contacte para asistirlo.</p>
+            	<p>Seleccione esta opción y un responsable del área técnica se contactará para tramitar su solicitud.</p>
                 
                 <div class="block_info_divider"></div>
                 
                 {{form.managed_domain}}
                 <label for="managed_domain">
-                    <b>Necesito asistencia</b>
+                    <b>Quiero mi página web</b>
                 </label>
             </div>
         </dd>
       
         
       <dt style="width:380px; margin-right:20px; margin-bottom:15px;">
-        <h3>Mi sitio web en UltraProp</h3>
-         <p style="font-weight:normal;">Es el sitio que le generamos dentro de UltraProp si aún no tiene un dominio propio, elija el nombre con el que desea aparecer.</p>
+        <h3>Dirección en UltraProp</h3>
+         <p style="font-weight:normal;">Elija su dirección web en ULTAPROP.</p>
       </dt>
       
 	<dd id="did_dd" {% if form.domain_id.errors %} class="errorbox" {% endif %}>
     	<div style="border:solid 1px #ccc; padding:10px 15px;">
           <span>http://www.ultraprop.com.ar/</span>
             {{form.domain_id(style='width:140px;', placeholder='')}}
-          <a class="uibutton" id="validate_domain_id" href="#">&nbsp;Validar&nbsp;</a>
+          <a class="uibutton" id="validate_domain_id" href="#" title="Comprobar disponibilidad">&nbsp;Comprobar&nbsp;</a>
             {{ form_error(form.domain_id) }}
             {% if not form.domain_id.errors %}
               <p style="display:none" class="ok">&nbsp;</p>
