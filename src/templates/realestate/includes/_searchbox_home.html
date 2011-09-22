@@ -1,14 +1,16 @@
 {% import 'realestate/includes/_form_fields.html' as ff %}
-<div class="box" id="searchbox_form_area">
+<div id="searchbox_form_area">
   <form id="filter" method="POST" action="{{url_for('realestate/search', realestate=realestate.key()|string)}}">
   <div class="filters">
-  	<h3>Buscador</h3>
-    <div class="location_box">
-      <p class="label">Zona</p>
+  	<!--h2>Buscador</h2-->
+    <div class="location_box home">
+      <p class="label" style="font-size:14px;">Ubicación</p>
       {{form.location_text(class='search big', placeholder='Calle, Barrio, Localidad')}}
-      <input class="btnSearch" type="submit" value=""/>
     </div>
-    <div class="fields">
+    
+
+    
+    <div>
       <ul class="property_type">
         <li>
           <div class="divider_h"></div>
@@ -31,6 +33,12 @@
             {{ff.simple_field_pair(form.price_min, form.price_max)}}
           </div>
         </li>
+        
+        <li>
+          <div class="divider_h"></div>
+          <p class="label">Dormitorios</p>
+          {{form.bedrooms}}
+        </li>
         <li>
           <div class="divider_h"></div>
           <p class="label">Ambientes</p>
@@ -42,17 +50,12 @@
           {{form.area_indoor}}
         </li>
         <li>
-          <div class="divider_h"></div>
-          <p class="label">Dormitorios</p>
-          {{form.bedrooms}}
-        </li>
-        <li>
           {{form.sort(style='display:none')}}
         </li>
         <li>
           <div class="divider_h"></div>
           <!-- a id="apply" href="#" onclick="$('#filter').submit();" style="float:right;margin:11px 27px 0px 0px;" class="lightblue_border">Buscar</a-->
-          <a id="apply" href="#" onclick="$('#filter').submit();" style="float:right;margin-right:27px;" class="uibutton special submit">Buscar</a>
+          <a id="apply" href="#" onclick="$('#filter').submit();" style="float:right;margin-right:27px;" class="uibutton special submit home">Buscar</a>
         </li>
       </ul>
         

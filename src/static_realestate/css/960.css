@@ -356,17 +356,3 @@
 
 #left_content {float:left; width:185px; margin-right:18px;}
 #right_content {float:left; width:773px; overflow:hidden;}
-
-/* ///// HOME ///// */
-#searchbox_home {overflow:hidden; width:976px; margin:auto;}
-#searchbox_form_area {/*opacity:0.6;*/padding:15px; margin:2px 22px 0px 0px;float:right; width:360px; height:276px; background:#e3e1d8; border-left:solid 1px #fff;}
-/*#searchbox_form_area:hover {opacity:1;}*/
-#center_column_home {float:left; /*width:520px;*/ width:755px; margin:0; }
-#right_column_home {float:right; width:235px; margin:0;}
-
-
-#footer { 
-	width:976px; 
-	margin:10px auto; 
-	border-top:solid 1px #ccc; 
-} 

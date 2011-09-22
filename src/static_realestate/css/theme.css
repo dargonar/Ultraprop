@@ -50,7 +50,7 @@ hr {
 /* ///// Global ///// */
 #header {
 	background: url(/re/img/backgrounds/header.gif) bottom repeat-x;
-	padding-bottom:5px; 
+	padding-bottom:5px;
 	min-height:60px;
 }
 #header.container_12 {
@@ -110,6 +110,7 @@ h3.section {
 .btnMore {
 	margin-top:10px;
 	cursor:pointer;
+	display:block;
 }
 a {
 	color:#0099cc;
@@ -130,21 +131,24 @@ a:hover {
 	margin-bottom: 20px;
 	padding: 0;
 }
+
 /* ///// HOME PAGE ///// */
 .txt_welcome {
 	float:left;
-  /* HACK color del bg */
+	/* HACK color del bg */
   /* HACK img bg */
-	background:#4E4E4E /*url(/re/img/backgrounds/about.jpg) no-repeat;*/;
+	/*background:#4E4E4E*/ /*url(/re/img/backgrounds/about.jpg) no-repeat;*/;
+	background:#4E4E4E url(/re/img/city.png) repeat-x bottom;
 	/*width:522px;*/ width:100%;
-	height:293px;
+	height:286px;
 	padding-left:20px;
-	padding-top:20px;
+	padding-top:20px; 
+	width:565px;
 }
 .txt_welcome h2, .txt_welcome h4 {
 	color:#fff;
 	width:240px;
-  width:540px;
+	width:540px;
 	margin-bottom:10px;
 }
 #searchbox_home.grid_12 {
@@ -153,14 +157,20 @@ a:hover {
 #searchbox_home ul.property_type {
 	width:400px;
 	overflow:hidden;
-	margin-bottom:10px;
+	margin:6px 0; 
+	padding:0 10px;
 }
 #searchbox_home ul.property_type li {
 	float:left;
 	width:185px;
-	/*font-size:18px;*/
-	margin-bottom:5px;
+	margin-bottom:5px; 
+	font-weight:bold;
 }
+#searchbox_home ul.property_type li.ppal {
+	font-weight:bold;
+		font-size:16px;
+}
+
 label {
 	cursor:pointer;
 }
@@ -196,7 +206,7 @@ label {
 }
 .grid_2.property_box {
 	min-height:300px;
-  height:auto;
+	height:auto;
 	margin:0;
 	width:160px;
 	margin-right:20px;
@@ -307,8 +317,8 @@ dl.news dd h5 {
 }
 .prop_box ul.data {
 	overflow:hidden;
-	margin-top:6px; 
-	min-height:121px;	
+	margin-top:6px;
+	min-height:121px;
 }
 .prop_box ul.data li {
 	float:left;
@@ -422,14 +432,13 @@ ul.actions li a {
 	text-decoration:none;
 	margin-top:5px;
 }
-
 #paginator li a.selected {
 	cursor:default;
 	background:#666;
 	border:solid 1px #666;
 	color:#fff;
 }
-#paginator li.prev a, #paginator li.next a , a.lightblue_border{
+#paginator li.prev a, #paginator li.next a, a.lightblue_border {
 	border-radius: 5px;
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
 	padding:6px 10px;
@@ -479,23 +488,32 @@ ul.actions li a {
 	background:#fff;
 	height:25px;
 }
-
-.detailBox .addressbox { overflow:hidden; margin-bottom:5px;}
+.detailBox .addressbox {
+	overflow:hidden;
+	margin-bottom:5px;
+}
 .detailBox .address {
-/*	background: none repeat scroll 0 0 #eee;
+	/*	background: none repeat scroll 0 0 #eee;
 	border: 1px solid #ccc;*/
 	font-size: 16px;
 	font-weight: bold;
-/*	margin-bottom: 14px;
+	/*	margin-bottom: 14px;
 	margin-top: 10px;
 	padding: 6px 10px;*/ 
-	width:460px; 
+	width:460px;
 	float:left;
 }
-
-.detailBox .price { float:right; color:#0099CC; font-size:18px; width:155px; font-weight: bold; text-align:right;}
-.detailBox .price small { padding-right:4px;}
-
+.detailBox .price {
+	float:right;
+	color:#0099CC;
+	font-size:18px;
+	width:155px;
+	font-weight: bold;
+	text-align:right;
+}
+.detailBox .price small {
+	padding-right:4px;
+}
 /*.colBox {
 	overflow: hidden;
 }*/
@@ -607,8 +625,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFECA9', endC
 dl.properties {
 	font-size: 12px;
 	margin-bottom: 15px;
-	overflow: hidden;
-/*	width: 283px;*/
+	overflow: hidden;/*	width: 283px;*/
 }
 dl.properties dt, dl.properties dd {
 	border-top: 1px dotted #EFEFEF;
@@ -656,15 +673,27 @@ dl.properties dt.price, dl.properties dd.price small {
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
     -moz-border-top-colors: none;*/
-    background: none repeat scroll 0 0 #F9F9F9;
-	border-color: #ccc;
-	border-style: solid none;
-	border-width: 1px 0;
-	box-shadow: 0 0 0 1px #FFFFFF inset;
 	margin-top: 3px;
 	overflow: hidden;
 	padding: 8px 10px;
 }
+
+.filters .location_box.list {
+	background: none repeat scroll 0 0 #F9F9F9;
+	border-color: #ccc;
+	border-style: solid none;
+	border-width: 1px 0;
+	box-shadow: 0 0 0 1px #FFFFFF inset;
+}
+
+.filters .location_box.home {
+	margin-top: 3px;
+	overflow: hidden;
+	padding: 8px 10px;
+}
+
+
+
 .filters h3 {
 	color: #000000;
 	padding: 5px 10px;
@@ -678,6 +707,9 @@ dl.properties dt.price, dl.properties dd.price small {
 .filters .location_box .search.big {
 	width: 302px;
 }
+
+.filters .location_box.home .search.big { padding:5px; width: 320px; border:solid 1px #ccc; font-size:18px; font-family:Arial, Helvetica, sans-serif;}
+
 .filters .location_box .btnSearch {
 	background: url("/img/ultraprop_ui_sprite.png") no-repeat scroll -720px -131px transparent;
 	border: 0 none;
@@ -710,11 +742,15 @@ dl.properties dt.price, dl.properties dd.price small {
 	min-width: 90px;
 	font-size:13px;
 }
+
+.filters .uibutton.special.submit.home { width:136px; font-size:16px;}
+
+
 /* ///// PROPERTY FICHA ///// */
 
 .detailBox {
 	padding-bottom: 20px;
-/*	padding-left: 20px;*/
+	/*	padding-left: 20px;*/
 	width: 625px;
 }
 .infoBox h2 {
@@ -846,9 +882,9 @@ ul.detail li {
 	border: 1px solid #CCCCCC;
 	padding: 4px;
 }
-
-.picture a img.pic { max-width:130px;}
-
+.picture a img.pic {
+	max-width:130px;
+}
 /* ///// CONTACT FORM ///// */
 .contactform {
 	overflow:hidden;
@@ -858,12 +894,14 @@ ul.detail li {
 	float:left;
 	width:300px;
 	margin-right:30px;
-	margin-top:12px; 
+	margin-top:12px;
 	font-size:13px;
 }
-
-.contactform .contactinfo .txt {color:#999; font-size:12px; width:250px;}
-
+.contactform .contactinfo .txt {
+	color:#999;
+	font-size:12px;
+	width:250px;
+}
 .contactform form {
 	float:left;
 }
@@ -874,7 +912,7 @@ ul.detail li {
 .contactform form textarea {
 	font-family:Arial, Helvetica, sans-serif;
 	padding:5px;
-	width:344px; 
+	width:344px;
 	height:80px;
 	font-size:12px;
 }
@@ -916,58 +954,79 @@ p.error {
 	border: 1px solid #CC0033;
 	color: #CC0033 !important;
 }
-
-
-.rightColumn { 	
+.rightColumn {
 	width:280px;
-	float:right; 
-	overflow:hidden; 
+	float:right;
+	overflow:hidden;
 	padding-right:20px;
 }
-	
-	
 .contactBox {
-/*	width:280px;
+	/*	width:280px;
 	float:right;*/
 	border:solid 1px #addef1;
 	background:#def2f8;
 	-webkit-border-radius: 4px;
 	moz-border-radius: 4px;
-	border-radius: 4px; 
-	overflow:hidden; 
+	border-radius: 4px;
+	overflow:hidden;
 	margin-top:25px;
 }
-
 .contactBox .head {
 	background:#0099CC;
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0099CC', endColorstr='#006699'); /* for IE */
+ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0099CC', endColorstr='#006699'); /* for IE */
 	background: -webkit-gradient(linear, left top, left bottom, from(#0099CC), to(#006699)); /* for webkit browsers */
-	background: -moz-linear-gradient(top, #0099CC, #006699); /* for firefox 3.6+ */ 
+	background: -moz-linear-gradient(top, #0099CC, #006699); /* for firefox 3.6+ */
 	-moz-border-radius:4px 4px 0px 0px;
 	-webkit-border-radius:4px 4px 0px 0px;
 	border-radius:4px 4px 0px 0px;
-	margin:1px; 
-	border-bottom:solid 2px #fff; 
-	font-size:21px; 
+	margin:1px;
+	border-bottom:solid 2px #fff;
+	font-size:21px;
 	color:#fff;
-	text-shadow: 0 -1px 0 #006699; 
+	text-shadow: 0 -1px 0 #006699;
 	padding:10px 17px;
 }
-.contactBox .head p { font-size:18px;}
-.contactBox form { padding: 4px 17px 10px;}
-.contactBox form label { font-size:11px; font-weight:bold; display:block; margin-top:8px;}
-.contactBox form input { border:solid 1px #ccc; background:#fff; padding:3px; width:235px;} 
-.contactBox form input.short { width:60px; margin-right:5px;}
-.contactBox form input.medium { width:160px;}
-.contactBox form textarea { width:230px; height:110px; font-family:Arial, Helvetica, sans-serif; padding:5px; font-size:12px;}
-
-.contactData { padding:0 17px; }
-
-.detailBox .pic { padding:0;}
-
+.contactBox .head p {
+	font-size:18px;
+}
+.contactBox form {
+	padding: 4px 17px 10px;
+}
+.contactBox form label {
+	font-size:11px;
+	font-weight:bold;
+	display:block;
+	margin-top:8px;
+}
+.contactBox form input {
+	border:solid 1px #ccc;
+	background:#fff;
+	padding:3px;
+	width:235px;
+}
+.contactBox form input.short {
+	width:60px;
+	margin-right:5px;
+}
+.contactBox form input.medium {
+	width:160px;
+}
+.contactBox form textarea {
+	width:230px;
+	height:110px;
+	font-family:Arial, Helvetica, sans-serif;
+	padding:5px;
+	font-size:12px;
+}
+.contactData {
+	padding:0 17px;
+}
+.detailBox .pic {
+	padding:0;
+}
 /* ///// MESSAGES ///// */
 
-.msg_info,  .msg_success, .msg_warning, .msg_error, .msg_validation{
+.msg_info, .msg_success, .msg_warning, .msg_error, .msg_validation {
 	border: 1px solid;
 	margin: 10px 0px;
 	padding:15px 10px 15px 50px;
@@ -995,7 +1054,45 @@ p.error {
 	background-color:#EFC2C4;
 	background-image: url(/img/icons/error.png);
 }
-
-form #ketchup, form #inketchup{display:none;}
-
-#logo a { text-decoration:none; font-size:32px; line-height:57px; font-weight:bold; letter-spacing:-1px; text-shadow: 0 1px 0 #fff;}
+form #ketchup, form #inketchup {
+	display:none;
+}
+#logo a {
+	text-decoration:none;
+	font-size:32px;
+	line-height:57px;
+	font-weight:bold;
+	letter-spacing:-1px;
+	text-shadow: 0 1px 0 #fff;
+}
+/* ///// HOME ///// */
+#searchbox_home {
+	overflow:hidden;
+	width:976px;
+	margin:auto;
+}
+#searchbox_form_area {/*opacity:0.6;*/
+	padding:15px;
+/*	margin:2px 22px 0px 0px;*/
+	float:right;
+	width:360px;
+	height:276px;
+	background:#e3e1d8;
+	border-left:solid 1px #fff;
+}
+/*#searchbox_form_area:hover {opacity:1;}*/
+#center_column_home {
+	float:left; /*width:520px;*/
+	width:755px;
+	margin:0;
+}
+#right_column_home {
+	float:right;
+	width:235px;
+	margin:0;
+}
+#footer {
+	width:976px;
+	margin:10px auto;
+	border-top:solid 1px #ccc;
+}
