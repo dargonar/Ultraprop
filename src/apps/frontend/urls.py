@@ -13,7 +13,7 @@ def get_rules():
     
       #-------------------------------URL HACKS VAN ACA----------------------------------------
       #Route('/tsk/fix_images',      name='fiximages',      handler='apps.backend.hacks.FixImages'),
-      #Route('/tsk/fix_re',          name='fixre',          handler='apps.backend.hacks.FixRealEstates'),
+      Route('/tsk/fix_re',          name='fixre',          handler='apps.backend.hacks.FixRealEstates'),
       #Route('/tsk/remove_re/<key>', name='removere',       handler='apps.backend.hacks.RemoveRealEstate'),
       
       #Route('/h/fix_prop',     name='fixprop',            handler='apps.backend.hacks.FixProperty'),
