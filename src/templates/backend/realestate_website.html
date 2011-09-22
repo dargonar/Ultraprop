@@ -53,7 +53,7 @@
     <input type="hidden" name="key" value="{{key}}" />
     <!-- ///// IDENTITY ///// -->    
     
-<h2 class="title">Cómo me verán los usuarios?</h2>
+<h2 class="title">¿Cómo me verán los usuarios?</h2>
 <dl class="form" style="max-width:920px;">
         <dt style="width:380px; margin-right:20px; margin-bottom:15px;">
             <h3>Ya tengo web con dominio propio</h3>
@@ -62,95 +62,74 @@
         </dt>
 
         {{ form_field2(form.website, title="www.sudominio.com.ar", placeholder="www.sudominio.com.ar") }}
-        
+  
         <dt style="width:380px; margin-right:20px; margin-bottom:15px;">
         	<h3>Mi dominio con UltraProp</h3>
         	<p style="font-weight:normal;">
             Quiero aprovechar la página que me ofrece UltraProp y además 
-que sea accedida con mi nombre de dominio:
-www.mi_inmobiliaria.com.ar<a href="http://www.jorgemaull.com.ar" target="_blank">(ver ejemplo)</a>
+que sea accedida con mi nombre de dominio.<br />
+<a href="http://www.jorgemaull.com.ar" target="_blank"> (ver ejemplo)</a>
 			</p>
         </dt>
         <dd>
-        	<div class="block_info">
+   	  <div class="block_info" style="margin-bottom:15px;">
             	<p>Este proceso debe ser realizado con cierto grado de conocimiento técnico, seleccione el siguiente casillero si quiere que un responsable del área técnica se contacte para asistirlo.</p>
                 
+                <div class="block_info_divider"></div>
+                
                 {{form.managed_domain}}
-                <label for="website">
+                <label for="managed_domain">
                     <b>Necesito asistencia</b>
                 </label>
             </div>
-        
-        
-            <div class="ex-label" style="width:365px;">
-                
-
-            </div>
-            <!--div id="own_website_help" style="margin-top:10px;display:none;clear:both;">
-              <div style="padding:20px;opacity:1;background: none repeat scroll 0 0 #E4F1FF;border: 1px solid #99C7F8;;height:auto;width:325px;">
-                <ul>
-                	<li style="padding-top:4px;">
-                    &raquo;&nbsp;<b>Si aún no tiene su dominio propio</b>, lo registramos y alojamos en nuestros servidores. Gestionamos su correo @su_inmobiliaria.com.ar.<br/>
-                  </li>
-                	<li style="padding-top:4px;">
-                    &raquo;&nbsp;<b>Si ya dispone de uno</b>, lo alojamos en nuestros servidores, implementando la tecnología de ULTRAPROP para su web propia.<br/>
-                  </li>
-                	<li style="padding-top:4px;padding-bottom:5px;">
-                    &raquo;&nbsp;<b>Si ya tiene su web propia</b> y desea mantener su diseño original, mantenemos este diseño y agregamos su oferta inmobiliaria en ULTRAPROP dentro de su web. <br/>
-                  </li>
-                </ul>
-                Seleccione la opción <b><i>Utilizar ULTRAPROP como mi web</i></b> y un agente de ULTRAPROP se comunicará con Ud. a la brevedad.<br/>
-                <p style="margin-top: 3px;">
-                  <small>Asegúrese de haber configurado correctamente la información de <a href="{{ url_for('backend/realestate/edit') }}">contacto aquí</a> antes de guardar los cambios.</small>
-                </p>
-              </div>
-            </div-->
         </dd>
+      
         
-    </dl>
-    <dl class="form">
-      <dt>
-        Mi dirección en ULTRAPROP
-         <p style="font-weight:normal; font-size:11px; color:#666;">Su oferta inmobiliaria siempre visible desde ULTRAPROP.</p>
+      <dt style="width:380px; margin-right:20px; margin-bottom:15px;">
+        <h3>Mi sitio web en UltraProp</h3>
+         <p style="font-weight:normal;">Es el sitio que le generamos dentro de UltraProp si aún no tiene un dominio propio, elija el nombre con el que desea aparecer.</p>
       </dt>
-      <dd id="did_dd" {% if form.domain_id.errors %} class="errorbox" {% endif %}>
-        <span>http://www.ultraprop.com.ar/</span>
-        {{form.domain_id(style='width:140px;', placeholder='')}}
-        <a class="uibutton" id="validate_domain_id" href="#">&nbsp;Validar&nbsp;</a>
-        {{ form_error(form.domain_id) }}
-        {% if not form.domain_id.errors %}
-          <p style="display:none" class="ok">&nbsp;</p>
-        {% endif %}
+      
+	<dd id="did_dd" {% if form.domain_id.errors %} class="errorbox" {% endif %}>
+    	<div style="border:solid 1px #ccc; padding:10px 15px;">
+          <span>http://www.ultraprop.com.ar/</span>
+            {{form.domain_id(style='width:140px;', placeholder='')}}
+          <a class="uibutton" id="validate_domain_id" href="#">&nbsp;Validar&nbsp;</a>
+            {{ form_error(form.domain_id) }}
+            {% if not form.domain_id.errors %}
+              <p style="display:none" class="ok">&nbsp;</p>
+            {% endif %}
+        </div>
+        
+        <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
       </dd>
-    </dl>  
+</dl>
 
-    <dl class="form">
-      <dt>Título institucional
-        <p style="font-weight:normal; font-size:11px; color:#666;"></p>
+<h2 class="title">Editar mensajes institucionales</h2>
+
+<dl class="form" style="max-width:920px;">
+	<dt style="width:400px; margin-bottom:15px;">
+        <img src="/img/myweb_sample.jpg"/>
       </dt>
       
-      {{ form_field2(form.tpl_title, title="Título", placeholder="Escriba su título institucional aquí") }}
-    </dl>  
-    
-    <dl class="form">
-      <dt>Texto institucional
-        <p style="font-weight:normal; font-size:11px; color:#666;"></p>
-      </dt>
-      
-      {{ form_field2(form.tpl_text, title="Título", placeholder="Escriba su texto institucional aquí") }}
-    </dl>  
-    
-    <dl class="form">
-      <dt></dt>
       <dd>
-          <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
+      	<div style="border:solid 1px #ccc; padding:10px 15px; margin-top:20px;">
+            <h4 style=" margin:0; margin-bottom:3px;">Título institucional</h4>
+            {{ form.tpl_title(title="Título", placeholder="Escriba un título institucional aquí") }}
+            
+            <h4 style="margin-bottom:3px;">Texto institucional</h4>
+            {{ form.tpl_text(title="Título", placeholder="Escriba un texto institucional aquí") }}
+            
+            <div style="margin-top:8px;">
+            	<a href="{{realestate|realestate_linkfy(check_domain=False)}}" target="_blank" id="preview" class="uibutton">&nbsp;&nbsp;&nbsp;Visualizar página&nbsp;&nbsp;&nbsp;</a>
+             </div>
+        </div>
+        
+        <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
       </dd>
-    </dl>  
+
+	</dl>  
+
   </form>
-<br/>  
-<br/>
-<br/>
- 
- 
-  
+
 {% endblock  %}

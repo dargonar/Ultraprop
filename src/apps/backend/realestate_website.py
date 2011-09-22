@@ -34,6 +34,7 @@ class Edit(BackendHandler):
     realestate                    = get_or_404(self.get_realestate_key())
     kwargs['form']                = RealEstateWebSiteForm(obj=realestate)
     kwargs['key']                 = self.get_realestate_key()
+    kwargs['realestate']          = realestate
     kwargs['mnutop']              = 'website'
    
     return self.render_response('backend/realestate_website.html', **kwargs)
