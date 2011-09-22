@@ -753,11 +753,13 @@ function init_realestate_website(didurl){
         {
           $('#did_dd>p').attr('class','ok');
           $('#did_dd').attr('class',false);
+          alert('El nombre se encuentra disponible. Puede utilizarlo.');
         }
         else
         {
           $('#did_dd>p').attr('class','error');
           $('#did_dd').attr('class','errorbox');
+          alert('El nombre ya esta siendo utilizado. Por favor ingrese otro nombre.');
         }
 
         $('#did_dd>p').html(res.msg);
