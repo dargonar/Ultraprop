@@ -23,3 +23,7 @@ class Red(FrontendHandler):
     realestates   = RealEstate.all().fetch(100)
     return self.render_response('frontend/red.html'
                 , realestates     = realestates)
+
+class Terms(FrontendHandler):
+  def get(self, **kwargs):
+    return self.render_response('frontend/terms.html')
