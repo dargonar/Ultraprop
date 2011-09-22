@@ -2662,3 +2662,15 @@ table.poll { margin-right:10px;}
 table.poll td { border-bottom:solid 1px #ccc; padding-bottom:10px;}
 table.poll td.radio { width:30px; vertical-align: top; border-bottom:solid 1px #fff;}
 table.poll td p { color:#333;}
+
+.footer {
+    border-top: 1px solid #CCCCCC;
+    margin: 10px auto;
+    /*width: 976px;*/
+}
+.backend_simple .footer{
+  position:absolute;bottom:0px;width:100%;
+}
+.cpyr {
+	padding:10px;
+}
