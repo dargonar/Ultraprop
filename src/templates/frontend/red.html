@@ -50,7 +50,7 @@
                     <h1>{{realestate.name}}</h1>
                     <span>{{realestate.address if realestate.address else ''}}</span><br/>
                     <span>{{realestate.telephone_number if realestate.telephone_number else ''}}</span><br/>
-                    <a href="{{realestate|realestate_linkfy}}" target="_blank" title="Enlace de {{realestate.name}} en Ultraprop"/><b>{{realestate.name|truncate(length=21, killwords=True)}}</b> en Ultraprop<br/>
+                    <a href="{{realestate|realestate_linkfy}}" target="_blank" title="Enlace de {{realestate.name}} en Ultraprop"><b>{{realestate.name|truncate(length=21, killwords=True)}}</b> en Ultraprop</a><br/>
                     {% if realestate.website and realestate.website|wordcount>0 %}
                       <a href="{{'%s%s'|format('http://',realestate.website) if 'http://' not in realestate.website else realestate.website }}" target="_blank">{{realestate.website}}</a><br/>
                     {% endif %}
