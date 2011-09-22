@@ -209,4 +209,4 @@ def do_realestate_linkfy(realestate, check_domain=False):
   if realestate.domain_id and realestate.domain_id.strip()!='' :
     return url_for('realestate/search_slug', realestate_slug=realestate.domain_id)
   
-  return url_for('realestate/home', str(realestate=realestate.key()))
+  return url_for('realestate/home', realestate=str(realestate.key()))
