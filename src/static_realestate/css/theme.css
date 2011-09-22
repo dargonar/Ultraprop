@@ -144,6 +144,7 @@ a:hover {
 .txt_welcome h2, .txt_welcome h4 {
 	color:#fff;
 	width:240px;
+  width:540px;
 	margin-bottom:10px;
 }
 #searchbox_home.grid_12 {
@@ -157,7 +158,7 @@ a:hover {
 #searchbox_home ul.property_type li {
 	float:left;
 	width:185px;
-	font-size:18px;
+	/*font-size:18px;*/
 	margin-bottom:5px;
 }
 label {
@@ -414,20 +415,21 @@ ul.actions li a {
 	float:left;
 	margin:0 3px;
 }
-#paginator li a {
+#paginator li a, a.lightblue_border {
 	display:block;
 	padding:2px 6px;
 	border:solid 1px #CCC;
 	text-decoration:none;
 	margin-top:5px;
 }
+
 #paginator li a.selected {
 	cursor:default;
 	background:#666;
 	border:solid 1px #666;
 	color:#fff;
 }
-#paginator li.prev a, #paginator li.next a {
+#paginator li.prev a, #paginator li.next a , a.lightblue_border{
 	border-radius: 5px;
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
 	padding:6px 10px;
@@ -672,6 +674,9 @@ dl.properties dt.price, dl.properties dd.price small {
 .filters .location_box .search {
 	float: left;
 	width: 132px;
+}
+.filters .location_box .search.big {
+	width: 302px;
 }
 .filters .location_box .btnSearch {
 	background: url("/img/ultraprop_ui_sprite.png") no-repeat scroll -720px -131px transparent;
