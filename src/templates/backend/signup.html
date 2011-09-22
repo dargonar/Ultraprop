@@ -2,12 +2,17 @@
 
 {%- macro form_field(field, label='', class='') -%}
 	<div class="field">
+    {% if label != '' %}
     <div class="input_label">{{label}}</div>
+    {% endif %}
     {{ field(class=class+(' error' if field.errors else '')  , **kwargs) }}
     {% if field.name == 'confirm' %}
       <a href="#" class="btnIcon" id="password_unequal" style="display:none;position:absolute;top:13px;right:0px;" title="Verifique que las contraseñas sean iguales">
         <img src="/img/icons/delete.png" />
       </a>
+    {% endif %}
+    {% if field.name == 'accept_terms' %}
+    Acepto los <a target="_blank" href="{{url_for('frontend/terms')}}">términos y condiciones</a>    
     {% endif %}
   </div> 
   {% if field.errors %}
@@ -65,8 +70,12 @@ $(document).ready(function() {
                   {{ form_field(form.password, label='contraseña',  class="xg long", placeholder="Contraseña", id="password") }}
                 </div>
                 <div class="last {{ 'errorbox' if form.confirm.errors else '' }}"> 
-                  {{ form_field(form.confirm, label='repetir', class="xg long", placeholder="Repetir contraseña", placeholder="Repetir contraseña", id="confirm_password") }}
+                  {{ form_field(form.confirm, label='repetir', class="xg long", placeholder="Repetir contraseña", id="confirm_password") }}
                 </div>
+                <div class="last {{ 'errorbox' if form.accept_terms.errors else '' }}"> 
+                  {{ form_field(form.accept_terms) }}
+                </div>
+                
                 {{form.ketchup(id='ketchup')}}
                 
                 <input type="submit" value="COMENZAR A PUBLICAR!" name="" class="btnWizard start">

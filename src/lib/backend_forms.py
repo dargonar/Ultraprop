@@ -433,7 +433,11 @@ class UserChangePasswordForm(Form):
 class SignUpForm(KetchupForm):
   def __repr__(self):
     return 'SignUpForm'
-    
+
+  def validate_accept_terms(form, field):
+    if not field.data:
+      raise ValidationError(u'Debe aceptar los términos y condiciones.')
+      
   def validate_email(form, field):
     # Chequeo que el correo no este repetido
     user        = User.all().filter('email =', field.data).get()
@@ -466,6 +470,7 @@ class SignUpForm(KetchupForm):
                             validators.EqualTo('confirm', message=u'Las contraseñas deben ser iguales.')
                         ])
   confirm             = PasswordField(u'Repita contraseña')
+  accept_terms        = BooleanField('')
       
 class PropertyContactForm(KetchupForm):
   def __repr__(self):
