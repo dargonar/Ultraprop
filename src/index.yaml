@@ -229,7 +229,3 @@ indexes:
   - name: location_geocells
   - name: realestate
   - name: price_sell_computed
-
-- kind: RealEstate
-  properties:
-  - name: domain_id

@@ -292,6 +292,37 @@ function init_new_property()
   $("#toimages").click( function(e) {
     $("input[name=goto]").val('go');
   });
+  
+  //Boton de maximizar
+  $('#btnMaximize').toggle(function() {
+    $('#location_box').addClass('fullsize');
+    $(this).removeClass('maximize');
+    $(this).addClass('minimize');
+    $('#map_canvas').css('width',$('#location_box').width()+'px').css('height',$('#location_box').height()-$('#location_box .location_head').innerHeight()+'px');
+    google.maps.event.trigger(map, 'resize');
+  }, function() {
+    $('#location_box').removeClass('fullsize');
+    $(this).removeClass('minimize');
+    $(this).addClass('maximize');
+    $('#map_canvas').css('width','740px').css('height','300px');
+    google.maps.event.trigger(map, 'resize');
+    map.setCenter(marker.getPosition());
+  });
+
+  //Auto checkea el box cuando hay precio
+  // $("#price_rent").keyup(function(event){
+    // chk = $('input[name=rent_yes]');
+    // if( ($(this).val() != '' && chk.is(':checked') == false) ||
+        // ($(this).val() == '' && chk.is(':checked') == true ) )
+      // chk.trigger('click');
+  // });
+  
+  // //Auto checkea el box cuando hay precio
+  // $("#price_sell").keydown(function(event){
+    // $('input[name=sell_yes]').attr('checked', $(this).val() != '' ? 'checked' : false);
+  // });
+  
+  
 }
 
 //----------------------------------

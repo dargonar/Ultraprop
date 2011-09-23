@@ -20,7 +20,7 @@ class Index(FrontendHandler):
 
 class Red(FrontendHandler):
   def get(self, **kwargs):
-    realestates   = RealEstate.all().fetch(100)
+    realestates   = RealEstate.all().order('name')
     return self.render_response('frontend/red.html'
                 , realestates     = realestates)
 

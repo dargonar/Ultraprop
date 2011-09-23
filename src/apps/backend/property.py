@@ -115,7 +115,7 @@ class Images(BackendHandler):
     images = ImageFile.all().filter('property =', property.key()).order('position')
     
     params = { 'current_tab' : 'pictures',
-               'title'       : 'Imagenes de propiedad',
+               'title'       : 'Fotos de la propiedad',
                'key'         :  kwargs['key'],
                'mnutop'      : 'propiedades',
                'images'      :  images}
