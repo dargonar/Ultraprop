@@ -47,8 +47,8 @@
             {% endfor%}
           </ul>
           <h2>Ubicación de la propiedad</h2>
-          {% set map_width  = '616' if ficha is defined else '625' %}
-          {% set map_height = '320' if ficha is defined else '320' %}
+          {% set map_width  = '616' %}
+          {% set map_height = '320' %}
           {% set img_map_src  = 'http://maps.google.com/maps/api/staticmap?center='+property.latitude|string+', '+property.longitude|string+'&zoom=14&size='+map_width+'x'+map_height+'&maptype=roadmap&markers=icon:http://ultraprop.appspot.com/img/icons/map/icong.png|'+property.latitude|string+', '+property.longitude|string+'&sensor=false' %}
           {% set map_img_id   = 'map_image_'+property.key()|string%}
           {% set map_buttons  = 'mapButtons_'+property.key()|string%}
