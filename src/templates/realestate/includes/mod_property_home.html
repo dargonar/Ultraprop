@@ -1,42 +1,21 @@
 <!-- /// PROPERTY HOME MODULE/// -->
-<div class="grid_2 property_box">
-    <h5>Belgrano</h5>
-    <p class="location">3600 Av. Scalabrini Ortiz</p>
-    <img class="pic" src="/re/img/property/sample1.jpg" />
+<div class="grid_2 property_box {{last}}">
+    <p style="font-size:13px; font-weight:bold;">{{ property.city}}</p>
+    {% set dir =  '%s %s'|format(property.street_name,property.street_number) %}
+    <p title="{{dir}}" style="margin-bottom:8px;">{{ dir|truncate(length=22, killwords=True) if (dir|length>25) else dir  }}</p>
+    <div class="pic" style="width:142px;position:relative;clear:both;display: table-cell;vertical-align: middle;">
+    <a href="{{url_for('realestate/ficha', key=property.key()|string, oper=property.prop_operation_id|string, realestate=realestate.key()|string)}}">
+      <img {% if property.main_image_url %} src="{{property.main_image_url}}=s150" {% else %} src="/img/picturebox/nophoto_80x60.jpg"  {% endif %} style="width:142px; border:none;"  title="{{property|headlinify}}"/>
+      </a>
+    </div>
     <div class="price_box">
-        <p class="price"><span class="label">Precio</span><span class="value price">U$S 1.630.000.-</span></p> 
-        <p class="price"><span class="label">Superficie</span><span class="value">350 m2</span></p> 
+        <p class="price"><span class="label">Precio</span><span class="value price">{{property|pricefy}}.-</span></p> 
+        <p class="price"><span class="label">Superficie</span><span class="value">{{property|totalareafy}}</span></p> 
     </div>
     <p class="detail">
-    Duplex. Living. Comedor. 3 dormitorio(s) 2 en suite, 1 suite con vest. 4 baño(s) 1 toilette(s).Habitación de servicio. 1 cochera(s). En semitorre. Al frente. S/av. principal. Reciclado. Luminoso. Impecable. 
+    {{ property.main_description|truncate(length=167, killwords=True)}} <br />
+    <!--{{property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor'], small=True, total_area_included=True) }}-->
     </p>
-    <input class="btnMore" name="" type="submit" value="más información" />
-</div>
-
-<div class="grid_2 property_box">
-    <h5>Belgrano</h5>
-    <p class="location">3600 Av. Scalabrini Ortiz</p>
-    <img class="pic" src="/re/img/property/sample1.jpg" />
-    <div class="price_box">
-        <p class="price"><span class="label">Precio</span><span class="value price">U$S 1.630.000.-</span></p> 
-        <p class="price"><span class="label">Superficie</span><span class="value">350 m2</span></p> 
-    </div>
-    <p class="detail">
-    Duplex. Living. Comedor. 3 dormitorio(s) 2 en suite, 1 suite con vest. 4 baño(s) 1 toilette(s).Habitación de servicio. 1 cochera(s). En semitorre. Al frente. S/av. principal. Reciclado. Luminoso. Impecable. 
-    </p>
-    <input class="btnMore" name="" type="submit" value="más información" />
-</div>
-
-<div class="grid_2 property_box last">
-    <h5>Belgrano</h5>
-    <p class="location">3600 Av. Scalabrini Ortiz</p>
-    <img class="pic" src="/re/img/property/sample1.jpg" />
-    <div class="price_box">
-        <p class="price"><span class="label">Precio</span><span class="value price">U$S 1.630.000.-</span></p> 
-        <p class="price"><span class="label">Superficie</span><span class="value">350 m2</span></p> 
-    </div>
-    <p class="detail">
-    Duplex. Living. Comedor. 3 dormitorio(s) 2 en suite, 1 suite con vest. 4 baño(s) 1 toilette(s).Habitación de servicio. 1 cochera(s). En semitorre. Al frente. S/av. principal. Reciclado. Luminoso. Impecable. 
-    </p>
-    <input class="btnMore" name="" type="submit" value="más información" />
+    <a class="btnMore" href="{{url_for('realestate/ficha', key=property.key()|string, oper=property.prop_operation_id|string, realestate=realestate.key()|string)}}" title="Ver ficha de la propiedad">Ver ficha »</a>
+     
 </div>

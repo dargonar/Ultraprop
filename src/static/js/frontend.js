@@ -277,7 +277,9 @@ function locateMap(myLatlng)
   var myOptions = {
     zoom: default_zoom_level,
     center: myLatlng,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    panControl: false
+
   };
   onWindowResize();
   map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
@@ -429,8 +431,6 @@ var g_searchCenterMarker = null;
 
 var g_mapAutoScrollInterval = null;
 var g_programmaticPanning = false; // Temporary moveend disable switch.
-var g_mapPanListener = null;
-var g_mapZoomListener = null;
 
 var MIN_PROXIMITY_SEARCH_GEOCODE_ACCURACY = 6;
 
@@ -662,6 +662,11 @@ function load_json_result(obj, cursorStep, load_html){
  * of the map.
  * @param {Boolean} enable Set to true to enable, false to disable.
  */
+var g_mapPanListener = null;
+var g_mapZoomListener = null;
+// var g_mapDragStartListener = null;
+// var g_mapBoundChangedListener = null;
+// var g_mapDragStarted = false;
 function enableSearchOnPan(enable) {
   if (typeof(enable) == 'undefined')
     enable = true;
@@ -669,10 +674,18 @@ function enableSearchOnPan(enable) {
   if (!enable) {
     if (g_mapPanListener)
       google.maps.event.removeListener(g_mapPanListener);
-      if(g_mapZoomListener!=null)
-        google.maps.event.removeListener(g_mapZoomListener);
-      g_mapPanListener = null;
-      g_mapZoomListener=null;
+    if(g_mapZoomListener!=null)
+      google.maps.event.removeListener(g_mapZoomListener);
+    // if(g_mapDragStartListener!=null)
+      // google.maps.event.removeListener(g_mapDragStartListener);  
+    // if(g_mapBoundChangedListener!=null)
+      // google.maps.event.removeListener(g_mapBoundChangedListener);    
+      
+    // Kill all listeners
+    g_mapPanListener = null;
+    g_mapZoomListener=null;
+    // g_mapDragStartListener=null;
+    // g_mapBoundChangedListener=null;
   } else if (!g_mapPanListener) {
     g_mapZoomListener= google.maps.event.addListener(map, 'zoom_changed',
         function() {
@@ -680,8 +693,18 @@ function enableSearchOnPan(enable) {
         });
     g_mapPanListener = google.maps.event.addListener(map, 'dragend',
         function() {
+          // g_mapDragStarted = false;
           doSearch();
         });
+    // g_mapDragStartListener = google.maps.event.addListener(map, 'dragstart',
+        // function() {
+          // g_mapDragStarted = true;
+        // });
+    // g_mapBoundChangedListener = google.maps.event.addListener(map, 'bounds_changed',
+        // function() {
+          // if (!g_mapDragStarted)
+            // doSearch();
+        // });
   }
 }
 

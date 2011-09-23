@@ -2,12 +2,17 @@
 
 {%- macro form_field(field, label='', class='') -%}
 	<div class="field">
+    {% if label != '' %}
     <div class="input_label">{{label}}</div>
+    {% endif %}
     {{ field(class=class+(' error' if field.errors else '')  , **kwargs) }}
     {% if field.name == 'confirm' %}
       <a href="#" class="btnIcon" id="password_unequal" style="display:none;position:absolute;top:13px;right:0px;" title="Verifique que las contraseñas sean iguales">
         <img src="/img/icons/delete.png" />
       </a>
+    {% endif %}
+    {% if field.name == 'accept_terms' %}
+    Acepto los <a target="_blank" href="{{url_for('frontend/terms')}}">términos y condiciones</a>    
     {% endif %}
   </div> 
   {% if field.errors %}
@@ -32,7 +37,7 @@ $(document).ready(function() {
   <table width="960" border="0" cellpadding="0" cellspacing="0">
     <tr>
       <td width="50%" align="center" style="padding-top:20px;" valign="top">
-        <img src="/img/frontend_promo.jpg"/>
+        <img src="/img/frontend.jpg"/>
         <ul class="skills">
           <li class="props"><p>Propiedades ilimitadas</p></li>
           <li class="pictures"><p>Fotos ilimitadas</p></li>
@@ -46,7 +51,7 @@ $(document).ready(function() {
           <div class="popup" style="border:none; width: 400px; text-align:left;">
             <div id="login" class="popup_box" style="padding:0;"> 
               <h1 style="font-size:24px; margin-left:5px;">Comience a Publicar Ahora!</h1>
-              <h2 style="color:#0A5278; font-weight:normal; margin-left:5px;">Pruébelo GRATIS por un período de 30 días.</h2>
+              <h2 style="color:#0A5278; font-weight:normal; margin-left:5px;">Pruébelo GRATIS por un período de 30 días. Sin compromiso.</h2>
               {# % if flash %}
                 <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
               {% endif % #}
@@ -65,8 +70,12 @@ $(document).ready(function() {
                   {{ form_field(form.password, label='contraseña',  class="xg long", placeholder="Contraseña", id="password") }}
                 </div>
                 <div class="last {{ 'errorbox' if form.confirm.errors else '' }}"> 
-                  {{ form_field(form.confirm, label='repetir', class="xg long", placeholder="Repetir contraseña", placeholder="Repetir contraseña", id="confirm_password") }}
+                  {{ form_field(form.confirm, label='repetir', class="xg long", placeholder="Repetir contraseña", id="confirm_password") }}
                 </div>
+                <div class="last {{ 'errorbox' if form.accept_terms.errors else '' }}"> 
+                  {{ form_field(form.accept_terms) }}
+                </div>
+                
                 {{form.ketchup(id='ketchup')}}
                 
                 <input type="submit" value="COMENZAR A PUBLICAR!" name="" class="btnWizard start">
@@ -86,7 +95,7 @@ $(document).ready(function() {
 <div class="skill_detail">
 	<h1>Diferente!</h1>
 	<div class="col_left">
-		<h3>ULTRAPROP es Diferente!</h3>
+		<h3>¿Cómo funciona?</h3>
     	<p>
         A diferencia de los demás portales inmobiliarios, ULTRAPROP es el primero en su tipo en utilizar un Sistema de Geolocalización Real, eso quiere decir que con sólo ubicar una zona de interés en el mapa, automáticamente se muestra la oferta disponible en esa zona y alrededores.<br />
         </p>

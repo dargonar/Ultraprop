@@ -20,6 +20,16 @@ class Search(RealestateHandler, PropertyPaginatorMixin):
       
     return self.get2(**kwargs)
   
+  def by_slug(self, **kwargs):
+    
+    self.realestate = RealEstate.all().filter(' domain_id = ', kwargs.get('realestate_slug')).get()
+
+    # Ponemos la pantalla de disabled si esta en NO_PAYMENT
+    if self.realestate.status == RealEstate._NO_PAYMENT:
+      return self.render_response('realestate/disabled.html', realestate=self.realestate)
+      
+    return self.get2(**kwargs)
+  
   def post(self, **kwargs):
     self.request.charset = 'utf-8'
     self.realestate = get_or_404( self.get_realestate_key_ex(kwargs.get('realestate')) )

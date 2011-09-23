@@ -23,7 +23,7 @@
 
 
 <div style="overflow:hidden; margin-bottom:20px;">
-		<h1>Estado de cuenta</h1>
+		<h1>Mi Cuenta</h1>
   </div>
   {% if flash %}
     <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
@@ -85,7 +85,7 @@
             <input type="hidden" name="url_redirect_enabled" value="1"/>
             <input type="hidden" name="change_quantity" value="0"/>
             
-            <input type="submit" class="btnWizard" name="" value="{{'Pagar Ahora' if invoice.state == Invoice._NOT_PAID else ' Reimprimir '}}">
+            <input type="submit" class="btnWizard" name="" value="{{'Pagar Ahora' if invoice.state == Invoice._NOT_PAID else ' Reimprimir cupón '}}">
           </form>
         </td>
     </tr>

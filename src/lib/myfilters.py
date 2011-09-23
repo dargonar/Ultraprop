@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
-
+from webapp2 import uri_for as url_for
 from datetime import datetime, timedelta
-from models import Property
+from models import Property, RealEstate
 from re import *
 from backend_forms import status_choices
 from search_helper import config_array, alphabet
@@ -180,14 +180,17 @@ def do_operationfy(operation_id):
     return 'Venta'
   return 'Alquiler'
   
-def do_pricefy(property, operation_type = None, small=False, **args):
+def do_pricefy(property, operation_type = None, small=False, extended_format=False, **args):
   number = property.price_rent
   cur = property.price_rent_currency
-  if (operation_type is None and property.price_sell_computed>0.0) or int(operation_type) == Property._OPER_SELL:
+  #if (operation_type is None and property.price_sell_computed>0.0) or int(operation_type) == Property._OPER_SELL:
+  if property.prop_operation_id == Property._OPER_SELL:
     number = property.price_sell
     cur = property.price_sell_currency
+  if extended_format:
+    return '<span class="value price"><small>%s</small> %s</span>' % (cur, do_currencyfy(number))
   return '<small>'+cur+'</small>'+do_currencyfy(number, small=small)
-
+  
 def do_expensasfy(property, operation_type = None, small=False, small_if_none=False, **args):
   number = property.price_expensas
   cur = property.price_rent_currency
@@ -197,3 +200,13 @@ def do_expensasfy(property, operation_type = None, small=False, small_if_none=Fa
     else:
       return 'Sin datos / No tiene'
   return '<small>'+cur+'</small>'+do_currencyfy(number, small=small) + (' <span class="mth">/mes</span>' if not small else '')
+  
+def do_realestate_linkfy(realestate, check_domain=False):
+  if check_domain:
+    if realestate.managed_domain == 1 and realestate.website and realestate.website.strip()!='':
+      return realestate.website
+  
+  if realestate.domain_id and realestate.domain_id.strip()!='' :
+    return url_for('realestate/search_slug', realestate_slug=realestate.domain_id)
+  
+  return url_for('realestate/home', realestate=str(realestate.key()))

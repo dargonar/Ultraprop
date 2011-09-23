@@ -48,6 +48,8 @@ class RealEstate(db.Model):
   name                = db.StringProperty()
   website             = db.StringProperty(indexed=False)
   email               = db.EmailProperty(indexed=False)
+  tpl_title           = db.StringProperty(indexed=False)
+  tpl_text            = db.TextProperty(indexed=False)
   
   title               = db.StringProperty()
   fax_number          = db.StringProperty(indexed=False)
@@ -587,7 +589,7 @@ class Consulta(db.Model):
   prop_operation_desc       = db.StringProperty()
   is_from_ultraprop         = db.IntegerProperty()
   created_at                = db.DateTimeProperty(auto_now_add=True)
-  
+
 class Link(db.Model):
   @classmethod
   def new_for_user(cls):
@@ -600,3 +602,27 @@ class Link(db.Model):
   slug                      = db.StringProperty()
   query_string              = db.TextProperty()
   created_at                = db.DateTimeProperty(auto_now_add=True)
+
+class HelpDesk(db.Model):
+  @classmethod
+  def new_for_current(cls, user):
+    tel = (user.mobile_number if user.mobile_number and user.mobile_number.strip()!='' else user.telephone_number)
+    if not tel:
+      tel = user.realestate.telephone_number
+    return HelpDesk(realestate_name=user.realestate.name
+                , realestate=user.realestate
+                , sender_name= '%s %s' % (user.first_name if user.first_name else '', user.last_name if user.last_name else '') 
+                , sender_email=user.email
+                , sender_telephone=tel)
+    
+  realestate_name           = db.StringProperty()
+  realestate                = db.ReferenceProperty(RealEstate)
+  sender_name               = db.StringProperty()
+  sender_email              = db.StringProperty()
+  sender_telephone          = db.StringProperty()
+  sender_subject            = db.StringProperty()
+  sender_comment            = db.TextProperty()
+  created_at                = db.DateTimeProperty(auto_now_add=True)
+  
+  def __repr__(self):
+    return self.realestate_name + '|' + str(self.realestate.key()) + '|' + self.sender_name + '|' + self.sender_email + '|' + self.sender_telephone + '|' + self.sender_subject + '|' + self.sender_comment + '|' + self.created_at.strftime('%d/%m/%Y')

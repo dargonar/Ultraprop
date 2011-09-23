@@ -1,0 +1,133 @@
+{% extends "backend/_base.html" %}
+
+{%- macro form_field(field, class='') -%}
+		{% if field.errors %}
+      {{field(class=class+' error', **kwargs)}}
+    {% else %}
+      {{field(class=class, **kwargs)}}
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro form_field2(field) -%}
+  <dd {% if field.errors %} class="errorbox" {% endif %} >
+  	<div style="border:solid 1px #ccc; padding:10px 15px;">
+		<span style="font-size:14px; font-weight:bold; padding-right:5px;">http://</span>   
+        {{ form_field(field, **kwargs)}}
+        {{ form_error(field) }}
+    </div>
+  </dd>  
+{%- endmacro -%}
+
+{%- macro form_error(field) -%}
+    {% if field.description != '' %}<span class="m2">{{field.description}}</span>{% endif %}
+    {% if field.errors %} <p class="error">{{ field.errors.0 }}</p> {% endif %}
+{%- endmacro -%}
+
+
+{%- macro form_field2_container_double(field1, field2) -%}
+  <dd {% if field1.errors or field2.errors %} class="errorbox" {% endif %} >
+{%- endmacro -%}
+
+{%- macro form_field2_container(field) -%}
+  <dd {% if field.errors %} class="errorbox" {% endif %} >
+{%- endmacro -%}
+
+{% block headscript %}
+  <script type="text/javascript">
+  $(document).ready(function() {
+    init_realestate_website('{{url_for('backend/realestate_website/check_domain_id')}}');
+  });
+  </script>
+{% endblock %}
+
+{% block content %}
+
+	<div style="overflow:hidden; margin-bottom:20px;">
+		<h1>Mi Web <!--i style="font-size:14px;">edición de sitio web</i--></h1>
+  </div>
+  {% if flash %}
+    <div class="msg_{{flash.type}}" id="flash_message"><b>{{flash.message}}</b></div>
+  {% endif %}
+    
+  <form id="website_form" action="{{url_for('backend/realestate_website/edit')}}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="key" value="{{key}}" />
+    <!-- ///// IDENTITY ///// -->    
+    <h2 class="title">Mi marca y mi presencia en la web</h2>
+    <dl class="form" style="max-width:920px;">
+        <dt style="width:380px; margin-right:20px; margin-bottom:15px;">
+            <h3>Ya tengo página web</h3>
+            <p style="font-weight:normal;">
+            Ingrese la dirección para que figure en nuestros listados y en la página de contacto.</p>
+        </dt>
+
+        {{ form_field2(form.website, title="www.sudominio.com.ar", placeholder="www.sudominio.com.ar") }}
+  
+        <dt style="width:380px; margin-right:20px; margin-bottom:15px;">
+        	<h3>No tengo página web</h3>
+        	<p style="font-weight:normal;">
+            Si desea tener su página web con dominio propio seleccione esta opción.&nbsp;&nbsp;
+            <a href="http://www.jorgemaull.com.ar" target="_blank"> (ver ejemplo)</a>
+			</p>
+        </dt>
+        <dd>
+   	  <div class="block_info" style="margin-bottom:15px;">
+            	<p>Seleccione esta opción y un responsable del área técnica se contactará para tramitar su solicitud.</p>
+                
+                <div class="block_info_divider"></div>
+                
+                {{form.managed_domain}}
+                <label for="managed_domain">
+                    <b>Quiero mi página web</b>
+                </label>
+            </div>
+        </dd>
+      
+        
+      <dt style="width:380px; margin-right:20px; margin-bottom:15px;">
+        <h3>Dirección en UltraProp</h3>
+         <p style="font-weight:normal;">Elija su dirección web en ULTAPROP.</p>
+      </dt>
+      
+	<dd id="did_dd" {% if form.domain_id.errors %} class="errorbox" {% endif %}>
+    	<div style="border:solid 1px #ccc; padding:10px 15px;">
+          <span>http://www.ultraprop.com.ar/</span>
+            {{form.domain_id(style='width:140px;', placeholder='')}}
+          <a class="uibutton" id="validate_domain_id" href="#" title="Comprobar disponibilidad">&nbsp;Comprobar&nbsp;</a>
+            {{ form_error(form.domain_id) }}
+            {% if not form.domain_id.errors %}
+              <p style="display:none" class="ok">&nbsp;</p>
+            {% endif %}
+        </div>
+        
+        <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
+      </dd>
+</dl>
+
+<h2 class="title">Mensajes institucionales en su Página Web</h2>
+
+<dl class="form" style="max-width:920px;">
+	<dt style="width:400px; margin-bottom:15px;">
+        <img src="/img/myweb_sample.jpg"/>
+      </dt>
+      
+      <dd>
+      	<div style="border:solid 1px #ccc; padding:10px 15px; margin-top:20px;">
+            <h4 style=" margin:0; margin-bottom:3px;">Título institucional</h4>
+            {{ form.tpl_title(title="Título", placeholder="Escriba un título institucional aquí") }}
+            
+            <h4 style="margin-bottom:3px;">Texto institucional</h4>
+            {{ form.tpl_text(title="Título", placeholder="Escriba un texto institucional aquí") }}
+            
+            <div style="margin-top:8px;">
+            	<a href="{{realestate|realestate_linkfy(check_domain=False)}}" target="_blank" id="preview" class="uibutton">&nbsp;&nbsp;&nbsp;Visualizar página&nbsp;&nbsp;&nbsp;</a>
+             </div>
+        </div>
+        
+        <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
+      </dd>
+
+	</dl>  
+
+  </form>
+
+{% endblock  %}

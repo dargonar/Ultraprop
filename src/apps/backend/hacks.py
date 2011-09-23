@@ -23,6 +23,7 @@ class Unsubscribe(BackendHandler):
     return self.render_response('backend/unsubscribe.html', email=kwargs['email'])
 
 class LaPlataCampaign(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     emails = [
       'info@daufi.com.ar',
@@ -125,6 +126,7 @@ class OldRealEstateRedirect(BackendHandler):
     self.redirect_to('realestate/search', realestate=realestate)
 
 class RemoveRealEstate(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     re = get_or_404(kwargs['key'])
     
@@ -182,6 +184,7 @@ class ImageFixMapper(Mapper):
     return ([img], []) # update/delete
 
 class FixImages(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     # Mandamos a correr la tarea de mapeo
     tmp = ImageFixMapper()
@@ -192,35 +195,20 @@ class FixImages(BackendHandler):
 class RealEstateFixMapper(Mapper):
   KIND    = RealEstate
   def map(self, re):
-    
-    #re.status     = RealEstate._ENABLED
-    #re.logo_url   = get_serving_url(re.logo) if re.logo else None
-    #re.plan       = Plan.all().get()
-    #re.domain_id  = do_slugify(re.name)
-
-    first_date = date(2011,9,10)
-    
-    invoice = Invoice()
-    invoice.realestate = re
-    invoice.trx_id     = create_transaction_number(first_date, re)
-    invoice.amount     = re.plan.amount
-    invoice.state      = Invoice._NOT_PAID
-    invoice.date       = first_date
-    invoice.put()
 
     # Nuevo hack
-    re.managed_domain = 1
-    re.last_invoice   = invoice.date
-    re.last_login     = datetime.now()
+    re.tpl_title  = u'Hacemos más fácil, rápida y segura su operación inmobiliaria'
+    re.tpl_text   = u'Nuestra inmobiliaria se ha convertido en una empresa moderna y dinámica. Hoy cuenta con los más modernos sistemas de comercialización, con los recursos humanos y con la tecnología necesarios para realizar con éxito sus negocios inmobiliarios.'
     
     return ([re], []) # update/delete
 
 class FixRealEstates(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     # Mandamos a correr la tarea de mapeo
     tmp = RealEstateFixMapper()
     deferred.defer(tmp.run)
-    self.response.write('corriendo RealEstateFixMapper')    
+    self.response.write('corriendo RealEstateFixMapper v2')    
 
 #------------
 class PropertyFixMapper(Mapper):
@@ -240,6 +228,7 @@ class PropertyFixMapper(Mapper):
     return ([prop], []) # update/delete
 
 class FixProperty(BackendHandler):
+  @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     # Mandamos a correr la tarea de mapeo
     tmp = PropertyFixMapper()

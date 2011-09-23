@@ -81,6 +81,12 @@ def my_int_validator(field):
     raise ValidationError('El numero es invalido')
 
 def validate_domain_id(domain_id, mykey=None):
+    if domain_id.strip()=='':
+      return {'result':'used','msg':u'El nombre no puede ser vacío'}
+    
+    if domain_id.strip()in['mapa', 'admin', 'red-ultraprop', '']:
+      return {'result':'used','msg':u'Este nombre está restringido'}
+      
     # Primero validamos que sea tipo regex
     SLUG_REGEX = re.compile('^[-\w]+$')
     if not re.match(SLUG_REGEX, domain_id):
@@ -103,8 +109,9 @@ class PropertyFilterForm(Form):
   currency           = SelectField('Moneda',choices=[('ARS', '$ - Pesos'), ('USD', 'USD - Dolares')],default='ARS')
   price_min          = IntegerField(u'Precio', [validators.optional()], widget=MyTextInput())
   price_max          = IntegerField(u'Precio', [validators.optional()], widget=MyTextInput())
-  area_indoor        = SelectField('Ambientes' , coerce=int, choices=[( i, features['area_indoor']['descriptions'][i]) for i in range(0, len(features['area_indoor']['rangos']))],default=0)
-  rooms              = SelectField('Superficie', coerce=int, choices=[( i, features['rooms']['descriptions'][i]) for i in range(0, len(features['rooms']['rangos'])-1)],default=0)  
+  area_indoor        = SelectField('Superficie' , coerce=int, choices=[( i, features['area_indoor']['descriptions'][i]) for i in range(0, len(features['area_indoor']['rangos']))],default=0)
+  rooms              = SelectField('Ambientes', coerce=int, choices=[( i, features['rooms']['descriptions'][i]) for i in range(0, len(features['rooms']['rangos'])-1)],default=0)  
+  bedrooms           = SelectField('Dormitorios', coerce=int, choices=[( i, features['bedrooms']['descriptions'][i]) for i in range(0, len(features['bedrooms']['rangos'])-1)],default=0)  
   sort               = SelectField(choices=[(order_opts[i][0],order_opts[i][1]) for i in range(0,len(order_opts))], default='-sort_price')
   status             = SelectField(u'Estado de publicación', coerce=int, choices=status_choices, default=Property._PUBLISHED)
   haslocation        = BooleanField(u'Listar Todas')
@@ -287,20 +294,36 @@ class RealEstateForm(Form):
   
   logo                = FileField('')
   name                = TextField('',[validators.Required(message=u'Debe ingresar un nombre de Inmobiliaria.')])
-  website             = TextField('', default='')
   email               = TextField('',[validators.email(message=u'Debe ingresar un correo válido.')
                                       , validators.Required(message=u'Debe ingresar un correo electrónico.')], default='')
-  
   title               = TextField()
   fax_number          = TextField('')
   telephone_number    = TextField('',[validators.Required(message=u'Debe ingresar un número de teléfono.')])
   telephone_number2   = TextField('')
-  
   address             = TextField('',[validators.Required(message=u'Debe ingresar una dirección.')])
   zip_code            = TextField('',[validators.Required(message=u'Debe ingresar un código postal.')])
   
+  def update_object(self, rs):
+    rs.name               = self.name.data
+    rs.email              = self.email.data
+    rs.title              = self.title.data
+    rs.fax_number         = self.fax_number.data
+    rs.telephone_number   = self.telephone_number.data
+    rs.telephone_number2  = self.telephone_number2.data
+    rs.address            = self.address.data
+    rs.zip_code           = self.zip_code.data
+    return rs
+    
+
+class RealEstateWebSiteForm(Form):
+  def __repr__(self):
+    return 'RealEstateWebSiteForm'
+  
+  website             = TextField('', default='')
   managed_domain      = BooleanField('')
   domain_id           = TextField('')
+  tpl_title           = TextField('')
+  tpl_text            = TextAreaField('')
   
   def validate_website(form, field):
     
@@ -325,23 +348,17 @@ class RealEstateForm(Form):
     
     
   def update_object(self, rs):
-    rs.name               = self.name.data
+    rs.website                  = self.website.data
+    if self.website.data.strip() != '' and 'http://' not in self.website.data:
+      rs.website                  = 'http://'+self.website.data
+    tmp_current_managed_domain  = rs.managed_domain
+    rs.managed_domain           = to_int(self.managed_domain.data)
+    rs.domain_id                = self.domain_id.data
+    rs.tpl_title                = self.tpl_title.data
+    rs.tpl_text                 = self.tpl_text.data
     
-    # _website              = self.website.data.strip()
-    # if 'http://' not in _website and _website != '':
-      # _website = 'http://%s' % self.website.data
+    return rs, (tmp_current_managed_domain!=rs.managed_domain)
     
-    rs.website            = self.website.data
-    rs.managed_domain     = to_int(self.managed_domain.data)
-    rs.domain_id          = self.domain_id.data
-    rs.email              = self.email.data
-    rs.title              = self.title.data
-    rs.fax_number         = self.fax_number.data
-    rs.telephone_number   = self.telephone_number.data
-    rs.telephone_number2  = self.telephone_number2.data
-    rs.address            = self.address.data
-    rs.zip_code           = self.zip_code.data
-    return rs
     
 class UserForm(Form):
   def __repr__(self):
@@ -417,7 +434,11 @@ class UserChangePasswordForm(Form):
 class SignUpForm(KetchupForm):
   def __repr__(self):
     return 'SignUpForm'
-    
+
+  def validate_accept_terms(form, field):
+    if not field.data:
+      raise ValidationError(u'Debe aceptar los términos y condiciones.')
+      
   def validate_email(form, field):
     # Chequeo que el correo no este repetido
     user        = User.all().filter('email =', field.data).get()
@@ -450,6 +471,7 @@ class SignUpForm(KetchupForm):
                             validators.EqualTo('confirm', message=u'Las contraseñas deben ser iguales.')
                         ])
   confirm             = PasswordField(u'Repita contraseña')
+  accept_terms        = BooleanField('')
       
 class PropertyContactForm(KetchupForm):
   def __repr__(self):
@@ -461,3 +483,22 @@ class PropertyContactForm(KetchupForm):
   message             = TextAreaField('',[validators.Required(message=u'Debe ingresar un mensaje.')], default='')
   telephone           = TextField('')
   
+class HelpDeskForm(Form):
+  def __repr__(self):
+    return 'HelpDeskForm'
+  
+  sender_name               = TextField('',[validators.Required(message=u'Debe ingresar un nombre.')])
+  sender_email              = TextField('',[validators.email(message=u'Debe ingresar un correo válido.')
+                                      , validators.Required(message=u'Debe ingresar un correo.')], default='')
+  sender_telephone          = TextField('')
+  sender_subject            = TextField('', [validators.Required(message=u'Debe ingresar un Asunto.')])
+  sender_comment            = TextAreaField('',[validators.Required(message=u'Debe ingresar un Comentario.')], default='')
+  
+  def update_object(self, help_desk):
+    help_desk.sender_name       = self.sender_name.data
+    help_desk.sender_email      = self.sender_email.data
+    help_desk.sender_telephone  = self.sender_telephone.data  
+    help_desk.sender_subject  = self.sender_subject.data
+    help_desk.sender_comment  = self.sender_comment.data
+    
+    return help_desk

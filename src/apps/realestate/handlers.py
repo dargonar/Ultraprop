@@ -9,28 +9,39 @@ from webapp2 import cached_property
 
 from models import Property
 from backend_forms import PropertyFilterForm, PropertyContactForm
-
 from utils import get_or_404, RealestateHandler
-
+from search_helper_func import PropertyPaginatorMixin
 # Mail de bienvenida
 from google.appengine.api import mail
 from models import User, RealEstate
 
 # Index va a ser la homepage de la inmobiliaria, creo que quedará obsoleto.    
-class Index(RealestateHandler):
+class Index(RealestateHandler, PropertyPaginatorMixin):
+  realestate = None
+  
   def get(self, **kwargs):
-    realestate = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
-    
+    self.realestate = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
+    return self.getto(realestate=self.realestate)
+  
+  def by_slug(self, **kwargs):
+    self.realestate = RealEstate.all().filter(' domain_id = ', kwargs.get('realestate_slug')).get()
+    if not self.realestate:
+      abort(404)
+    return self.getto(self.realestate, **kwargs)
+  
+  def getto(self, realestate, **kwargs):
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
     if realestate.status == RealEstate._NO_PAYMENT:
       return self.render_response('realestate/disabled.html', realestate=realestate)
-
-    kwargs['realestate']  = realestate
-    kwargs['realestate_logo'] = realestate.logo_url
-    kwargs['menu_item']   = 'index'
       
+    kwargs['realestate']        = realestate
+    kwargs['menu_item']         = 'index'
+    kwargs['properties']        = Property.all().filter(' realestate = ', realestate).filter(' status = ', Property._PUBLISHED).fetch(4)
+    kwargs['form']              = self.form
     return self.render_response('realestate/index.html', **kwargs)
- 
+  
+  
+    
 # Info de la propiedad, creo que quedará obsoleto.    
 class Info(RealestateHandler):
   def get(self, **kwargs):

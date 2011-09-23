@@ -4,21 +4,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
   init_new_property();
-  $('#btnMaximize').toggle(function() {
-    $('#location_box').addClass('fullsize');
-    $(this).removeClass('maximize');
-    $(this).addClass('minimize');
-    $('#map_canvas').css('width',$('#location_box').width()+'px').css('height',$('#location_box').height()-$('#location_box .location_head').innerHeight()+'px');
-    google.maps.event.trigger(map, 'resize');
-  }, function() {
-    $('#location_box').removeClass('fullsize');
-    $(this).removeClass('minimize');
-    $(this).addClass('maximize');
-    $('#map_canvas').css('width','740px').css('height','300px');
-    google.maps.event.trigger(map, 'resize');
-    //var point = new google.maps.LatLng($('#location').val().split(',')[0], $('#location').val().split(',')[1]);
-    map.setCenter(marker.getPosition());
-  });
 });
 </script>
 {% endblock %}

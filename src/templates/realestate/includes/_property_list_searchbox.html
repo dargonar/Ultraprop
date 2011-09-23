@@ -3,7 +3,7 @@
   <form id="filter" method="POST" action="{{url_for('realestate/search', realestate=realestate.key()|string)}}">
   <div class="filters">
   	<h3>Buscador</h3>
-    <div class="location_box">
+    <div class="location_box list">
       <p class="label">Zona</p>
       {{form.location_text(class='search', placeholder='Calle, Barrio, Localidad')}}
       <input class="btnSearch" type="submit" value=""/>
@@ -28,6 +28,10 @@
         <div class="divider_h"></div>
         <p class="label">Ambientes</p>
         {{form.rooms}}
+        
+        <div class="divider_h"></div>
+        <p class="label">Dormitorios</p>
+        {{form.bedrooms}}
         
         <div class="divider_h"></div>
         <p class="label">Superficie Cub.</p>

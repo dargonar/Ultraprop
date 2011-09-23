@@ -12,11 +12,11 @@ def get_rules():
     rules = [
     
       #-------------------------------URL HACKS VAN ACA----------------------------------------
-      #Route('/h/fix_images',   name='fiximages',          handler='apps.backend.hacks.FixImages'),
+      Route('/tsk/fix_images',      name='fiximages',      handler='apps.backend.hacks.FixImages'),
       Route('/tsk/fix_re',          name='fixre',          handler='apps.backend.hacks.FixRealEstates'),
       Route('/tsk/remove_re/<key>', name='removere',       handler='apps.backend.hacks.RemoveRealEstate'),
       
-      #Route('/h/fix_prop',     name='fixprop',            handler='apps.backend.hacks.FixProperty'),
+      Route('/h/fix_prop',     name='fixprop',            handler='apps.backend.hacks.FixProperty'),
       
       # Esta la pongo aca por puta
       Route('/webclient/index.asp',   name='oldredir',            handler='apps.backend.hacks.OldRealEstateRedirect'),
@@ -38,7 +38,10 @@ def get_rules():
       Route('/',                                                    name='frontend/home',             handler='apps.frontend.home.Index'),
       
       Route('/mapa',                                                name='frontend/map',              handler='apps.frontend.map.Index'),
-      Route('/mapa/',                                               name='frontend/map/',             handler='apps.frontend.map.Index'),
+      
+      Route('/inmobiliarias-la-plata',                              name='frontend/red',              handler='apps.frontend.home.Red'),
+
+      Route('/terms',                                               name='frontend/terms',            handler='apps.frontend.home.Terms'),      
       
       Route('/mapa/<slug>/<key_name_or_id>',                        name='frontend/map/slug/key',     handler='apps.frontend.map.Index:slugged_link'),
       Route('/mapa/<realestate>',                                   name='frontend/map/realestate',   handler='apps.frontend.map.Index:realesate_filtered'),

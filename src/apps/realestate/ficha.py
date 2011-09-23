@@ -43,7 +43,7 @@ class Show(RealestateHandler):
     kwargs['price']       = price
     kwargs['cur']         = cur
     kwargs['config_array']= config_array
-    kwargs['menu_item']   =  'search'
+    kwargs['menu_item']   =  'ficha'
     
     kwargs['form']        =  self.form
     kwargs['oper']        =  price_data_operation
