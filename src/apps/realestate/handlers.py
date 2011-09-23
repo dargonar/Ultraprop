@@ -21,7 +21,7 @@ class Index(RealestateHandler, PropertyPaginatorMixin):
   
   def get(self, **kwargs):
     self.realestate = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
-    return self.getto(self.realestate, **kwargs)
+    return self.getto(realestate=self.realestate)
   
   def by_slug(self, **kwargs):
     self.realestate = RealEstate.all().filter(' domain_id = ', kwargs.get('realestate_slug')).get()
@@ -32,7 +32,7 @@ class Index(RealestateHandler, PropertyPaginatorMixin):
   def getto(self, realestate, **kwargs):
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
     if realestate.status == RealEstate._NO_PAYMENT:
-      return self.render_response('realestate/disabled.html', realestate=self.realestate)
+      return self.render_response('realestate/disabled.html', realestate=realestate)
       
     kwargs['realestate']        = realestate
     kwargs['menu_item']         = 'index'
