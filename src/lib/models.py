@@ -135,7 +135,7 @@ class User(db.Model):
   
   @property
   def full_name(self):
-    return '%s %s' % (self.first_name, self.last_name)
+    return '%s %s' % (self.first_name if self.first_name else '' , self.last_name if self.last_name else '')
   
   def __repr__(self):
     return self.name
@@ -626,3 +626,22 @@ class HelpDesk(db.Model):
   
   def __repr__(self):
     return self.realestate_name + '|' + str(self.realestate.key()) + '|' + self.sender_name + '|' + self.sender_email + '|' + self.sender_telephone + '|' + self.sender_subject + '|' + self.sender_comment + '|' + self.created_at.strftime('%d/%m/%Y')
+
+class RealEstateFriendship(db.Model):
+  _REQUESTED        = 1
+  _ACCEPTED         = 2
+  _DENIED           = 3
+  _REJECTED         = 4
+  
+  @classmethod
+  def new_for_request(cls):
+    return RealEstateFriendship(state=RealEstateFriendship._REQUESTED)
+    
+  realestate_a              = db.ReferenceProperty(RealEstate)
+  realestate_b              = db.ReferenceProperty(RealEstate)
+  created_at                = db.DateTimeProperty(auto_now_add=True)
+  state                     = db.IntegerProperty()
+  rs_a_shows_b              = db.BooleanProperty()
+  rs_b_shows_a              = db.BooleanProperty()
+  
+  

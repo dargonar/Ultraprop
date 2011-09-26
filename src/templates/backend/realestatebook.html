@@ -16,43 +16,20 @@ $(document).ready(function() {
 
 {% block content %}
 
-<div id="msg1" class="bg_popup friends">&nbsp;</div>
-<div id="msg2" class="dialog account">
-<!--div class="btnClose"></div-->
-	
-    <div style="padding:14px 20px;">
-      {% if flash %}
-        <div class="msg_{{flash.type}}" id="flash_message"><b>{{flash.message}}</b></div>
-      {% else %}
-        <h2 style=" color:#0A5278; margin-bottom:10px; font-size:21px;">Red ULTRAPROP</h2>
-        <p style="font-size:16px;">
-        Este servicio le permite ampliar y compartir su oferta inmobiliaria con sus colegas de confianza.<br/>
-        <br /><br />
-        <b> ¿Desea habilitar este servicio?</b>
-        </p>
-        <div class="divider_h"></div>
-        <div align="center">
-          <a id="apply" class="uibutton special submit" href="{{url_for('backend/realestatebook/wants_poke')}}" style="font-size:14px;">SI, habilitar servicio</a>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <a id="apply" style="text-decoration:underline;" href="#">NO, gracias</a>
-        </div>
-      {% endif %}
-    </div>
-</div>
-
-
 <h1 style="margin-bottom:20px;">Red ULTRAPROP</h1>
 <ul class="tabs_admin">
   <li><a href="#">Red ULTRAPROP</a></li>
   <li><a href="#">Solicitudes</a></li>
   <li class="active"> <a href="javascript:alert('Debe guardar la propiedad para subir las fotos')">Buscar inmobiliarias</a> </li>
 </ul>
-
-<div class="uibutton-toolbar picture" style="margin-bottom:5px; margin-top:10px;"> <span class="label">Seleccionar:</span>
+{% if flash %}
+  <div class="msg_{{flash.type}}" id="flash_message"><b>{{flash.message}}</b></div>
+{% endif %}
+<!--div class="uibutton-toolbar picture" style="margin-bottom:5px; margin-top:10px;"> <span class="label">Seleccionar:</span>
   <div class="uibutton-group"> <a id="selectall" class="uibutton" href="#">Todo</a> <a id="deselectall"class="uibutton" href="#">Nada</a> </div>
   <a id="delselected" class="uibutton" href="#">Eliminar</a>
   <input style="float:right;" name="" type="text" placeholder="Escriba un nombre" />
-  <img id="wait" src="/img/ajax-loader.gif" style="display:none"/> </div>
+  <img id="wait" src="/img/ajax-loader.gif" style="display:none"/> </div-->
   
   
   
@@ -88,64 +65,47 @@ $(document).ready(function() {
     <a href="#" class="z ln-last">Z</a>
 </div>
 
-
-
-
-
 <div class="viewPicBox">
   <ul id="masterpic" class="picturebox_admin">
     {% for realestate in realestates %}
     <li>
-      <div style="display:none" class="confirm">
-        <div class="actions">
-          <p class="msg">Seguro desea eliminar?</p>
-          <a class="no" href="#">NO</a> <a class="yes" href="#">SI</a> </div>
-        <div class="bg"></div>
-      </div>
-      <img title="Eliminar imagen" src="/img/icons/btnClose.png" class="btnClose">
-      <div style="display: table-cell; vertical-align: middle; text-align:center; width:160px; height:120px" id="imgbox"> 
-        <!--img src="http://localhost:8080/_ah/img/SkkNYovRBfyJWn5fkmXUhA===s160" class="propImg" title="DSCF8511.JPG" alt="DSCF8511.JPG" style="max-width:160px; max-height:120px"--> 
-        {% if realestate.logo_url %} <img class="logo" src="{{realestate.logo_url+'=s160'}}" style="max-width:160px;max-height:120px;" title="{{realestate.name}}"/> {% else %}
-        <div style="width:160px;height:120px;float:left;"></div>
-        {% endif %} </div>
-      <p class="name">{{realestate.name}}</p>
-      <div jqtransform="true">
-        <div class="ex-label">
-          <input type="checkbox" name="ag1kZXZ-dWx0cmFwcm9wchALEglJbWFnZUZpbGUYkk4M" id="main_filter-proptype-departamento">
+      <div style="width:160px; height:120px" id="imgbox"> 
+        <div class="agentbox" style="width: 160px;float: left; margin-right:20px;">
+          <div style="width:160px;height:120px;display: table-cell; vertical-align: middle;">
+            {% if realestate.logo_url %}
+              <img class="logo" src="{{realestate.logo_url+'=s160'}}" style="max-width:160px;max-height:120px;" title="{{realestate.name}}"/> 
+            {% else %}
+              <div style="width:160px;height:120px;float:left;"></div>
+            {% endif %} 
+          </div>
+          <div class="data" style="width:160px;test-align:left;">
+            <h3>{{realestate.name}}</h3>
+            <span>{{realestate.address if realestate.address else ''}}</span><br/>
+            <span>{{realestate.telephone_number if realestate.telephone_number else ''}}</span><br/>
+            {% if realestate.website and realestate.website|wordcount>0 %}
+              <a href="{{'%s%s'|format('http://',realestate.website) if 'http://' not in realestate.website else realestate.website }}" target="_blank" title="Sitio web de {{realestate.name}}">{{realestate.website}}</a><br/>
+            {% else %}
+              <br/>
+            {% endif %}
+            <a href="{{realestate|realestate_linkfy}}" target="_blank" title="{{realestate.name}} en Ultraprop">www.ultraprop.com.ar{{realestate|realestate_linkfy}}</a><br/>
+            <p>{{ realestate|ownerify}}</p>
+          </div>
         </div>
+      </div>
+      <div class="ex-label" title="Seleccionar para pedir amistad">
+        <input type="checkbox"/> <b>Agregar a mi grupo</b>
       </div>
     </li>
     {% endfor %}
   </ul>
 </div>
 <span id="addphoto"></span> 
-
-<!--p class="msg_warning" align="center">
-    <span class="title">
-      Estamos actualizando los servidores. Este servicio estará disponible a la brevedad para Usted.
-    </span>
-  </p--> 
-{% if flash %} 
-<!--div class="msg_{{flash.type}}" id="flash_message">{{flash.message}}</div--> 
-{% endif %} <br/>
+<br/>
 <center>
   <div style="margin:10px 0; border-top: dotted 1px #ccc;"></div>
-  <img src="/img/friends.gif" width="243" height="61" /> 
-  <!--a href="{{url_for('backend/realestatebook/wants_poke')}}" class="btnWizard" style="text-align:center;">Avisarme cuando esté disponible</a-->
+  <a href="#" style="border:none;">
+    <img src="/img/friends.gif" width="243" height="61" /> 
+  </a>
 </center>
 
-<!--
-    <div id="sort_by">
-      <div class="sortbox">
-         <label>Listado</label> 
-      </div>
-    </div>
-    {# % include "backend/includes/realestatebook_navbar.html" % #}
-    <div class="divider"></div>
-    <div class="noelement proplist txt">
-      <span>Estamos actualizando los servidores. Disculpe las molestias.</span>
-    </div>
-    <div class="divider"></div>
-    {# % include "backend/includes/realestatebook_navbar.html" % #}
-  --> 
 {% endblock %}
