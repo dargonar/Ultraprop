@@ -1,0 +1,36 @@
+	<div class="list_box">
+    <!--input name="{{req_realestate.key()|string}}" class="chkrs" id="{{req_realestate.key()|string}}" type="checkbox" /-->
+        
+    <!-- PICTURE -->
+        {% if req_realestate.logo_url %}
+          <img class="pic" src="{{req_realestate.logo_url+'=s140'}}" style="max-width:140px;max-height:105px;" title="{{req_realestate.name}}" class="pic"/> 
+        {% else %}
+          <div style="max-width:140px;max-height:105px;" class="pic"></div>
+        {% endif %} 
+        <!-- DATA -->
+        <div class="data">
+        	<h3>{{req_realestate.name}}</h3>
+            <p class="sup">
+              <span>{{req_realestate.address if req_realestate.address else ''}}</span><br/>
+              <span>{{req_realestate.telephone_number if req_realestate.telephone_number else ''}}</span><br/>
+              {% if req_realestate.website and req_realestate.website|wordcount>0 %}
+                <a href="{{'%s%s'|format('http://',req_realestate.website) if 'http://' not in req_realestate.website else req_realestate.website }}" target="_blank" title="Sitio web de {{req_realestate.name}}">{{req_realestate.website}}</a><br/>
+              {% else %}
+                <br/>
+              {% endif %}
+              <a href="{{req_realestate|realestate_linkfy}}" target="_blank" title="{{req_realestate.name}} en Ultraprop">www.ultraprop.com.ar{{req_realestate|realestate_linkfy}}</a><br/>
+              {{ req_realestate|ownerify}}
+            </p>
+        </div>
+        
+        <!-- -->
+        <div class="actions">
+          {% if request.is_sender(req_realestate) %}
+          <a class="uibutton" href="{{url_for('backend/realestatebook/friend_request/accept', key=request.key()|string)}}" title="Aceptar solicitud">Aceptar &raquo;</a>
+          <a class="publisher uibutton icon delete" href="{{url_for('backend/realestatebook/friend_request/reject', key=request.key()|string)}}" title="Rechazar solicitud">Rechazar</a>
+          {% else %}
+          <span>Aguardando respuesta...</span>  
+          {% endif %}
+        </div>
+        
+    </div>

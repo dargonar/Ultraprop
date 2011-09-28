@@ -218,6 +218,13 @@ indexes:
   - name: state
   - name: date
 
+- kind: Property
+  properties:
+  - name: realestate_network
+  - name: status
+  - name: price_rent_computed
+    direction: desc
+
 - kind: PropertyIndex
   properties:
   - name: location_geocells

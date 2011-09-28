@@ -146,6 +146,8 @@ class Property(GeoModel):
   _NOT_PUBLISHED = 2
   _DELETED       = 3
   
+  # realestates_friends     => al ser amigos
+  # realestates_frontend    => al ampliar oferta  
   @staticmethod
   def new(realestate):
     return Property(realestate=realestate, status=Property._PUBLISHED ,image_count=0)
@@ -160,6 +162,10 @@ class Property(GeoModel):
   def is_not_published(self):
     return self.status == Property._NOT_PUBLISHED
   
+  _RS_FRIEND_FIELD        = 'realestate_network'
+  _RS_SHARE_FIELD         = 'realestate_network_fe'
+  realestate_network      = db.StringListProperty()   # somos amigos
+  realestate_network_fe   = db.StringListProperty()   # ampliamos oferta
   # Information Fields	
   headline                = db.StringProperty()
   main_description        = db.TextProperty()
@@ -631,17 +637,63 @@ class RealEstateFriendship(db.Model):
   _REQUESTED        = 1
   _ACCEPTED         = 2
   _DENIED           = 3
-  _REJECTED         = 4
+  _DELETED          = 4
   
   @classmethod
-  def new_for_request(cls):
-    return RealEstateFriendship(state=RealEstateFriendship._REQUESTED)
+  def new_for_request(cls, realestate_a, realestate_b):
+    rs                  = RealEstateFriendship(key_name = '%s,%s' % (str(realestate_a.key()), str(realestate_b.key())), state=RealEstateFriendship._REQUESTED)
+    rs.rs_a_shows_b     = False
+    rs.rs_b_shows_a     = False
+    rs.realestate_a     = realestate_a
+    rs.realestate_b     = realestate_b
+    return rs
+  
+  @classmethod
+  def get_the_other(cls, obj_key, known_realestate, get_key=False):
+    datu        = str(obj_key.name()).split(',')
+    unknown_key = datu[0]
+    if(datu[0]==known_realestate):
+      unknown_key = datu[1]
+    if get_key:
+      return db.Key(unknown_key)
+    return unknown_key
+  
+  def get_the_other_realestate(self, known_realestate, key_only=False):
+    if key_only:
+      return RealEstateFriendship.get_the_other(self.key(), str(known_realestate), get_key=False)
+    return db.get(RealEstateFriendship.get_the_other(self.key(), str(known_realestate), get_key=True))
+  
+  def is_sender(self, realestate):
+    return self.realestate_a.key() == realestate.key()
+  
+  def accept(self):
+    self.state = RealEstateFriendship._ACCEPTED
+    self.save()
+    return
     
-  realestate_a              = db.ReferenceProperty(RealEstate)
-  realestate_b              = db.ReferenceProperty(RealEstate)
+  def reject(self):
+    self.state = RealEstateFriendship._DENIED
+    self.save()
+    return 
+    
+  realestate_a              = db.ReferenceProperty(RealEstate, collection_name ='realestate_a')
+  realestate_b              = db.ReferenceProperty(RealEstate, collection_name ='realestate_b')
+  realestate_deleter        = db.ReferenceProperty(RealEstate, collection_name ='realestate_deleter') 
   created_at                = db.DateTimeProperty(auto_now_add=True)
   state                     = db.IntegerProperty()
   rs_a_shows_b              = db.BooleanProperty()
   rs_b_shows_a              = db.BooleanProperty()
+  realestates               = db.StringListProperty()
   
+  # def save(self):
+    # super(RealEstateFriendship, self).save()
+    # return self
+    
+  #Cuando nuevo
+  def put(self):
+    self.realestates.append(str(self.realestate_a.key()))
+    self.realestates.append(str(self.realestate_b.key()))
+    super(RealEstateFriendship, self).put()
+    return self
+    
   

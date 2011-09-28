@@ -4,13 +4,14 @@ import urllib
 import cgi
 
 from google.appengine.ext import db
-
+from google.appengine.api import taskqueue
+from taskqueue import Mapper
 from webapp2 import abort, cached_property, RequestHandler, Response, HTTPException, uri_for as url_for, get_app
 from webapp2_extras import jinja2, sessions, json
 
 from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify, do_headlinify, do_slugify, do_operationfy, do_totalareafy, do_expensasfy, do_add_days, do_realestate_linkfy, do_ownerify
 
-from models import Link
+from models import Link, Property
 # ================================================================================ #
 # Funciones para manejo de Links: guardar y recuperar busqueda en mapa =========== #
 # ================================================================================ #
@@ -340,3 +341,43 @@ class RealestateHandler(MyBaseHandler):
     except:
       return db.Key(realestate_key_or_id)
       
+class NetworkPropertyMapper(Mapper):
+  KIND        = Property
+  FILTER      = []
+  
+  def __init__(self, owner, friend, do_add=True, field='realestate_network', field2=None): # realestate_network or realestate_network_fe
+    
+    self.owner = owner
+    self.friend = friend
+    self.do_add = do_add
+    self.field  = field
+    self.field2 = field2
+    self.FILTER = [ ('realestate', str(owner)) ]
+    
+    super(NetworkPropertyMapper, self).__init__()
+    return
+    
+  def map(self, prop):
+
+    prop_val  = getattr(prop, self.field)
+    prop_val2 = None
+    if self.field2:
+      prop_val2 = getattr(prop, self.field2)
+      
+    if self.friend not in prop_val and self.do_add:
+      prop_val.append(self.friend)
+      if prop_val2 and self.friend not in prop_val2:
+        prop_val2.append(self.friend)
+      return ([prop],[])
+    
+    if self.friend in prop_val and not self.do_add:
+      prop_val.remove( self.friend )
+      if prop_val2 and self.friend in prop_val:
+        prop_val2.remove( self.friend )
+      return ([prop], []) # update/delete
+    
+    return ([],[])
+    
+  # def finish(self):
+      # """Called when the mapper has finished, to allow for any final work to be done."""
+      # pass

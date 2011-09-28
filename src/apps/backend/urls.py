@@ -53,8 +53,16 @@ def get_rules():
         ]),
         
         PathPrefixRoute('/inmobiliarias_amigas', [
-          Route('/list'                  , name='backend/realestatebook/list'                 , handler='apps.backend.realestatebook.Demo'),
-          Route('/wants_poke'            , name='backend/realestatebook/wants_poke'           , handler='apps.backend.realestatebook.WantsPoke'),
+          Route('/list'                         , name='backend/realestatebook/list'                    , handler='apps.backend.realestatebook.Index'),
+          Route('/requests'                     , name='backend/realestatebook/requests'                , handler='apps.backend.realestatebook.Requests'),
+          Route('/friends'                      , name='backend/realestatebook/friends'                 , handler='apps.backend.realestatebook.Friends'),
+          Route('/friends/delete/<key>'         , name='backend/realestatebook/friends/delete'          , handler='apps.backend.realestatebook.Friends:delete'),
+          Route('/friends/share/<key>'          , name='backend/realestatebook/friends/share'           , handler='apps.backend.realestatebook.Friends:share'),
+          Route('/friends/unshare/<key>'        , name='backend/realestatebook/friends/unshare'         , handler='apps.backend.realestatebook.Friends:unshare'),
+          Route('/friend_request'               , name='backend/realestatebook/friend_request'          , handler='apps.backend.realestatebook.FriendRequest'),
+          Route('/friend_request/accept/<key>'  , name='backend/realestatebook/friend_request/accept'   , handler='apps.backend.realestatebook.FriendRequest:accept'),
+          Route('/friend_request/reject/<key>'  , name='backend/realestatebook/friend_request/reject'   , handler='apps.backend.realestatebook.FriendRequest:reject'),
+          
         ]),
 		
         

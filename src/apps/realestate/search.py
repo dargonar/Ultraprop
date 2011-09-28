@@ -42,7 +42,8 @@ class Search(RealestateHandler, PropertyPaginatorMixin):
 
   def add_extra_filter(self, base_query):
     base_query.filter('status =', Property._PUBLISHED)
-    base_query.filter('realestate =', self.realestate )
+    # base_query.filter('realestate =', self.realestate )
+    base_query.filter('realestate_network =', str(self.realestate.key()) )
 
   def render(self, **kwargs):
     self.response.headers["P3P"] = 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"'

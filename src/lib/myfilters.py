@@ -2,7 +2,7 @@
 import logging
 from webapp2 import uri_for as url_for
 from datetime import datetime, timedelta
-from models import Property, RealEstate, User
+from models import Property, RealEstate, User, RealEstateFriendship
 from re import *
 from backend_forms import status_choices
 from search_helper import config_array, alphabet
@@ -214,3 +214,4 @@ def do_realestate_linkfy(realestate, check_domain=False):
 def do_ownerify(realestate):
   user = User.all().filter(' realestate = ', realestate).get()
   return 'De <i>%s</i> <br/>%s' % (user.full_name, user.email)
+   
