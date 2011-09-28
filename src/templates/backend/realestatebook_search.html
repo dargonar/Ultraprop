@@ -10,6 +10,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
   setTimeout("hideFlashMessageSlow()", 5000);
+  
   jQuery('#send_friend_keys').click(function(){
     var keys=jQuery('#selected_friend_keys').val();
     jQuery('input[type="checkbox"].rskey:checked ').each(
@@ -24,6 +25,12 @@ $(document).ready(function() {
     jQuery('#send_friend_request').submit();
     return false;
   });
+  
+  $('#masterpic').listnav({
+    noMatchText:'No hay inmobilirias cuyo nombre inicie con esta letra.',
+    prefixes: ['inmobiliria','broker'],
+    showCounts: false
+  });
 });
 </script> 
 {% endblock %}
@@ -33,16 +40,14 @@ $(document).ready(function() {
   {% set rsbook_title = 'Buscar Inmobilirias'%}
   {% set rsbook_menu = 'search'%}
   {% include 'backend/includes/realestatebook_navbar.html' %}
-  <div class="ln-letters">
-    <!--a href="#" class="all ln-selected">TODO</a-->
-    <a href="#" class="all">TODO</a>
+  <div class="ln-letters" id="masterpic-nav">
+    <!--a href="#" class="all">TODO</a>
     <a href="#" class="a">A</a>
     <a href="#" class="b">B</a>
     <a href="#" class="c">C</a>
     <a href="#" class="d">D</a>
     <a href="#" class="e">E</a>
     <a href="#" class="f">F</a>
-    <!--a href="#" class="g ln-disabled">G</a-->
     <a href="#" class="g">G</a>
     <a href="#" class="h">H</a>
     <a href="#" class="i">I</a>
@@ -62,7 +67,7 @@ $(document).ready(function() {
     <a href="#" class="w">W</a>
     <a href="#" class="x">X</a>
     <a href="#" class="y">Y</a>
-    <a href="#" class="z ln-last">Z</a>
+    <a href="#" class="z ln-last">Z</a-->
   </div>
 
   {% if realestates|length>0 %}

@@ -1,5 +1,11 @@
 {% extends "backend/_base.html" %}
 
+{%- macro select_option(key, value) -%}
+  {% if key==value %}
+    selected="selected"
+  {% endif %}
+{%- endmacro -%}
+
 {% block menuleft %} 
 <!--div id="mnuLeft">
   
@@ -27,32 +33,27 @@ $(document).ready(function() {
   {% include 'backend/includes/realestatebook_navbar.html' %}
   
   <!-- PROP LIST-->  
+  <div id="sort_by">
+    <div class="sortbox">
+       <label>Ver</label> 
+       <form name="filter_form" id="filter_form" method="POST" action="{{url_for('backend/realestatebook/requests')}}" style="width:250px;display: inline-block;">
+         <select name="filter" id="filter">
+          <option value="0" {{select_option(filter,0)}}>Enviadas y recibidas</option>
+          <option value="{{_SENT}}" {{select_option(filter,_SENT)}}>Enviadas</option>
+          <option value="{{_RECEIVED}}" {{select_option(filter,_RECEIVED)}}>Recibidas</option>
+         </select>
+       </form>
+    </div>
+  </div>
   {% for request in requests %}
     {% if loop.first %}   
-      <div id="sort_by">
-        <div class="sortbox">
-           <label>Ver</label> 
-           <form name="filter_form" id="filter_form" method="POST" action="{{url_for('backend/realestatebook/requests')}}" style="width:250px;display: inline-block;">
-             <select name="filter" id="filter">
-              <option value="0">Enviadas y recibidas</option>
-              <option value="{{_SENT}}">Enviadas</option>
-              <option value="{{_RECEIVED}}">Recibidas</option>
-             </select>
-           </form>
-           {#{ form.sort(id='fake_sort') }#}
-        </div>
-      </div>
-      <form id="remove" method="POST" action="#">
-      <input id="newstatus" type="hidden" name="newstatus" value="0"/>
-      <input type="hidden" name="page" value="{# {page} #}"/>
       {% include "backend/includes/realestatebook_list_navigation.html" %}
     {% endif %}
     
-      {% set req_realestate = request.get_the_other_realestate(realestate.key()) %}
-      {% include "backend/includes/realestatebook_list_view.html" %}
+    {% set req_realestate = request.get_the_other_realestate(realestate.key()) %}
+    {% include "backend/includes/realestatebook_list_view.html" %}
     
     {% if loop.last %} 
-      </form>
       <div class="h_last"></div>
       {% include "backend/includes/realestatebook_list_navigation.html" %}
     {% endif %}
@@ -61,9 +62,6 @@ $(document).ready(function() {
     <div class="noelement proplist txt">
       <span>No posee solicitudes</span>
     </div>
-    {#% if form.status.data == Property._PUBLISHED %#}
-    <div class="divider_h"></div>
-    {#% endif %#}
   {% endfor %}
 
 {% endblock %}

@@ -21,6 +21,8 @@ class Index(BackendHandler):
     return self.redirect_to('backend/realestatebook/friends')
   
 
+  #q = RealEstate.all().filter('name >= ', 'D').filter('name < ', 'd'+u'\ufffd').fetch(10)
+  
 class FriendRequest(BackendHandler):
   @need_auth()
   def post(self, **kwargs):
@@ -96,8 +98,8 @@ class FriendRequest(BackendHandler):
       
       self.set_ok('La solicitud de amistad ha sido aceptada.')
     else:
-      req.reject()
-      self.set_ok('La solicitud de amistad aceptada ha sido rechazada.')
+      req.delete()
+      self.set_ok('La solicitud de amistad ha sido rechazada.')
     return self.redirect_to('backend/realestatebook/requests')
 
 class Requests(BackendHandler):
@@ -106,13 +108,12 @@ class Requests(BackendHandler):
   
   @need_auth()
   def get(self, **kwargs):
+    kwargs['filter']            = int(self.request.GET.get('filter', 0))
     return self.get2(**kwargs)
     
   @need_auth()
   def post(self, **kwargs):
-    filter = int(kwargs.get('filter', 0))
-    if filter > 0 :
-      kwargs['filter']          = filter
+    kwargs['filter']            = int(self.request.POST.get('filter', 0))
     return self.get2(**kwargs)
     
   def get2(self, **kwargs):
@@ -125,9 +126,9 @@ class Requests(BackendHandler):
       kwargs['filter']              = 0
     else:
       if kwargs['filter'] == self._SENT:
-        kwargs['requests']            = RealEstateFriendship.all().filter('realestate_a = ', str(realestate.key())).filter('state = ', RealEstateFriendship._REQUESTED).fetch(1000)
+        kwargs['requests']            = RealEstateFriendship.all().filter('realestate_a = ', realestate.key()).filter('state = ', RealEstateFriendship._REQUESTED).fetch(1000)
       else:
-        kwargs['requests']            = RealEstateFriendship.all().filter('realestate_b = ', str(realestate.key())).filter('state = ', RealEstateFriendship._REQUESTED).fetch(1000)
+        kwargs['requests']            = RealEstateFriendship.all().filter('realestate_b = ', realestate.key()).filter('state = ', RealEstateFriendship._REQUESTED).fetch(1000)
     
     kwargs['_SENT']       = self._SENT
     kwargs['_RECEIVED']   = self._RECEIVED
