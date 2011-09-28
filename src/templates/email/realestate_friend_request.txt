@@ -1,0 +1,19 @@
+{% extends "email/_base.txt"%}
+{%block content%}
+  Pedido de amistad de un colega en ULTRAPROP.
+    
+    {{rs_requestor.name}} ha solicitado su amistad.
+    El servicio de amistad le permite ampliar su oferta inmobiliria y permite a sus colegas operar con sus inmuebles.
+    Dialogue y acorde con su colega los términos de operación de los inmuebles compartidos.
+    
+    Datos de contacto del solicitante
+      Nombre: {{rs_receiver}}
+      Correo electrónico: {{sender_email}}
+      Teléfono: {{sender_telephone}}
+      Web de la inmobiliaria: {{sender_telephone}}
+      Web en Ultraprop: {{sender_telephone}}
+    
+    Para aceptar la amistad ingrese en "<b>Red ULTAPROP</b>" en el panel de control, y seleccione "<b>Solicitudes</b>".<br />
+    Para acceder al panel ahora ingrese a esta dirección: {{url_for('backend/realestatebook/friend_request', _full=True)}}.
+    
+{% endblock %}
