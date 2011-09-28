@@ -141,13 +141,14 @@ class List(BackendHandler, PropertyPaginatorMixin):
         # Todas las propiedades del conjunto de mi red.
         base_query.filter('realestate_network = ', self.get_realestate_key() )
       else:
-        if rs_filter == self.get_realestate_key(): 
-          # Solo mis propiedades.
-          base_query.filter('realestate =', db.Key( self.get_realestate_key() ) )
-        else: 
-          # Solo propiedades de alguna inmo amiga.
-          # logging.info('Filtrando por inmo amiga ['+rs_filter+']')
-          base_query.filter('realestate_network =', rs_filter )
+        base_query.filter('realestate =', db.Key( rs_filter ) )
+        # if rs_filter == self.get_realestate_key(): 
+          # # Solo mis propiedades.
+          # base_query.filter('realestate =', db.Key( self.get_realestate_key() ) )
+        # else: 
+          # # Solo propiedades de alguna inmo amiga.
+          # # logging.info('Filtrando por inmo amiga ['+rs_filter+']')
+          # base_query.filter('realestate_network =', rs_filter )
     
     base_query.filter('status =', self.form.status.data)
       
