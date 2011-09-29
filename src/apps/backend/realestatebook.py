@@ -154,7 +154,7 @@ class Requests(BackendHandler):
     kwargs['realestate']          = realestate
     kwargs['mnutop']              = 'realestatebook'
     
-    if 'filter' not in kwargs:
+    if 'filter' not in kwargs or kwargs['filter']==0:
       kwargs['requests']            = RealEstateFriendship.all().filter('realestates = ', str(realestate.key())).filter('state = ', RealEstateFriendship._REQUESTED).fetch(1000)
       kwargs['filter']              = 0
     else:

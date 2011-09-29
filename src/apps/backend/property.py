@@ -136,23 +136,15 @@ class List(BackendHandler, PropertyPaginatorMixin):
   def add_extra_filter(self, base_query):
     if not self.has_role('ultraadmin'):
       #base_query.filter('realestate =', db.Key( self.get_realestate_key() ) )
+      
       rs_filter = self.form.realestate_network.data
-      logging.info('property.py::add_extra_filter rs_filter:['+rs_filter+']')
       if rs_filter is None or rs_filter.strip()=='' or rs_filter.strip().lower()=='none': 
-        # Todas las propiedades del conjunto de mi red.
+        rs_filter = self.get_realestate_key()
+      if rs_filter.strip().lower()=='all': 
         base_query.filter('realestate_network = ', self.get_realestate_key() )
-        logging.info('property.py:: is none; rs_key:['+self.get_realestate_key()+']')
       else:
         base_query.filter('realestate =', db.Key( rs_filter ) )
-        logging.info('property.py:: NO is none')
-        # if rs_filter == self.get_realestate_key(): 
-          # # Solo mis propiedades.
-          # base_query.filter('realestate =', db.Key( self.get_realestate_key() ) )
-        # else: 
-          # # Solo propiedades de alguna inmo amiga.
-          # # logging.info('Filtrando por inmo amiga ['+rs_filter+']')
-          # base_query.filter('realestate_network =', rs_filter )
-    
+      
     base_query.filter('status =', self.form.status.data)
       
       
