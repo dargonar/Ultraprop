@@ -3,31 +3,21 @@
 {%block content%}
     <tr>
     <td style="font-family:Arial, Helvetica, sans-serif; padding:20px;">
-      <h1 style="font-size:18px; font-weight:normal;">¡Hola {{rs_receiver.name}}!</h1>
+      <h1 style="font-size:18px; font-weight:normal;">¡Hola {{rs_requestor.name}}!</h1>
       <div style="border-bottom:solid 3px #cccccc; border-right:solid 4px #cccccc;">
         <div style="border:solid 1px #cccccc; padding:20px; padding-top:25px; height:120px;">
           <table width="100%" border="0">
             <tr>
               <td valign="top" width="300">
-                {{rs_requestor}} ha solicitado su amistad. <br />
-                El servicio de amistad le permite ampliar su oferta inmobiliria y permite a sus colegas operar con sus inmuebles.<br/>
-                Dialogue y acorde con su colega los términos de operación de los inmuebles compartidos.
+                {{rs_receiver.name}} ha aceptado su pedido de amistad. <br />
                 <span style="font-size:15px; font-weight:bold;"></span>
               </td>
-              <td valign="top" align="right"><a href="{{url_for('backend/realestatebook/friend_request', _full=True)}}" style="background-color: #5cb039; border: 1px solid #559f32; color: #FFFFFF; display: inline-block; font-size: 13px; font-weight: bold; padding: 10px 50px; text-decoration: none; white-space: nowrap; margin-bottom:15px;" title="Ir al Panel de control">Ir al Panel de control</a><br /></td>
+              <td valign="top" align="right"><a href="{{url_for('backend/realestatebook/friends', _full=True)}}" style="background-color: #5cb039; border: 1px solid #559f32; color: #FFFFFF; display: inline-block; font-size: 13px; font-weight: bold; padding: 10px 50px; text-decoration: none; white-space: nowrap; margin-bottom:15px;" title="Ir al Panel de control">Ir al Panel de control</a><br /></td>
             </tr>
           </table>
           <p style="font-size:12px; margin-bottom:10px;">
-            Datos de contacto del solicitante<br/>
-            &nbsp;&nbsp;&nbsp;Nombre: <b>{{rs_receiver}}</b><br/>
-            &nbsp;&nbsp;&nbsp;Correo electrónico: <b>{{sender_email}}</b><br/>
-            &nbsp;&nbsp;&nbsp;Teléfono: <b>{{sender_telephone}}</b><br/>
-            &nbsp;&nbsp;&nbsp;Web de la inmobiliaria: <b>{{sender_telephone}}</b><br/>
-            &nbsp;&nbsp;&nbsp;Web en Ultraprop: <b>{{sender_telephone}}</b><br/>
-          </p>
-          <p style="font-size:12px; margin-bottom:10px;">
-            Para aceptar la amistad ingrese en "<b>Red ULTAPROP</b>" en el panel de control, y seleccione "<b>Solicitudes</b>".<br />
-            Para acceder al panel ahora haga <a href="{{url_for('backend/realestatebook/friend_request', _full=True)}}" style="font-size:12px;">click aquí</a> o presione en "Ir al Panel de control".
+            Para compartir la oferta de {{rs_receiver.name}} ingrese en "<b>Red ULTAPROP</b>" en el panel de control, y seleccione "<b>Mi Red</b>".<br />
+            Para acceder al panel ahora haga <a href="{{url_for('backend/realestatebook/friends', _full=True)}}" style="font-size:12px;">click aquí</a> o presione en "Ir al Panel de control".
           </p>
         </div>
       </div>

@@ -1,0 +1,16 @@
+{% extends "email/_base.txt"%}
+{%block content%}
+  Pedido de amistad de un colega en ULTRAPROP.
+    
+    ¡Hola {{rs_requestor.name}}!
+    
+    Su solicitud de amistad a {{rs_receiver.name}} ha sido enviada.
+    
+    Datos de contacto del solicitado:
+      Nombre: {{rs_receiver|ownerify(min=True)}}
+      Correo electrónico: {{rs_receiver.email}}
+      Teléfono: {{rs_receiver.telephone_number}}
+      Web de la inmobiliaria: {{rs_receiver.website}}
+      Web en Ultraprop: {{rs_receiver|realestate_linkfy}}
+    
+{% endblock %}

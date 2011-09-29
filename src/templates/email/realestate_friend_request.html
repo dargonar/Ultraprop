@@ -18,8 +18,8 @@
             </tr>
           </table>
           <p style="font-size:12px; margin-bottom:10px;">
-            Datos de contacto del solicitante<br/>
-            &nbsp;&nbsp;&nbsp;Nombre: <b>{{rs_requestor|ownerify}}</b><br/>
+            Datos de contacto del solicitante:<br/>
+            &nbsp;&nbsp;&nbsp;Nombre: <b>{{rs_requestor|ownerify(min=True)}}</b><br/>
             &nbsp;&nbsp;&nbsp;Correo electrónico: <b>{{rs_requestor.email}}</b><br/>
             &nbsp;&nbsp;&nbsp;Teléfono: <b>{{rs_requestor.telephone_number}}</b><br/>
             &nbsp;&nbsp;&nbsp;Web de la inmobiliaria: <b>{{rs_requestor.website}}</b><br/>

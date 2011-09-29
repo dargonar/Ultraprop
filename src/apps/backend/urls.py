@@ -25,7 +25,6 @@ def get_rules():
           Route('/<invoice>/payment-done'     , name='billing/payment/done'         , handler='apps.backend.payment.Done'),
           Route('/<invoice>/payment-pending'  , name='billing/payment/pending'      , handler='apps.backend.payment.Pending'),
         ]),
-        
       ]),
       
       # Todas las rutas de administracion

@@ -157,7 +157,7 @@ class Property(GeoModel):
     friends  = RealEstateFriendship.all().filter('realestates = ', my_key).filter('state = ', RealEstateFriendship._ACCEPTED).fetch(1000)
     for friend in friends:
       my_friend_key = friend.get_the_other_realestate(my_key, key_only=True)
-      if friend.is_the_other_realestate_showing_fe(my_key):
+      if friend.is_the_other_realestate_offering_my_props(my_key):
         prop.realestate_network_fe.append(my_friend_key)
       prop.realestate_network.append(my_friend_key)
     return prop
@@ -669,10 +669,11 @@ class RealEstateFriendship(db.Model):
       return db.Key(unknown_key)
     return unknown_key
   
-  def is_the_other_realestate_showing_fe(self, known_realestate):
-    if str(self.key()).split(',')[0]==known_realestate:
-      return self.rs_a_shows_b
-    return self.rs_b_shows_a
+  def is_the_other_realestate_offering_my_props(self, my_realestate_key):
+    if str(self.key()).split(',')[0]==my_realestate_key:
+      return self.rs_b_shows_a
+    return self.rs_a_shows_b
+    
   def get_the_other_realestate(self, known_realestate, key_only=False):
     if key_only:
       return RealEstateFriendship.get_the_other(self.key(), str(known_realestate), get_key=False)

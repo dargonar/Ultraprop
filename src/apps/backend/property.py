@@ -137,11 +137,14 @@ class List(BackendHandler, PropertyPaginatorMixin):
     if not self.has_role('ultraadmin'):
       #base_query.filter('realestate =', db.Key( self.get_realestate_key() ) )
       rs_filter = self.form.realestate_network.data
+      logging.info('property.py::add_extra_filter rs_filter:['+rs_filter+']')
       if rs_filter is None or rs_filter.strip()=='' or rs_filter.strip().lower()=='none': 
         # Todas las propiedades del conjunto de mi red.
         base_query.filter('realestate_network = ', self.get_realestate_key() )
+        logging.info('property.py:: is none; rs_key:['+self.get_realestate_key()+']')
       else:
         base_query.filter('realestate =', db.Key( rs_filter ) )
+        logging.info('property.py:: NO is none')
         # if rs_filter == self.get_realestate_key(): 
           # # Solo mis propiedades.
           # base_query.filter('realestate =', db.Key( self.get_realestate_key() ) )

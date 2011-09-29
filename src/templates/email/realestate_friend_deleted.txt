@@ -1,0 +1,7 @@
+{% extends "email/_base.txt"%}
+{%block content%}
+    ¡Hola {{rs_other.name}}!
+    
+    {{rs.name}} ha dado por finalizada su amistad.
+                
+{% endblock %}

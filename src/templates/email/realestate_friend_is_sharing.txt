@@ -1,0 +1,13 @@
+{% extends "email/_base.txt"%}
+{%block content%}
+  ¡Hola {{rs_other.name}}!
+  
+  {{rs.name}} ha ampliado su oferta con tus inmuebles.
+  Ahora tus inmuebles podrán ser consultados por más clientes.
+  
+  {% if rs_other_not_sharing %}
+  Tu también puedes ampliar tu oferta inmobiliria ingresando a "Red ULTAPROP" en el panel de control, y seleccionando "Mi Red".
+  Para acceder al panel ahora ingrese a {{url_for('backend/realestatebook/friends', _full=True)}}.
+  {% endif %}
+                
+{% endblock %}

@@ -211,7 +211,9 @@ def do_realestate_linkfy(realestate, check_domain=False):
   
   return url_for('realestate/home', realestate=str(realestate.key()))
 
-def do_ownerify(realestate):
+def do_ownerify(realestate, min=False):
   user = User.all().filter(' realestate = ', realestate).get()
+  if min:
+    return '%s (%s)' % (user.full_name, user.email)
   return 'De <i>%s</i> <br/>%s' % (user.full_name, user.email)
    

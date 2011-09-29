@@ -38,16 +38,33 @@ class FriendRequest(BackendHandler):
         continue
       realestate_b = db.get(rs_key)
       req = RealEstateFriendship.new_for_request(realestate, realestate_b)
-      # req.realestate_a = realestate
-      # req.realestate_b = realestate_b
+      
       req.put()
-      # mail_to=realestate_b.email
-      # body='La inmobiliaria %s desea ser su amiga.' %  (realestate.name)
-      # mail.send_mail(sender="www.ultraprop.com.ar <info@ultraprop.com.ar>", 
-                   # to       = mail_to,
-                   # subject  = "ULTRAPROP: Una inmobiliaria quiere ser su amiga",
-                   # body     = body)
-    
+      
+      context = {'rs_requestor':           realestate, 
+                 'rs_receiver':            realestate_b}
+      body = self.render_template('email/realestate_friend_request.txt', **context)  
+      # Armo el body en HTML.
+      html = self.render_template('email/realestate_friend_request.html', **context)  
+      
+      # Envío el correo.
+      mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['share_link']['sender'], 
+                   to=realestate_b.email,
+                   subject="ULTRAPROP - Pedido de amistad",
+                   body=body,
+                   html=html)
+      
+      body = self.render_template('email/realestate_friend_request_cc.txt', **context)  
+      # Armo el body en HTML.
+      html = self.render_template('email/realestate_friend_request_cc.html', **context)  
+      
+      mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['share_link']['sender'], 
+                   to=realestate.email,
+                   subject="ULTRAPROP - Pedido de amistad",
+                   body=body,
+                   html=html
+                   )
+      
     self.set_ok(u'Su pedido de amistad fue enviado con éxito.')
     
     return self.redirect_to('backend/realestatebook/friend_request')
@@ -85,10 +102,14 @@ class FriendRequest(BackendHandler):
     req                           = get_or_404(kwargs.get('key'))
     if req.is_sender(realestate):
       self.abort(500)
+    
+    my_key        = self.get_realestate_key()
+    realestate_b  = req.get_the_other_realestate(my_key, key_only=False)
+    context       = { 'rs_requestor':           realestate_b, 
+                      'rs_receiver':          realestate}
+
     if accept:
       req.accept()
-      
-      my_key  = self.get_realestate_key()
       owner   = req.get_the_other_realestate(my_key, key_only=True)
       tmp     = NetworkPropertyMapper(owner, my_key, do_add=True, field=Property._RS_FRIEND_FIELD)
       deferred.defer(tmp.run)
@@ -96,10 +117,22 @@ class FriendRequest(BackendHandler):
       tmp2    = NetworkPropertyMapper(my_key, owner, do_add=True, field=Property._RS_FRIEND_FIELD)
       deferred.defer(tmp2.run)
       
+      body = self.render_template('email/realestate_friend_accepted.txt', **context)  
+      html = self.render_template('email/realestate_friend_accepted.html', **context)  
+    
       self.set_ok('La solicitud de amistad ha sido aceptada.')
     else:
+      body = self.render_template('email/realestate_friend_denied.txt', **context)  
+      html = self.render_template('email/realestate_friend_denied.html', **context) 
       req.delete()
       self.set_ok('La solicitud de amistad ha sido rechazada.')
+      
+    # Envío el correo.
+    mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['share_link']['sender'], 
+                 to=realestate_b.email,
+                 subject="ULTRAPROP - Pedido de amistad",
+                 body=body,
+                 html=html)
     return self.redirect_to('backend/realestatebook/requests')
 
 class Requests(BackendHandler):
@@ -157,6 +190,19 @@ class Friends(BackendHandler):
     tmp2    = NetworkPropertyMapper(my_key, owner, do_add=False, field=Property._RS_FRIEND_FIELD, field2=Property._RS_SHARE_FIELD)
     deferred.defer(tmp2.run)
     
+    realestate_b = db.get(owner)
+    context = {'rs':           realestate, 
+               'rs_other':     realestate_b}
+    body = self.render_template('email/realestate_friend_deleted.txt', **context)  
+    html = self.render_template('email/realestate_friend_deleted.html', **context)  
+    
+    # Envío el correo.
+    mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['share_link']['sender'], 
+                 to=realestate_b.email,
+                 subject=u"ULTRAPROP - Finalización de amistad",
+                 body=body,
+                 html=html)
+    
     req.delete()
     self.set_ok('La amistad ha sido dada de baja.')
     return self.redirect_to('backend/realestatebook/friends')
@@ -177,7 +223,21 @@ class Friends(BackendHandler):
     owner   = req.get_the_other_realestate(my_key, key_only=True)
     tmp     = NetworkPropertyMapper(owner, my_key, do_add=True, field=Property._RS_SHARE_FIELD)
     deferred.defer(tmp.run)
-
+    
+    realestate_b = req.get_the_other_realestate(my_key, key_only=False)
+    context = {'rs':                    realestate, 
+               'rs_other':              realestate_b,
+               'rs_other_not_sharing':  req.is_the_other_realestate_offering_my_props(my_key)}
+    body = self.render_template('email/realestate_friend_is_sharing.txt', **context)  
+    html = self.render_template('email/realestate_friend_is_sharing.html', **context)  
+    
+    # Envío el correo.
+    mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['share_link']['sender'], 
+                 to=realestate_b.email,
+                 subject=u"ULTRAPROP - Red ULTRAPROP",
+                 body=body,
+                 html=html)
+    
     self.set_ok('La amistad ha sido actualizada.')
     return self.redirect_to('backend/realestatebook/friends')
     
@@ -198,5 +258,18 @@ class Friends(BackendHandler):
     tmp     = NetworkPropertyMapper(owner, my_key, do_add=False, field=Property._RS_SHARE_FIELD)
     deferred.defer(tmp.run)
     
+    realestate_b = req.get_the_other_realestate(my_key, key_only=False)
+    context = {'rs':           realestate, 
+               'rs_other':     realestate_b}
+    body = self.render_template('email/realestate_friend_stopped_sharing.txt', **context)  
+    html = self.render_template('email/realestate_friend_stopped_sharing.html', **context)  
+    
+    # Envío el correo.
+    mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['share_link']['sender'], 
+                 to=realestate_b.email,
+                 subject=u"ULTRAPROP - Finalización de amistad",
+                 body=body,
+                 html=html)
+                 
     self.set_ok('La amistad ha sido actualizada.')
     return self.redirect_to('backend/realestatebook/friends')
