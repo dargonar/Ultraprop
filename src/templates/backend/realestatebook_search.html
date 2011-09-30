@@ -74,6 +74,7 @@ $(document).ready(function() {
     <div class="viewPicBox">
       <ul id="masterpic" class="picturebox_admin">
         {% for realestate in realestates %}
+        {% set realestate_key = realestate.key()|string %}
         <li>
           <div style="width:160px; height:120px" id="imgbox"> 
             <div class="agentbox" style="width: 160px;float: left; margin-right:20px;">
@@ -99,7 +100,11 @@ $(document).ready(function() {
             </div>
           </div>
           <div class="ex-label" title="Seleccionar para pedir amistad">
-            <input type="checkbox" class="rskey" key="{{realestate.key()|string}}"/> <b>Agregar a mi Red</b>
+            {% if realestate_key in already_friends %}
+              Ya pertenece a su Red.
+            {% else %}
+              <input type="checkbox" class="rskey" key="{{realestate_key}}"/> <b>Agregar a mi Red</b>
+            {% endif %}
           </div>
         </li>
         {% endfor %}

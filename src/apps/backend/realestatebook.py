@@ -81,11 +81,14 @@ class FriendRequest(BackendHandler):
     realestate_str_key = str(realestate.key())
     query = RealEstate.all().filter('__key__ != ', realestate.key())
     
+    already_friends = []
     if requests:
       for request in requests:
-        current_key = RealEstateFriendship.get_the_other(request, realestate_str_key, get_key=True)
-        query.filter('__key__ != ', current_key)
+        current_key = RealEstateFriendship.get_the_other(request, realestate_str_key, get_key=False)
+        #query.filter('__key__ != ', current_key)
+        already_friends.append(current_key)
         
+    kwargs['already_friends']     = already_friends
     kwargs['realestates']         = query.fetch(1000)
     return self.render_response('backend/realestatebook_search.html', **kwargs)
   
