@@ -1,11 +1,11 @@
-	<div class="list_box">
+	<div class="list_box" style="height:auto;overflow-x:hidden;overflow-y:auto;">
       <p class="price">
         {% set item_index = page_size*(page-1)+loop.index %}
         <span class="value price">
           {{item_index}}.-
         </span>
       </p>
-      <div class="" style="float: left;overflow: hidden;margin-left: 50px;margin-right: 170px;position: absolute;">
+      <div class="" style="height:auto;float:left;overflow-x: hidden;margin-left: 50px;margin-right: 25px;position: absolute;">
         {% if consulta.property %}
         	<h3>Consulta por {{consulta.property.prop_operation_id|operationfy}} de  
             <a href="{{url_for('realestate/ficha', key=consulta.property.key()|string, oper=consulta.property.prop_operation_id|string , realestate=consulta.property.realestate.key()|string)}}" target="_blank" title="Ver ficha en nueva ventana">esta propiedad</a>.
@@ -13,7 +13,7 @@
         {% else %}
           <h3>Consulta de contacto</h3>  
         {% endif %}
-            <p class="sup">
+            <p class="sup" style="height:auto;">
               Nombre: <b>{{consulta.sender_name}}</b><br/>
               Email: <b>{{consulta.sender_email}}</b><br/>
               Consulta: <b>{{consulta.sender_comment}}</b><br/>
