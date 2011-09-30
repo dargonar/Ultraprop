@@ -44,6 +44,7 @@ def get_rules():
         
         PathPrefixRoute('/consultas', [
           Route('/list'                  , name='backend/consultas/list'         , handler='apps.backend.consultas.Index'),
+          Route('/list/<page>'           , name='backend/consultas/list/page'    , handler='apps.backend.consultas.Index:page'),
         ]),
         
         PathPrefixRoute('/realestate', [

@@ -1,6 +1,11 @@
 	<div class="list_box">
-      
-      <div class="">
+      <p class="price">
+        {% set item_index = page_size*(page-1)+loop.index %}
+        <span class="value price">
+          {{item_index}}.-
+        </span>
+      </p>
+      <div class="" style="float: left;overflow: hidden;margin-left: 50px;margin-right: 170px;position: absolute;">
         {% if consulta.property %}
         	<h3>Consulta por {{consulta.property.prop_operation_id|operationfy}} de  
             <a href="{{url_for('realestate/ficha', key=consulta.property.key()|string, oper=consulta.property.prop_operation_id|string , realestate=consulta.property.realestate.key()|string)}}" target="_blank" title="Ver ficha en nueva ventana">esta propiedad</a>.

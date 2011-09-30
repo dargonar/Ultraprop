@@ -78,6 +78,9 @@
                 {% endif %}
                 <!-- a href="{{property.realestate.website}}" target="_blank">{{property.realestate.website}}</a><br/-->
                 <span>{{property.realestate.email}}</span><br/>
+                {% if property.realestate.open_at %}
+                  <span>Atención {{property.realestate.open_at}}</span><br/>
+                {% endif %}
               </div>
             {% endif %}
             
