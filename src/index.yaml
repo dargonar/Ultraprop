@@ -212,6 +212,12 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: Consulta
+  properties:
+  - name: realestate
+  - name: created_at
+    direction: desc
+
 - kind: Invoice
   properties:
   - name: realestate

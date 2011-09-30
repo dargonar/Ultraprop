@@ -55,6 +55,7 @@ class RealEstate(db.Model):
   fax_number          = db.StringProperty(indexed=False)
   telephone_number    = db.StringProperty(indexed=False)
   telephone_number2   = db.StringProperty(indexed=False)
+  open_at             = db.StringProperty(indexed=False)
   
   address             = db.StringProperty(indexed=False)
   zip_code            = db.StringProperty()

@@ -301,6 +301,7 @@ class RealEstateForm(Form):
   fax_number          = TextField('')
   telephone_number    = TextField('',[validators.Required(message=u'Debe ingresar un número de teléfono.')])
   telephone_number2   = TextField('')
+  open_at             = TextField('')
   address             = TextField('',[validators.Required(message=u'Debe ingresar una dirección.')])
   zip_code            = TextField('',[validators.Required(message=u'Debe ingresar un código postal.')])
   
@@ -313,6 +314,7 @@ class RealEstateForm(Form):
     rs.telephone_number2  = self.telephone_number2.data
     rs.address            = self.address.data
     rs.zip_code           = self.zip_code.data
+    rs.open_at            = self.open_at.data
     return rs
     
 

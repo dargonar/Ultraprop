@@ -42,6 +42,10 @@ def get_rules():
         Route('/restore/request'         , name='backend/auth/restore/request'   , handler='apps.backend.auth.RestorePasswordRequest'),
         Route('/validate/<key>'          , name='backend/validate/user'          , handler='apps.backend.auth.ValidateUser'),
         
+        PathPrefixRoute('/consultas', [
+          Route('/list'                  , name='backend/consultas/list'         , handler='apps.backend.consultas.Index'),
+        ]),
+        
         PathPrefixRoute('/realestate', [
           Route('/edit'                  , name='backend/realestate/edit'             , handler='apps.backend.realestate.Edit'),
         ]),

@@ -1,0 +1,22 @@
+	<div class="list_box">
+      
+      <div class="">
+        {% if consulta.property %}
+        	<h3>Consulta por {{consulta.property.prop_operation_id|operationfy}} de  
+            <a href="{{url_for('realestate/ficha', key=consulta.property.key()|string, oper=consulta.property.prop_operation_id|string , realestate=consulta.property.realestate.key()|string)}}" target="_blank" title="Ver ficha en nueva ventana">esta propiedad</a>.
+          </h3>
+        {% else %}
+          <h3>Consulta de contacto</h3>  
+        {% endif %}
+            <p class="sup">
+              Nombre: <b>{{consulta.sender_name}}</b><br/>
+              Email: <b>{{consulta.sender_email}}</b><br/>
+              Consulta: <b>{{consulta.sender_comment}}</b><br/>
+              Teléfono: <b>{{consulta.sender_telephone if consulta.sender_telephone else 'N/D'}}</b><br/>
+              {% if consulta.property %}
+              Propiedad consultada: <a href="{{url_for('realestate/ficha', key=consulta.property.key()|string, oper=consulta.property.prop_operation_id|string , realestate=consulta.property.realestate.key()|string)}}" target="_blank" title="Ver ficha en nueva ventana">Ver ficha</a>.<br/>
+              {% endif %}
+              Consulta enviada desde {{ 'ULTRAPROP' if consulta.is_from_ultraprop else 'su sitio web' }} el día {{ consulta.created_at.strftime('%d/%m/%Y')}}
+            </p>
+        </div>
+    </div>

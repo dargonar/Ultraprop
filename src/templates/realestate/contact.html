@@ -27,13 +27,17 @@
     <div class="contactform">
     
       <div class="contactinfo">
-        <span><b>Teléfono:</b> {{realestate.telephone_number}}</span><br/>
+        <span><b>Teléfono:</b> {{realestate.telephone_number if realestate.telephone_number else 'N/D'}}</span><br/>
         <!--span><b>Email:</b> {{realestate.email}}</span><br/-->
-        <span><b>Dirección:</b> {{realestate.address}}</span>
-        
+        <span><b>Dirección:</b> {{realestate.address if realestate.address else 'N/D'}}</span>
+        {% if realestate.open_at %}
+          <br/><span>Atención {{realestate.open_at}}</span><br/>
+        {% endif %}
         <br/>
         <br/> 
         
+        
+                
       	<p class="txt">Si desea saber más de nosotros o nuestros servicios, por favor complete el siguiente formulario para que podamos contactarlo a la brevedad.</p>        
 	</div>
 
