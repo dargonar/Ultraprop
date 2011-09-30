@@ -2,6 +2,6 @@
 {%block content%}
     ¡Hola {{rs_other.name}}!
     
-    {{rs.name}} ha dado por finalizada su amistad.
-                
+    '{{rs.name}}' ha dejado de pertenecer a su Red.
+    A partir de este momento su oferta inmobiliria no estará disponible para '{{rs.name}}', y viceversa.
 {% endblock %}

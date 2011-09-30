@@ -2,7 +2,7 @@
 {%block content%}
   Pedido de amistad de un colega en ULTRAPROP.
     
-    {{rs_receiver.name}} ha aceptado su pedido de amistad.
+    '{{rs_receiver.name}}' se ha unido a su Red.
     
     Para compartir la oferta de {{rs_receiver.name}} ingrese en "Red ULTAPROP" en el panel de control, y seleccione "Mi Red".
     Para acceder al panel ahora ingrese en {{url_for('backend/realestatebook/friends', _full=True)}}.

@@ -27,7 +27,7 @@
         <div class="actions">
           {% if request.is_sender(req_realestate) %}
           <a class="uibutton" href="{{url_for('backend/realestatebook/friend_request/accept', key=request.key()|string)}}" title="Aceptar solicitud">Aceptar &raquo;</a>
-          <a class="publisher uibutton icon delete" href="{{url_for('backend/realestatebook/friend_request/reject', key=request.key()|string)}}" title="Rechazar solicitud">Rechazar</a>
+          <a class="publisher uibutton icon delete" href="{{url_for('backend/realestatebook/friend_request/reject', key=request.key()|string)}}" title="Rechazar solicitud">Ignorar</a>
           {% else %}
           <span>Aguardando respuesta...</span>  
           {% endif %}

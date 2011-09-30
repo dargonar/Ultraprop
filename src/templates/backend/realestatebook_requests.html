@@ -38,7 +38,7 @@ $(document).ready(function() {
        <label>Ver</label> 
        <form name="filter_form" id="filter_form" method="POST" action="{{url_for('backend/realestatebook/requests')}}" style="width:250px;display: inline-block;">
          <select name="filter" id="filter">
-          <option value="0" {{select_option(filter,0)}}>Enviadas y recibidas</option>
+          <!-- option value="0" {# {select_option(filter,0)} #}>Enviadas y recibidas</option -->
           <option value="{{_SENT}}" {{select_option(filter,_SENT)}}>Enviadas</option>
           <option value="{{_RECEIVED}}" {{select_option(filter,_RECEIVED)}}>Recibidas</option>
          </select>

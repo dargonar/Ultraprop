@@ -70,7 +70,7 @@ $(document).ready(function() {
             {% else %}
               <a class="publisher uibutton " href="{{url_for('backend/realestatebook/friends/unshare', key=request.key()|string)}}" title="Dejar de ampliar mi oferta con las propiedades de mi colega">No ampliar mi oferta</a>
             {% endif %}
-            <a class="" href="{{url_for('backend/realestatebook/friends/delete', key=request.key()|string)}}" title="Eliminar amistad">Eliminar amistad</a>
+            <a class="" href="{{url_for('backend/realestatebook/friends/delete', key=request.key()|string)}}" title="Eliminar a este colega de mi Red">Quitar de mi Red</a>
           </div>
         </li>
         {% endfor %}

@@ -695,6 +695,11 @@ class RealEstateFriendship(db.Model):
     self.state = RealEstateFriendship._DENIED
     self.save()
     return 
+  
+  def alive(self):
+    self.state = RealEstateFriendship._REQUESTED
+    self.save()
+    return 
     
   realestate_a              = db.ReferenceProperty(RealEstate, collection_name ='realestate_a')
   realestate_b              = db.ReferenceProperty(RealEstate, collection_name ='realestate_b')

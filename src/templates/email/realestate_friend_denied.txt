@@ -2,6 +2,6 @@
 {%block content%}
   Pedido de amistad de un colega en ULTRAPROP.
     
-    {{rs_receiver.name}} ha rechazado su pedido de amistad.
+    '{{rs_receiver.name}}' ha rechazado pertenecer a su Red.
                 
 {% endblock %}

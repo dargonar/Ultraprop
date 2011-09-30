@@ -1,10 +1,8 @@
 {% extends "email/_base.txt"%}
 {%block content%}
-  Pedido de amistad de un colega en ULTRAPROP.
-    
     ¡Hola {{rs_requestor.name}}!
     
-    Su solicitud de amistad a {{rs_receiver.name}} ha sido enviada.
+    Su invitación a {{rs_receiver.name}} ha sido enviada.
     
     Datos de contacto del solicitado:
       Nombre: {{rs_receiver|ownerify(min=True)}}
