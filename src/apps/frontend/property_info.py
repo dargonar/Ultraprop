@@ -160,6 +160,7 @@ class SendMail(FrontendHandler):
       return
     
     context = { 'propery_key':                key
+               ,'realestate_key':             str(db.get(key).realestate.key())
                ,'query_string':               self.request.query_string + '&version=1'       
                ,'sender_name':                self.form.name.data
                ,'sender_email':               self.form.email.data

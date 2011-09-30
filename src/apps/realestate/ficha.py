@@ -21,7 +21,6 @@ class Show(RealestateHandler):
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
     if realestate.status == RealEstate._NO_PAYMENT:
       return self.render_response('realestate/disabled.html', realestate=realestate)
-
     
     kwargs['realestate']  = realestate
     kwargs['realestate_logo'] =  realestate.logo_url
