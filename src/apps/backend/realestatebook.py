@@ -79,21 +79,23 @@ class FriendRequest(BackendHandler):
     realestate                    = get_or_404(self.get_realestate_key())
     keys = [realestate.key()]
     
-    requests                      = RealEstateFriendship.all(keys_only=True).filter('realestates = ', str(realestate.key())).fetch(1000)
-    #.filter('state = ', RealEstateFriendship._REQUESTED)
+    friends       = RealEstateFriendship.all(keys_only=True).filter('realestates = ', str(realestate.key())).filter('state = ', RealEstateFriendship._ACCEPTED).fetch(1000)
+    requesteds    = RealEstateFriendship.all(keys_only=True).filter('realestates = ', str(realestate.key())).fetch(1000)
     
     realestate_str_key = str(realestate.key())
     query = RealEstate.all().filter('__key__ != ', realestate.key())
     
     already_friends   = []
-    friend_req_sent   = []
-    if requests:
-      for request in requests:
+    if friends:
+      for request in friends:
         current_key = RealEstateFriendship.get_the_other(request, realestate_str_key, get_key=False)
-        #query.filter('__key__ != ', current_key)
-        if request.state == RealEstateFriendship._ACCEPTED:
-          already_friends.append(current_key)
-        else:
+        already_friends.append(current_key)
+    
+    friend_req_sent   = []
+    if requesteds:
+      for request in requesteds:
+        current_key = RealEstateFriendship.get_the_other(request, realestate_str_key, get_key=False)
+        if current_key not in already_friends:
           friend_req_sent.append(current_key)
         
     kwargs['already_friends']         = already_friends

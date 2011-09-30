@@ -104,10 +104,11 @@ $(document).ready(function() {
               Ya pertenece a su Red.
             {% else %}
               {% if realestate_key in friend_req_sent %}
-                Invitación pendiente de aprobación.
+                Pendiente de aprobaciÃ³n.
               {% else %}
                 <input type="checkbox" class="rskey" key="{{realestate_key}}"/> <b>Agregar a mi Red</b>
               {% endif %}
+            {% endif %}
           </div>
         </li>
         {% endfor %}

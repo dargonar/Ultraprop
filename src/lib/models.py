@@ -655,6 +655,10 @@ class RealEstateFriendship(db.Model):
   _DELETED          = 4
   
   @classmethod
+  def not_accepted_states(cls):
+    return [RealEstateFriendship._REQUESTED, RealEstateFriendship._DENIED, RealEstateFriendship._DELETED]
+    
+  @classmethod
   def new_for_request(cls, realestate_a, realestate_b):
     rs                  = RealEstateFriendship(key_name = '%s,%s' % (str(realestate_a.key()), str(realestate_b.key())), state=RealEstateFriendship._REQUESTED)
     rs.rs_a_shows_b     = False
