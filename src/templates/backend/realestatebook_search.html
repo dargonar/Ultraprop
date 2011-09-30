@@ -101,12 +101,17 @@ $(document).ready(function() {
           </div>
           <div class="ex-label" title="Seleccionar para pedir amistad">
             {% if realestate_key in already_friends %}
-              Ya pertenece a su Red.
+              Ya pertenece a tu Red.
             {% else %}
               {% if realestate_key in friend_req_sent %}
                 Pendiente de aprobación.
               {% else %}
-                <input type="checkbox" class="rskey" key="{{realestate_key}}"/> <b>Agregar a mi Red</b>
+                {% if realestate_key in denied %}
+                  Solicitud rechazada.<br/>
+                  <input type="checkbox" class="rskey" key="{{realestate_key}}"/> <b>Agregar a mi Red</b>
+                {% else %}
+                  <input type="checkbox" class="rskey" key="{{realestate_key}}"/> <b>Agregar a mi Red</b>
+                {% endif %}
               {% endif %}
             {% endif %}
           </div>

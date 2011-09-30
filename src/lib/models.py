@@ -677,6 +677,11 @@ class RealEstateFriendship(db.Model):
       return db.Key(unknown_key)
     return unknown_key
   
+  @classmethod
+  def is_sender_ex(cls, obj_key, known_realestate):
+    datu        = str(obj_key.name()).split(',')
+    return datu[0]==known_realestate
+    
   def is_the_other_realestate_offering_my_props(self, my_realestate_key):
     if str(self.key()).split(',')[0]==my_realestate_key:
       return self.rs_b_shows_a

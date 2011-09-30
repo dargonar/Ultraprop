@@ -33,41 +33,42 @@ class FriendRequest(BackendHandler):
       self.set_warning(u'Seleccione al menos una inmobiliria.')
       return self.redirect_to('backend/realestatebook/friend_request')
     
+    
+    
     for rs_key in friend_keys.split(','):
       if not rs_key or len(rs_key)<1:
         continue
       req = RealEstateFriendship.all().filter('realestates = ', self.get_realestate_key()).filter('realestates = ', rs_key).get()
       if req:
-        req.created_at = datetime.now()
-        req.alive()
-      else:
-        realestate_b = db.get(rs_key)
-        req = RealEstateFriendship.new_for_request(realestate, realestate_b)
-        req.put()
+        req.delete()
       
-        context = {'rs_requestor':           realestate, 
-                   'rs_receiver':            realestate_b}
-        body = self.render_template('email/realestate_friend_request.txt', **context)  
-        # Armo el body en HTML.
-        html = self.render_template('email/realestate_friend_request.html', **context)  
-        
-        # Envío el correo.
-        mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['share_link']['sender'], 
-                     to=realestate_b.email,
-                     subject="ULTRAPROP - Pedido de amistad",
-                     body=body,
-                     html=html)
-        
-        body = self.render_template('email/realestate_friend_request_cc.txt', **context)  
-        # Armo el body en HTML.
-        html = self.render_template('email/realestate_friend_request_cc.html', **context)  
-        
-        mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['share_link']['sender'], 
-                     to=realestate.email,
-                     subject="ULTRAPROP - Pedido de amistad",
-                     body=body,
-                     html=html
-                   )
+      realestate_b = db.get(rs_key)
+      req = RealEstateFriendship.new_for_request(realestate, realestate_b)
+      req.put()
+      
+      context = {'rs_requestor':           realestate, 
+                 'rs_receiver':            realestate_b}
+      body = self.render_template('email/realestate_friend_request.txt', **context)  
+      # Armo el body en HTML.
+      html = self.render_template('email/realestate_friend_request.html', **context)  
+      
+      # Envío el correo.
+      mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['share_link']['sender'], 
+                   to=realestate_b.email,
+                   subject="ULTRAPROP - Pedido de amistad",
+                   body=body,
+                   html=html)
+      
+      body = self.render_template('email/realestate_friend_request_cc.txt', **context)  
+      # Armo el body en HTML.
+      html = self.render_template('email/realestate_friend_request_cc.html', **context)  
+      
+      mail.send_mail(sender="www.ultraprop.com.ar <%s>" % self.config['ultraprop']['mail']['share_link']['sender'], 
+                   to=realestate.email,
+                   subject="ULTRAPROP - Pedido de amistad",
+                   body=body,
+                   html=html
+                 )
       
     self.set_ok(u'Su pedido de amistad fue enviado con éxito.')
     
@@ -91,13 +92,21 @@ class FriendRequest(BackendHandler):
         current_key = RealEstateFriendship.get_the_other(request, realestate_str_key, get_key=False)
         already_friends.append(current_key)
     
+    denied            = []
     friend_req_sent   = []
     if requesteds:
       for request in requesteds:
         current_key = RealEstateFriendship.get_the_other(request, realestate_str_key, get_key=False)
         if current_key not in already_friends:
-          friend_req_sent.append(current_key)
-        
+          if RealEstateFriendship.is_sender_ex(request, realestate_str_key):
+            friend_req_sent.append(current_key)
+          else:
+            if db.get(request).state==RealEstateFriendship._DENIED:
+              denied.append(current_key)
+            else:
+              friend_req_sent.append(current_key)
+              
+    kwargs['denied']                  = denied
     kwargs['already_friends']         = already_friends
     kwargs['friend_req_sent']         = friend_req_sent
     kwargs['realestates']             = query.fetch(1000)
