@@ -7,7 +7,7 @@
 	<!-- ///// PUBLICAR ///// -->
 {% if in_map is not defined %}
 	{% if is_logged is defined and is_logged %}
-    	<li class="btnLight"><a href="{{ url_for('property/list') }}" title="Publicar propiedades">Publicar propiedades</a></li>
+    	<li class="btnLight"><a href="{{ url_for('property/list') }}" title="Publicar propiedades">Soy Inmobiliaria</a></li>
     {% else %}
     	<li class="btnLight"><a href="{{ url_for('backend/auth/login') }}" title="Publicar propiedades">Publicar propiedades</a></li>
     {% endif %}
