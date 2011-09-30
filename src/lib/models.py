@@ -42,8 +42,8 @@ class RealEstate(db.Model):
   @classmethod
   def new(cls):
     rs = RealEstate(status=RealEstate._TRIAL, managed_domain=0)
-    re.tpl_title  = u'Hacemos más fácil, rápida y segura su operación inmobiliaria'
-    re.tpl_text   = u'Nuestra inmobiliaria se ha convertido en una empresa moderna y dinámica. Hoy cuenta con los más modernos sistemas de comercialización, con los recursos humanos y con la tecnología necesarios para realizar con éxito sus negocios inmobiliarios.'
+    rs.tpl_title  = u'Hacemos más fácil, rápida y segura su operación inmobiliaria'
+    rs.tpl_text   = u'Nuestra inmobiliaria se ha convertido en una empresa moderna y dinámica. Hoy cuenta con los más modernos sistemas de comercialización, con los recursos humanos y con la tecnología necesarios para realizar con éxito sus negocios inmobiliarios.'
   return rs
     
   logo                = blobstore.BlobReferenceProperty() #--Borrar--
