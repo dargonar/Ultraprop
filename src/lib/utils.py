@@ -11,7 +11,7 @@ from webapp2_extras import jinja2, sessions, json
 
 from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify, do_headlinify, do_slugify, do_operationfy, do_totalareafy, do_expensasfy, do_add_days, do_realestate_linkfy, do_ownerify
 
-from models import Link, Property
+from models import Link, Property, RealEstate
 # ================================================================================ #
 # Funciones para manejo de Links: guardar y recuperar busqueda en mapa =========== #
 # ================================================================================ #
@@ -345,13 +345,14 @@ class NetworkPropertyMapper(Mapper):
   KIND        = Property
   FILTER      = []
   
-  def __init__(self, owner, friend, do_add=True, field='realestate_network', field2=None): # realestate_network or realestate_network_fe
+  def __init__(self, owner, friend, do_add=True, for_admin=True, for_website=False): 
     
-    self.owner = owner
-    self.friend = friend
-    self.do_add = do_add
-    self.field  = field
-    self.field2 = field2
+    self.owner            = owner
+    self.friend           = friend
+    self.friend_website   = RealEstate.get_realestate_sharing_key(friend)
+    self.do_add           = do_add
+    self.for_admin        = for_admin
+    self.for_website      = for_website
     self.FILTER = [ ('realestate', str(owner)) ]
     
     super(NetworkPropertyMapper, self).__init__()
@@ -359,23 +360,22 @@ class NetworkPropertyMapper(Mapper):
     
   def map(self, prop):
 
-    prop_val  = getattr(prop, self.field)
-    prop_val2 = None
-    if self.field2:
-      prop_val2 = getattr(prop, self.field2)
-      
-    if self.friend not in prop_val and self.do_add:
-      prop_val.append(self.friend)
-      if prop_val2 and self.friend not in prop_val2:
-        prop_val2.append(self.friend)
+    prop_val  = prop.location_geocells
+    
+    if self.do_add:
+      if self.for_admin and self.friend not in prop_val:
+        prop_val.append(self.friend)
+      if self.for_website and self.friend_website not in prop_val:
+        prop_val.append(self.friend_website)
       return ([prop],[])
     
-    if self.friend in prop_val and not self.do_add:
-      prop_val.remove( self.friend )
-      if prop_val2 and self.friend in prop_val:
-        prop_val2.remove( self.friend )
-      return ([prop], []) # update/delete
-    
+    if not self.do_add:
+      if self.for_admin and self.friend in prop_val:
+        prop_val.remove(self.friend)
+      if self.for_website and self.friend_website in prop_val:
+        prop_val.remove(self.friend_website)
+      return ([prop],[])
+      
     return ([],[])
     
   # def finish(self):

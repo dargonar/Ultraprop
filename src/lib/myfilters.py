@@ -2,6 +2,7 @@
 import logging
 from webapp2 import uri_for as url_for
 from datetime import datetime, timedelta
+
 from models import Property, RealEstate, User, RealEstateFriendship
 from re import *
 from backend_forms import status_choices

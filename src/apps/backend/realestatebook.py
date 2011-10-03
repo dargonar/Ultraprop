@@ -136,10 +136,10 @@ class FriendRequest(BackendHandler):
     if accept:
       req.accept()
       owner   = req.get_the_other_realestate(my_key, key_only=True)
-      tmp     = NetworkPropertyMapper(owner, my_key, do_add=True, field=Property._RS_FRIEND_FIELD)
+      tmp     = NetworkPropertyMapper(owner, my_key, do_add=True, for_admin=True, for_website=False)
       deferred.defer(tmp.run)
       
-      tmp2    = NetworkPropertyMapper(my_key, owner, do_add=True, field=Property._RS_FRIEND_FIELD)
+      tmp2    = NetworkPropertyMapper(my_key, owner, do_add=True, for_admin=True, for_website=False)
       deferred.defer(tmp2.run)
       
       body = self.render_template('email/realestate_friend_accepted.txt', **context)  
@@ -212,9 +212,9 @@ class Friends(BackendHandler):
       self.abort(500)
     my_key  = self.get_realestate_key()
     owner   = req.get_the_other_realestate(my_key, key_only=True)
-    tmp     = NetworkPropertyMapper(owner, my_key, do_add=False, field=Property._RS_FRIEND_FIELD, field2=Property._RS_SHARE_FIELD)
+    tmp     = NetworkPropertyMapper(owner, my_key, do_add=False, for_admin=True, for_website=True)
     deferred.defer(tmp.run)
-    tmp2    = NetworkPropertyMapper(my_key, owner, do_add=False, field=Property._RS_FRIEND_FIELD, field2=Property._RS_SHARE_FIELD)
+    tmp2    = NetworkPropertyMapper(my_key, owner, do_add=False, for_admin=True, for_website=True)
     deferred.defer(tmp2.run)
     
     #Envío el correo.
@@ -248,7 +248,7 @@ class Friends(BackendHandler):
     
     my_key  = self.get_realestate_key()
     owner   = req.get_the_other_realestate(my_key, key_only=True)
-    tmp     = NetworkPropertyMapper(owner, my_key, do_add=True, field=Property._RS_SHARE_FIELD)
+    tmp     = NetworkPropertyMapper(owner, my_key, do_add=True, for_admin=False, for_website=True)
     deferred.defer(tmp.run)
     
     realestate_b = req.get_the_other_realestate(my_key, key_only=False)
@@ -282,7 +282,7 @@ class Friends(BackendHandler):
     
     my_key  = self.get_realestate_key()
     owner   = req.get_the_other_realestate(my_key, key_only=True)
-    tmp     = NetworkPropertyMapper(owner, my_key, do_add=False, field=Property._RS_SHARE_FIELD)
+    tmp     = NetworkPropertyMapper(owner, my_key, do_add=False, for_admin=False, for_website=False)
     deferred.defer(tmp.run)
     
     realestate_b = req.get_the_other_realestate(my_key, key_only=False)

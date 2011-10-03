@@ -197,13 +197,13 @@ class RealEstateFixMapper(Mapper):
   def map(self, re):
 
     # Nuevo hack
-    re.tpl_title  = u'Hacemos más fácil, rápida y segura su operación inmobiliaria'
-    re.tpl_text   = u'Nuestra inmobiliaria se ha convertido en una empresa moderna y dinámica. Hoy cuenta con los más modernos sistemas de comercialización, con los recursos humanos y con la tecnología necesarios para realizar con éxito sus negocios inmobiliarios.'
-    
+    re.is_tester = False
+    if re.email in ['emiliomaull@gmail.com', 'matias.romeo@gmail.com' , 'federico.maull@regatta.com.br', 'ptutino@gmail.com']:
+      re.is_tester = True
     return ([re], []) # update/delete
 
 class FixRealEstates(BackendHandler):
-  @need_auth(roles='ultraadmin', code=505)
+ # @need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     # Mandamos a correr la tarea de mapeo
     tmp = RealEstateFixMapper()
@@ -219,16 +219,25 @@ class PropertyFixMapper(Mapper):
 
   def map(self, prop):
     
-    try:
-      prop.main_image_url = get_serving_url(prop.main_image) if prop.main_image else None
-    except:
-      prop.main_image_url = None
+    # try:
+      # prop.main_image_url = get_serving_url(prop.main_image) if prop.main_image else None
+    # except:
+      # prop.main_image_url = None
     
-    prop.price_expensas = 0.0
+    # prop.price_expensas = 0.0
+    
+    re_key = str(prop.realestate.key())
+    if re_key not in prop.location_geocells:
+      prop.location_geocells.append(re_key)
+    re_key_ex = RealEstate.get_realestate_sharing_key(re_key)
+    
+    if re_key_ex not in prop.location_geocells:
+      prop.location_geocells.append(re_key_ex)
+    
     return ([prop], []) # update/delete
 
 class FixProperty(BackendHandler):
-  @need_auth(roles='ultraadmin', code=505)
+  #@need_auth(roles='ultraadmin', code=505)
   def get(self, **kwargs):
     # Mandamos a correr la tarea de mapeo
     tmp = PropertyFixMapper()

@@ -141,7 +141,7 @@ class List(BackendHandler, PropertyPaginatorMixin):
       if rs_filter is None or rs_filter.strip()=='' or rs_filter.strip().lower()=='none': 
         rs_filter = self.get_realestate_key()
       if rs_filter.strip().lower()=='all': 
-        base_query.filter('realestate_network = ', self.get_realestate_key() )
+        base_query.filter('location_geocells = ', self.get_realestate_key() )
       else:
         base_query.filter('realestate =', db.Key( rs_filter ) )
       

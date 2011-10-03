@@ -644,7 +644,7 @@ function init_property_list(property_new_url)
     $('form#filter').submit();
   });
   
-  $('#prop_type, #currency, #rooms, #area_indoor, #status').change( function(e) {
+  $('#prop_type, #currency, #rooms, #area_indoor, #status, #realestate_network').change( function(e) {
     $('form#filter').submit();
   });
   

@@ -46,7 +46,14 @@ class RealEstate(db.Model):
     rs.tpl_text   = u'Nuestra inmobiliaria se ha convertido en una empresa moderna y dinámica. Hoy cuenta con los más modernos sistemas de comercialización, con los recursos humanos y con la tecnología necesarios para realizar con éxito sus negocios inmobiliarios.'
     rs.is_tester  = False
     return rs
-    
+  
+  @classmethod
+  def get_realestate_sharing_key(cls, string_key, realestate=None):
+    prefix = 'fe_'
+    if string_key is not None and string_key.strip()!='':
+      return prefix+string_key
+    return prefix+str(realestate.key())
+  
   logo                = blobstore.BlobReferenceProperty() #--Borrar--
   logo_url            = db.StringProperty(indexed=False)
   name                = db.StringProperty()
@@ -158,14 +165,16 @@ class Property(GeoModel):
   def new(realestate):
     prop = Property(realestate=realestate, status=Property._PUBLISHED ,image_count=0)
     my_key=str(realestate)
-    prop.realestate_network_fe.append(my_key)
-    prop.realestate_network.append(my_key)
+    
+    prop.location_geocells.append(my_key)
+    prop.location_geocells.append(RealEstate.get_realestate_sharing_key(my_key))
+    
     friends  = RealEstateFriendship.all().filter('realestates = ', my_key).filter('state = ', RealEstateFriendship._ACCEPTED).fetch(1000)
     for friend in friends:
       my_friend_key = friend.get_the_other_realestate(my_key, key_only=True)
       if friend.is_the_other_realestate_offering_my_props(my_key):
-        prop.realestate_network_fe.append(my_friend_key)
-      prop.realestate_network.append(my_friend_key)
+        prop.location_geocells.append(RealEstate.get_realestate_sharing_key(my_friend_key))
+      prop.location_geocells.append(my_friend_key)
     return prop
     
   status                  = db.IntegerProperty()
@@ -177,11 +186,6 @@ class Property(GeoModel):
   
   def is_not_published(self):
     return self.status == Property._NOT_PUBLISHED
-  
-  _RS_FRIEND_FIELD        = 'realestate_network'
-  _RS_SHARE_FIELD         = 'realestate_network_fe'
-  realestate_network      = db.StringListProperty()   # somos amigos
-  realestate_network_fe   = db.StringListProperty()   # ampliamos oferta
   
   # Information Fields	
   headline                = db.StringProperty()
