@@ -126,7 +126,8 @@ class SendTask(MyBaseHandler):
   def requestinfo_user(self, params):
     key                   = params['propery_key']
     property              = db.get(key) 
-    realestate            = property.realestate 
+    realestate_key        = params['realestate_key'] 
+    realestate            = db.get(realestate_key) 
     
     prop_operation_id     = params['prop_operation_id']
     
@@ -171,7 +172,8 @@ class SendTask(MyBaseHandler):
   def requestinfo_agent(self, params):  
     key                   = params['propery_key']
     property              = db.get(key) 
-    realestate            = property.realestate 
+    realestate_key        = params['realestate_key'] 
+    realestate            = db.get(realestate_key) 
     
     prop_operation_id     = params['prop_operation_id']
     

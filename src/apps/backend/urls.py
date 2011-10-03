@@ -25,7 +25,6 @@ def get_rules():
           Route('/<invoice>/payment-done'     , name='billing/payment/done'         , handler='apps.backend.payment.Done'),
           Route('/<invoice>/payment-pending'  , name='billing/payment/pending'      , handler='apps.backend.payment.Pending'),
         ]),
-        
       ]),
       
       # Todas las rutas de administracion
@@ -43,6 +42,11 @@ def get_rules():
         Route('/restore/request'         , name='backend/auth/restore/request'   , handler='apps.backend.auth.RestorePasswordRequest'),
         Route('/validate/<key>'          , name='backend/validate/user'          , handler='apps.backend.auth.ValidateUser'),
         
+        PathPrefixRoute('/consultas', [
+          Route('/list'                  , name='backend/consultas/list'         , handler='apps.backend.consultas.Index'),
+          Route('/list/<page>'           , name='backend/consultas/list/page'    , handler='apps.backend.consultas.Index:page'),
+        ]),
+        
         PathPrefixRoute('/realestate', [
           Route('/edit'                  , name='backend/realestate/edit'             , handler='apps.backend.realestate.Edit'),
         ]),
@@ -53,8 +57,16 @@ def get_rules():
         ]),
         
         PathPrefixRoute('/inmobiliarias_amigas', [
-          Route('/list'                  , name='backend/realestatebook/list'                 , handler='apps.backend.realestatebook.Demo'),
-          Route('/wants_poke'            , name='backend/realestatebook/wants_poke'           , handler='apps.backend.realestatebook.WantsPoke'),
+          Route('/list'                         , name='backend/realestatebook/list'                    , handler='apps.backend.realestatebook.Index'),
+          Route('/requests'                     , name='backend/realestatebook/requests'                , handler='apps.backend.realestatebook.Requests'),
+          Route('/friends'                      , name='backend/realestatebook/friends'                 , handler='apps.backend.realestatebook.Friends'),
+          Route('/friends/delete/<key>'         , name='backend/realestatebook/friends/delete'          , handler='apps.backend.realestatebook.Friends:delete'),
+          Route('/friends/share/<key>'          , name='backend/realestatebook/friends/share'           , handler='apps.backend.realestatebook.Friends:share'),
+          Route('/friends/unshare/<key>'        , name='backend/realestatebook/friends/unshare'         , handler='apps.backend.realestatebook.Friends:unshare'),
+          Route('/friend_request'               , name='backend/realestatebook/friend_request'          , handler='apps.backend.realestatebook.FriendRequest'),
+          Route('/friend_request/accept/<key>'  , name='backend/realestatebook/friend_request/accept'   , handler='apps.backend.realestatebook.FriendRequest:accept'),
+          Route('/friend_request/reject/<key>'  , name='backend/realestatebook/friend_request/reject'   , handler='apps.backend.realestatebook.FriendRequest:reject'),
+          
         ]),
 		
         

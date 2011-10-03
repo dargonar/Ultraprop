@@ -114,7 +114,8 @@ class PropertyFilterForm(Form):
   bedrooms           = SelectField('Dormitorios', coerce=int, choices=[( i, features['bedrooms']['descriptions'][i]) for i in range(0, len(features['bedrooms']['rangos'])-1)],default=0)  
   sort               = SelectField(choices=[(order_opts[i][0],order_opts[i][1]) for i in range(0,len(order_opts))], default='-sort_price')
   status             = SelectField(u'Estado de publicación', coerce=int, choices=status_choices, default=Property._PUBLISHED)
-  haslocation        = BooleanField(u'Listar Todas')
+  #haslocation        = BooleanField(u'Listar Todas')
+  realestate_network = SelectField(u'Inmobiliaria')
 
 #Form to edit/create a new property
 class PropertyForm(Form):
@@ -300,6 +301,7 @@ class RealEstateForm(Form):
   fax_number          = TextField('')
   telephone_number    = TextField('',[validators.Required(message=u'Debe ingresar un número de teléfono.')])
   telephone_number2   = TextField('')
+  open_at             = TextField('')
   address             = TextField('',[validators.Required(message=u'Debe ingresar una dirección.')])
   zip_code            = TextField('',[validators.Required(message=u'Debe ingresar un código postal.')])
   
@@ -312,6 +314,7 @@ class RealEstateForm(Form):
     rs.telephone_number2  = self.telephone_number2.data
     rs.address            = self.address.data
     rs.zip_code           = self.zip_code.data
+    rs.open_at            = self.open_at.data
     return rs
     
 

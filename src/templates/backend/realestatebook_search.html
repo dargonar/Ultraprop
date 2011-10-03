@@ -1,0 +1,140 @@
+{% extends "backend/_base.html" %}
+
+{% block menuleft %} 
+<!--div id="mnuLeft">
+  
+</div--> 
+{% endblock %}
+
+{% block headscript %} 
+<script type="text/javascript">
+$(document).ready(function() {
+  setTimeout("hideFlashMessageSlow()", 5000);
+  
+  jQuery('#send_friend_keys').click(function(){
+    var keys=jQuery('#selected_friend_keys').val();
+    jQuery('input[type="checkbox"].rskey:checked ').each(
+      function(index, value){ 
+        if(keys!=null && keys!='')
+          keys=keys+','
+        keys=keys+jQuery(value).attr('key');
+      }
+    );
+    jQuery('#selected_friend_keys').val(keys);
+    
+    jQuery('#send_friend_request').submit();
+    return false;
+  });
+  
+  $('#masterpic').listnav({
+    noMatchText:'No hay inmobilirias cuyo nombre inicie con esta letra.',
+    prefixes: ['inmobiliria','broker'],
+    showCounts: false
+  });
+});
+</script> 
+{% endblock %}
+
+{% block content %}
+  
+  {% set rsbook_title = 'Buscar Inmobilirias'%}
+  {% set rsbook_menu = 'search'%}
+  {% include 'backend/includes/realestatebook_navbar.html' %}
+  <div class="ln-letters" id="masterpic-nav">
+    <!--a href="#" class="all">TODO</a>
+    <a href="#" class="a">A</a>
+    <a href="#" class="b">B</a>
+    <a href="#" class="c">C</a>
+    <a href="#" class="d">D</a>
+    <a href="#" class="e">E</a>
+    <a href="#" class="f">F</a>
+    <a href="#" class="g">G</a>
+    <a href="#" class="h">H</a>
+    <a href="#" class="i">I</a>
+    <a href="#" class="j">J</a>
+    <a href="#" class="k">K</a>
+    <a href="#" class="l">L</a>
+    <a href="#" class="m">M</a>
+    <a href="#" class="n">N</a>
+    <a href="#" class="o">O</a>
+    <a href="#" class="p">P</a>
+    <a href="#" class="q">Q</a>
+    <a href="#" class="r">R</a>
+    <a href="#" class="s">S</a>
+    <a href="#" class="t">T</a>
+    <a href="#" class="u">U</a>
+    <a href="#" class="v">V</a>
+    <a href="#" class="w">W</a>
+    <a href="#" class="x">X</a>
+    <a href="#" class="y">Y</a>
+    <a href="#" class="z ln-last">Z</a-->
+  </div>
+
+  {% if realestates|length>0 %}
+    <div class="viewPicBox">
+      <ul id="masterpic" class="picturebox_admin">
+        {% for realestate in realestates %}
+        {% set realestate_key = realestate.key()|string %}
+        <li>
+          <div style="width:160px; height:120px" id="imgbox"> 
+            <div class="agentbox" style="width: 160px;float: left; margin-right:20px;">
+              <div style="width:160px;height:120px;display: table-cell; vertical-align: middle;">
+                {% if realestate.logo_url %}
+                  <img class="logo" src="{{realestate.logo_url+'=s160'}}" style="max-width:160px;max-height:120px;" title="{{realestate.name}}"/> 
+                {% else %}
+                  <div style="width:160px;height:120px;float:left;"></div>
+                {% endif %} 
+              </div>
+              <div class="data" style="width:160px;test-align:left;">
+                <h3>{{realestate.name}}</h3>
+                <span>{{realestate.address if realestate.address else ''}}</span><br/>
+                <span>{{realestate.telephone_number if realestate.telephone_number else ''}}</span><br/>
+                {% if realestate.website and realestate.website|wordcount>0 %}
+                  <a href="{{'%s%s'|format('http://',realestate.website) if 'http://' not in realestate.website else realestate.website }}" target="_blank" title="Sitio web de {{realestate.name}}">{{realestate.website}}</a><br/>
+                {% else %}
+                  <br/>
+                {% endif %}
+                <a href="{{realestate|realestate_linkfy}}" target="_blank" title="{{realestate.name}} en Ultraprop">www.ultraprop.com.ar{{realestate|realestate_linkfy}}</a><br/>
+                <p>{{ realestate|ownerify}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="ex-label" title="Seleccionar para pedir amistad">
+            {% if realestate_key in already_friends %}
+              Ya pertenece a tu Red.
+            {% else %}
+              {% if realestate_key in friend_req_sent %}
+                Pendiente de aprobación.
+              {% else %}
+                {% if realestate_key in denied %}
+                  Solicitud rechazada.<br/>
+                  <input type="checkbox" class="rskey" key="{{realestate_key}}"/> <b>Agregar a mi Red</b>
+                {% else %}
+                  <input type="checkbox" class="rskey" key="{{realestate_key}}"/> <b>Agregar a mi Red</b>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <span id="addphoto"></span> 
+    <br/>
+    <center>
+      <form id="send_friend_request" name="send_friend_request" action="/admin/inmobiliarias_amigas/friend_request" method="POST" style="display:none;">
+        <input type="text" value="" name="selected_friend_keys" id="selected_friend_keys"/>
+      </form>
+      <div style="margin:10px 0; border-top: dotted 1px #ccc;"></div>
+      <a href="#" style="border:none;" id="send_friend_keys">
+        <img src="/img/friends.gif" width="243" height="61" /> 
+      </a>
+    </center>
+  
+  {% else %}
+    <div class="divider"></div>
+    <div class="noelement proplist txt">
+      <span>No hay inmobiliarias en el listado</span>
+    </div>
+  {% endif %}    
+{% endblock %}

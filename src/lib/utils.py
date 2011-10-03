@@ -4,13 +4,14 @@ import urllib
 import cgi
 
 from google.appengine.ext import db
-
+from google.appengine.api import taskqueue
+from taskqueue import Mapper
 from webapp2 import abort, cached_property, RequestHandler, Response, HTTPException, uri_for as url_for, get_app
 from webapp2_extras import jinja2, sessions, json
 
-from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify, do_headlinify, do_slugify, do_operationfy, do_totalareafy, do_expensasfy, do_add_days, do_realestate_linkfy
+from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify, do_headlinify, do_slugify, do_operationfy, do_totalareafy, do_expensasfy, do_add_days, do_realestate_linkfy, do_ownerify
 
-from models import Link
+from models import Link, Property, RealEstate
 # ================================================================================ #
 # Funciones para manejo de Links: guardar y recuperar busqueda en mapa =========== #
 # ================================================================================ #
@@ -254,6 +255,7 @@ class Jinja2Mixin(object):
     env.filters['expensasfy']         = do_expensasfy
     env.filters['realestate_linkfy']  = do_realestate_linkfy
     env.filters['add_days']           = do_add_days
+    env.filters['ownerify']           = do_ownerify
     env.globals['url_for']            = self.uri_for
     env.globals['app_version_id']     = self.app.config['ultraprop']['app_version_id']
     env.globals['app_version']        = self.app.config['ultraprop']['app_version']
@@ -339,3 +341,43 @@ class RealestateHandler(MyBaseHandler):
     except:
       return db.Key(realestate_key_or_id)
       
+class NetworkPropertyMapper(Mapper):
+  KIND        = Property
+  FILTER      = []
+  
+  def __init__(self, owner, friend, do_add=True, for_admin=True, for_website=False): 
+    
+    self.owner            = owner
+    self.friend           = friend
+    self.friend_website   = RealEstate.get_realestate_sharing_key(friend)
+    self.do_add           = do_add
+    self.for_admin        = for_admin
+    self.for_website      = for_website
+    self.FILTER = [ ('realestate', str(owner)) ]
+    
+    super(NetworkPropertyMapper, self).__init__()
+    return
+    
+  def map(self, prop):
+
+    prop_val  = prop.location_geocells
+    
+    if self.do_add:
+      if self.for_admin and self.friend not in prop_val:
+        prop_val.append(self.friend)
+      if self.for_website and self.friend_website not in prop_val:
+        prop_val.append(self.friend_website)
+      return ([prop],[])
+    
+    if not self.do_add:
+      if self.for_admin and self.friend in prop_val:
+        prop_val.remove(self.friend)
+      if self.for_website and self.friend_website in prop_val:
+        prop_val.remove(self.friend_website)
+      return ([prop],[])
+      
+    return ([],[])
+    
+  # def finish(self):
+      # """Called when the mapper has finished, to allow for any final work to be done."""
+      # pass

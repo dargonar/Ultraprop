@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 {% import 'backend/_form_fields.html' as ff %}
 {% block tab_content %}
-<form id="registerform" action="{{url_for('property/new')}}" method="post">
+<form id="new_property_form" action="{{url_for('property/new')}}" method="post">
   <input name="key" type="hidden" value="{% if key %}{{key}}{% endif %}"/>
   <input name="goto" type="hidden" value=""/>
   <!-- type.html -->

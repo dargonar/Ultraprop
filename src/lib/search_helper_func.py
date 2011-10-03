@@ -231,10 +231,20 @@ class PropertyPaginatorMixin(object):
   
   @cached_property
   def form(self):
+    from models import RealEstate, RealEstateFriendship
+    
     if self.state_source == 'request':
       self.session['request.data'] = self.request.POST.mixed()
     
-    return PropertyFilterForm(MultiDict(self.session['request.data']))
+    form                            = PropertyFilterForm(MultiDict(self.session['request.data']))
+    
+    if 'account.realestate.key' in self.session:
+      my_key  = self.session['account.realestate.key']
+      rs      = db.get(my_key)
+      friends  = RealEstateFriendship.all().filter('realestates = ', my_key).filter('state = ', RealEstateFriendship._ACCEPTED).fetch(1000)
+      form.realestate_network.choices = [(my_key, rs.name), ('ALL','<<Mi RED ULTAPROP>>')]+[(str(rs_friend.get_the_other_realestate(my_key, key_only=True)), '--'+rs_friend.get_the_other_realestate(my_key, key_only=False).name) for rs_friend in friends]
+      form.realestate_network.default = my_key
+    return form
     
 class Searcher(object):
   def __init__(self, request):

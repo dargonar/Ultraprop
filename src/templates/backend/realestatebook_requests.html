@@ -1,0 +1,67 @@
+{% extends "backend/_base.html" %}
+
+{%- macro select_option(key, value) -%}
+  {% if key==value %}
+    selected="selected"
+  {% endif %}
+{%- endmacro -%}
+
+{% block menuleft %} 
+<!--div id="mnuLeft">
+  
+</div--> 
+{% endblock %}
+
+{% block headscript %} 
+<script type="text/javascript">
+$(document).ready(function() {
+  setTimeout("hideFlashMessageSlow()", 5000);
+  jQuery('#filter').change(function(){
+    jQuery('#filter_form').submit();
+  });
+});
+</script> 
+{% endblock %}
+
+{% block content %}
+  {% set type = '' %}
+  {% if filter > 0 %}
+    {% set type = 'enviadas' if filter==_SENT else 'recibidas' %}
+  {% endif %}
+  {% set rsbook_title = 'Solicitudes '+type %}
+  {% set rsbook_menu = 'solicitudes'%}
+  {% include 'backend/includes/realestatebook_navbar.html' %}
+  
+  <!-- PROP LIST-->  
+  <div id="sort_by">
+    <div class="sortbox">
+       <label>Ver</label> 
+       <form name="filter_form" id="filter_form" method="POST" action="{{url_for('backend/realestatebook/requests')}}" style="width:250px;display: inline-block;">
+         <select name="filter" id="filter">
+          <!-- option value="0" {# {select_option(filter,0)} #}>Enviadas y recibidas</option -->
+          <option value="{{_SENT}}" {{select_option(filter,_SENT)}}>Enviadas</option>
+          <option value="{{_RECEIVED}}" {{select_option(filter,_RECEIVED)}}>Recibidas</option>
+         </select>
+       </form>
+    </div>
+  </div>
+  {% for request in requests %}
+    {% if loop.first %}   
+      {% include "backend/includes/realestatebook_list_navigation.html" %}
+    {% endif %}
+    
+    {% set req_realestate = request.get_the_other_realestate(realestate.key()) %}
+    {% include "backend/includes/realestatebook_list_view.html" %}
+    
+    {% if loop.last %} 
+      <div class="h_last"></div>
+      {% include "backend/includes/realestatebook_list_navigation.html" %}
+    {% endif %}
+  {% else %}
+    <div class="divider"></div>
+    <div class="noelement proplist txt">
+      <span>No posee solicitudes</span>
+    </div>
+  {% endfor %}
+
+{% endblock %}

@@ -21,7 +21,6 @@ class Show(RealestateHandler):
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
     if realestate.status == RealEstate._NO_PAYMENT:
       return self.render_response('realestate/disabled.html', realestate=realestate)
-
     
     kwargs['realestate']  = realestate
     kwargs['realestate_logo'] =  realestate.logo_url
@@ -79,7 +78,7 @@ class Show(RealestateHandler):
     
     db.run_in_transaction(txn)
     
-    self.set_ok('Tu consulta enviada satisfactoriamente. Te hemos enviado una copia de la consulta a tu correo.')  
+    self.set_ok('Tu consulta fue enviada satisfactoriamente. Te hemos enviado una copia de la consulta a tu correo.')  
     return self.redirect_to('realestate/ficha', key=key, oper=prop_operation_id, realestate=realestate)
     
   @cached_property

@@ -41,8 +41,19 @@ class RealEstate(db.Model):
   
   @classmethod
   def new(cls):
-    return RealEstate(status=RealEstate._TRIAL, managed_domain=0)
-    
+    rs = RealEstate(status=RealEstate._TRIAL, managed_domain=0)
+    rs.tpl_title  = u'Hacemos más fácil, rápida y segura su operación inmobiliaria'
+    rs.tpl_text   = u'Nuestra inmobiliaria se ha convertido en una empresa moderna y dinámica. Hoy cuenta con los más modernos sistemas de comercialización, con los recursos humanos y con la tecnología necesarios para realizar con éxito sus negocios inmobiliarios.'
+    rs.is_tester  = False
+    return rs
+  
+  @classmethod
+  def get_realestate_sharing_key(cls, string_key, realestate=None):
+    prefix = 'fe_'
+    if string_key is not None and string_key.strip()!='':
+      return prefix+string_key
+    return prefix+str(realestate.key())
+  
   logo                = blobstore.BlobReferenceProperty() #--Borrar--
   logo_url            = db.StringProperty(indexed=False)
   name                = db.StringProperty()
@@ -55,6 +66,7 @@ class RealEstate(db.Model):
   fax_number          = db.StringProperty(indexed=False)
   telephone_number    = db.StringProperty(indexed=False)
   telephone_number2   = db.StringProperty(indexed=False)
+  open_at             = db.StringProperty(indexed=False)
   
   address             = db.StringProperty(indexed=False)
   zip_code            = db.StringProperty()
@@ -64,6 +76,7 @@ class RealEstate(db.Model):
   enable              = db.IntegerProperty() #--borrar--
   status              = db.IntegerProperty()
   managed_domain      = db.IntegerProperty()
+  is_tester           = db.BooleanProperty()
   
   domain_id           = db.StringProperty()
   plan                = db.ReferenceProperty(Plan)
@@ -135,7 +148,7 @@ class User(db.Model):
   
   @property
   def full_name(self):
-    return '%s %s' % (self.first_name, self.last_name)
+    return '%s %s' % (self.first_name if self.first_name else '' , self.last_name if self.last_name else '')
   
   def __repr__(self):
     return self.name
@@ -146,10 +159,24 @@ class Property(GeoModel):
   _NOT_PUBLISHED = 2
   _DELETED       = 3
   
+  # realestates_friends     => al ser amigos
+  # realestates_frontend    => al ampliar oferta  
   @staticmethod
   def new(realestate):
-    return Property(realestate=realestate, status=Property._PUBLISHED ,image_count=0)
-
+    prop = Property(realestate=realestate, status=Property._PUBLISHED ,image_count=0)
+    my_key=str(realestate)
+    
+    prop.location_geocells.append(my_key)
+    prop.location_geocells.append(RealEstate.get_realestate_sharing_key(my_key))
+    
+    friends  = RealEstateFriendship.all().filter('realestates = ', my_key).filter('state = ', RealEstateFriendship._ACCEPTED).fetch(1000)
+    for friend in friends:
+      my_friend_key = friend.get_the_other_realestate(my_key, key_only=True)
+      if friend.is_the_other_realestate_offering_my_props(my_key):
+        prop.location_geocells.append(RealEstate.get_realestate_sharing_key(my_friend_key))
+      prop.location_geocells.append(my_friend_key)
+    return prop
+    
   status                  = db.IntegerProperty()
   def is_deleted(self):
     return self.status == Property._DELETED
@@ -626,3 +653,87 @@ class HelpDesk(db.Model):
   
   def __repr__(self):
     return self.realestate_name + '|' + str(self.realestate.key()) + '|' + self.sender_name + '|' + self.sender_email + '|' + self.sender_telephone + '|' + self.sender_subject + '|' + self.sender_comment + '|' + self.created_at.strftime('%d/%m/%Y')
+
+class RealEstateFriendship(db.Model):
+  _REQUESTED        = 1
+  _ACCEPTED         = 2
+  _DENIED           = 3
+  _DELETED          = 4
+  
+  @classmethod
+  def not_accepted_states(cls):
+    return [RealEstateFriendship._REQUESTED, RealEstateFriendship._DENIED, RealEstateFriendship._DELETED]
+    
+  @classmethod
+  def new_for_request(cls, realestate_a, realestate_b):
+    rs                  = RealEstateFriendship(key_name = '%s,%s' % (str(realestate_a.key()), str(realestate_b.key())), state=RealEstateFriendship._REQUESTED)
+    rs.rs_a_shows_b     = False
+    rs.rs_b_shows_a     = False
+    rs.realestate_a     = realestate_a
+    rs.realestate_b     = realestate_b
+    return rs
+  
+  @classmethod
+  def get_the_other(cls, obj_key, known_realestate, get_key=False):
+    datu        = str(obj_key.name()).split(',')
+    unknown_key = datu[0]
+    if(datu[0]==known_realestate):
+      unknown_key = datu[1]
+    if get_key:
+      return db.Key(unknown_key)
+    return unknown_key
+  
+  @classmethod
+  def is_sender_ex(cls, obj_key, known_realestate):
+    datu        = str(obj_key.name()).split(',')
+    return datu[0]==known_realestate
+    
+  def is_the_other_realestate_offering_my_props(self, my_realestate_key):
+    if str(self.key()).split(',')[0]==my_realestate_key:
+      return self.rs_b_shows_a
+    return self.rs_a_shows_b
+    
+  def get_the_other_realestate(self, known_realestate, key_only=False):
+    if key_only:
+      return RealEstateFriendship.get_the_other(self.key(), str(known_realestate), get_key=False)
+    return db.get(RealEstateFriendship.get_the_other(self.key(), str(known_realestate), get_key=True))
+  
+  def is_sender(self, realestate):
+    return self.realestate_a.key() == realestate.key()
+  
+  def accept(self):
+    self.state = RealEstateFriendship._ACCEPTED
+    self.save()
+    return
+    
+  def reject(self):
+    self.state = RealEstateFriendship._DENIED
+    self.save()
+    return 
+  
+  def alive(self):
+    self.state = RealEstateFriendship._REQUESTED
+    self.save()
+    return 
+    
+  realestate_a              = db.ReferenceProperty(RealEstate, collection_name ='realestate_a')
+  realestate_b              = db.ReferenceProperty(RealEstate, collection_name ='realestate_b')
+  realestate_deleter        = db.ReferenceProperty(RealEstate, collection_name ='realestate_deleter') 
+  created_at                = db.DateTimeProperty(auto_now_add=True)
+  state                     = db.IntegerProperty()
+  rs_a_shows_b              = db.BooleanProperty()
+  rs_b_shows_a              = db.BooleanProperty()
+  realestates               = db.StringListProperty()
+  
+  # def save(self):
+    # super(RealEstateFriendship, self).save()
+    # return self
+    
+  #Cuando nuevo
+  def put(self):
+    self.realestates.append(str(self.realestate_a.key()))
+    self.realestates.append(str(self.realestate_b.key()))
+    super(RealEstateFriendship, self).put()
+    return self
+    
+  

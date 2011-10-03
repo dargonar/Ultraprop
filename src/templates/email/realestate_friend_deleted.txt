@@ -1,0 +1,7 @@
+{% extends "email/_base.txt"%}
+{%block content%}
+    ¡Hola {{rs_other.name}}!
+    
+    '{{rs.name}}' ha dejado de pertenecer a su Red.
+    A partir de este momento su oferta inmobiliria no estará disponible para '{{rs.name}}', y viceversa.
+{% endblock %}

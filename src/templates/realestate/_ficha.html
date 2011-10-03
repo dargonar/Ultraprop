@@ -37,16 +37,19 @@
   <div class="contactData">
       <!-- AGENT INFO -->
       <div id="agent_info" class="agentbox">
-         {% if property.realestate %}  
-          <div class="data">
-            <h1>{{property.realestate.name}}</h1>
-            <span>{{property.realestate.address}}</span><br/>
-            <span>{{property.realestate.telephone_number}}</span><br/>
-            <a href="{{property.realestate.website}}" target="_blank">{{property.realestate.website}}</a><br/>
-            <!--span>{{property.realestate.email}}</span><br/-->
-          </div>
-        {% endif %}
-        
+        <div class="data">
+          <h1>{{realestate.name}}</h1>
+          <span>{{realestate.address if realestate.address else ''}}</span><br/>
+          <span>{{realestate.telephone_number if realestate.telephone_number else ''}}</span><br/>
+          <a href="{{realestate|realestate_linkfy}}" target="_blank" title="Enlace de {{realestate.name}} en Ultraprop"><b>{{realestate.name}}</b> en Ultraprop</a><br/>
+          {% if realestate.website and realestate.website|wordcount>0 %}
+            <a href="{{'%s%s'|format('http://',realestate.website) if 'http://' not in realestate.website else realestate.website }}" target="_blank">{{realestate.website}}</a><br/>
+          {% endif %}
+          <span>{{realestate.email}}</span><br/>
+          {% if realestate.open_at %}
+            <span>Atención {{realestate.open_at}}</span><br/>
+          {% endif %}
+        </div>
       </div>
    </div>
    

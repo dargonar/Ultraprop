@@ -1,7 +1,10 @@
 {% extends "backend/_base2.html" %}
 
 {% block content %}
-    <div id="login_container" class="login_window" align="center" style="overflow:hidden; width:900px; margin:auto;">
+  <div id="login_container" class="login_window" align="center" style="overflow:hidden; width:900px; margin:auto;">
+    {% if flash %}
+      <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
+    {% endif %}
     <div class="popup" style="float:left; width:435px;">
       <div id="login" class="popup_box" align="left" style="min-height:232px;"> 
         <div class="header" style="font-size:14px; font-weight:bold; color:#3E8924;">Usuario Registrado</div>
@@ -17,9 +20,6 @@
               <a id="btnForgotPass" href="#" onclick="jQuery('#login').hide();jQuery('#restore_pass').show(); return false;" class="small">Olvidó su contraseña?</a> 
             </span> 
           </p>
-          {% if flash %}
-            <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
-          {% endif %}
           <a href="#" class="fancy_button login"><input type="submit" value="INGRESAR" name=""></a>
         </form>
         <!--div jqtransform="true">

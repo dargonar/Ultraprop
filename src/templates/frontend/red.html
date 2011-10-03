@@ -1,7 +1,7 @@
   {% extends "frontend/_base.html"%}  
   
   {%block metas%}
-    <title>ULTRAPROP - Red de inmobiliarias</title>
+    <title>ULTRAPROP - Red de inmobiliarias de La Plata</title>
     <meta name="description" content="Inmobiliarias que forman parte de ULTRAPROP " />
     <meta name="keywords" content="ULTRAPROP, red, inmobiliaria" />
   {%endblock%}
@@ -14,39 +14,35 @@
         <div id="content" align="left">
           <!-- /// HEADER /// -->
           <div id="header">
-            <a href="/" title="Página de inicio de UltraProp"><img class="logo" src="/img/pixel-transp.gif" /></a>
+            <a href="/" title="Página de inicio de UltraProp">
+              <img class="logo" src="/img/pixel-transp.gif" />
+            </a>
             {%include "frontend/templates/header_links.html"%}
           </div>
-          
           <div style="padding:15px; padding-left:20px; overflow:hidden; background: none repeat scroll 0 0 #E4F1FF;border: 1px solid #99C7F8;">
           	<div style="float:left; width:600px;">
-                <h1>Inmobiliarias de la Red ULTRAPROP</h1>
+                <h1>Inmobiliarias de la Red ULTRAPROP en La Plata</h1>
                 <p style="font-size:14px; margin-top:15px;">
                 Regístrese y comience a publicar sus inmuebles y obtenga su página web propia.<!--, aparecerá en los listados de inmobiliarias e inmuebles de La Plata.-->
                 <br /><br /><br />
                 Haga <a href="admin/signup">click aquí</a> para conocer más acerca de nuestros servicios.
                 </p>
             </div>
-            
             <div style="float:right;">
             	<a href="admin/signup"><img src="/img/banners/publicar.gif" /></a>
             </div>
-          
           </div>
-          
           <h2 style="margin-left:20px; margin-top:15px;">Las siguientes inmobiliarias ya nos eligieron </h2>
-          
-           <br/>
+          <br/>
               {% for realestate in realestates %}
-                {% if realestate.email != 'emiliomaull@gmail.com' and realestate.email != 'matias.romeo@gmail.com' and realestate.email != 'federico.maull@regatta.com.br' %}
+                {# % if realestate.email != 'emiliomaull@gmail.com' and realestate.email != 'matias.romeo@gmail.com' and realestate.email != 'federico.maull@regatta.com.br' and realestate.email != 'ptutino@gmail.com' % #}
+                {% if not realestate.is_tester %}
                 <div id="agent_info" class="agentbox" style="width: 460px;float: left; margin-right:20px;">
-                  
-                  	<div style="width:130px;height:80px;float:left; margin-right:15px;">
-                    {% if realestate.logo_url %}
-                    	<img class="logo" src="{{realestate.logo_url+'=s130'}}" style="max-width:130px;max-height:80px;" title="{{realestate.name}}"/>
-                    {% endif %}
-                    </div>
-                  
+                  <div style="width:130px;height:80px;float:left; margin-right:15px;">
+                  {% if realestate.logo_url %}
+                    <img class="logo" src="{{realestate.logo_url+'=s130'}}" style="max-width:130px;max-height:80px;" title="{{realestate.name}}"/>
+                  {% endif %}
+                  </div>
                   <div class="data" style="width:288px">
                     <h1>{{realestate.name}}</h1>
                     <span>{{realestate.address if realestate.address else ''}}</span><br/>

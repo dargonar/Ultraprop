@@ -203,6 +203,7 @@ function is_from_country(item, country)
   return false;
 }
 
+  
 function init_new_property()
 {
   //Cargamos maps api
@@ -210,23 +211,29 @@ function init_new_property()
   
   //Pone estilo 'Selected' cuando marcan checkbox y limpia errores <p>
   $(".typebox input[type=checkbox]").click( function() {
-
     var typebox = $(this).parents('.typebox:first');
-    $(typebox).toggleClass('selected', this.checked);
+    $(typebox).toggleClass('selected'); //, this.checked);
 
-    //recalculate operation
-    var val=0;
-    $(".typebox input[type=checkbox]:checked").each( function(i, field) {
-      var tmp = field.id.split('_');
-      val |= parseInt( tmp[1] );
-    });
-    $("#prop_operation_id").val(val);
-    
     var op = $(this).parents('dd.operation:first');
     op.removeClass('errorbox');
     op.find('p.error').remove();
   });
   
+  //Auto checkea el box cuando hay precio
+  $("#price_rent").keyup(function(event){
+    chk = $('input[name=rent_yes]');
+    if( ($(this).val() != '' && chk.is(':checked') == false) ||
+        ($(this).val() == '' && chk.is(':checked') == true ) )
+      chk.trigger('click'); 
+  });
+  
+  $("#price_sell").keyup(function(event){
+    chk = $('input[name=sell_yes]');
+    if( ($(this).val() != '' && chk.is(':checked') == false) ||
+        ($(this).val() == '' && chk.is(':checked') == true ) )
+      chk.trigger('click'); 
+  });
+ 
   $("#description").focus( function() {
     $(this).removeClass('errorbox');
   });
@@ -308,21 +315,18 @@ function init_new_property()
     google.maps.event.trigger(map, 'resize');
     map.setCenter(marker.getPosition());
   });
-
-  //Auto checkea el box cuando hay precio
-  // $("#price_rent").keyup(function(event){
-    // chk = $('input[name=rent_yes]');
-    // if( ($(this).val() != '' && chk.is(':checked') == false) ||
-        // ($(this).val() == '' && chk.is(':checked') == true ) )
-      // chk.trigger('click');
-  // });
   
-  // //Auto checkea el box cuando hay precio
-  // $("#price_sell").keydown(function(event){
-    // $('input[name=sell_yes]').attr('checked', $(this).val() != '' ? 'checked' : false);
-  // });
-  
-  
+  $('#new_property_form').submit(function() {
+    //recalculate operation
+    var val=0;
+    $(".typebox input[type=checkbox]:checked").each( function(i, field) {
+      var tmp = field.id.split('_');
+      val |= parseInt( tmp[1] );
+    });
+    $("#prop_operation_id").val(val);
+    return true;
+  });
+    
 }
 
 //----------------------------------
@@ -640,7 +644,7 @@ function init_property_list(property_new_url)
     $('form#filter').submit();
   });
   
-  $('#prop_type, #currency, #rooms, #area_indoor, #status').change( function(e) {
+  $('#prop_type, #currency, #rooms, #area_indoor, #status, #realestate_network').change( function(e) {
     $('form#filter').submit();
   });
   

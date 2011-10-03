@@ -122,7 +122,11 @@
         <dt>Correo electrónico</dt>
         {{ form_field2(form.email, placeholder="correo electrónico", title="correo electrónico") }}
     </dl>  
-  
+    </dl>
+      <dl class="form">
+        <dt>Días y horarios de atención</dt>
+        {{ form_field2(form.open_at, placeholder="Lun. a Vier. de 9:00 a 18:00 y Sab. de 10:00 a 13:00", title="Días y horarios de atención") }}
+    </dl>
     
     <dl class="form">
       <dd style="margin-left:200px;width:100%;">

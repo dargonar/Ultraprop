@@ -1,0 +1,7 @@
+{% extends "email/_base.txt"%}
+{%block content%}
+  ¡Hola {{rs_other.name}}!
+  
+  {{rs.name}} ha dejado de ofertar tus inmuebles en su sitio web.
+                
+{% endblock %}
