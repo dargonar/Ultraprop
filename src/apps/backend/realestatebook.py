@@ -85,6 +85,8 @@ class FriendRequest(BackendHandler):
     
     realestate_str_key = str(realestate.key())
     query = RealEstate.all().filter('__key__ != ', realestate.key())
+    if not self.has_role('ultraadmin'):
+      query.filter(' is_tester = ', False)
     
     already_friends   = []
     if friends:

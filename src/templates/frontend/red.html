@@ -35,7 +35,8 @@
           <h2 style="margin-left:20px; margin-top:15px;">Las siguientes inmobiliarias ya nos eligieron </h2>
           <br/>
               {% for realestate in realestates %}
-                {% if realestate.email != 'emiliomaull@gmail.com' and realestate.email != 'matias.romeo@gmail.com' and realestate.email != 'federico.maull@regatta.com.br' and realestate.email != 'ptutino@gmail.com' %}
+                {# % if realestate.email != 'emiliomaull@gmail.com' and realestate.email != 'matias.romeo@gmail.com' and realestate.email != 'federico.maull@regatta.com.br' and realestate.email != 'ptutino@gmail.com' % #}
+                {% if not realestate.is_tester %}
                 <div id="agent_info" class="agentbox" style="width: 460px;float: left; margin-right:20px;">
                   <div style="width:130px;height:80px;float:left; margin-right:15px;">
                   {% if realestate.logo_url %}
