@@ -245,6 +245,8 @@ class PropertyPaginatorMixin(object):
       friends  = RealEstateFriendship.all().filter('realestates = ', my_key).filter('state = ', RealEstateFriendship._ACCEPTED).fetch(1000)
       form.realestate_network.choices = [(my_key, rs.name), ('ALL','<<Mi RED ULTAPROP>>')]+[(str(rs_friend.get_the_other_realestate(my_key, key_only=True)), '--'+rs_friend.get_the_other_realestate(my_key, key_only=False).name) for rs_friend in friends]
       form.realestate_network.default = my_key
+    else:
+      form.realestate_network.choices = [('ALL','<<Mi RED ULTAPROP>>')]
     return form
     
 class Searcher(object):
