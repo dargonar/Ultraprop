@@ -226,6 +226,15 @@ class PropertyFixMapper(Mapper):
     
     # prop.price_expensas = 0.0
     
+    try:
+      re = prop.realestate
+      if not re:
+        logging.error(' NO TIENE REAL ESTATE:'+str(prop.key()))
+        return ([], [])
+    except:
+      logging.error(' NO TIENE REAL ESTATE:'+str(prop.key()))
+      return ([], [])
+    
     re_key = str(prop.realestate.key())
     if re_key not in prop.location_geocells:
       prop.location_geocells.append(re_key)
