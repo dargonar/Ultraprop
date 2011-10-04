@@ -50,6 +50,7 @@ class Search(RealestateHandler, PropertyPaginatorMixin):
     kwargs['menu_item']       = 'search'
     kwargs['realestate']      = self.realestate
     kwargs['realestate_logo'] =  self.realestate.logo_url
-    
+    if 'page' not in kwargs:
+      kwargs['page'] = 1
     return self.render_response('realestate/search.html', **kwargs)
 

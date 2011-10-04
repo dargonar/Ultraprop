@@ -5,7 +5,7 @@ from google.appengine.ext import db
 from google.appengine.api import taskqueue
 from google.appengine.api.images import get_serving_url
 
-from webapp2 import cached_property
+from webapp2 import cached_property, abort
 
 from models import Property
 from backend_forms import PropertyFilterForm, PropertyContactForm

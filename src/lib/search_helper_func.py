@@ -227,6 +227,7 @@ class PropertyPaginatorMixin(object):
     kwargs['form']      = self.form
     kwargs['Property']  = Property
     kwargs['page_size'] = self.page_size
+    kwargs['page']      = 1
     return self.render(**kwargs)
   
   @cached_property

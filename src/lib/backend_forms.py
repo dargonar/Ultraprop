@@ -116,7 +116,11 @@ class PropertyFilterForm(Form):
   status             = SelectField(u'Estado de publicación', coerce=int, choices=status_choices, default=Property._PUBLISHED)
   #haslocation        = BooleanField(u'Listar Todas')
   realestate_network = SelectField(u'Inmobiliaria')
-
+  
+  def validate_realestate_network(form, field):
+    pass
+  
+  
 #Form to edit/create a new property
 class PropertyForm(Form):
   def __repr__(self):
@@ -204,7 +208,7 @@ class PropertyForm(Form):
   price_rent          = TextField()
   rent_yes            = BooleanField('Alquiler', id='op_' + str(Property._OPER_RENT))
   price_expensas      = TextField()
-  
+    
   def validate_price_expensas(form, field):
     my_float_validator_simple(field)
     
