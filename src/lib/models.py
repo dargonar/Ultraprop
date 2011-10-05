@@ -163,19 +163,7 @@ class Property(GeoModel):
   # realestates_frontend    => al ampliar oferta  
   @staticmethod
   def new(realestate):
-    prop = Property(realestate=realestate, status=Property._PUBLISHED ,image_count=0)
-    my_key=str(realestate)
-    
-    prop.location_geocells.append(my_key)
-    prop.location_geocells.append(RealEstate.get_realestate_sharing_key(my_key))
-    
-    friends  = RealEstateFriendship.all().filter('realestates = ', my_key).filter('state = ', RealEstateFriendship._ACCEPTED).fetch(1000)
-    for friend in friends:
-      my_friend_key = friend.get_the_other_realestate(my_key, key_only=True)
-      if friend.is_the_other_realestate_offering_my_props(my_key):
-        prop.location_geocells.append(RealEstate.get_realestate_sharing_key(my_friend_key))
-      prop.location_geocells.append(my_friend_key)
-    return prop
+    return Property(realestate=realestate, status=Property._PUBLISHED ,image_count=0)
     
   status                  = db.IntegerProperty()
   def is_deleted(self):
@@ -398,9 +386,30 @@ class Property(GeoModel):
     pi.realestate              = self.realestate
     pi.property                = self.key()    
   
-  def save(self):
-    self.calculate_inner_values()
-
+  
+  def realestate_friend_keys(self):
+    my_key = str(self.realestate.key())
+    
+    friends = RealEstateFriendship.all().filter('realestates = ', my_key).filter('state = ', RealEstateFriendship._ACCEPTED).fetch(1000)
+    friend_realestates_keys = []
+    friend_realestates_keys.append(my_key)
+    friend_realestates_keys.append(RealEstate.get_realestate_sharing_key(my_key))
+    
+    for friend in friends:
+      my_friend_key = friend.get_the_other_realestate(my_key, key_only=True)
+      # Somos amigos, entonces ves mis props en admin
+      friend_realestates_keys.append(my_friend_key)
+      # Si estas mostrando mi oferta en tu web
+      if friend.is_the_other_realestate_offering_my_props(my_key):
+        friend_realestates_keys.append(RealEstate.get_realestate_sharing_key(my_friend_key))
+  
+    return friend_realestates_keys
+    
+  def save(self, build_index=True, friends=None):
+    # Puede ser que venga de imagenes.
+    if build_index:
+      self.calculate_inner_values()
+      self.append_friends(friends)
     # Magia para saber si necesitamos actualizar o rebuildear el index [o no hacer nada]
     # Solo para la edicion, quitar publicacion o borrar lo fuerzan directamente
     retvalue = 'nones'
@@ -414,10 +423,18 @@ class Property(GeoModel):
     return retvalue
     
   #Cuando nuevo
-  def put(self):
+  def put(self, friends):
     self.calculate_inner_values()
+    self.append_friends(friends)
     super(Property, self).put()
     return 'need_rebuild'
+  
+  #Agrego realestates amigas a self.location_geocells y me agrgo a mi mismo jejej.
+  def append_friends(self, friends):
+    
+    
+    self.location_geocells.extend(friends)
+    
   
   def getPropType(self):
     return config_array['cells']['prop_type_id']['short_descriptions'][alphabet.index(self.prop_type_id)]

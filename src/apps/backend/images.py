@@ -37,7 +37,7 @@ class Reorder(BackendHandler):
     db.save(to_save)
     property = self.mine_or_404(str(to_save[0].property.key()))
     property.main_image_url = to_save[0].title
-    property.save()
+    property.save(build_index=False)
     
     self.response.write('ok')
 
@@ -110,7 +110,7 @@ class Remove(BackendHandler):
       property.images_count = 0
       property.main_image_url   = None
       
-    result = property.save()
+    result = property.save(build_index=False)
     if result != 'nones':
       taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':result})
     
@@ -189,7 +189,7 @@ class Upload(BackendHandler):
       property.images_count = 1
       property.main_image_url   = imgfile.title
     
-    result = property.save()
+    result = property.save(build_index=False)
     # HACK: No mandamos a regenerar el PropertyIndex
     #if result != 'nones':
     #  taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':result})
