@@ -14,7 +14,7 @@ from google.appengine.api import taskqueue
 from webapp2 import cached_property, Response, RequestHandler
 
 from backend_forms import PropertyForm, PropertyFilterForm
-from models import Property, PropertyIndex, ImageFile
+from models import Property, PropertyIndex, ImageFile, RealEstateFriendship, RealEstate
 from search_helper_func import PropertyPaginatorMixin, create_query_from_dict
 
 from utils import need_auth, BackendHandler 
@@ -185,8 +185,9 @@ class NewEdit(BackendHandler):
     # Updateamos y mandamos a rebuild el indice si es necesario
     # Solo lo hacemos si se require y la propiedad esta publicada
     # Si se modifica una propiedad BORRADA o DESACTIVADA no se toca el indice por que no existe
+    friend_realestates_keys = property.realestate_friend_keys()
     def savetxn():
-      result = property.save() if editing else property.put()
+      result = property.save(build_index=True, friends=friend_realestates_keys) if editing else property.put(friends=friend_realestates_keys)
       if result != 'nones' and property.status == Property._PUBLISHED:
         taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':result}, transactional=True)
     
