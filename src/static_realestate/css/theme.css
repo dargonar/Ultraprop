@@ -79,19 +79,12 @@ ul#mnuTop li {
 	padding:0 15px;
 	margin:0 1px;
 	cursor:pointer;
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#383838', endColorstr='#616161'); /* for IE */
-	background: -webkit-gradient(linear, left top, left bottom, from(#383838), to(#616161)); /* for webkit browsers */
-	background: -moz-linear-gradient(top, #383838, #616161); /* for firefox 3.6+ */
 }
 ul#mnuTop li:hover {
-	background:#777;
+/*	background:#777;*/
 }
 ul#mnuTop li.selected {
-	background:#0099CC;
 	cursor:default;
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#0099CC'); /* for IE */
-	background: -webkit-gradient(linear, left top, left bottom, from(#006699), to(#0099CC)); /* for webkit browsers */
-	background: -moz-linear-gradient(top, #006699, #0099CC); /* for firefox 3.6+ */
 }
 #content {
 	padding-top:20px;
@@ -113,11 +106,9 @@ h3.section {
 	display:block;
 }
 a {
-	color:#0099cc;
 	text-decoration:none;
 }
 a:hover {
-	color:#0099CC;
 	text-decoration:underline;
 }
 .box {
