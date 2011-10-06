@@ -1,15 +1,13 @@
 {% import 'realestate/includes/_form_fields.html' as ff %}
 <div id="searchbox_form_area">
   <form id="filter" method="POST" action="{{url_for('realestate/search', realestate=realestate.key()|string)}}">
+  <input type="hidden" name="realestate_network" id="realestate_network" value="ALL"/>
   <div class="filters">
   	<!--h2>Buscador</h2-->
     <div class="location_box home">
       <p class="label" style="font-size:14px;">Ubicación</p>
       {{form.location_text(class='search big', placeholder='Calle, Barrio, Localidad')}}
     </div>
-    
-
-    
     <div>
       <ul class="property_type">
         <li>
