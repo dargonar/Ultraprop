@@ -1,0 +1,48 @@
+a {
+	color:#0099cc;
+}
+a:hover {
+	color:#0099CC;
+}
+
+h2, h3 {
+    color: #000;
+    line-height: 1;
+}
+
+hr {
+	background:#eee;
+}
+
+ul#mnuTop li {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#383838', endColorstr='#616161'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#383838), to(#616161)); /* for webkit browsers */
+	background: -moz-linear-gradient(top, #383838, #616161); /* for firefox 3.6+ */
+}
+ul#mnuTop li:hover {
+	background:#777;
+}
+ul#mnuTop li.selected {
+	background:#0099CC;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#0099CC'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#006699), to(#0099CC)); /* for webkit browsers */
+	background: -moz-linear-gradient(top, #006699, #0099CC); /* for firefox 3.6+ */
+}
+
+.txt_welcome {
+	background:#4E4E4E url(/re/img/city.png) repeat-x bottom;
+}
+
+.grid_2.property_box p.price span.value.price {
+	color:#0099CC;
+}
+
+#searchbox_form_area {
+	background:#e3e1d8;
+	border-left:solid 1px #fff;
+}
+
+/* ///// POPERTY LIST ///// */
+.prop_box ul.data li.detail p.price span.value.price {
+	color: #0099CC;
+}

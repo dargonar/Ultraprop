@@ -1,16 +1,16 @@
 {% extends "realestate/_base.html" %}
 
 {% block content %}
-
+	<div class="searchbox_area">
     <div id="searchbox_home">
-    
       	<!-- INSTITUTIONAL AREA -->
         <div class="txt_welcome">
             <h2>{{ realestate.tpl_title if realestate.tpl_title else '--título institucional--' }}</h2>
             <h4>{{ realestate.tpl_text if realestate.tpl_text else '--texto institucional--' }}</h4>
          </div>
          {%include "realestate/includes/_searchbox_home.html"%}
-	    </div> 
+	    </div>
+	</div> 
     
     <!-- ///// CONTENT ///// -->
     <div id="content" style="padding:10px 0; overflow:hidden;">

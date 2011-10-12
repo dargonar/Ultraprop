@@ -1,0 +1,150 @@
+/* Propio del template */
+body {
+/*    background: url("/re/img/backgrounds/body.gif") repeat scroll center top transparent;*/
+    margin: 0;
+    padding: 0;
+}
+
+#header {
+    background: none repeat scroll 0 0 #343434;
+    overflow: hidden; 
+		padding-bottom:0;
+}
+
+#header .content { background:#000; overflow:hidden;}
+.searchbox_area { background:#63625e; overflow:hidden;}
+
+#logo { margin-left:20px;}
+
+/* ///// */
+
+a {
+	color:#333333;
+}
+a:hover {
+	color:#FF3333;
+}
+
+h2 {
+    color: #FF3333;
+    line-height: 1;
+} 
+
+h3 {
+    color: #FF3333;
+    line-height: 1;
+}
+
+hr {
+	background:#FF3333;
+}
+
+ul#mnuTop li {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#383838', endColorstr='#616161'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#383838), to(#616161)); /* for webkit browsers */
+	background: -moz-linear-gradient(top, #383838, #616161); /* for firefox 3.6+ */
+}
+ul#mnuTop li:hover {
+	background:#777;
+}
+ul#mnuTop li.selected {
+	background:#FF3333;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#D10000', endColorstr='#FF3333'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#D10000), to(#FF3333)); /* for webkit browsers */
+	background: -moz-linear-gradient(top, #D10000, #FF3333); /* for firefox 3.6+ */
+}
+
+.txt_welcome {
+	background:url(/re/img/theme/comp_2.jpg);
+}
+
+.txt_welcome h2 {
+	color:#fff;
+}
+
+.txt_welcome h4 {
+	color:#fff; 
+	font-size:14px; 
+	font-weight:normal;
+}
+
+.grid_2.property_box p.price span.value.price {
+	color:#FF3333;
+}
+
+#searchbox_form_area {
+	background:#E3E1D8;
+	border-left:solid 1px #fff;
+}
+
+/* ///// POPERTY LIST ///// */
+.prop_box ul.data li.detail p.price span.value.price {
+	color: #FF3333;
+}
+
+/* ///// HACK FB BUTTONS ///// */
+.uibutton.special {
+		-moz-border-radius:3px;
+		-webkit-border-radius:3px;
+		border-radius:3px; 
+		
+		font-size:15px; 
+		padding:0.5em 0.6em;
+		
+    background-color: #fff;
+    background-image: -moz-linear-gradient(#ebebeb, #ffffff);
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#ffffff');
+		background-image: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#ffffff));
+		
+    border-color: #ccc #ccc #bbb5b5;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), 0 1px 0 #EBEBEB inset;
+    color: #333333 !important;
+		text-shadow: 0 -1px 0 #fff;
+}
+
+.uibutton.special:active {
+    border-color: #ccc;
+    background: #ebebeb;
+    filter: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+/* ///// FICHA ///// */
+
+.detailBox .price {
+	color:#FF3333;
+}
+
+.contactBox {
+	border:solid 1px #ccc;
+	background:#eee;
+}
+
+.contactBox .head {
+	background-color: #FF3333;
+	background-image: -moz-linear-gradient(#FF3333, #D10000);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF3333', endColorstr='#D10000');
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#FF3333), to(#D10000));
+
+	border-bottom:solid 2px #fff;
+	color:#fff;
+	text-shadow: 0 -1px 0 #b40000;
+}
+
+.contactBox .btnSend, dl.contact .btnSend {
+	background-color: #fff;
+	background-image: -moz-linear-gradient(#ebebeb, #ffffff);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#ffffff');
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#ffffff));
+	
+	border: 1px solid #ccc;
+	color: #333;
+	text-shadow: 0 -1px 0 #fff;
+}
+
+.contactBox .btnSend:active {
+	border-color: #ccc;
+	background: #ebebeb;
+}
