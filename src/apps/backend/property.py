@@ -51,7 +51,7 @@ class Restore(BackendHandler):
   def get(self, **kwargs):
     property = self.mine_or_404(kwargs['key'])
     property.status = Property._NOT_PUBLISHED
-    property.save()
+    property.save(build_index=False)
     
     self.response.write('ok')
 
@@ -71,7 +71,7 @@ class Remove(BackendHandler):
     properties = []
     for property in Property.get(keys):
       property.status  = newstatus
-      property.save()
+      property.save(build_index=False)
       
       # Verifico que sean mias las propiedades que voy a borrar del indice
       if str(property.realestate.key()) != self.get_realestate_key():
@@ -96,11 +96,11 @@ class Publish(BackendHandler):
     
     property = self.mine_or_404(kwargs['key'])
     property.status = Property._PUBLISHED if int(kwargs['yes']) else Property._NOT_PUBLISHED
-    property.save()
+    property.save(build_index=False)
     
     # Updateamos y mandamos a rebuild el indice si es necesario
     def savetxn():
-      property.save()
+      property.save(build_index=False)
       taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':'need_rebuild' if property.status == Property._PUBLISHED else 'need_remove'}, transactional=True)
     
     db.run_in_transaction(savetxn)
