@@ -56,7 +56,7 @@
 </div>
   
     <div id="detailBox" class="detailBox">
-      <!--h2 class="super">{{ property.getPropType() }} en {{ property.getPropOperation() }}</h2-->
+      <!--h2 class="super">{# { property.getPropType() } #} en {# { property.getPropOperation() } #}</h2-->
       <div class="addressbox">
       	<p class="address">{{ property | addressify }}</p>
         <p class="price"><small>{{ cur }}</small> {{ price|currencyfy }}</p>
