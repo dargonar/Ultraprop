@@ -13,6 +13,13 @@ function init_search()
   $('#prop_operation_id').change( function(e) {
     var hide = $('#prop_operation_id').val() != 0;
     $('#cosas').toggle(hide);
+    
+    if( !hide )
+    {
+      $('#price_min').val('');
+      $('#price_max').val('');
+    }
+    
     $('form#filter').submit();
   });
 
