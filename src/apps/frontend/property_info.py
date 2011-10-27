@@ -34,6 +34,9 @@ class Ficha(FrontendHandler):
     
     property              = get_or_404(key) 
     
+    property.visits=property.visits+1
+    property.save(build_index=False)
+    
     price                 = property.price_sell 
     cur                   = property.price_sell_currency 
     

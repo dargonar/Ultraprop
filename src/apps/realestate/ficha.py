@@ -30,6 +30,9 @@ class Show(RealestateHandler):
     
     property = db.get(key) 
     
+    property.visits=property.visits+1
+    property.save(build_index=False)
+    
     price            = property.price_sell 
     cur              = property.price_sell_currency 
     
