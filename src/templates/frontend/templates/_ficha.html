@@ -7,11 +7,14 @@
       <h2>Ficha de Propiedad</h2>
       <h1>{{property | headlinify}}</h1>
       <p class="address">{{ property | addressify }}</p>
-      <div class="colBox">
+      <div class="colBox" style="position:relative;">
         <!-- /// PICTURE COLUMN /// -->
         <div class="picCol">
           <!-- /// SLIDESHOW /// -->
           {%include "frontend/templates/_slideshow.html"%}
+        </div>
+        <div style="float:left;position:absolute;bottom:0px">
+            Visitas: {{property.visits}}.
         </div>
         <!-- ///// DATA COLUMN ///// -->
         <div class="dataCol">

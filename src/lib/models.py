@@ -331,6 +331,7 @@ class Property(GeoModel):
   # year_built_id           = db.IntegerProperty() # A estrenar
   # # ======================================================= #
 
+  visits                        = db.IntegerProperty(indexed=False, default=0) 
   def has_images(self):
     if self.images_count is not None and self.images_count != 0:
       return 1
