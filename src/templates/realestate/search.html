@@ -23,13 +23,17 @@ $(document).ready(function() {
                   <label>Ordenar por</label> 
                   {{ form.sort(id='fake_sort') }}
                 </div>
-              <div class="qty"><b>{{ page_size*(page-1)+1 }}  - {{ page_size*(page-1)+ (properties|length if properties else 0 )}} </b></div>
+                <div class="qty">
+                  {% if properties %}
+                  <b>{{ page_size*(page-1)+1 }}  - {{ page_size*(page-1)+ (properties|length if properties else 0 )}} </b>
+                  {% endif %}
+                </div>
             </div>
             {% if properties %}
               {% for property in properties %}
                 {%include "realestate/includes/_mod_property_list.html" %}
               {% endfor %}
-            {% endif %}
+            
 
             {% set prevurl = url_for('realestate/search/page', page=page-1, realestate=realestate.key()|string) if page > 1 else '#' %}
             {% set prevena = 'disable' if prevurl == '#' else '' %}
@@ -44,7 +48,13 @@ $(document).ready(function() {
                 <a href="{{nexturl}}" class="{{nextena}}">Siguiente &raquo;</a>
               </li>
             </ul>
-              
+            {% else %}
+              {% if not form.errors %}
+              <b> No se encontraron propiedades. </b>
+              {% else %}
+              <b> Verifique los datos ingresados. </b>
+              {% endif %}
+            {% endif %}
           </div>
           
       </div>
