@@ -21,7 +21,7 @@
 
 
 {% block content %}
-  <div id="content">
+  <div id="content" class="contact">
     <h1>Contáctenos</h1>
     
     <div class="contactform">
@@ -48,8 +48,8 @@
             <dt>Nombre y Apellido </dt>
             {{ form_field(form.name, placeholder="nombre y apellido") }}
             
-            <dt>Email</dt>
-            {{ form_field(form.email, placeholder="email") }}
+            <!-- <dt>Email</dt>
+            {{ form_field(form.email, placeholder="email") }} -->
             
             <dt>Teléfono</dt>
             {{ form_field(form.telephone, placeholder="teléfono") }}

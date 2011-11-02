@@ -355,4 +355,4 @@
 }
 
 #left_content {float:left; width:185px; margin-right:18px;}
-#right_content {float:left; width:773px; overflow:hidden;}
+#right_content {float:right; width:773px; overflow:hidden;}

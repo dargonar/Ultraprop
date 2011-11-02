@@ -42,10 +42,11 @@ ul {
 p {
 	margin:0;
 }
-hr {
+/*hr {
+	background: none repeat scroll 0 0 #EEEEEE;
 	border:none;
 	margin:10px 0;
-}
+}*/
 /* ///// Global ///// */
 #header {
 	background: url(/re/img/backgrounds/header.gif) bottom repeat-x;
@@ -87,7 +88,12 @@ ul#mnuTop li.selected {
 }
 #content {
 	padding-top:20px;
+	padding:10px 0; 
+	overflow:hidden;
 }
+
+#content.contact { padding-top:30px;}
+
 .prop_column {
 	width:100%;
 	float:left;
@@ -622,6 +628,42 @@ dl.properties dt.price, dl.properties dd.price small {
 .hint {
 	color:#CCC;
 }
+
+#left_content li { 
+	border-bottom:solid 2px #eee; 
+	padding:10px 0;
+}
+.filters_app {
+	background:#959595; 
+	padding:16px; 
+	padding-bottom:10px; 
+	min-height:120px; 
+	margin-bottom:3px;
+}
+.filters_app h3 {color:#fff; margin-bottom:10px;}
+/*.filters_app .filters_list {}*/
+.filters_app .filters_list li { 
+	overflow:hidden; 
+	background:#fff; 
+	padding:6px 9px !important; 
+	padding-right:6px !important;;
+	
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px; 
+	
+	border:none !important; 
+	margin-bottom:5px;
+
+}
+
+.filters_app .filters_list li span { display:inline-block; width:150px; float:left;}
+
+.filters_app .filters_list li a.close{display:inline-block; background: url(../img/theme/ico_close.gif); height:13px; width:13px; float:right; margin-top:1px; float:right;}
+a.filters_delete,
+a:hover.filters_delete {display:block; text-align:right; color:#fff; padding:4px 0;}
+
+
 .filters .location_box {
 	/*    -moz-border-bottom-colors: none;
     -moz-border-image: none;
@@ -843,7 +885,8 @@ ul.detail li {
 /* ///// CONTACT FORM ///// */
 .contactform {
 	overflow:hidden;
-	padding-top:8px;
+	padding-top:8px; 
+	padding-bottom:30px; 
 }
 .contactform .contactinfo {
 	float:left;
@@ -868,7 +911,7 @@ ul.detail li {
 	font-family:Arial, Helvetica, sans-serif;
 	padding:5px;
 	width:344px;
-	height:80px;
+	height:150px;
 	font-size:12px;
 }
 .contactform form input.short {
@@ -887,7 +930,8 @@ dl.contact dt, dl.contact dd {
 }
 dl.contact dt {
 	clear:both;
-	width:150px;
+	width:150px; 
+	font-weight:bold;
 }
 dl.contact dd {
 	width:356px;
@@ -1037,3 +1081,5 @@ form #ketchup, form #inketchup {
 	margin:10px auto;
 	border-top:solid 1px #ccc;
 }
+
+form#filter { margin-top:0;}

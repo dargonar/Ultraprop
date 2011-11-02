@@ -45,7 +45,7 @@
           {% if realestate.website and realestate.website|wordcount>0 %}
             <a href="{{'%s%s'|format('http://',realestate.website) if 'http://' not in realestate.website else realestate.website }}" target="_blank">{{realestate.website}}</a><br/>
           {% endif %}
-          <span>{{realestate.email}}</span><br/>
+          <!--span>{{realestate.email}}</span><br/-->
           {% if realestate.open_at %}
             <span>Atención {{realestate.open_at}}</span><br/>
           {% endif %}
@@ -101,4 +101,5 @@
      </div>
     </div>
   </div>
+ </div>
 {% endblock %}

@@ -1,10 +1,23 @@
 {% import 'realestate/includes/_form_fields.html' as ff %}
+
+
+<div class="filters_app">
+	<h3>Filtros Aplicados</h3>
+  <ul class="filters_list">
+  	<li><span>Departamento</span><a href="#" class="close"></a></li>
+    <li><span>Venta</span><a href="#" class="close"></a></li>
+    <li><span>Con precio</span><a href="#" class="close"></a></li>
+  </ul>
+  <a href="#" class="filters_delete">Eliminar filtros</a>
+</div>
+
+
 <div class="box">
   <form id="filter" method="POST" action="{{url_for('realestate/search', realestate=realestate.key()|string)}}">
   <div class="filters">
-  	<h3>Buscador</h3>
+  	<h3>Filtrar resultados</h3>
     <div class="location_box list">
-      <p class="label">Zona</p>
+      <p class="label">Ubicación</p>
       {{form.location_text(class='search', placeholder='Calle, Barrio, Localidad')}}
       <input class="btnSearch" type="submit" value=""/>
     </div>

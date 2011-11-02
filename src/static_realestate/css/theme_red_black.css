@@ -77,7 +77,14 @@ ul#mnuTop li.selected {
 	border-left:solid 1px #fff;
 }
 
+/* ///// SEARCH BOX///// */
+#left_content {width: 215px;}
+#right_content {width: 728px;}
+.filters .location_box .search {width: 160px;}
+.filters h3 {font-size: 16px;}
+
 /* ///// POPERTY LIST ///// */
+.prop_column { padding-top:15px;}
 .prop_box ul.data li.detail p.price span.value.price {
 	color: #FF3333;
 }
