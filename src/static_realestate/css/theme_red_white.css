@@ -57,9 +57,11 @@ ul#mnuTop li.selected {
 	border-left:solid 1px #fff;
 }
 
-/* ///// SEARCH BOX///// */
+/* ///// COLUMNS ///// */
 #left_content {width: 215px;}
 #right_content {width: 728px;}
+
+/* ///// SEARCH BOX///// */
 .filters .location_box .search {width: 160px;}
 .filters h3 {font-size: 16px;}
 
