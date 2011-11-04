@@ -343,7 +343,7 @@ class RealestateHandler(MyBaseHandler):
       
 class NetworkPropertyMapper(Mapper):
   KIND        = Property
-  FILTER      = []
+  FILTERS     = []
   
   def __init__(self, owner, friend, do_add=True, for_admin=True, for_website=False): 
     
@@ -353,7 +353,9 @@ class NetworkPropertyMapper(Mapper):
     self.do_add           = do_add
     self.for_admin        = for_admin
     self.for_website      = for_website
-    self.FILTER = [ ('realestate', str(owner)) ]
+    self.FILTERS          = [ ('realestate', db.Key(owner)) ]
+    
+    logging.error('RealestateHandler::__init__() owner:%s friend:%s'%(self.owner, self.friend));
     
     super(NetworkPropertyMapper, self).__init__()
     return
@@ -361,7 +363,7 @@ class NetworkPropertyMapper(Mapper):
   def map(self, prop):
 
     prop_val  = prop.location_geocells
-    
+    logging.error('RealestateHandler::map() owner:%s friend:%s'%(self.owner, self.friend));
     if self.do_add:
       if self.for_admin and self.friend not in prop_val:
         prop_val.append(self.friend)

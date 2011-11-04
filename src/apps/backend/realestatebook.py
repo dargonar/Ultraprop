@@ -20,7 +20,6 @@ class Index(BackendHandler):
   def get(self, **kwargs):
     return self.redirect_to('backend/realestatebook/friends')
   
-
   #q = RealEstate.all().filter('name >= ', 'D').filter('name < ', 'd'+u'\ufffd').fetch(10)
   
 class FriendRequest(BackendHandler):
@@ -135,6 +134,7 @@ class FriendRequest(BackendHandler):
 
     if accept:
       req.accept()
+      # Si yo acepto, es porque me invito ela otra inmobiliaria, por lo que owner is the other RS!
       owner   = req.get_the_other_realestate(my_key, key_only=True)
       tmp     = NetworkPropertyMapper(owner, my_key, do_add=True, for_admin=True, for_website=False)
       deferred.defer(tmp.run)
@@ -248,6 +248,9 @@ class Friends(BackendHandler):
     
     my_key  = self.get_realestate_key()
     owner   = req.get_the_other_realestate(my_key, key_only=True)
+    
+    logging.error('realestatebook::share() owner:%s friend:%s'%(owner, my_key));
+    
     tmp     = NetworkPropertyMapper(owner, my_key, do_add=True, for_admin=False, for_website=True)
     deferred.defer(tmp.run)
     
@@ -283,6 +286,9 @@ class Friends(BackendHandler):
     my_key  = self.get_realestate_key()
     owner   = req.get_the_other_realestate(my_key, key_only=True)
     tmp     = NetworkPropertyMapper(owner, my_key, do_add=False, for_admin=False, for_website=False)
+    
+    logging.error('realestatebook::unshare() owner:%s friend:%s'%(owner, my_key));
+    
     deferred.defer(tmp.run)
     
     realestate_b = req.get_the_other_realestate(my_key, key_only=False)

@@ -66,7 +66,6 @@ def get_rules():
           Route('/friend_request'               , name='backend/realestatebook/friend_request'          , handler='apps.backend.realestatebook.FriendRequest'),
           Route('/friend_request/accept/<key>'  , name='backend/realestatebook/friend_request/accept'   , handler='apps.backend.realestatebook.FriendRequest:accept'),
           Route('/friend_request/reject/<key>'  , name='backend/realestatebook/friend_request/reject'   , handler='apps.backend.realestatebook.FriendRequest:reject'),
-          
         ]),
 		
         
