@@ -2734,3 +2734,7 @@ table.poll td p { color:#333;}
 	display:block; 
 	z-index:1;
 }
+
+.custom_data_theme {border:solid 1px #ccc; padding:10px 15px; margin-top:20px;}
+.custom_data_theme input[type="text"],
+.custom_data_theme textarea { width:388px !important;}
