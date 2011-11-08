@@ -2674,3 +2674,63 @@ table.poll td p { color:#333;}
 .cpyr {
 	padding:10px;
 }
+
+
+
+
+/* ///// THEME ///// */
+
+.theme_box,
+.theme_box {
+		background: none;
+    border: 1px solid transparent;
+    border-radius: 6px 6px 6px 6px;
+    float: left;
+    margin-bottom: 10px;
+    margin-right: 8px;
+    overflow: hidden;
+    padding: 10px 10px 10px;
+    width: 240px; 
+}
+.theme_box:hover,
+.theme_box.selected {
+		background: none repeat scroll 0 0 #F9F9F9;
+    border: 1px solid #CCCCCC; 
+}
+
+.theme_box h3 {font-size:13px !important; margin-bottom:5px; color:#0A5278;}
+
+.theme_box .zoom { 
+	display:none;
+	background:#000;
+	width: 242px;
+	height:190px; 
+	position:absolute;
+	opacity:0.4;
+	-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
+	filter: alpha(opacity=40);
+}
+.theme_box .buttons {margin-top:6px; height:22px;}
+.theme_box .buttons a { display:none;}
+.theme_box:hover .buttons a,
+.theme_box.selected .buttons a { display: inline-block;}
+
+.theme_box .ico_zoom { 
+	display:none; 
+	width:35px; 
+	height:35px;
+	background:url(/img/ultraprop_ui_sprite.png) no-repeat scroll -742px -130px transparent;
+	margin-left: 103px;
+	margin-top: 77px;
+	position: absolute; 
+	z-index:999;
+}
+
+.theme_box .pic { border:solid 1px #ccc;}
+
+.theme_box:hover .ico_zoom { display:block;}
+
+.theme_box:hover .zoom { 
+	display:block; 
+	z-index:1;
+}
