@@ -208,38 +208,6 @@ a la identidad de su Inmobiliaria.</p>
   </ul>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <h2 class="title">Mensajes institucionales en su Página Web</h2>
 
 <dl class="form" style="max-width:920px;">
@@ -248,16 +216,27 @@ a la identidad de su Inmobiliaria.</p>
       </dt>
       
       <dd>
-      	<div style="border:solid 1px #ccc; padding:10px 15px; margin-top:20px;">
+      	<div class="custom_data_theme">
             <h4 style=" margin:0; margin-bottom:3px;">Título institucional</h4>
             {{ form.tpl_title(title="Título", placeholder="Escriba un título institucional aquí") }}
             
             <h4 style="margin-bottom:3px;">Texto institucional</h4>
             {{ form.tpl_text(title="Título", placeholder="Escriba un texto institucional aquí") }}
             
+            <div class="block_info" style="margin-left:0; margin-top:10px; margin-bottom:18px;"> 
+              <h4 style="margin-bottom:3px; margin-top:0;">Imagen de fondo (opcional)</h4>   
+              <p>Si lo desea puede utilizar una imagen propia.</p>
+              <input name="" type="file" style="margin:5px 0;" />
+              <p>
+              La imagen debe medir 586 x 306 pixeles.
+              <a href="/img/comp_2.jpg" target="_blank">Descargar ejemplo !</a>
+              </p>
+             </div>
+             
             <div style="margin-top:8px;">
             	<a href="{{realestate|realestate_linkfy(check_domain=False)}}" target="_blank" id="preview" class="uibutton">&nbsp;&nbsp;&nbsp;Visualizar página&nbsp;&nbsp;&nbsp;</a>
              </div>
+             
         </div>
         
         <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
