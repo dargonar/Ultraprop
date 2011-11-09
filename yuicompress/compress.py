@@ -97,7 +97,7 @@ STYLESHEETS = {
     
     're':[
       'src/static_realestate/css/960.css',
-      'src/static_realestate/css/theme.css',
+      #'src/static_realestate/css/theme.css',
       'src/static_realestate/css/fb-buttons.css',
       'src/static_realestate/css/jquery.ad-gallery.css',
     ]
