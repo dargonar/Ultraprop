@@ -21,13 +21,13 @@ git rm -f src/static_realestate/css/realestate.min-*.css
 git rm -f src/static_realestate/js/realestate.min-*.js
 
 # Corremos el compresor de CSS y JS para backend
-/c/Python25/python.exe yuicompress/compress.py $1 be
+/c/Python26/python.exe yuicompress/compress.py $1 be
 
 # Corremos el compresor de CSS y JS para frontend
-/c/Python25/python.exe yuicompress/compress.py $1 fe
+/c/Python26/python.exe yuicompress/compress.py $1 fe
 
 # Corremos el compresor de CSS y JS para realestate
-/c/Python25/python.exe yuicompress/compress.py $1 re
+/c/Python26/python.exe yuicompress/compress.py $1 re
 
 # Copiamos los min JS y min CSS a sus folders
 mv backend.min-$1.js src/static/js
@@ -49,4 +49,4 @@ mv realestate.min-$1.css src/static_realestate/css
 git add src/static_realestate/css/realestate.min-$1.css
 
 # Compilamos los templates jinja2
-/c/Python25/python.exe compile_templates.py
+/c/Python26/python.exe compile_templates.py

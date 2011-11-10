@@ -100,14 +100,13 @@ class LaPlataCampaign(BackendHandler):
       'info@ceciliacordero.com.ar',
       'info@dedich.com.ar']
     
-    # emails = ['ptutino@gmail.com', 'ptutino@gmail.com']
-    sent = []
-    for email in emails:
-      if email in sent:
-        continue
-      params = {'action': 'laplata_campaign', 'email':email}
-      taskqueue.add(url='/tsk/email_task', params=params)
-      sent.append(email)
+    # sent = []
+    # for email in emails:
+      # if email in sent:
+        # continue
+      # params = {'action': 'laplata_campaign', 'email':email}
+      # taskqueue.add(url='/tsk/email_task', params=params)
+      # sent.append(email)
       
     
 class VerArchivo(BackendHandler):
@@ -219,30 +218,10 @@ class PropertyFixMapper(Mapper):
 
   def map(self, prop):
     
-    # try:
-      # prop.main_image_url = get_serving_url(prop.main_image) if prop.main_image else None
-    # except:
-      # prop.main_image_url = None
-    
-    # prop.price_expensas = 0.0
-    
-    try:
-      re = prop.realestate
-      if not re:
-        logging.error(' NO TIENE REAL ESTATE:'+str(prop.key()))
-        return ([], [])
-    except:
-      logging.error(' NO TIENE REAL ESTATE:'+str(prop.key()))
-      return ([], [])
-    
-    re_key = str(prop.realestate.key())
-    if re_key not in prop.location_geocells:
-      prop.location_geocells.append(re_key)
-    re_key_ex = RealEstate.get_realestate_sharing_key(re_key)
-    
-    if re_key_ex not in prop.location_geocells:
-      prop.location_geocells.append(re_key_ex)
-    
+    key = str(prop.realestate.key())
+    data = [key, 'fe_'+key]
+    prop.calculate_inner_values()
+    prop.append_friends(data)
     return ([prop], []) # update/delete
 
 class FixProperty(BackendHandler):
