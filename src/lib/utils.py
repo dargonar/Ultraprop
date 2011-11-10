@@ -355,7 +355,7 @@ class NetworkPropertyMapper(Mapper):
     self.for_website      = for_website
     self.FILTERS          = [ ('realestate', db.Key(owner)) ]
     
-    logging.error(u'NetworkPropertyMapper::__init__() owner:%s friend:%s'%(self.owner, self.friend));
+    # logging.error(u'NetworkPropertyMapper::__init__() owner:%s friend:%s'%(self.owner, self.friend));
     
     super(NetworkPropertyMapper, self).__init__()
     return
@@ -363,7 +363,7 @@ class NetworkPropertyMapper(Mapper):
   def map(self, prop):
 
     prop_val  = prop.location_geocells
-    logging.error(u'NetworkPropertyMapper::map() owner:%s friend:%s'%(self.owner, self.friend));
+    # logging.error(u'NetworkPropertyMapper::map() owner:%s friend:%s'%(self.owner, self.friend));
     if self.do_add:
       if self.for_admin and self.friend not in prop_val:
         prop_val.append(self.friend)

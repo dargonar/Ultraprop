@@ -249,7 +249,7 @@ class Friends(BackendHandler):
     my_key  = self.get_realestate_key()
     owner   = req.get_the_other_realestate(my_key, key_only=True)
     
-    logging.error(u'realestatebook::share() owner:%s friend:%s'%(owner, my_key));
+    # logging.error(u'realestatebook::share() owner:%s friend:%s'%(owner, my_key));
     
     tmp     = NetworkPropertyMapper(owner, my_key, do_add=True, for_admin=False, for_website=True)
     deferred.defer(tmp.run)
@@ -287,7 +287,7 @@ class Friends(BackendHandler):
     owner   = req.get_the_other_realestate(my_key, key_only=True)
     tmp     = NetworkPropertyMapper(owner, my_key, do_add=False, for_admin=False, for_website=True)
     
-    logging.error(u'realestatebook::unshare() owner:%s friend:%s'%(owner, my_key));
+    # logging.error(u'realestatebook::unshare() owner:%s friend:%s'%(owner, my_key));
     
     deferred.defer(tmp.run)
     
