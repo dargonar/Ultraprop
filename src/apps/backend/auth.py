@@ -66,6 +66,7 @@ class Logout(BackendHandler):
     return self.redirect_to('backend/auth/login')
     
 class SignUp(BackendHandler):
+  promo = 'promo-3-meses'
   #Edit/New
   def get(self, **kwargs):
     
@@ -73,6 +74,10 @@ class SignUp(BackendHandler):
       return self.redirect_to('property/list')
     
     kwargs['form']   = self.form
+    if 'promo' in kwargs:
+      kwargs['promo'] = self.promo
+    else:
+      kwargs['promo'] = None
     return self.render_response('backend/signup.html', **kwargs)
   
   #Create/Save RealEstate & User.
@@ -87,9 +92,25 @@ class SignUp(BackendHandler):
       
       return self.render_response('backend/signup.html', **kwargs)
     
-    # Aca traemos el plan por defecto
-    plan = Plan.all().filter('name','promo-lanzamiento').get()
+    plan = None
+    # Aca traemos el plan...
 
+    if 'promo' in kwargs and kwargs.get('promo')==self.promo:
+      # ...el de la promo
+      plan = Plan.all().filter('name','promo-3-meses').get()
+      if not plan:
+        p = Plan()
+        p.name = 'promo-3-meses'
+        p.description = u'Promoción lanzamiento $80+iva'
+        p.type = Plan._MONTHLY
+        p.amount = 80
+        p.free_days = 90
+        p.save()
+        plan = p
+    else:
+      # ...o plan por defecto
+      plan = Plan.all().filter('name','promo-lanzamiento').get()
+    
     # Generamos la inmo en estado TRIAL y le ponemos el Plan
     realEstate = RealEstate.new()
     realEstate.telephone_number = self.form.telephone_number.data
