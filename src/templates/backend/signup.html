@@ -51,7 +51,7 @@ $(document).ready(function() {
           <div class="popup" style="border:none; width: 400px; text-align:left;">
             <div id="login" class="popup_box" style="padding:0;"> 
               <h1 style="font-size:24px; margin-left:5px;">Comience a Publicar Ahora!</h1>
-              <h2 style="color:#0A5278; font-weight:normal; margin-left:5px;">Pruébelo GRATIS por un período de 30 días. Sin compromiso.</h2>
+              <h2 style="color:#0A5278; font-weight:normal; margin-left:5px;">Utilize la plataforma sin cargo por un período de {{plan.free_days}} días.</h2>
               {% set post_url = url_for('backend/auth/signup/promo',promo=promo ) if promo else url_for('backend/auth/signup') %}
               <form id="signup_form" action="{{post_url}}" method="post" style="margin-right:15px;width:400px;">
                 <!-- ///// IDENTITY ///// -->    
