@@ -2702,7 +2702,7 @@ table.poll td p { color:#333;}
     border: 1px solid #CCCCCC; 
 }
 
-.theme_box.selected {background:#F9F9F9 url(/img/icons/bullet_ball_green.png) no-repeat 235px 5px;}
+.theme_box.selected {background:#E4F1FF; border: 1px solid #99C7F8;}
 
 .theme_box h3 {font-size:13px !important; margin-bottom:5px;}
 
