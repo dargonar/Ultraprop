@@ -55,6 +55,7 @@ def get_rules():
         PathPrefixRoute('/website', [
           Route('/edit'                  , name='backend/realestate_website/edit'             , handler='apps.backend.realestate_website.Edit'),
           Route('/validate_domain_id'    , name='backend/realestate_website/check_domain_id'  , handler='apps.backend.realestate_website.CheckDomainId'),
+          Route('/set_theme/<theme>'     , name='backend/realestate_website/set_theme'        , handler='apps.backend.realestate_website.Edit:set_theme')
         ]),
         
         PathPrefixRoute('/inmobiliarias_amigas', [

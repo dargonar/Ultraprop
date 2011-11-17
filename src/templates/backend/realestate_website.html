@@ -32,6 +32,13 @@
   <dd {% if field.errors %} class="errorbox" {% endif %} >
 {%- endmacro -%}
 
+{%- macro is_selected(selected, theme) -%}
+  {% if selected == theme %}
+    selected
+  {% endif %}
+{%- endmacro -%}
+
+
 {% block headscript %}
   <script type="text/javascript">
   $(document).ready(function() {
@@ -117,10 +124,10 @@
 
 <!-- ///// THEMES ///// -->
 <h2 class="title">Seleccionar Plantilla</h2> 
-
+{% set the_theme = realestate.get_web_theme() %}
 <div id="gallery">
   <ul>
-    <li class="theme_box">
+    <li class="theme_box {{is_selected(the_theme, themes[0])}} ">
     		<h3>Verde y Azul</h3>
     		<a class="zoomin" href="/img/themplates/green_medium.jpg" title="Plantilla Verde">
           <img src="/img/pixel-transp.gif" class="ico_zoom" />
@@ -129,12 +136,12 @@
         </a>
         
         <div class="buttons">
-          <a class="uibutton icon preview" href="{{realestate|realestate_linkfy(check_domain=False)}}" target="_blank">&nbsp;Vista previa&nbsp;</a>
-          <a class="uibutton special" href="#">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
+          <a class="uibutton icon preview" href="{{ url_for('realestate/theme_preview', realestate=realestate.key()|string, theme=themes[0]) }}" target="_blank">&nbsp;Vista previa&nbsp;</a>
+          <a class="uibutton special" href="{{ url_for('backend/realestate_website/set_theme', theme=themes[0])}}">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
         </div>
     </li>
     
-    <li class="theme_box">
+    <li class="theme_box {{is_selected(the_theme, themes[1])}} ">
     		<h3>Azul</h3>
     		<a class="zoomin" href="/img/themplates/blue_medium.jpg" title="Plantilla Azul">
           <img src="/img/pixel-transp.gif" class="ico_zoom" />
@@ -143,12 +150,12 @@
         </a>
         
         <div class="buttons">
-          <a class="uibutton icon preview" href="{{realestate|realestate_linkfy(check_domain=False)}}" target="_blank">&nbsp;Vista previa&nbsp;</a>
-          <a class="uibutton special" href="#">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
+          <a class="uibutton icon preview" href="{{ url_for('realestate/theme_preview', realestate=realestate.key()|string, theme=themes[1]) }}" target="_blank">&nbsp;Vista previa&nbsp;</a>
+          <a class="uibutton special" href="{{ url_for('backend/realestate_website/set_theme', theme=themes[1])}}">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
         </div>
     </li>
     
-    <li class="theme_box">
+    <li class="theme_box {{is_selected(the_theme, themes[2])}} ">
     		<h3>Gris</h3>
     		<a class="zoomin" href="/img/themplates/grey_medium.jpg" title="Plantilla Gris">
           <img src="/img/pixel-transp.gif" class="ico_zoom" />
@@ -157,12 +164,12 @@
         </a>
         
         <div class="buttons">
-          <a class="uibutton icon preview" href="{{realestate|realestate_linkfy(check_domain=False)}}" target="_blank">&nbsp;Vista previa&nbsp;</a>
-          <a class="uibutton special" href="#">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
+          <a class="uibutton icon preview" href="{{ url_for('realestate/theme_preview', realestate=realestate.key()|string, theme=themes[2]) }}" target="_blank">&nbsp;Vista previa&nbsp;</a>
+          <a class="uibutton special" href="{{ url_for('backend/realestate_website/set_theme', theme=themes[2])}}">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
         </div>
     </li>
     
-    <li class="theme_box">
+    <li class="theme_box {{is_selected(the_theme, themes[3])}} ">
     		<h3>Rojo alto contraste</h3>
     		<a class="zoomin" href="/img/themplates/red_black_medium.jpg" title="Plantilla Rojo y Negro">
           <img src="/img/pixel-transp.gif" class="ico_zoom" />
@@ -171,12 +178,12 @@
         </a>
         
         <div class="buttons">
-          <a class="uibutton icon preview" href="{{realestate|realestate_linkfy(check_domain=False)}}" target="_blank">&nbsp;Vista previa&nbsp;</a>
-          <a class="uibutton special" href="#">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
+          <a class="uibutton icon preview" href="{{ url_for('realestate/theme_preview', realestate=realestate.key()|string, theme=themes[3]) }}" target="_blank">&nbsp;Vista previa&nbsp;</a>
+          <a class="uibutton special" href="{{ url_for('backend/realestate_website/set_theme', theme=themes[3])}}">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
         </div>
     </li>
     
-    <li class="theme_box">
+    <li class="theme_box {{is_selected(the_theme, themes[4])}} ">
     		<h3>Rojo minimalista</h3>
     		<a class="zoomin" href="/img/themplates/red_white_medium.jpg" title="Plantilla Rojo y Blanco">
           <img src="/img/pixel-transp.gif" class="ico_zoom" />
@@ -185,12 +192,12 @@
         </a>
         
         <div class="buttons">
-          <a class="uibutton icon preview" href="{{realestate|realestate_linkfy(check_domain=False)}}" target="_blank">&nbsp;Vista previa&nbsp;</a>
-          <a class="uibutton special" href="#">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
+          <a class="uibutton icon preview" href="{{ url_for('realestate/theme_preview', realestate=realestate.key()|string, theme=themes[4]) }}" target="_blank">&nbsp;Vista previa&nbsp;</a>
+          <a class="uibutton special" href="{{ url_for('backend/realestate_website/set_theme', theme=themes[4])}}">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
         </div>
     </li>
     
-    <li class="theme_box selected">
+    <li class="theme_box selected" style="display:none;">
 		<div style="width:240px; height:188px;">
     
     	<h1 style="margin:20px 20px 10px 20px; font-size:24px; line-height:24px; letter-spacing:-1px;">Solicitar plantilla personalizada</h1>
@@ -223,7 +230,7 @@ a la identidad de su Inmobiliaria.</p>
             <h4 style="margin-bottom:3px;">Texto institucional</h4>
             {{ form.tpl_text(title="Título", placeholder="Escriba un texto institucional aquí") }}
             
-            <div class="block_info" style="margin-left:0; margin-top:10px; margin-bottom:18px;"> 
+            <!-- div class="block_info" style="margin-left:0; margin-top:10px; margin-bottom:18px;"> 
               <h4 style="margin-bottom:3px; margin-top:0;">Imagen de fondo (opcional)</h4>   
               <p>Si lo desea puede utilizar una imagen propia.</p>
               <input name="" type="file" style="margin:5px 0;" />
@@ -231,7 +238,7 @@ a la identidad de su Inmobiliaria.</p>
               La imagen debe medir 586 x 306 pixeles.
               <a href="/img/comp_2.jpg" target="_blank">Descargar ejemplo !</a>
               </p>
-             </div>
+            </div-->
              
             <div style="margin-top:8px;">
             	<a href="{{realestate|realestate_linkfy(check_domain=False)}}" target="_blank" id="preview" class="uibutton icon preview">&nbsp;Vista Previa&nbsp;</a>

@@ -27,7 +27,7 @@ class Index(RealestateHandler, PropertyPaginatorMixin):
     self.realestate = RealEstate.all().filter(' domain_id = ', kwargs.get('realestate_slug')).get()
     if not self.realestate:
       abort(404)
-    return self.getto(self.realestate, **kwargs)
+    return self.getto(realestate=self.realestate, **kwargs)
   
   def getto(self, realestate, **kwargs):
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
@@ -38,9 +38,19 @@ class Index(RealestateHandler, PropertyPaginatorMixin):
     kwargs['menu_item']         = 'index'
     kwargs['properties']        = Property.all().filter(' location_geocells = ', RealEstate.get_realestate_sharing_key(None, realestate=realestate)).filter(' status = ', Property._PUBLISHED).fetch(4)
     kwargs['form']              = self.form
+    
+    if 'theme' in kwargs:
+      #HACK!
+      realestate.web_theme = kwargs.get('theme')
+      
     return self.render_response('realestate/index.html', **kwargs)
   
-  
+  def theme_preview(self, **kwargs):
+    self.realestate = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
+    if not self.realestate:
+      abort(404)
+    del(kwargs['realestate'])
+    return self.getto(realestate=self.realestate, **kwargs)
     
 # Info de la propiedad, creo que quedará obsoleto.    
 class Info(RealestateHandler):

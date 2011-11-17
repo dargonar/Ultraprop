@@ -1113,6 +1113,12 @@ body.backend ul.picturebox_admin li {
 	margin-bottom:10px;
   min-height:330px;
 }
+
+body.backend ul#masterpic.picturebox_admin li  
+{
+  min-height:100px;
+}
+
 body.backend ul.picturebox_admin li .btnClose {
 	float:right;
 	position:absolute;
@@ -2677,11 +2683,8 @@ table.poll td p { color:#333;}
 }
 
 
-
-
 /* ///// THEME ///// */
 
-.theme_box,
 .theme_box {
 		background: none;
     border: 1px solid transparent;
@@ -2699,6 +2702,8 @@ table.poll td p { color:#333;}
     border: 1px solid #CCCCCC; 
 }
 
+.theme_box.selected {background:#F9F9F9 url(/img/icons/bullet_ball_green.png) no-repeat 235px 5px;}
+
 .theme_box h3 {font-size:13px !important; margin-bottom:5px;}
 
 .theme_box .zoom { 
@@ -2713,8 +2718,9 @@ table.poll td p { color:#333;}
 }
 .theme_box .buttons {margin-top:6px; height:22px;}
 .theme_box .buttons a { display:none;}
-.theme_box:hover .buttons a,
-.theme_box.selected .buttons a { display: inline-block;}
+.theme_box:hover .buttons a { display: inline-block;}
+.theme_box.selected:hover .buttons a.uibutton.special { display: none;}
+/*.theme_box.selected .buttons a { display: inline-block;}*/
 
 .theme_box .ico_zoom { 
 	display:none; 
