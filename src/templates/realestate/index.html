@@ -34,11 +34,11 @@
           <ul>
             <li class="address">
                 <h2 style="padding-bottom: 8px; margin-top: 5px;">{{realestate.name}}</h2>
-                <p>Visítenos en {{realestate.address}}.</p>
+                <p>{% if realestate.address %} Visítenos en {{realestate.address}}.{% endif %}</p>
             </li>
             <li class="phone">
                 <p>Llámenos al</p>
-                <h2>{{realestate.telephone_number}}</h2>
+                <h2>{{realestate.telephone_number if realestate.telephone_number else ''}}</h2>
             </li>
             <li class="email">
                 <p><a href="{{url_for('realestate/info', realestate=realestate.key()|string)}}">Para mayor información contáctenos vía email</a></p>

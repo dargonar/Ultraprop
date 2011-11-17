@@ -54,6 +54,11 @@ class RealEstate(db.Model):
       return prefix+string_key
     return prefix+str(realestate.key())
   
+  def get_web_theme(self):
+    if self.web_theme is not None and self.web_theme.strip()!='':
+      return self.web_theme
+    return 'theme_grey'
+    
   logo                = blobstore.BlobReferenceProperty() #--Borrar--
   logo_url            = db.StringProperty(indexed=False)
   name                = db.StringProperty()
@@ -78,6 +83,7 @@ class RealEstate(db.Model):
   managed_domain      = db.IntegerProperty()
   is_tester           = db.BooleanProperty()
   
+  web_theme           = db.StringProperty(indexed=False)
   domain_id           = db.StringProperty()
   plan                = db.ReferenceProperty(Plan)
   last_email          = db.DateProperty()

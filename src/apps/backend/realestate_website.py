@@ -25,8 +25,11 @@ class CheckDomainId(BackendHandler):
     
     res = validate_domain_id(domain_id, self.get_realestate_key())
     return self.render_json_response(res)
-    
+
 class Edit(BackendHandler):
+  default_theme = 'theme_grey'
+  themes        = ['theme_green_blue', 'theme_blue', 'theme_grey', 'theme_red_black', 'theme_red_white']
+  
   #Edit/New
   @need_auth()
   def get(self, **kwargs):
@@ -37,7 +40,7 @@ class Edit(BackendHandler):
     kwargs['realestate']          = realestate
     kwargs['mnutop']              = 'website'
    
-    return self.render_response('backend/realestate_website.html', **kwargs)
+    return self.render_response('backend/realestate_website.html', themes=self.themes, **kwargs)
   
   #Create/Save RealEstate & User.
   @need_auth()
@@ -57,7 +60,7 @@ class Edit(BackendHandler):
       if self.form.errors:
         kwargs['flash']         = self.build_error(u'Verifique los datos ingresados:')
         # + '<br/>'.join(reduce(lambda x, y: str(x)+' '+str(y), t) for t in self.form.errors.values()))
-      return self.render_response('backend/realestate_website.html', **kwargs)
+      return self.render_response('backend/realestate_website.html', themes=self.themes, **kwargs)
     
     
     realestate, requested_hosting = self.form.update_object(realestate)
@@ -78,7 +81,23 @@ class Edit(BackendHandler):
     # Set Flash
     self.set_ok('configuración de Sitio Web guardado satisfactoriamente. Un agente de ULTRAPROP se comunicará con Ud. en breve.' )
     return self.redirect_to('backend/realestate_website/edit')
+  
+  @need_auth()
+  def set_theme(self, **kwargs):
+    self.request.charset = 'utf-8'
     
+    realestate = get_or_404(self.get_realestate_key())
+    
+    the_theme = self.default_theme
+    if 'theme' in kwargs and kwargs.get('theme') in self.themes:
+      the_theme = kwargs.get('theme')
+    
+    realestate.web_theme = the_theme
+    realestate.save()
+    
+    self.set_ok('Plantilla actualizada satisfactoriamente.' )
+    return self.redirect_to('backend/realestate_website/edit')
+
   @cached_property
   def form(self):
     return RealEstateWebSiteForm(self.request.POST)

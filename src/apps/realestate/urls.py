@@ -20,6 +20,7 @@ def get_rules():
         ]),
       # RealEstate Home por slug
       Route('/<realestate_slug>',                     name='realestate/search_slug',    handler='apps.realestate.handlers.Index:by_slug'),
+      Route('/<realestate>/theme_preview/<theme>',    name='realestate/theme_preview',  handler='apps.realestate.handlers.Index:theme_preview'),
         
     ]
 

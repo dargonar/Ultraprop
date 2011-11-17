@@ -36,6 +36,7 @@ def get_rules():
         Route('/help'                    , name='backend/help'                   , handler='apps.backend.help.Index'),
         Route('/login'                   , name='backend/auth/login'             , handler='apps.backend.auth.Login'),
         Route('/signup'                  , name='backend/auth/signup'            , handler='apps.backend.auth.SignUp'),
+        Route('/signup/<promo>'          , name='backend/auth/signup/promo'      , handler='apps.backend.auth.SignUp'),
         Route('/logout'                  , name='backend/auth/logout'            , handler='apps.backend.auth.Logout'),
         Route('/restore/password/<key>'  , name='backend/auth/restore'           , handler='apps.backend.auth.RestorePassword'),
         Route('/unrestore/password/<key>', name='backend/auth/unrestore'         , handler='apps.backend.auth.UnRestorePassword'),
@@ -54,6 +55,7 @@ def get_rules():
         PathPrefixRoute('/website', [
           Route('/edit'                  , name='backend/realestate_website/edit'             , handler='apps.backend.realestate_website.Edit'),
           Route('/validate_domain_id'    , name='backend/realestate_website/check_domain_id'  , handler='apps.backend.realestate_website.CheckDomainId'),
+          Route('/set_theme/<theme>'     , name='backend/realestate_website/set_theme'        , handler='apps.backend.realestate_website.Edit:set_theme')
         ]),
         
         PathPrefixRoute('/inmobiliarias_amigas', [
