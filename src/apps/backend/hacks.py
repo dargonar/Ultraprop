@@ -12,7 +12,7 @@ from google.appengine.ext import deferred, db, blobstore
 # Cositas sueltas
 from utils import get_or_404, need_auth, BackendHandler 
 from taskqueue import Mapper
-from models import Property, ImageFile, RealEstate, Plan, RealEstate, Invoice, PropertyIndex, User
+from models import Property, ImageFile, RealEstate, Plan, RealEstate, Invoice, PropertyIndex, User, RealEstateFriendship
 from myfilters import do_slugify
 from apps.backend.payment import create_transaction_number
 
@@ -136,12 +136,17 @@ class RemoveRealEstate(BackendHandler):
     for img in ImageFile.all().filter('realestate', re.key()):
       blobs.append(img.file.key())
       imgs.append(img.key())
-      props.append(img.property.key())
       
     blobstore.delete(blobs)
-    db.delete(props)
     db.delete(imgs)
 
+    props = []
+    for prop in Property.all().filter('realestate', re.key()):
+      props.append(prop.key())
+      
+    db.delete(props)
+    
+    
     pis = []
     for pi in PropertyIndex.all().filter('realestate', re.key()):
       pis.append(pi.key())
@@ -163,6 +168,12 @@ class RemoveRealEstate(BackendHandler):
       usrs.append(usr)
     
     db.delete(usrs)
+    
+    mRealEstateFriendship=[]
+    for fr in RealEstateFriendship.all().filter('realestates', str(re.key())):
+      mRealEstateFriendship.append(fr)
+    
+    db.delete(mRealEstateFriendship)
     
     re.delete()
     
