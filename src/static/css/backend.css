@@ -1111,7 +1111,7 @@ body.backend ul.picturebox_admin li {
 	float:left;
 	margin-right:8px;
 	margin-bottom:10px;
-  min-height:330px;
+  min-height:330px !important;
 }
 
 body.backend ul#masterpic.picturebox_admin li  
