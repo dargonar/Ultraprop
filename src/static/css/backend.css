@@ -1116,7 +1116,7 @@ body.backend ul.picturebox_admin li {
 
 body.backend ul#masterpic.picturebox_admin li  
 {
-  min-height:100px;
+  min-height:100px !important;
 }
 
 body.backend ul.picturebox_admin li .btnClose {
