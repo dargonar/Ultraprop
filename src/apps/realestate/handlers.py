@@ -14,6 +14,7 @@ from search_helper_func import PropertyPaginatorMixin
 # Mail de bienvenida
 from google.appengine.api import mail
 from models import User, RealEstate
+from theme_manager import default_theme, themes, get_props_at_home
 
 # Index va a ser la homepage de la inmobiliaria, creo que quedará obsoleto.    
 class Index(RealestateHandler, PropertyPaginatorMixin):
@@ -36,12 +37,13 @@ class Index(RealestateHandler, PropertyPaginatorMixin):
       
     kwargs['realestate']        = realestate
     kwargs['menu_item']         = 'index'
-    kwargs['properties']        = Property.all().filter(' location_geocells = ', RealEstate.get_realestate_sharing_key(None, realestate=realestate)).filter(' status = ', Property._PUBLISHED).fetch(5)
     kwargs['form']              = self.form
     
-    if 'theme' in kwargs:
+    if 'theme' in kwargs and kwargs.get('theme') in themes.keys():
       #HACK!
       realestate.web_theme = kwargs.get('theme')
+    
+    kwargs['properties']        = Property.all().filter(' location_geocells = ', RealEstate.get_realestate_sharing_key(None, realestate=realestate)).filter(' status = ', Property._PUBLISHED).fetch(get_props_at_home(realestate.web_theme))  
       
     return self.render_response('realestate/index.html', **kwargs)
   

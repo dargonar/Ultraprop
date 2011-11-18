@@ -16,6 +16,7 @@ from backend_forms import RealEstateWebSiteForm, validate_domain_id
 from utils import get_or_404, need_auth, BackendHandler
 from models import RealEstate
 
+from theme_manager import default_theme, themes
 
 class CheckDomainId(BackendHandler):
   @need_auth()
@@ -27,9 +28,7 @@ class CheckDomainId(BackendHandler):
     return self.render_json_response(res)
 
 class Edit(BackendHandler):
-  default_theme = 'theme_grey'
-  themes        = ['theme_green_blue', 'theme_blue', 'theme_grey', 'theme_red_black', 'theme_red_white']
-  
+    
   #Edit/New
   @need_auth()
   def get(self, **kwargs):
@@ -40,7 +39,7 @@ class Edit(BackendHandler):
     kwargs['realestate']          = realestate
     kwargs['mnutop']              = 'website'
    
-    return self.render_response('backend/realestate_website.html', themes=self.themes, **kwargs)
+    return self.render_response('backend/realestate_website.html', themes=themes.keys(), **kwargs)
   
   #Create/Save RealEstate & User.
   @need_auth()
@@ -60,7 +59,7 @@ class Edit(BackendHandler):
       if self.form.errors:
         kwargs['flash']         = self.build_error(u'Verifique los datos ingresados:')
         # + '<br/>'.join(reduce(lambda x, y: str(x)+' '+str(y), t) for t in self.form.errors.values()))
-      return self.render_response('backend/realestate_website.html', themes=self.themes, **kwargs)
+      return self.render_response('backend/realestate_website.html', themes=themes.keys(), **kwargs)
     
     
     realestate, requested_hosting = self.form.update_object(realestate)
@@ -88,8 +87,8 @@ class Edit(BackendHandler):
     
     realestate = get_or_404(self.get_realestate_key())
     
-    the_theme = self.default_theme
-    if 'theme' in kwargs and kwargs.get('theme') in self.themes:
+    the_theme = default_theme
+    if 'theme' in kwargs and kwargs.get('theme') in themes.keys():
       the_theme = kwargs.get('theme')
     
     realestate.web_theme = the_theme
