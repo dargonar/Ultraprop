@@ -47,6 +47,7 @@ SCRIPTS = {
         'src/static/js/plugins/swfupload.cookies.js',
         'src/static/js/jquery.ketchup.js',
         'src/static/js/jquery.listnav.pack-2.1.js',
+        'src/static/js/jquery.lightbox-0.5.js',
         'src/static/js/backend.js',
       ],
       
@@ -85,6 +86,7 @@ STYLESHEETS = {
       'src/static/css/common.css',
       'src/static/css/backend.css',
       'src/static/css/fb-buttons.css',
+      'src/static/css/jquery.lightbox-0.5.css',
     ],
     
     'fe':[
