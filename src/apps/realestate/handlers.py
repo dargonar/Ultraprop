@@ -39,10 +39,6 @@ class Index(RealestateHandler, PropertyPaginatorMixin):
     kwargs['menu_item']         = 'index'
     kwargs['form']              = self.form
     
-    if 'theme' in kwargs and kwargs.get('theme') in themes.keys():
-      #HACK!
-      realestate.web_theme = kwargs.get('theme')
-    
     kwargs['properties']        = Property.all().filter(' location_geocells = ', RealEstate.get_realestate_sharing_key(None, realestate=realestate)).filter(' status = ', Property._PUBLISHED).fetch(get_props_at_home(realestate.web_theme))  
       
     return self.render_response('realestate/index.html', **kwargs)
@@ -52,6 +48,29 @@ class Index(RealestateHandler, PropertyPaginatorMixin):
     if not self.realestate:
       abort(404)
     del(kwargs['realestate'])
+    
+    if 'theme' in kwargs and kwargs.get('theme') in themes.keys():
+      #HACK!
+      self.realestate.web_theme = kwargs.get('theme')
+      
+    return self.getto(realestate=self.realestate, **kwargs)
+  
+  def texts_preview(self, **kwargs):
+    self.request.charset = 'utf-8'
+    
+    self.realestate = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
+    if not self.realestate:
+      abort(404)
+    del(kwargs['realestate'])
+    
+    if 'title' in kwargs:
+      #HACK!
+      self.realestate.tpl_title = kwargs.get('title').decode('utf-8') 
+    
+    if 'message' in kwargs:
+      #HACK!
+      self.realestate.tpl_text = kwargs.get('message').decode('utf-8') 
+      
     return self.getto(realestate=self.realestate, **kwargs)
     
 # Info de la propiedad, creo que quedará obsoleto.    

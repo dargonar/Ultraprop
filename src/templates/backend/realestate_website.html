@@ -40,20 +40,25 @@
 
 
 {% block headscript %}
-  <script type="text/javascript">
-  $(document).ready(function() {
-    init_realestate_website('{{url_for('backend/realestate_website/check_domain_id')}}');
-  });
-  </script>
-  
-  
     <script type="text/javascript" src="/js/jquery.lightbox-0.5.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/jquery.lightbox-0.5.css" media="screen" />
 
     <script type="text/javascript">
+    $(document).ready(function() {
+      init_realestate_website('{{url_for('backend/realestate_website/check_domain_id')}}');
+    });
+  
     $(function() {
         $('#gallery a.zoomin').lightBox();
     });
+    
+    function PreviewTexts(obj, url)
+    {
+      var the_url = url.replace('-message-', $('#tpl_text').val());
+      the_url = the_url.replace('-title-', $('#tpl_title').val());
+      $(obj).attr('href', the_url);
+      return true;
+    }
     </script>
 {% endblock %}
 
@@ -222,10 +227,10 @@
       <dd>
       	<div class="custom_data_theme">
             <h4 style=" margin:0; margin-bottom:3px;">Título institucional</h4>
-            {{ form.tpl_title(title="Título", placeholder="Escriba un título institucional aquí") }}
+            {{ form.tpl_title(title="Título", placeholder="Escriba un título institucional aquí", id='tpl_title') }}
             
             <h4 style="margin-bottom:3px;">Texto institucional</h4>
-            {{ form.tpl_text(title="Título", placeholder="Escriba un texto institucional aquí") }}
+            {{ form.tpl_text(title="Título", placeholder="Escriba un texto institucional aquí", id='tpl_text') }}
             
             <!-- div class="block_info" style="margin-left:0; margin-top:10px; margin-bottom:18px;"> 
               <h4 style="margin-bottom:3px; margin-top:0;">Imagen de fondo (opcional)</h4>   
@@ -238,10 +243,7 @@
             </div-->
              
             <div style="margin-top:8px;">
-            	<a href="{{realestate|realestate_linkfy(check_domain=False)}}" target="_blank" id="preview" class="uibutton icon preview">&nbsp;Vista Previa&nbsp;</a>
-              
-
-              
+            	<a href="#" onclick="return PreviewTexts(this, '{{ url_for('realestate/texts_preview', realestate=realestate.key()|string, title='-title-', message='-message-', _full=true) }}');" target="_blank" id="preview" class="uibutton icon preview">&nbsp;Vista Previa&nbsp;</a>              
              </div>
              
         </div>
