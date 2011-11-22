@@ -36,10 +36,10 @@ $(document).ready(function() {
   
   {% if requests|length>0 %}
     <div class="viewPicBox">
-      <ul id="masterpic" class="picturebox_admin">
+      <ul id="realestatebook_list" class="picturebox_admin">
         {% for request in requests %}
         {% set req_realestate = request.get_the_other_realestate(realestate.key()) %}
-        <li>
+        <li style="position:relative;">
           <div style="width:160px; height:120px" id="imgbox"> 
             <div class="agentbox" style="width: 160px;float: left; margin-right:20px;">
               <div style="width:160px;height:120px;display: table-cell; vertical-align: middle;">
@@ -63,7 +63,7 @@ $(document).ready(function() {
               </div>
             </div>
           </div>
-          <div class="ex-label" title="eliminar amistad">
+          <div class="ex-label" style="bottom:0px;position:absolute;"  title="eliminar amistad">
             <br/>
             {% if (request.is_sender(realestate) and not request.rs_a_shows_b) or (not request.is_sender(realestate) and not request.rs_b_shows_a) %}
               <a class="publisher uibutton " href="{{url_for('backend/realestatebook/friends/share', key=request.key()|string)}}" title="Ampliar mi oferta con las propiedades de mi colega">Ampliar mi oferta</a>
