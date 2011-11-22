@@ -39,7 +39,7 @@ class Index(RealestateHandler, PropertyPaginatorMixin):
     kwargs['menu_item']         = 'index'
     kwargs['form']              = self.form
     
-    kwargs['properties']        = Property.all().filter(' location_geocells = ', RealEstate.get_realestate_sharing_key(None, realestate=realestate)).filter(' status = ', Property._PUBLISHED).fetch(get_props_at_home(realestate.web_theme))  
+    kwargs['properties']        = Property.all().filter(' location_geocells = ', RealEstate.get_realestate_sharing_key(None, realestate=realestate)).filter(' status = ', Property._PUBLISHED).fetch(get_props_at_home(realestate.get_web_theme()))  
       
     return self.render_response('realestate/index.html', **kwargs)
   
