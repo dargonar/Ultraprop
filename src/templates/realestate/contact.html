@@ -28,7 +28,7 @@
     
       <div class="contactinfo">
         <span><b>Teléfono:</b> {{realestate.telephone_number if realestate.telephone_number else 'N/D'}}</span><br/>
-        <span><b>Email:</b> {{realestate.email}}</span><br/>
+        <!-- span><b>Email:</b> {{realestate.email}}</span><br/ -->
         <span><b>Dirección:</b> {{realestate.address if realestate.address else 'N/D'}}</span>
         {% if realestate.open_at %}
           <br/><span>Atención {{realestate.open_at}}</span><br/>
@@ -48,8 +48,8 @@
             <dt>Nombre y Apellido </dt>
             {{ form_field(form.name, placeholder="nombre y apellido") }}
             
-            <!-- <dt>Email</dt>
-            {{ form_field(form.email, placeholder="email") }} -->
+            <<dt>Email</dt>
+            {{ form_field(form.email, placeholder="email") }}
             
             <dt>Teléfono</dt>
             {{ form_field(form.telephone, placeholder="teléfono") }}
