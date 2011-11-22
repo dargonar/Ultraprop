@@ -26,7 +26,7 @@ $(document).ready(function() {
     return false;
   });
   
-  $('#masterpic').listnav({
+  $('#realestatebook_list').listnav({
     noMatchText:'No hay inmobilirias cuyo nombre inicie con esta letra.',
     prefixes: ['inmobiliria','broker'],
     showCounts: false
@@ -72,11 +72,11 @@ $(document).ready(function() {
 
   {% if realestates|length>0 %}
     <div class="viewPicBox">
-      <ul id="masterpic" class="picturebox_admin">
+      <ul id="realestatebook_list" class="picturebox_admin">
         {% for realestate in realestates %}
         {% set realestate_key = realestate.key()|string %}
-        <li>
-          <div style="width:160px; height:120px" id="imgbox"> 
+        <li style="position:relative;">
+          <div style="width:160px; height:120px;" id="imgbox"> 
             <div class="agentbox" style="width: 160px;float: left; margin-right:20px;">
               <div style="width:160px;height:120px;display: table-cell; vertical-align: middle;">
                 {% if realestate.logo_url %}
@@ -99,7 +99,7 @@ $(document).ready(function() {
               </div>
             </div>
           </div>
-          <div class="ex-label" title="Seleccionar para pedir amistad">
+          <div class="ex-label" style="bottom:0px;position:absolute;" title="Seleccionar para pedir amistad">
             {% if realestate_key in already_friends %}
               Ya pertenece a tu Red.
             {% else %}
