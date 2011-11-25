@@ -191,6 +191,9 @@ class BackendMixin(object):
     self.session['account.realestate.status']       = user.realestate.status
     self.session['account.roles']                   = map(lambda s: s.strip(), user.rol.split(','))
     
+    if self.is_ultraadmin:
+      self.session['account.realestate.status'] = RealEstate._ENABLED
+      
   @property
   def is_enabled(self):
     return self.is_logged and 'account.enabled' in self.session and self.session['account.enabled'] != 0

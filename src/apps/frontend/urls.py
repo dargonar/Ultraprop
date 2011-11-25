@@ -16,7 +16,7 @@ def get_rules():
       Route('/tsk/fix_re',          name='fixre',          handler='apps.backend.hacks.FixRealEstates'),
       Route('/tsk/remove_re/<key>', name='removere',       handler='apps.backend.hacks.RemoveRealEstate'),
       Route('/tsk/fix_prop',        name='fixprop',        handler='apps.backend.hacks.FixProperty'),
-      
+
       # Esta la pongo aca por puta
       Route('/webclient/index.asp',   name='oldredir',            handler='apps.backend.hacks.OldRealEstateRedirect'),
 
