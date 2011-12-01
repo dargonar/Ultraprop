@@ -257,6 +257,16 @@ function autoGeolocate(){
   var myLatlng = new google.maps.LatLng(default_lat, default_lon);
   locateMap(myLatlng);
   initMapSearch();
+  
+  // //http://code.google.com/p/geoxml3/
+  // //var bsasSubWayLayer = new google.maps.KmlLayer('/kml/subway-bsas-arg.kml');
+  // var bsasSubWayLayer = new google.maps.KmlLayer('http://www.coloresypinturas.com.ar/subway-bsas-arg_min.kmz', {preserveViewport:true});
+  // bsasSubWayLayer.setMap(map);
+  // google.maps.event.addListener(bsasSubWayLayer, "metadata_changed" , 
+    // function() { 
+      // //something
+  // });   
+      
 }
 
 function html5LocatePositionError(positionerror){
