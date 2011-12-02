@@ -23,11 +23,16 @@ class Plan(db.Model):
   _EMI_MONTHLY = 3
 
   name                = db.StringProperty()
-  description         = db.StringProperty()
+  description         = db.StringProperty(indexed=False)
+  slug                = db.StringProperty()
   type                = db.IntegerProperty()
   amount              = db.IntegerProperty()
-  free_days           = db.IntegerProperty()
-
+  free_days           = db.IntegerProperty(indexed=False)
+  payd_days           = db.IntegerProperty(indexed=False) # Si es _ONE_TIME
+  online              = db.IntegerProperty() # Lo mostramos en SignUp
+  enabled             = db.IntegerProperty() # Indica si permite nuevas inmobilirias con este plan
+  html                = db.TextProperty(indexed=False)
+  
   def __repr__(self):
     return 'PLAN: ' + self.name
     

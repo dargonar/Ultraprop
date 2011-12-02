@@ -179,6 +179,12 @@ indexes:
   - name: state
   - name: date
 
+- kind: Plan
+  properties:
+  - name: enabled
+  - name: online
+  - name: amount
+
 - kind: PropertyIndex
   properties:
   - name: location_geocells

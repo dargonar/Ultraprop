@@ -855,6 +855,7 @@ ul.skills {
 	margin-top:18px;
 	margin-right: 54px;
 }
+
 ul.skills li {
 	float:none;
 	font-size:16px;
@@ -865,6 +866,11 @@ ul.skills li {
 	padding-top:3px;
 	color:#0A5278;
 }
+
+ul.skills li.nada {
+	background: none;
+}
+
 ul.skills li.props {
 	background-position: 0px 0px;
 }

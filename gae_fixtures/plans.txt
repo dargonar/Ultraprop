@@ -1,4 +1,56 @@
 from models import *
+from myfilters import do_slugify
+
+
+
+for plan in Plan.all().fetch(10):
+  plan.online=1
+  plan.enabled=1
+  plan.slug = do_slugify(plan.name)
+  plan.save()
+  print plan.slug
+
+========================
+from models import *
+
+p = Plan()
+p.name = 'Plan S'
+p.description = u'Hasta 3 avisos'
+p.html = u'Hasta <b>3</b> avisos'
+p.type = Plan._ONE_TIME
+p.amount = 60
+p.free_days = 7
+p.payd_days = 30
+p.online = 1
+p.enabled = 1
+p.save()
+
+p = Plan()
+p.name = 'Plan M'
+p.description = u'Avisos ilimitados'
+p.html = u'Avisos ilimitados'
+p.type = Plan._ONE_TIME
+p.amount = 120
+p.free_days = 7
+p.payd_days = 90
+p.online = 1
+p.enabled = 1
+p.save()
+
+p = Plan()
+p.name = 'Plan L'
+p.description = u'Página web y dominio de correo propio'
+p.html = u'Avisos ilimitados<br/>Página web y dominio de correo propio'
+p.type = Plan._ONE_TIME
+p.amount = 200
+p.free_days = 7
+p.payd_days = 180
+p.online = 1
+p.enabled = 1
+p.save()
+
+--
+from models import *
 
 p = Plan()
 p.name = 'promo-lanzamiento'

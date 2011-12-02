@@ -51,7 +51,7 @@ $(document).ready(function() {
           <div class="popup" style="border:none; width: 400px; text-align:left;">
             <div id="login" class="popup_box" style="padding:0;"> 
               <h1 style="font-size:24px; margin-left:5px;">Comience a Publicar Ahora!</h1>
-              <h2 style="color:#0A5278; font-weight:normal; margin-left:5px;">Utilize la plataforma sin cargo por un período de {{plan.free_days}} días.</h2>
+              <h2 style="color:#0A5278; font-weight:normal; margin-left:5px;">Complete todos los campos y seleccione el plan que más le interese.</h2>
               {% set post_url = url_for('backend/auth/signup/promo',promo=promo ) if promo else url_for('backend/auth/signup') %}
               <form id="signup_form" action="{{post_url}}" method="post" style="margin-right:15px;width:400px;">
                 <!-- ///// IDENTITY ///// -->    
@@ -70,12 +70,55 @@ $(document).ready(function() {
                 <div class="last {{ 'errorbox' if form.confirm.errors else '' }}"> 
                   {{ form_field(form.confirm, label='repetir', class="xg long", placeholder="Repetir contraseña", id="confirm_password") }}
                 </div>
-                <div class="last {{ 'errorbox' if form.accept_terms.errors else '' }}"> 
+                
+                <div id="gallery" class="signup">
+                  <ul>
+                    {% if planes %}
+                      {% for plan in planes %}
+                        <li class="theme_box {{ 'selected' if loop.index0==1}} plan{{loop.index0}}" key='{{plan.key()|string}}' style="position:relative;text-align:center;">
+                          <div class="checked"></div> 
+                          <h3 style="color:#0A5278;">{{plan.name}}</h3>
+                          <p>
+                            <b>{{plan.html}}</b>
+                          </p>
+                          <p style="bottom:38px;position:absolute;text-align:center;">  
+                            Precio: {% if plan.amount>0 %}<b>${{plan.amount}}</b>/mes {% else %} <b>gratis</b> {% endif %}
+                          </p>
+                          
+                          <div class="buttons" style="bottom:10px;position:absolute;">
+                            <a class="uibutton special" href="#" onclick="jQuery('.theme_box').removeClass('selected'); jQuery('.plan{{loop.index0}}').addClass('selected'); jQuery('#plan').val('{{plan.key()|string}}'); return false;">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
+                          </div>
+                        </li>
+                        {% if loop.index0==1 and not selected_plan %}
+                          {% set default_plan = plan.key|string %}
+                        {% else %}
+                          {% if plan.key|string == selected_plan %}
+                            {% set default_plan = plan.key|string %}
+                          {% endif %}
+                        {% endif %}
+                      {% endfor %}
+                    {% else %}
+                      <li class="theme_box selected" key='{{promo.key()|string}}' style="position:relative;text-align:center;margin-left:125px;">
+                          <div class="checked"></div> 
+                          <h3 style="color:#0A5278;">{{promo.name}}</h3>
+                          <p>
+                            <b>{{promo.html}}</b>
+                          </p>
+                          <p style="bottom:38px;position:absolute;text-align:center;">  
+                            Precio: {% if promo.amount>0 %}<b>${{promo.amount}}</b>/mes {% else %} <b>gratis</b> {% endif %}
+                          </p>
+                          
+                        </li>
+                        {% set default_plan = promo.key|string %}
+                    {% endif %}
+                  </ul>
+                </div>
+                <div class="last {{ 'errorbox' if form.accept_terms.errors else '' }}" style="clear:both;"> 
                   {{ form_field(form.accept_terms) }}
                 </div>
                 
                 {{form.ketchup(id='ketchup')}}
-                
+                <input type="hidden" name="plan" id="plan" value="{{default_plan}}" />
                 <input type="submit" value="COMENZAR A PUBLICAR!" name="" class="btnWizard start">
                 <!--div class="navButtons" style="text-align:left;">
                   <a href="#" class="fancy_button start"><input type="submit" value="COMENZAR!" name="" class="btnWizard"></a>
@@ -93,25 +136,26 @@ $(document).ready(function() {
 <div class="skill_detail">
 	<h1>Diferente!</h1>
 	<div class="col_left">
-		<h3>¿Cómo funciona?</h3>
+		<h3>¿Cómo encuentran tus propiedades?</h3>
     	<p>
-        A diferencia de los demás portales inmobiliarios, ULTRAPROP es el primero en su tipo en utilizar un Sistema de Geolocalización Real, eso quiere decir que con sólo ubicar una zona de interés en el mapa, automáticamente se muestra la oferta disponible en esa zona y alrededores.<br />
+        ULTRAPROP es la primer plataforma de posicionamiento web para inmobiliarias que utiliza búsquedas geoespaciales en vez del clásico combo de país, provincia, ciudad y barrio.
+        Ubicando una zona de interés en el mapa se accede a la oferta disponible en esa zona y alrededores.<br />
         </p>
         <br />
-        <h3>Búsquedas más simples:</h3>
-        <p>Otros portales combinan infinidad de filtros dificultando las búsquedas que terminan por frustrar al usuario. En ULTRAPROP solamente hay que seleccionar la zona de interés en el mapa para conocer la oferta disponible.</p>
+        <h3>Administrá todo desde un mismo lugar</h3>
+        <p>ULTRAPROP centraliza la administración en esta sección del portal, publicando tus propiedades en <a href="http://www.ultraprop.com.ar/mapa" target="_blank" >www.ultraprop.com.ar</a> y en el sitio web de tu inmobiliaria, permitiendo que gestiones tu cartera de propiedades y tus vínculos con colegas que te permitirá ampliar tu oferta inmobiliaria.</p>
     </div>
     
     <div class="col_right">
    		<h3>Más contactos</h3>
         <p>
-En ULTRAPROP queremos que recibas la mayor cantidad de contactos posibles, por eso solamente le pedimos a los usuarios los datos mínimos para establecer contacto contigo, sin exigir suscripciones ni extensos formularios de registro, porque a mayor cantidad de contactos mayor cantidad de negocios concretados.
-</p>
-	<br />
+        En ULTRAPROP queremos que recibas la mayor cantidad de clientes posibles, por ello no solicitamos dato alguno a quienes desean establecer contacto contigo, sin suscripciones ni formularios de registro: a mayor cantidad de contactos mayor posibilidad de concretar negocios.
+        </p>
+        <br />
 
 		<h3>Sin Límites:</h3>
-        <p>Publique toda su oferta inmobiliaria, ULTRAPROP No limita la cantidad de avisos ni la cantidad de fotos por propiedad.</p>
-    </div>
+    <p>Publique toda su oferta inmobiliaria, ULTRAPROP No limita la cantidad de avisos ni la cantidad de fotos por propiedad.</p>
+  </div>
 </div>
 
 
@@ -121,13 +165,13 @@ En ULTRAPROP queremos que recibas la mayor cantidad de contactos posibles, por e
     	<h3>Más es más...</h3>
 		<img src="/img/email/map.jpg" />
         <ul class="features">
-            <li><b>Sin Límites:</b> En ULTRAPROP nada tiene límites, publique la cantidad de propiedades que desee sin limitar la cantidad de fotografías que la propiedad requiere. Porque los límites son para los pequeños y ULTRAPROP es Grande, muy Grande!</li>
+            <li><b>Sin Límites:</b> En ULTRAPROP nada tiene límites, publique la cantidad de propiedades que desee sin limitar la cantidad de fotografías que la propiedad requiere. Porque los límites son para los pequeños...</li>
             
-            <li><b>Más visitas:</b> ULTRAPROP crece día a día, por eso hoy podemos anunciar que somos el portal inmobiliario más visitado de La Plata y Gran La plata.</li>
+            <!-- li><b>Más visitas:</b> ULTRAPROP crece día a día, por eso hoy podemos anunciar que somos el portal inmobiliario más visitado de La Plata y Gran La plata.</li -->
             
-            <li><b>Innovación:</b> Somos el primer portal inmobiliario con búsquedas por Geolocalización Real de Latinoamérica.</li>
+            <li><b>Innovación:</b> Somos el primer portal inmobiliario con búsquedas por <b title="o búsquedas geoespaciales, como más le guste...">Geolocalización Real</b> de Latinoamérica.</li>
             
-            <li><b>Seguridad:</b> Garantía 100% en el aire, ULTRAPROP se encuentra alojado en la mayor infraestructura de servidores replicados del mundo.</li>
+            <li><b>Cloud:</b> Oyó hablar de la <i>Cloud</i>: ULTRAPROP se encientra en ella, por ello no hay límites ni congestionamientos en el acceso a la plataforma.</li>
         </ul>
     </li>
     
@@ -135,19 +179,19 @@ En ULTRAPROP queremos que recibas la mayor cantidad de contactos posibles, por e
     	<h3>Fácil y rápido</h3>
    	  <img src="/img/email/admin.jpg" />
       <ul class="features">
-            <li><b>Fácil de usar, rápido de implementar</b>: La carga de información no debe ser nunca una barrera entre usted y sus clientes, por eso hemos desarrollado un sistema ágil que le permite mantener su oferta actualizada de forma ágil y amena.</li>
+            <li><b>Fácil de usar, rápido de implementar</b>: Publicar una propiedad o actualizar su info de contacto no debe ser nunca una barrera entre usted y sus clientes, por eso hemos desarrollado un sistema ágil para mantener su oferta actualizada.</li>
             
-            <li><b>La imagen es todo:</b> Suba la cantidad de fotografías que desee, sin tener que procesarlas, tal como las obtuvo de su cámara o teléfono celular, no es necesario que modifique su tamaño, rote su posición, ni renombre para ordenarlas, una vez arriba podrá ordenarlas mediante drag & drop.</li>
+            <li><b>La imagen es todo:</b> Suba la cantidad de fotografías de las propiedades que desee, tal como las obtuvo de su cámara o teléfono celular sin necesidad demodificar su tamaño o de renombrarlas para ordenarlas.</li>
             
             <li><b>Ubicación:</b> Los usuarios buscan propiedades por zonas de interés. Ubique los inmuebles en el mapa de la forma más sencilla.</li>
     </ul>
     </li>
     
     <li class="last">
-    	<h3>Identidad</h3>
+    	<h3>Identidad y posicionamiento</h3>
     	<img src="/img/email/site.jpg" />
         <ul class="features">
-            <li><b>Mi Web Propia:</b> Su cartera de inmuebles más completa e impactante. Mejoras y actualizaciones Gratuitas.</li>
+            <li><b>Mi Web Propia:</b> Su cartera de inmuebles más completa e impactante.</li>
             
             <li><b>Con Nombre Propio:</b><br /> 
 <b>"Si aún no tiene su dominio propio"</b>, lo registramos y alojamos en nuestros servidores. Gestionamos su correo @su_inmobiliaria.com.ar<br /><br />

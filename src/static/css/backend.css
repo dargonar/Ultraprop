@@ -2696,13 +2696,33 @@ table.poll td p { color:#333;}
     padding: 10px 10px 10px;
     width: 240px; 
 }
+
+.signup .theme_box {
+  width: 100px;
+  min-height: 120px;
+  background: none repeat scroll 0 0 #EEEEEE;
+  border: 1px solid #EEEEEE; 
+}
+
 .theme_box:hover,
 .theme_box.selected {
 		background: none repeat scroll 0 0 #F9F9F9;
     border: 1px solid #CCCCCC; 
 }
 
-.theme_box.selected {background:#E4F1FF; border: 1px solid #99C7F8;}
+.theme_box.selected {
+    background:#E4F1FF ; 
+    border: 1px solid #99C7F8;}
+
+.signup .theme_box  .checked{
+  display:none;
+}    
+.signup .theme_box.selected  .checked{
+    position:absolute;right:8px;top:8px;
+    display:inline-block;
+    height:16px;width:16px;
+    background:#E4F1FF url(/img/ultraprop_ui_sprite.png) no-repeat scroll -552px -598px;
+}
 
 .theme_box h3 {font-size:13px !important; margin-bottom:5px;}
 
