@@ -197,7 +197,9 @@ class Property(GeoModel):
   street_number           = db.IntegerProperty(indexed=False)
   
   zip_code                = db.StringProperty(indexed=False)
-  	
+  
+  cardinal_direction      = db.StringProperty(indexed=False)
+  
   floor                   = db.StringProperty(indexed=False)
   building_floors	        = db.IntegerProperty(indexed=False)
   	
@@ -313,11 +315,20 @@ class Property(GeoModel):
         # Bueno	        5
         # Muy bueno	    6
         # Excelente	    7
+  
+  _OPER_STATE_NADA              = 1
+  _OPER_STATE_VENDIDO           = 2
+  _OPER_STATE_ALQUILADO         = 4
+  _OPER_STATE_RESERVADO         = 8
+  _OPER_STATE_SUSPENDIDO        = 16
+  _OPER_STATE_DE_POZO           = 32
+  _OPER_STATE_APTO_CREDITO      = 64
+  _OPER_STATE_IMPECABLE         = 128
+  _OPER_STATE_INVERSION         = 256
+  _OPER_STATE_OPORTUNIDAD       = 512
+  
   prop_operation_state_id	      = db.IntegerProperty(indexed=False)
-        # Disponible	  1
-        # Reservada	    2
-        # Vendida	      3
-        # Alquilada	    4
+  
   prop_owner_id	                = db.IntegerProperty(indexed=False)
         # Inmobiliaria	1
         # Dueño directo	2
