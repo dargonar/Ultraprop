@@ -2699,7 +2699,7 @@ table.poll td p { color:#333;}
 
 .signup .theme_box {
   width: 100px;
-  min-height: 120px;
+  min-height: 100px;
   background: none repeat scroll 0 0 #EEEEEE;
   border: 1px solid #EEEEEE; 
 }

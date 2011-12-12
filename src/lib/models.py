@@ -33,6 +33,10 @@ class Plan(db.Model):
   enabled             = db.IntegerProperty() # Indica si permite nuevas inmobilirias con este plan
   html                = db.TextProperty(indexed=False)
   
+  max_properties              = db.IntegerProperty(indexed=False)
+  allow_realestatefriendship  = db.IntegerProperty(indexed=False)
+  allow_website               = db.IntegerProperty(indexed=False)
+  
   def __repr__(self):
     return 'PLAN: ' + self.name
     
@@ -83,7 +87,7 @@ class RealEstate(db.Model):
   updated_at          = db.DateTimeProperty(auto_now=True)
   created_at          = db.DateTimeProperty(auto_now_add=True)
   
-  enable              = db.IntegerProperty() #--borrar--
+  enable              = db.IntegerProperty()
   status              = db.IntegerProperty()
   managed_domain      = db.IntegerProperty()
   is_tester           = db.BooleanProperty()
@@ -95,8 +99,14 @@ class RealEstate(db.Model):
   last_invoice        = db.DateProperty()
   last_login          = db.DateTimeProperty()
   
+  matricula_martillero                = db.StringProperty()
+  matricula_martillero_owner_fullname = db.StringProperty()
+  matricula_martillero_owner_dni      = db.StringProperty()
+  matricula_martillero_enabled        = db.IntegerProperty()
+  
   def is_in_trial(self):
     return self.status==RealEstate._TRIAL
+  
   @staticmethod
   def public_attributes():
     """Returns a set of simple attributes on Immovable Property entities."""

@@ -51,7 +51,7 @@ $(document).ready(function() {
           <div class="popup" style="border:none; width: 400px; text-align:left;">
             <div id="login" class="popup_box" style="padding:0;"> 
               <h1 style="font-size:24px; margin-left:5px;">Comience a Publicar Ahora!</h1>
-              <h2 style="color:#0A5278; font-weight:normal; margin-left:5px;">Complete todos los campos y seleccione el plan que más le interese.</h2>
+              <h2 style="color:#0A5278; font-weight:normal; margin-left:5px;">Complete el formulario y seleccione el plan que más le convenga.</h2>
               {% set post_url = url_for('backend/auth/signup/promo',promo=promo ) if promo else url_for('backend/auth/signup') %}
               <form id="signup_form" action="{{post_url}}" method="post" style="margin-right:15px;width:400px;">
                 <!-- ///// IDENTITY ///// -->    
@@ -75,14 +75,14 @@ $(document).ready(function() {
                   <ul>
                     {% if planes %}
                       {% for plan in planes %}
-                        <li class="theme_box {{ 'selected' if loop.index0==1}} plan{{loop.index0}}" key='{{plan.key()|string}}' style="position:relative;text-align:center;">
+                        <li class="theme_box {{ 'selected' if loop.index0==1}} plan{{loop.index0}}" key='{{plan.key()|string}}' style="position:relative;text-align:center;min-height: 135px;">
                           <div class="checked"></div> 
                           <h3 style="color:#0A5278;">{{plan.name}}</h3>
-                          <p>
+                          <p style="display: table-cell; vertical-align: middle; text-align:center;height:65px;width:100%;">
                             <b>{{plan.html}}</b>
                           </p>
-                          <p style="bottom:38px;position:absolute;text-align:center;">  
-                            Precio: {% if plan.amount>0 %}<b>${{plan.amount}}</b>/mes {% else %} <b>gratis</b> {% endif %}
+                          <p style="bottom:38px;position:absolute;text-align:center;padding-left:20px;">  
+                            <b style="text-align:center;">{% if plan.amount>0 %}${{plan.amount}}/mes {% else %}Sin costo{% endif %}</b>
                           </p>
                           
                           <div class="buttons" style="bottom:10px;position:absolute;">
@@ -101,13 +101,12 @@ $(document).ready(function() {
                       <li class="theme_box selected" key='{{promo.key()|string}}' style="position:relative;text-align:center;margin-left:125px;">
                           <div class="checked"></div> 
                           <h3 style="color:#0A5278;">{{promo.name}}</h3>
-                          <p>
+                          <p style="display: table-cell; vertical-align: middle; text-align:center;height:50px;width:100%;">
                             <b>{{promo.html}}</b>
                           </p>
-                          <p style="bottom:38px;position:absolute;text-align:center;">  
-                            Precio: {% if promo.amount>0 %}<b>${{promo.amount}}</b>/mes {% else %} <b>gratis</b> {% endif %}
+                          <p style="bottom:8px;position:absolute;text-align:center;padding-left:20px;">  
+                            <b style="text-align:center;">{% if promo.amount>0 %}${{promo.amount}}/mes {% else %}Sin costo{% endif %}</b>
                           </p>
-                          
                         </li>
                         {% set default_plan = promo.key|string %}
                     {% endif %}
@@ -171,7 +170,7 @@ $(document).ready(function() {
             
             <li><b>Innovación:</b> Somos el primer portal inmobiliario con búsquedas por <b title="o búsquedas geoespaciales, como más le guste...">Geolocalización Real</b> de Latinoamérica.</li>
             
-            <li><b>Cloud:</b> Oyó hablar de la <i>Cloud</i>: ULTRAPROP se encientra en ella, por ello no hay límites ni congestionamientos en el acceso a la plataforma.</li>
+            <li><b>Cloud:</b> Oyó hablar de la <i>Cloud</i>: ULTRAPROP se encuentra en ella, por ello no hay límites de almacenamiento ni congestionamientos en el acceso a la plataforma.</li>
         </ul>
     </li>
     
@@ -194,9 +193,11 @@ $(document).ready(function() {
             <li><b>Mi Web Propia:</b> Su cartera de inmuebles más completa e impactante.</li>
             
             <li><b>Con Nombre Propio:</b><br /> 
-<b>"Si aún no tiene su dominio propio"</b>, lo registramos y alojamos en nuestros servidores. Gestionamos su correo @su_inmobiliaria.com.ar<br /><br />
-<b>"Si ya dispone de uno"</b>, lo alojamos en nuestros servidores, implementando la tecnología de ULTRAPROP para su web propia.<br /><br />
-<b>"Si ya tiene su web propia"</b> y desea mantener su diseño original, le ofrecemos un script para administrar y mostrar su oferta inmobiliaria dentro de su web. </li>
+              Montamos la tecnología de <b>ULTRAPROP</b> dentro de su web y gestionamos su dominio si aún no cuenta con él.
+<!--b>"Si aún no tiene su dominio propio"</b>, Gestionamos su dominio web y de correo electrónico y lo alojamos en nuestros servidores.<br /><br />
+<b>"Si ya dispone de uno"</b>, alojamos su sitio web en nuestros servidores.<br /><br />
+<b>"Si ya tiene su web propia"</b> y desea mantener su diseño original, montamos la tecnología de ULTRAPROP dentro de su web. -->
+            </li>
             
             <li><b>Email @su_inmobiliaria:</b> Permita que sus clientes lo contacten a una cuenta más confiable y profesional.</li>
         </ul>

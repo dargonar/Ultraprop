@@ -4,9 +4,25 @@ from myfilters import do_slugify
 
 
 for plan in Plan.all().fetch(10):
-  plan.online=1
-  plan.enabled=1
-  plan.slug = do_slugify(plan.name)
+  plan.max_properties               = -1
+  plan.allow_realestatefriendship   = 1
+  plan.allow_website                = 1
+  
+  if plan.slug == 'plan-s':
+    p.max_properties               = 15
+    p.allow_realestatefriendship   = 0
+    p.allow_website                = 0
+  
+  if plan.slug == 'plan-m':
+    p.max_properties               = -1
+    p.allow_realestatefriendship   = 0
+    p.allow_website                = 1
+  
+  if plan.slug == 'plan-l':
+    p.max_properties               = -1
+    p.allow_realestatefriendship   = 1
+    p.allow_website                = 1
+    
   plan.save()
   print plan.slug
 
@@ -15,38 +31,47 @@ from models import *
 
 p = Plan()
 p.name = 'Plan S'
-p.description = u'Hasta 3 avisos'
-p.html = u'Hasta <b>3</b> avisos'
+p.description = u'Hasta 15 avisos'
+p.html = u'Hasta <b>15</b> avisos'
 p.type = Plan._ONE_TIME
 p.amount = 60
 p.free_days = 7
 p.payd_days = 30
 p.online = 1
 p.enabled = 1
+p.max_properties               = 15
+p.allow_realestatefriendship   = 0
+p.allow_website                = 0
 p.save()
 
 p = Plan()
 p.name = 'Plan M'
 p.description = u'Avisos ilimitados'
-p.html = u'Avisos ilimitados'
+p.html = u'Avisos ilimitados.<br/><b title="Página sin dominio propio">Página web</b>.'
 p.type = Plan._ONE_TIME
 p.amount = 120
 p.free_days = 7
 p.payd_days = 90
 p.online = 1
 p.enabled = 1
+p.max_properties               = -1
+p.allow_realestatefriendship   = 0
+p.allow_website                = 1
 p.save()
 
 p = Plan()
 p.name = 'Plan L'
 p.description = u'Página web y dominio de correo propio'
-p.html = u'Avisos ilimitados<br/>Página web y dominio de correo propio'
+p.html = u'Avisos ilimitados.<br/><b title="Con dominio propio www.su_inmobiliaria.com">Página web</b>.<br/> Correo propio.<br/><b title="Para ampliar su oferta inmobiliaria">Red inmobiliaria.</b>'
 p.type = Plan._ONE_TIME
 p.amount = 200
 p.free_days = 7
 p.payd_days = 180
 p.online = 1
 p.enabled = 1
+p.max_properties               = -1
+p.allow_realestatefriendship   = 1
+p.allow_website                = 1
 p.save()
 
 --
