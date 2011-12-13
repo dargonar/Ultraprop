@@ -17,7 +17,8 @@ from backend_forms import PropertyForm, PropertyFilterForm
 from models import Property, PropertyIndex, ImageFile, RealEstateFriendship, RealEstate
 from search_helper_func import PropertyPaginatorMixin, create_query_from_dict
 
-from utils import need_auth, BackendHandler 
+from utils import need_auth, BackendHandler
+from counter_shards import on_public_property_added, on_public_property_deleted, realestate_can_add_public_property, get_realestate_public_properties
 
 class UpdateIndex(RequestHandler):
   # Solo se puede llamar desde appengine por eso no lo aseguramos
@@ -68,14 +69,20 @@ class Remove(BackendHandler):
       if key != 'page' and key != 'newstatus':
         keys.append(key)
     
-    properties = []
-    for property in Property.get(keys):
-      property.status  = newstatus
-      property.save(build_index=False)
-      
+    props = Property.get(keys)
+    for property in props:
       # Verifico que sean mias las propiedades que voy a borrar del indice
       if str(property.realestate.key()) != self.get_realestate_key():
         self.abort(500)
+    
+    properties = []
+    for property in props:
+    
+      if property.status == Property._PUBLISHED and property.status != newstatus:
+        on_public_property_deleted(str(property.realestate.key()))
+      
+      property.status  = newstatus
+      property.save(build_index=False)
       
       properties.append(property)
     
@@ -94,8 +101,26 @@ class Publish(BackendHandler):
   @need_auth(code=404)
   def get(self, **kwargs):
     
-    property = self.mine_or_404(kwargs['key'])
-    property.status = Property._PUBLISHED if int(kwargs['yes']) else Property._NOT_PUBLISHED
+    property    = self.mine_or_404(kwargs['key'])
+    
+    new_status  = Property._PUBLISHED if int(kwargs['yes']) else Property._NOT_PUBLISHED
+    
+    rs_key      = self.get_realestate_key()
+    # chequeo que está habilitado para publicar más propiedades.
+    if new_status != property.status:
+      if new_status == Property._PUBLISHED:
+        if not realestate_can_add_public_property(rs_key, self.plan_max_properties):
+          error_msg = u'Ha publicado el límite permitido para su plan (%d propiedades/avisos). Comuníquese con Ultraprop si desea publicar más propeidades o deshabilite otra propiedad para publicar ésta.' % get_realestate_public_properties(rs_key)
+          
+          self.response.status = '403 '
+          return self.response.write(error_msg)
+        else:
+          on_public_property_added(rs_key)
+      else:
+        on_public_property_deleted(rs_key)
+    
+    property.status = new_status
+    
     property.save(build_index=False)
     
     # Updateamos y mandamos a rebuild el indice si es necesario
@@ -186,6 +211,15 @@ class NewEdit(BackendHandler):
     # Solo lo hacemos si se require y la propiedad esta publicada
     # Si se modifica una propiedad BORRADA o DESACTIVADA no se toca el indice por que no existe
     friend_realestates_keys = property.realestate_friend_keys()
+    
+    if not editing:
+      if not realestate_can_add_public_property(self.get_realestate_key(), self.plan_max_properties):
+        status          = Property._NOT_PUBLISHED
+      else:
+        status          = Property._PUBLISHED
+        on_public_property_added(self.get_realestate_key())
+      property.status = status
+        
     def savetxn():
       result = property.save(build_index=True, friends=friend_realestates_keys) if editing else property.put(friends=friend_realestates_keys)
       if result != 'nones' and property.status == Property._PUBLISHED:

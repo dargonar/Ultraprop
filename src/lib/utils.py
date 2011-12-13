@@ -191,9 +191,29 @@ class BackendMixin(object):
     self.session['account.realestate.status']       = user.realestate.status
     self.session['account.roles']                   = map(lambda s: s.strip(), user.rol.split(','))
     
+    self.session['account.plan.max_properties']               = user.realestate.plan.max_properties
+    self.session['account.plan.allow_realestatefriendship']   = user.realestate.plan.allow_realestatefriendship
+    self.session['account.plan.allow_website']                = user.realestate.plan.allow_website
+    
     if self.is_ultraadmin:
       self.session['account.realestate.status'] = RealEstate._ENABLED
-      
+  
+  # ===================================================================================== #
+  # Realestate's Plan attributes and accesors                                             #
+  @property
+  def plan_max_properties(self):
+    return self.session['account.plan.max_properties']
+  
+  @property
+  def plan_allow_realestatefriendship(self):
+    return self.session['account.plan.allow_realestatefriendship']==1
+  
+  @property
+  def plan_allow_website(self):
+    return self.session['account.plan.allow_website']==1
+  
+  # ===================================================================================== #
+  
   @property
   def is_enabled(self):
     return self.is_logged and 'account.enabled' in self.session and self.session['account.enabled'] != 0

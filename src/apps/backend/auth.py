@@ -95,7 +95,7 @@ class SignUp(BackendHandler):
     kwargs['planes']        = Plan.all().filter('online = ',1).filter('enabled = ',1).order('amount').fetch(3)
     kwargs['selected_plan'] = None
     
-    plan = get_or_404(kwargs.get('plan'))
+    plan = get_or_404(self.request.POST.get('plan'))
     if not plan:
       kwargs['form']       = self.form
       kwargs['flash']      = self.build_error('Seleccione un plan vigente.')

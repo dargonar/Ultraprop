@@ -726,7 +726,7 @@ function init_property_list(property_new_url)
           });
         },
         error: function(xml, txt, err) {
-          alert('error');
+          alert('ERROR: '+xml.responseText);
           $(this).removeClass('disable');
         } 
       }); 

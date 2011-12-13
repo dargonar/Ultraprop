@@ -459,6 +459,7 @@ class Property(GeoModel):
   def put(self, friends):
     self.calculate_inner_values()
     self.append_friends(friends)
+    
     super(Property, self).put()
     return 'need_rebuild'
   
