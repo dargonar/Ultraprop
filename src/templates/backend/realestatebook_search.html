@@ -41,33 +41,6 @@ $(document).ready(function() {
   {% set rsbook_menu = 'search'%}
   {% include 'backend/includes/realestatebook_navbar.html' %}
   <div class="ln-letters" id="masterpic-nav">
-    <!--a href="#" class="all">TODO</a>
-    <a href="#" class="a">A</a>
-    <a href="#" class="b">B</a>
-    <a href="#" class="c">C</a>
-    <a href="#" class="d">D</a>
-    <a href="#" class="e">E</a>
-    <a href="#" class="f">F</a>
-    <a href="#" class="g">G</a>
-    <a href="#" class="h">H</a>
-    <a href="#" class="i">I</a>
-    <a href="#" class="j">J</a>
-    <a href="#" class="k">K</a>
-    <a href="#" class="l">L</a>
-    <a href="#" class="m">M</a>
-    <a href="#" class="n">N</a>
-    <a href="#" class="o">O</a>
-    <a href="#" class="p">P</a>
-    <a href="#" class="q">Q</a>
-    <a href="#" class="r">R</a>
-    <a href="#" class="s">S</a>
-    <a href="#" class="t">T</a>
-    <a href="#" class="u">U</a>
-    <a href="#" class="v">V</a>
-    <a href="#" class="w">W</a>
-    <a href="#" class="x">X</a>
-    <a href="#" class="y">Y</a>
-    <a href="#" class="z ln-last">Z</a-->
   </div>
 
   {% if realestates|length>0 %}
@@ -106,11 +79,15 @@ $(document).ready(function() {
               {% if realestate_key in friend_req_sent %}
                 Pendiente de aprobación.
               {% else %}
-                {% if realestate_key in denied %}
-                  Solicitud rechazada.<br/>
-                  <input type="checkbox" class="rskey" key="{{realestate_key}}"/> <b>Agregar a mi Red</b>
+                {% if realestate.plan.allow_realestatefriendship!=1 %}
+                  <i style="color:#090909;" title="Esta inmobiliria no está suscripta al servicio de Red ULTRAPROP.">No suscripto a este servicio.</i>
                 {% else %}
-                  <input type="checkbox" class="rskey" key="{{realestate_key}}"/> <b>Agregar a mi Red</b>
+                  {% if realestate_key in denied %}
+                    Solicitud rechazada.<br/>
+                    <input type="checkbox" class="rskey" key="{{realestate_key}}"/> <b>Agregar a mi Red</b>
+                  {% else %}
+                    <input type="checkbox" class="rskey" key="{{realestate_key}}"/> <b>Agregar a mi Red</b>
+                  {% endif %}
                 {% endif %}
               {% endif %}
             {% endif %}
