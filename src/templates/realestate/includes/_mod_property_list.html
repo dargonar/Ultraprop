@@ -5,7 +5,8 @@
    		<a class="link" href="{{url_for('realestate/ficha', key=property.key()|string, oper=oper_id|string , realestate=realestate.key()|string)}}">Ver ficha &raquo;</a>
     </div>
     <ul class="data">
-        <li class="picture">
+        <li class="picture" style="position:relative;">
+            {{ property|operationify(0) }}
             <!--wh="147,110"-->
             {% set image_src = (property.main_image_url+'=s147') if property.main_image_url else '/img/picturebox/nophoto_150x113.jpg' %} 
             <a href="{{url_for('realestate/ficha', key=property.key()|string, oper=oper_id|string, realestate=realestate.key()|string)}}">

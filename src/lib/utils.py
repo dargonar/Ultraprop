@@ -9,7 +9,7 @@ from taskqueue import Mapper
 from webapp2 import abort, cached_property, RequestHandler, Response, HTTPException, uri_for as url_for, get_app
 from webapp2_extras import jinja2, sessions, json
 
-from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify, do_headlinify, do_slugify, do_operationfy, do_totalareafy, do_expensasfy, do_add_days, do_realestate_linkfy, do_ownerify
+from myfilters import do_currencyfy, do_statusfy, do_pricefy, do_addressify, do_descriptify, do_headlinify, do_slugify, do_operationfy, do_totalareafy, do_expensasfy, do_add_days, do_realestate_linkfy, do_ownerify, do_operationify
 
 from models import Link, Property, RealEstate
 # ================================================================================ #
@@ -191,9 +191,29 @@ class BackendMixin(object):
     self.session['account.realestate.status']       = user.realestate.status
     self.session['account.roles']                   = map(lambda s: s.strip(), user.rol.split(','))
     
+    self.session['account.plan.max_properties']               = user.realestate.plan.max_properties
+    self.session['account.plan.allow_realestatefriendship']   = user.realestate.plan.allow_realestatefriendship
+    self.session['account.plan.allow_website']                = user.realestate.plan.allow_website
+    
     if self.is_ultraadmin:
       self.session['account.realestate.status'] = RealEstate._ENABLED
-      
+  
+  # ===================================================================================== #
+  # Realestate's Plan attributes and accesors                                             #
+  @property
+  def plan_max_properties(self):
+    return self.session['account.plan.max_properties']
+  
+  @property
+  def plan_allow_realestatefriendship(self):
+    return self.session['account.plan.allow_realestatefriendship']==1
+  
+  @property
+  def plan_allow_website(self):
+    return self.session['account.plan.allow_website']==1
+  
+  # ===================================================================================== #
+  
   @property
   def is_enabled(self):
     return self.is_logged and 'account.enabled' in self.session and self.session['account.enabled'] != 0
@@ -259,6 +279,7 @@ class Jinja2Mixin(object):
     env.filters['realestate_linkfy']  = do_realestate_linkfy
     env.filters['add_days']           = do_add_days
     env.filters['ownerify']           = do_ownerify
+    env.filters['operationify']       = do_operationify
     env.globals['url_for']            = self.uri_for
     env.globals['app_version_id']     = self.app.config['ultraprop']['app_version_id']
     env.globals['app_version']        = self.app.config['ultraprop']['app_version']

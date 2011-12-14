@@ -23,11 +23,20 @@ class Plan(db.Model):
   _EMI_MONTHLY = 3
 
   name                = db.StringProperty()
-  description         = db.StringProperty()
+  description         = db.StringProperty(indexed=False)
+  slug                = db.StringProperty()
   type                = db.IntegerProperty()
   amount              = db.IntegerProperty()
-  free_days           = db.IntegerProperty()
-
+  free_days           = db.IntegerProperty(indexed=False)
+  payd_days           = db.IntegerProperty(indexed=False) # Si es _ONE_TIME
+  online              = db.IntegerProperty() # Lo mostramos en SignUp
+  enabled             = db.IntegerProperty() # Indica si permite nuevas inmobilirias con este plan
+  html                = db.TextProperty(indexed=False)
+  
+  max_properties              = db.IntegerProperty(indexed=False)
+  allow_realestatefriendship  = db.IntegerProperty(indexed=False)
+  allow_website               = db.IntegerProperty(indexed=False)
+  
   def __repr__(self):
     return 'PLAN: ' + self.name
     
@@ -78,7 +87,7 @@ class RealEstate(db.Model):
   updated_at          = db.DateTimeProperty(auto_now=True)
   created_at          = db.DateTimeProperty(auto_now_add=True)
   
-  enable              = db.IntegerProperty() #--borrar--
+  enable              = db.IntegerProperty()
   status              = db.IntegerProperty()
   managed_domain      = db.IntegerProperty()
   is_tester           = db.BooleanProperty()
@@ -90,8 +99,14 @@ class RealEstate(db.Model):
   last_invoice        = db.DateProperty()
   last_login          = db.DateTimeProperty()
   
+  matricula_martillero                = db.StringProperty()
+  matricula_martillero_owner_fullname = db.StringProperty()
+  matricula_martillero_owner_dni      = db.StringProperty()
+  matricula_martillero_enabled        = db.IntegerProperty()
+  
   def is_in_trial(self):
     return self.status==RealEstate._TRIAL
+  
   @staticmethod
   def public_attributes():
     """Returns a set of simple attributes on Immovable Property entities."""
@@ -192,7 +207,9 @@ class Property(GeoModel):
   street_number           = db.IntegerProperty(indexed=False)
   
   zip_code                = db.StringProperty(indexed=False)
-  	
+  
+  cardinal_direction      = db.StringProperty(indexed=False)
+  
   floor                   = db.StringProperty(indexed=False)
   building_floors	        = db.IntegerProperty(indexed=False)
   	
@@ -308,11 +325,20 @@ class Property(GeoModel):
         # Bueno	        5
         # Muy bueno	    6
         # Excelente	    7
+  
+  _OPER_STATE_NADA              = 1
+  _OPER_STATE_VENDIDO           = 2
+  _OPER_STATE_ALQUILADO         = 4
+  _OPER_STATE_RESERVADO         = 8
+  _OPER_STATE_SUSPENDIDO        = 16
+  _OPER_STATE_DE_POZO           = 32
+  _OPER_STATE_APTO_CREDITO      = 64
+  _OPER_STATE_IMPECABLE         = 128
+  _OPER_STATE_INVERSION         = 256
+  _OPER_STATE_OPORTUNIDAD       = 512
+  
   prop_operation_state_id	      = db.IntegerProperty(indexed=False)
-        # Disponible	  1
-        # Reservada	    2
-        # Vendida	      3
-        # Alquilada	    4
+  
   prop_owner_id	                = db.IntegerProperty(indexed=False)
         # Inmobiliaria	1
         # Dueño directo	2
@@ -433,6 +459,7 @@ class Property(GeoModel):
   def put(self, friends):
     self.calculate_inner_values()
     self.append_friends(friends)
+    
     super(Property, self).put()
     return 'need_rebuild'
   

@@ -66,32 +66,25 @@ class Logout(BackendHandler):
     return self.redirect_to('backend/auth/login')
     
 class SignUp(BackendHandler):
-  promo = 'promo-3-meses'
-  #Edit/New
+  
   def get(self, **kwargs):
-    
     if self.is_logged:
       return self.redirect_to('property/list')
     
-    kwargs['form']   = self.form
-    if 'promo' in kwargs and kwargs.get('promo')==self.promo:
-      # ...el de la promo
-      kwargs['promo'] = self.promo
-      plan  = Plan.all().filter('name','promo-3-meses').get()
-      if not plan:
-        p = Plan()
-        p.name = 'promo-3-meses'
-        p.description = u'Campaña lanzamiento $79'
-        p.type = Plan._MONTHLY
-        p.amount = 79
-        p.free_days = 90
-        p.save()
-        plan = p
-      kwargs['plan'] = plan
-    else:
-      # ...o plan por defecto
-      kwargs['plan'] = Plan.all().filter('name','promo-lanzamiento').get()
-      kwargs['promo'] = None
+    kwargs['form']    = self.form
+    no_promo = True
+    if 'promo' in kwargs:
+      plan  = Plan.all().filter('slug',kwargs['promo']).get()
+      if plan and plan.enabled==1:
+        kwargs['promo']   = plan
+        kwargs['planes']  = None
+        no_promo = False
+        
+    if no_promo:
+      kwargs['planes']  = Plan.all().filter('online = ',1).filter('enabled = ',1).order('amount').fetch(3)
+      kwargs['promo']   = None
+    
+    kwargs['selected_plan'] = None
     
     return self.render_response('backend/signup.html', **kwargs)
   
@@ -99,30 +92,21 @@ class SignUp(BackendHandler):
   def post(self, **kwargs):
     self.request.charset  = 'utf-8'
     
-    plan = None
-    # Aca traemos el plan...
-    if 'promo' in kwargs and kwargs.get('promo')==self.promo:
-      # ...el de la promo
-      plan = Plan.all().filter('name','promo-3-meses').get()
-      if not plan:
-        p = Plan()
-        p.name = 'promo-3-meses'
-        p.description = u'Campaña lanzamiento $79'
-        p.type = Plan._MONTHLY
-        p.amount = 79
-        p.free_days = 90
-        p.save()
-        plan = p
-    else:
-      # ...o plan por defecto
-      plan = Plan.all().filter('name','promo-lanzamiento').get()
-      
+    kwargs['planes']        = Plan.all().filter('online = ',1).filter('enabled = ',1).order('amount').fetch(3)
+    kwargs['selected_plan'] = None
+    
+    plan = get_or_404(self.request.POST.get('plan'))
+    if not plan:
+      kwargs['form']       = self.form
+      kwargs['flash']      = self.build_error('Seleccione un plan vigente.')
+      return self.render_response('backend/signup.html', **kwargs)
+    
     form_validated = self.form.validate()
     if not form_validated:
-      kwargs['form']         = self.form
+      kwargs['form']          = self.form
       if self.form.errors:
-        kwargs['flash']      = self.build_error('Verifique los datos ingresados:')# + '<br/>'.join(reduce(lambda x, y: str(x)+' '+str(y), t) for t in self.user_form.errors.values()))
-      kwargs['plan']         = plan
+        kwargs['flash']       = self.build_error('Verifique los datos ingresados.')
+      kwargs['selected_plan'] = str(plan.key())
       return self.render_response('backend/signup.html', **kwargs)
     
     # Generamos la inmo en estado TRIAL y le ponemos el Plan

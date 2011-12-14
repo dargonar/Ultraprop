@@ -34,6 +34,7 @@ function init_index()
     }
   }
   
+  //if(jQuery(window).width()<=1024)
   if(screen.width<=1024)
   {
     is1024w_or_less=true;

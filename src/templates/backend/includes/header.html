@@ -19,11 +19,11 @@
       {% if is_logged is defined and is_logged %}
 
       {% else %}
-      <li style="border-left:none;"><a href="{{url_for('frontend/map')}}" target="_blank" title="Ir a búsqueda por mapa">Inicio</a></li>
+        <li style="border-left:none;"><a href="{{url_for('frontend/map')}}" target="_blank" title="Ir a búsqueda por mapa">Inicio</a></li>
       {% endif %}
       
       {% if not is_logged %}
-        <li class="btnLight"><a href="{{url_for('backend/auth/login')}}" title="Iniciar sesión / Registrar Inmobiliaria">Publicar Propiedades</a></li>
+        <li class="btnLight"><a href="{{url_for('backend/auth/login')}}" title="Iniciar sesión / Registrar Inmobiliaria">Soy Inmobiliria</a></li>
       {% endif %}
       
       

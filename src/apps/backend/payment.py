@@ -115,6 +115,8 @@ class InvoicerMapper(Mapper):
         invoice.trx_id     = create_transaction_number(next_date, re)
         invoice.amount     = re.plan.amount
         invoice.state      = Invoice._NOT_PAID
+        if re.plan.amount is None or re.plan.amount<=0:
+          invoice.state      = Invoice._INBANK
         invoice.date       = next_date
         invoice.put()
         

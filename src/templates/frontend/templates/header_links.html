@@ -9,7 +9,7 @@
 	{% if is_logged is defined and is_logged %}
     	<li class="btnLight"><a href="{{ url_for('property/list') }}" title="Publicar propiedades">Soy Inmobiliaria</a></li>
     {% else %}
-    	<li class="btnLight"><a href="{{ url_for('backend/auth/login') }}" title="Publicar propiedades">Publicar propiedades</a></li>
+    	<li class="btnLight"><a href="{{ url_for('backend/auth/login') }}" title="Publicar propiedades">Soy Inmobiliaria</a></li>
     {% endif %}
     <li style="border-left:none;"><a href="{{url_for('frontend/red')}}" title="Listado de inmobiliarias que forman parte de la Red ULTRAPROP en La Plata">Inmobiliarias de La Plata</a></li>
     <li style=""><a href="mailto:ayuda@ultraprop.com.ar" title="Ayuda">Ayuda</a></li>

@@ -4,7 +4,8 @@
     {% set dir =  '%s %s'|format(property.street_name,property.street_number) %}
     <p title="{{dir}}" style="margin-bottom:8px;">{{ dir|truncate(length=22, killwords=True) if (dir|length>25) else dir  }}</p>
     <!--div class="pic" style="width:142px;position:relative;clear:both;display: table-cell;vertical-align: middle;"-->
-    <div>
+    <div style="position:relative">
+      {{ property|operationify(0) }}
       <a href="{{url_for('realestate/ficha', key=property.key()|string, oper=property.prop_operation_id|string, realestate=realestate.key()|string)}}">
         <img class="pic" {% if property.main_image_url %} src="{{property.main_image_url}}=s147" {% else %} src="/img/picturebox/nophoto_150x113.jpg"  {% endif %} style="max-width:147px;max-height:110px;"  title="{{property|headlinify}}"/>
       </a>
