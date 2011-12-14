@@ -32,7 +32,7 @@ class Index(RealestateHandler, PropertyPaginatorMixin):
   
   def getto(self, realestate, **kwargs):
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
-    if realestate.status == RealEstate._NO_PAYMENT:
+    if realestate.status == RealEstate._NO_PAYMENT or realestate.plan.allow_website == 0:
       return self.render_response('realestate/disabled.html', realestate=realestate)
       
     kwargs['realestate']        = realestate
@@ -79,7 +79,7 @@ class Info(RealestateHandler):
     realestate = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
     
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
-    if realestate.status == RealEstate._NO_PAYMENT:
+    if realestate.status == RealEstate._NO_PAYMENT or realestate.plan.allow_website == 0:
       return self.render_response('realestate/disabled.html', realestate=realestate)
     
     kwargs['realestate']  = realestate
@@ -95,7 +95,7 @@ class Info(RealestateHandler):
     
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
     re = get_or_404(self.get_realestate_key_ex(realestate))
-    if re.status == RealEstate._NO_PAYMENT:
+    if re.status == RealEstate._NO_PAYMENT or re.plan.allow_website == 0:
       return self.render_response('realestate/disabled.html', realestate=re)
 
     if not self.form.validate():

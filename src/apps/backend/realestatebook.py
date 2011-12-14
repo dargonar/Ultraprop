@@ -27,6 +27,11 @@ class FriendRequest(BackendHandler):
   def post(self, **kwargs):
     
     realestate                    = get_or_404(self.get_realestate_key())
+    
+    if not self.plan_allow_realestatefriendship:
+      self.set_warning(u'Su plan no tiene acceso al servicio de la red de inmobiliarias de ULTRAPROP que le permite ampliar su oferta y compartirla con sus colegas. Comuníquese con Ultraprop si desea utilizarlo.')
+      return self.redirect_to('property/list')
+    
     friend_keys                   = self.request.POST['selected_friend_keys'].strip()
     if not friend_keys:
       self.set_warning(u'Seleccione al menos una inmobiliria.')
@@ -77,6 +82,11 @@ class FriendRequest(BackendHandler):
   def get(self, **kwargs):
     kwargs['mnutop']              = 'realestatebook'
     realestate                    = get_or_404(self.get_realestate_key())
+    
+    if not self.plan_allow_realestatefriendship:
+      self.set_warning(u'Su plan no tiene acceso al servicio de la red de inmobiliarias de ULTRAPROP que le permite ampliar su oferta y compartirla con sus colegas. Comuníquese con Ultraprop si desea utilizarlo.')
+      return self.redirect_to('property/list')
+    
     keys = [realestate.key()]
     
     friends       = RealEstateFriendship.all(keys_only=True).filter('realestates = ', str(realestate.key())).filter('state = ', RealEstateFriendship._ACCEPTED).fetch(1000)
@@ -178,6 +188,11 @@ class Requests(BackendHandler):
     
   def get2(self, **kwargs):
     realestate                    = get_or_404(self.get_realestate_key())
+    
+    if not self.plan_allow_realestatefriendship:
+      self.set_warning(u'Su plan no tiene acceso al servicio de la red de inmobiliarias de ULTRAPROP que le permite ampliar su oferta y compartirla con sus colegas. Comuníquese con Ultraprop si desea utilizarlo.')
+      return self.redirect_to('property/list')
+      
     kwargs['realestate']          = realestate
     kwargs['mnutop']              = 'realestatebook'
     
@@ -198,6 +213,11 @@ class Friends(BackendHandler):
   @need_auth()
   def get(self, **kwargs):
     realestate                    = get_or_404(self.get_realestate_key())
+    
+    if not self.plan_allow_realestatefriendship:
+      self.set_warning(u'Su plan no tiene acceso al servicio de la red de inmobiliarias de ULTRAPROP que le permite ampliar su oferta y compartirla con sus colegas. Comuníquese con Ultraprop si desea utilizarlo.')
+      return self.redirect_to('property/list')
+    
     kwargs['realestate']          = realestate
     kwargs['mnutop']              = 'realestatebook'
     kwargs['requests']            = RealEstateFriendship.all().filter('realestates = ', str(realestate.key())).filter('state = ', RealEstateFriendship._ACCEPTED).fetch(1000)
@@ -236,7 +256,13 @@ class Friends(BackendHandler):
   
   @need_auth()
   def share(self, **kwargs):
+  
     realestate                    = get_or_404(self.get_realestate_key())
+    
+    if not self.plan_allow_realestatefriendship:
+      self.set_warning(u'Su plan no tiene acceso al servicio de la red de inmobiliarias de ULTRAPROP que le permite ampliar su oferta y compartirla con sus colegas. Comuníquese con Ultraprop si desea utilizarlo.')
+      return self.redirect_to('property/list')
+      
     req                           = get_or_404(kwargs.get('key'))
     if str(realestate.key()) not in req.realestates:
       self.abort(500)
@@ -274,6 +300,11 @@ class Friends(BackendHandler):
   @need_auth()
   def unshare(self, **kwargs):
     realestate                    = get_or_404(self.get_realestate_key())
+    
+    if not self.plan_allow_realestatefriendship:
+      self.set_warning(u'Su plan no tiene acceso al servicio de la red de inmobiliarias de ULTRAPROP que le permite ampliar su oferta y compartirla con sus colegas. Comuníquese con Ultraprop si desea utilizarlo.')
+      return self.redirect_to('property/list')
+      
     req                           = get_or_404(kwargs.get('key'))
     if str(realestate.key()) not in req.realestates:
       self.abort(500)

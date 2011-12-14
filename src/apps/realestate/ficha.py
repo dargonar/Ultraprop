@@ -19,7 +19,7 @@ class Show(RealestateHandler):
     realestate = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
     
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
-    if realestate.status == RealEstate._NO_PAYMENT:
+    if realestate.status == RealEstate._NO_PAYMENT or realestate.plan.allow_website == 0:
       return self.render_response('realestate/disabled.html', realestate=realestate)
     
     kwargs['realestate']  = realestate

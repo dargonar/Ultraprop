@@ -15,7 +15,7 @@ class Search(RealestateHandler, PropertyPaginatorMixin):
     self.realestate = get_or_404( self.get_realestate_key_ex(kwargs.get('realestate')) )
 
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
-    if self.realestate.status == RealEstate._NO_PAYMENT:
+    if self.realestate.status == RealEstate._NO_PAYMENT or self.realestate.plan.allow_website == 0:
       return self.render_response('realestate/disabled.html', realestate=self.realestate)
       
     return self.get2(**kwargs)
@@ -25,7 +25,7 @@ class Search(RealestateHandler, PropertyPaginatorMixin):
     self.realestate = RealEstate.all().filter(' domain_id = ', kwargs.get('realestate_slug')).get()
 
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
-    if self.realestate.status == RealEstate._NO_PAYMENT:
+    if self.realestate.status == RealEstate._NO_PAYMENT or self.realestate.plan.allow_website == 0:
       return self.render_response('realestate/disabled.html', realestate=self.realestate)
       
     return self.get2(**kwargs)
@@ -35,7 +35,7 @@ class Search(RealestateHandler, PropertyPaginatorMixin):
     self.realestate = get_or_404( self.get_realestate_key_ex(kwargs.get('realestate')) )
       
     # Ponemos la pantalla de disabled si esta en NO_PAYMENT
-    if self.realestate.status == RealEstate._NO_PAYMENT:
+    if self.realestate.status == RealEstate._NO_PAYMENT or self.realestate.plan.allow_website == 0:
       return self.render_response('realestate/disabled.html', realestate=self.realestate)
     
     return self.post2(**kwargs)

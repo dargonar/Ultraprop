@@ -110,7 +110,7 @@ class Publish(BackendHandler):
     if new_status != property.status:
       if new_status == Property._PUBLISHED:
         if not realestate_can_add_public_property(rs_key, self.plan_max_properties):
-          error_msg = u'Ha publicado el límite permitido para su plan (%d propiedades/avisos). Comuníquese con Ultraprop si desea publicar más propeidades o deshabilite otra propiedad para publicar ésta.' % get_realestate_public_properties(rs_key)
+          error_msg = u'Ha publicado el límite permitido para su plan (%d propiedades/avisos). Comuníquese con Ultraprop si desea publicar más propiedades o deshabilite otra propiedad para publicar ésta.' % get_realestate_public_properties(rs_key)
           
           self.response.status = '403 '
           return self.response.write(error_msg)
