@@ -13,21 +13,22 @@ for plan in Plan.all().fetch(10):
   plan.is_final_price               = 0
   if plan.slug in ['plan-s','plan-m','plan-l']:
     plan.is_final_price               = 1
+    plan.online                       = 1
   plan.save()
   print plan.slug
 
 p = Plan()
 p.name  = 'Plan S'
 p.slug  = do_slugify(p.name)
-p.description = u'Hasta 15 avisos'
-p.html = u'Hasta <b>15</b> avisos'
+p.description = u'Avisos ilimitados'
+p.html = u'Avisos ilimitados'
 p.type = Plan._ONE_TIME
 p.amount = 0
 p.free_days = 0
 p.payd_days = 0
 p.online = 1
 p.enabled = 1
-p.max_properties               = 15
+p.max_properties               = -1
 p.allow_realestatefriendship   = 0
 p.allow_website                = 0
 p.save()
@@ -35,10 +36,10 @@ p.save()
 p = Plan()
 p.name = 'Plan M'
 p.slug  = do_slugify(p.name)
-p.description = u'Avisos ilimitados'
-p.html = u'Avisos ilimitados.<br/><b title="Página sin dominio propio">Página web</b>.'
+p.description = u'Avisos ilimitados y página web'
+p.html = u'Avisos ilimitados.<br/><b title="Con dominio propio www.su_inmobiliaria.com">Página web</b>.'
 p.type = Plan._MONTHLY
-p.amount = 120
+p.amount = 119
 p.free_days = 7
 p.payd_days = 0
 p.online = 1
@@ -52,9 +53,9 @@ p = Plan()
 p.name = 'Plan L'
 p.slug  = do_slugify(p.name)
 p.description = u'Página web y dominio de correo propio'
-p.html = u'Avisos ilimitados.<br/><b title="Con dominio propio www.su_inmobiliaria.com">Página web</b>.<br/> Correo propio.<br/><b title="Para ampliar su oferta inmobiliaria">Red inmobiliaria.</b>'
+p.html = u'Avisos ilimitados.<br/><b title="Con dominio propio www.su_inmobiliaria.com">Página web</b>.<br/><b title="Con dominio propio casilla@su_inmobiliaria.com"> Correo propio</b>.<br/><b title="Para ampliar su oferta inmobiliaria">Red inmobiliaria</b>.'
 p.type = Plan._MONTHLY
-p.amount = 200
+p.amount = 189
 p.free_days = 7
 p.payd_days = 0
 p.online = 1
