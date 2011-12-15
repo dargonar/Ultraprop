@@ -33,6 +33,8 @@ class Plan(db.Model):
   enabled             = db.IntegerProperty() # Indica si permite nuevas inmobilirias con este plan
   html                = db.TextProperty(indexed=False)
   
+  is_final_price      = db.IntegerProperty()
+  
   max_properties              = db.IntegerProperty(indexed=False)
   allow_realestatefriendship  = db.IntegerProperty(indexed=False)
   allow_website               = db.IntegerProperty(indexed=False)

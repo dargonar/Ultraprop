@@ -50,7 +50,7 @@
         <td class="date">{{invoice.date.strftime('%d/%m/%Y')}}</td>
         <td class="expiration">{{(invoice.date|add_days(15)).strftime('%d/%m/%Y')}}</td>
         
-        {% if plan.type == 3 %}
+        {% if plan.type == 3 or plan.is_final_price==1 %}
         <td class="amount">${{ invoice.amount | currencyfy}}</td>
         {% else %}
         <td class="amount">${{ (invoice.amount * 1.21) | currencyfy}}</td>

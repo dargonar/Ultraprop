@@ -10,7 +10,9 @@ for plan in Plan.all().fetch(10):
   plan.enabled                      = 1
   plan.html                         = plan.description
   plan.slug                         = do_slugify(plan.name)
-
+  plan.is_final_price               = 0
+  if plan.slug in ['plan-s','plan-m','plan-l']:
+    plan.is_final_price               = 1
   plan.save()
   print plan.slug
 
