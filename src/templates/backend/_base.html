@@ -45,6 +45,9 @@
 <ul class="SubMnuTop">
     <li><a href="{{url_for('property/list')}}"><span></span>Listado de propiedades</a></li>
     <li><a href="{{url_for('property/new')}}"><span></span>Cargar nueva propiedad</a></li>
+    {% if session['account.realestate.requested_properties_import'] != 1 %}
+      <li><a href="{{url_for('backend/realestate/request_import')}}" title="Si está publicando en otro portal inmobiliario, puede solicitar la carga automática de las propiedades en ULTRAPROP." ><span></span>Solicitar importación de propiedades</a></li>
+    {% endif %}
 </ul>
 {% endif %}
  

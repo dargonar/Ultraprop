@@ -104,6 +104,8 @@ class RealEstate(db.Model):
   matricula_martillero_owner_dni      = db.StringProperty()
   matricula_martillero_enabled        = db.IntegerProperty()
   
+  requested_properties_import         = db.IntegerProperty()
+  
   def is_in_trial(self):
     return self.status==RealEstate._TRIAL
   

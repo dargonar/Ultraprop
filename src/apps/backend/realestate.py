@@ -13,6 +13,8 @@ from google.appengine.ext import db
 from google.appengine.api import images 
 from google.appengine.api.images import get_serving_url
 
+from google.appengine.api import mail
+
 from backend_forms import RealEstateForm, validate_domain_id
 from utils import get_or_404, need_auth, BackendHandler
 from webapp2 import cached_property
@@ -97,7 +99,7 @@ class Edit(BackendHandler):
     
     realestate.save()
     
-    # Actualizo los cambios en la sesi�n.
+    # Actualizo los cambios en la sesión.
     self.do_login(db.get(self.get_user_key()))
     
     # Set Flash
@@ -109,3 +111,30 @@ class Edit(BackendHandler):
   @cached_property
   def form(self):
     return RealEstateForm(self.request.POST)
+    
+class RequestImport(BackendHandler):
+  #Edit/New
+  @need_auth()
+  def get(self, **kwargs):
+    
+    realestate                    = get_or_404(self.get_realestate_key())
+    if realestate.requested_properties_import==1:
+      self.set_ok(u'Su solicitud ya ha sido enviada. Pronto un agente se contactará con Usted. <br/>Muchas gracias.')
+      return self.redirect_to('property/list')
+    
+    mail_to='info@ultraprop.com.ar'
+    body=u'La inmobiliaria %s desea %s importar sus propiedades desde algún portal hacia ULTRAPROP. Key: %s; - Name:%s; - Url:%s' % (realestate.name, 'DES' if realestate.managed_domain==0 else '',str(realestate.key()), realestate.name, self.url_for( 'realestate/search', _full=True, realestate=str(realestate.key())))
+    mail.send_mail(sender="www.ultraprop.com.ar <info@ultraprop.com.ar>", 
+                 to       = mail_to,
+                 subject  = "ULTRAPROP: Una inmobiliaria solicita importar propiedades en ULTRAPROP",
+                 body     = body)
+    
+    realestate.requested_properties_import=1
+    realestate.save()
+
+    # Actualizo los cambios en la sesión.
+    self.do_login(db.get(self.get_user_key()))
+    
+    # Set Flash
+    self.set_ok(u'Su solicitud ha sido remitida. Un agente de ULTRAPROP se comunicará en breve con Usted.' )
+    return self.redirect_to('property/list')

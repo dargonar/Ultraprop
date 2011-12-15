@@ -195,6 +195,8 @@ class BackendMixin(object):
     self.session['account.plan.allow_realestatefriendship']   = user.realestate.plan.allow_realestatefriendship
     self.session['account.plan.allow_website']                = user.realestate.plan.allow_website
     
+    self.session['account.realestate.requested_properties_import'] = user.realestate.requested_properties_import
+    
     if self.is_ultraadmin:
       self.session['account.realestate.status'] = RealEstate._ENABLED
   

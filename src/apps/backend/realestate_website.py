@@ -78,7 +78,7 @@ class Edit(BackendHandler):
     self.do_login(db.get(self.get_user_key()))
     
     # Set Flash
-    self.set_ok('configuración de Sitio Web guardado satisfactoriamente. Un agente de ULTRAPROP se comunicará con Ud. en breve.' )
+    self.set_ok('Configuración de Sitio Web guardado satisfactoriamente. Un agente de ULTRAPROP se comunicará con Ud. en breve.' )
     return self.redirect_to('backend/realestate_website/edit')
   
   @need_auth()

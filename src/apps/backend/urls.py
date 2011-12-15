@@ -50,6 +50,7 @@ def get_rules():
         
         PathPrefixRoute('/realestate', [
           Route('/edit'                  , name='backend/realestate/edit'             , handler='apps.backend.realestate.Edit'),
+          Route('/request_import'        , name='backend/realestate/request_import'   , handler='apps.backend.realestate.RequestImport'),
         ]),
         
         PathPrefixRoute('/website', [
