@@ -30,11 +30,11 @@ $(document).ready(function() {
   {% if loop.first %} 
   
 	<div id="sort_by">
+    <div class="button add" id="nprop"><a href="{{url_for('property/new')}}"></a>Nueva Propiedad</div>
     <div class="sortbox">
        <label>Ordenar por</label> 
        {{ form.sort(id='fake_sort') }}
     </div>
-    <div class="button add" id="nprop"><a href="{{url_for('property/new')}}"></a>Nueva Propiedad</div>
   </div>
   <form id="remove" method="POST" action="{{url_for('property/bulkremove')}}">
   <input id="newstatus" type="hidden" name="newstatus" value="0"/>

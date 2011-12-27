@@ -1979,13 +1979,12 @@ body.backend .list_box:hover .actions {
 	display:block;
 }
 body.backend #sort_by {
-	padding: 8px;
+	padding:12px 8px 12px 0;
 	overflow: hidden;
-	height: 32px;
+	height: 32px; 
 }
 #sort_by .sortbox {
-	float:left;
-	width:300px;
+	float:right;
 	margin-top:10px;
 }
 body.backend .uibutton-toolbar.picture .actions {
@@ -2210,11 +2209,8 @@ body.backend .button {
 	cursor:pointer;
 }
 body.backend .button.add {
-	float:right;
-	/*	padding:3px 6px; */ 
-	padding:6px 11px;
-	/*	height:20px; 
-	line-height:22px;*/	
+	float:left;
+	padding:8px 11px;
 	font-size: 14px;
 }
 body.backend .button.add a {
