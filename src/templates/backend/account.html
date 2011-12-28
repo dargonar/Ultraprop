@@ -71,7 +71,7 @@
             <input type="hidden" name="item_name_1" value="Abono mensual {{invoice.date.strftime('%m/%Y')}}" />
             <input type="hidden" name="item_quantity_1" value="1" /> 
 
-            {% if plan.type == 3 %}
+            {% if plan.type == 3 or plan.is_final_price==1 %}
             <input type="hidden" name="item_ammount_1" value="{{"%.02f"|format(invoice.amount)}}" />
             {% else %}
             <input type="hidden" name="item_ammount_1" value="{{"%.02f"|format(invoice.amount * 1.21)}}" />
@@ -131,7 +131,7 @@
             {% if 1==0 %}
               <b>$0.00</b>
             {% else %}
-              {% if plan.type == 3 %}
+              {% if plan.type == 3 or plan.is_final_price==1 %}
               <b>${{total_debt|float|currencyfy}}</b>
               {% else %}
               <b>${{(1.21*total_debt)|float|currencyfy}}</b>

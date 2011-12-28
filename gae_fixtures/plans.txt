@@ -31,6 +31,7 @@ p.enabled = 1
 p.max_properties               = -1
 p.allow_realestatefriendship   = 0
 p.allow_website                = 0
+p.is_final_price               = 1
 p.save()
 
 p = Plan()
@@ -39,7 +40,7 @@ p.slug  = do_slugify(p.name)
 p.description = u'Avisos ilimitados y página web'
 p.html = u'Avisos ilimitados.<br/><b title="Con dominio propio www.su_inmobiliaria.com">Página web</b>.'
 p.type = Plan._MONTHLY
-p.amount = 119
+p.amount = 99
 p.free_days = 7
 p.payd_days = 0
 p.online = 1
@@ -47,6 +48,7 @@ p.enabled = 1
 p.max_properties               = -1
 p.allow_realestatefriendship   = 0
 p.allow_website                = 1
+p.is_final_price               = 1
 p.save()
 
 p = Plan()
@@ -55,7 +57,7 @@ p.slug  = do_slugify(p.name)
 p.description = u'Página web y dominio de correo propio'
 p.html = u'Avisos ilimitados.<br/><b title="Con dominio propio www.su_inmobiliaria.com">Página web</b>.<br/><b title="Con dominio propio casilla@su_inmobiliaria.com"> Correo propio</b>.<br/><b title="Para ampliar su oferta inmobiliaria">Red inmobiliaria</b>.'
 p.type = Plan._MONTHLY
-p.amount = 189
+p.amount = 119
 p.free_days = 7
 p.payd_days = 0
 p.online = 1
@@ -63,32 +65,6 @@ p.enabled = 1
 p.max_properties               = -1
 p.allow_realestatefriendship   = 1
 p.allow_website                = 1
+p.is_final_price               = 1
 p.save()
 
---
-#from models import *
-
-#p = Plan()
-#p.name = 'promo-lanzamiento'
-#p.description = u'Promoción lanzamiento $99+iva'
-#p.type = Plan._MONTHLY
-#p.amount = 99
-#p.free_days = 30
-#p.save()
-
-# Nuevo para tuti
-#p = Plan()
-#p.name = 'promo-lanzamiento-2'
-#p.description = u'Promoción lanzamiento $79+iva'
-#p.type = Plan._MONTHLY
-#p.amount = 79
-#p.free_days = 30
-#p.save()
-
-#invoice = Invoice()
-#invoice.realestate = realEstate
-#invoice.trx_id     = '%sI%d' % ( first_date.strftime('%Y%m'), realEstate.key().id() )
-#invoice.amount     = realEstate.plan.amount
-#invoice.state      = Invoice._NOT_PAID
-#invoice.date       = first_date
-#invoice.put()

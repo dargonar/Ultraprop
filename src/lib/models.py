@@ -28,9 +28,9 @@ class Plan(db.Model):
   type                = db.IntegerProperty()
   amount              = db.IntegerProperty()
   free_days           = db.IntegerProperty(indexed=False)
-  payd_days           = db.IntegerProperty(indexed=False) # Si es _ONE_TIME
-  online              = db.IntegerProperty() # Lo mostramos en SignUp
-  enabled             = db.IntegerProperty() # Indica si permite nuevas inmobilirias con este plan
+  payd_days           = db.IntegerProperty(indexed=False) # Si es _ONE_TIME.
+  online              = db.IntegerProperty() # Lo mostramos en SignUp.
+  enabled             = db.IntegerProperty() # Indica si permite que nuevas inmobiliarias utilicen este plan.
   html                = db.TextProperty(indexed=False)
   
   is_final_price      = db.IntegerProperty()
