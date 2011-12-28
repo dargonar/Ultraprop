@@ -1369,7 +1369,7 @@ body.frontend_search .btnMoreProps {
 	line-height:28px; 
 }
 
-.btnMoreProps_list a.disable{
+.btnMoreProps_list a.disabled{
 	color: #86B66A; 
 	*color: #cccccc; 
 	cursor:default; 
@@ -1386,11 +1386,11 @@ body.frontend_search .btnMoreProps {
 }
 
 .btnMoreProps_list a span {background:url("/img/ultraprop_ui_sprite.png") no-repeat; padding:6px;}
-.btnMoreProps_list a.prev span {background-position: -625px -374px;}
+.btnMoreProps_list a.prev span {background-position: -624px -374px;}
 .btnMoreProps_list a.next span {background-position: -631px -374px;}
 
-.btnMoreProps_list a.prev.disable span {background-position: -625px -402px;}
-.btnMoreProps_list a.next.disable span {background-position: -631px -402px;}
+.btnMoreProps_list a.prev.disabled span {background-position: -624px -402px;}
+.btnMoreProps_list a.next.disabled span {background-position: -631px -402px;}
 
 
 body.frontend_search .btnMoreProps.prev {

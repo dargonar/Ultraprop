@@ -470,6 +470,9 @@ function doSearch() {
     cursorsArray = new Array();
     $('#btnMoreProps_next').attr('disabled','disabled');
     $('#btnMoreProps_prev').attr('disabled','disabled');
+    
+    $('#btnMoreProps_list_next').attr('disabled','disabled');
+    $('#btnMoreProps_list_prev').attr('disabled','disabled');
   }
   
   if(markers_coords!=null)
@@ -624,24 +627,43 @@ function load_json_result(obj, cursorStep, load_html){
         else
           cursorsArray[cursorPosition][-1]=null;
       }
-      $('#btnMoreProps_next').attr('disabled', ((cursorObject==null)?'disabled':''));
-      $('#btnMoreProps_next').attr('title',((cursorObject==null)?'':'Ver página '+ (cursorPosition+2)));
+      
+      if(cursorObject==null)
+      {
+        $('#btnMoreProps_next').attr('disabled', 'disabled');
+        $('#btnMoreProps_next').attr('title','');
+        $('#btnMoreProps_list_next').addClass('disabled');
+        $('#btnMoreProps_list_next').attr('title','');
+      }
+      else{
+        $('#btnMoreProps_next').attr('disabled', '');
+        $('#btnMoreProps_next').attr('title','Ver página '+ (cursorPosition+2));
+        $('#btnMoreProps_list_next').removeClass('disabled');
+        $('#btnMoreProps_list_next').attr('title','Ver página '+ (cursorPosition+2));
+      }
+      
     }
     else
     {
       $('#btnMoreProps_next').attr('disabled', 'disabled');
       $('#btnMoreProps_next').attr('title','');
+      $('#btnMoreProps_list_next').addClass('disabled');
+      $('#btnMoreProps_list_next').attr('title','');
     }
     
     if(cursorsArray!=null && cursorsArray.length>1)
     {
       $('#btnMoreProps_prev').attr('disabled', '');
       $('#btnMoreProps_prev').attr('title', 'Ver página '+cursorPosition);
+      $('#btnMoreProps_list_prev').removeClass('disabled');
+      $('#btnMoreProps_list_prev').attr('title','Ver página '+ (cursorPosition));
     }
     else
     {
       $('#btnMoreProps_prev').attr('disabled', 'disabled');
       $('#btnMoreProps_prev').attr('title', '');
+      $('#btnMoreProps_list_prev').addClass('disabled');
+      $('#btnMoreProps_list_prev').attr('title','');
     }
     
     if(load_html)
