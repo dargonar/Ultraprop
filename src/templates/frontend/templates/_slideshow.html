@@ -1,18 +1,36 @@
+{% block headscript %}
+    <!--script type="text/javascript" src="/js/jquery.lightbox-0.5.js?rand='+Math.random();"></script-->
+    <script type="text/javascript" src="/js/jquery.lightbox-0.5.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/jquery.lightbox-0.5.css" media="screen" />
+
+    <script type="text/javascript">
+    $(function() {
+				$('#thumblist a').lightBox();
+    });
+    </script>
+{% endblock %}
+
+
 <div id="gallery" class="ad-gallery" style="position:relative;">
   {{ property|operationify(1) }}
+  
   <div class="ad-image-wrapper"></div>
   
   <div class="ad-controls"></div>
   <div class="ad-nav">
     <div class="ad-thumbs">
-      <ul class="ad-thumb-list">
+      <ul id="thumblist" class="ad-thumb-list">
         {% set _width  = 616 %}
         {% set _height = 462 %}
         {% for img in images %}
           {% if img.title %}
           <li>
             <a href="{{img.title}}=s{{_width}}" wh="_width,_height">
-              <img id="image_{{loop.index}}" src="{{img.title}}=s72" wh="72,55" style="max-height:55px;" title="" alt="" class="popupimg class{{loop.index}}"> 
+              <!--img id="image_{{loop.index}}" src="{{img.title}}=s72" wh="72,55" style="max-height:55px;" title="" alt="" class="popupimg class{{loop.index}}"-->
+              <div class="pic_zoom"></div>
+              <div id="imgbox" style="display: table-cell; vertical-align: middle; text-align:center; height:63px">
+								<img id="image_{{loop.index}}" src="{{img.title}}=s63-c" style="max-width:83px;max-height:63px;" wh="83,63" title="" class="popupimg class{{loop.index}}"> 
+              </div>
             </a>
           </li>
           {% endif %}
