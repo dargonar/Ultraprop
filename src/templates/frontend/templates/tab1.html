@@ -49,6 +49,11 @@
   {{ html_property_list if html_property_list is defined and html_property_list else ''}}
 </div>
 
+<div class="btnMoreProps_list" align="center";>
+  <a class="prev disable" href="return getPrev();"><span>&nbsp;</span>{{max_results}} Anteriores</a>
+  <a class="next" href="return getNext();();">{{max_results}} Siguientes<span>&nbsp;</span></a>
+</div>
+
 <div class="foot_prop_list">
     <div class="qty">Viendo <b id="tab_viewing_count">0</b> propiedades. Página <b id="tab_viewing_page">0</b>.</div>
      <a onclick="return onShowCompare();" href="#" id="btnCompare" class="btnCompare">Comparar</a>

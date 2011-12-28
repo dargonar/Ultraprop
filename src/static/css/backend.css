@@ -1247,13 +1247,26 @@ body.backend .btnBig a {
 	margin-left:0;
 	vertical-align:top;
 }
+/*body.backend .btnBig {
+	display:inline-block;
+ *display:block;
+ *width:180px;
+}*/
+
 body.backend .btnBig {
 	/*	width:150px;*/
 /*	display:inline;*/ 
 	display:inline-block;
  *display:block;
- *width:180px;
+ *width:230px;
+ *height:60px;
+ 
+	font-size: 22px; 
+	padding: 18px 34px 20px; 
+	*padding-top:0px; 
+	margin-top:0;
 }
+
 body.backend .btnBig.disable {
 	cursor:default;
 	opacity:0.5;
@@ -1382,7 +1395,8 @@ body.backend ul.tabs_admin li a {
 	color: #000000;
 	display: block;
 	padding: 0 20px;
-	text-decoration: none;
+	text-decoration: none; 
+	font-weight:bold;
 }
 body.backend ul.tabs_admin li.active {
 	background: none repeat scroll 0 0 #FFFFFF;
@@ -2146,18 +2160,25 @@ body.backend .btnIcon img {
 	border:0;
 }
 /* ///// MENU TOP y SUBMENU TOP ///// */
-body.backend .SubMnuTop {
-	/*	position:absolute;*/
+/*body.backend .SubMnuTop {
 	height:32px;
 	background:#fff;
-	/*	width:100%;*/
 	border-bottom:solid 1px #63A23C;
 	margin-top:1px;
 	-moz-box-shadow:0px 1px 1px #ccc;
 	-webkit-box-shadow:0px 1px 1px #ccc;
 	box-shadow:0px 1px 1px #ccc;
+}*/
+body.backend .SubMnuTop {
+    border-bottom: 1px solid #63A23C;
+		-moz-box-shadow:0px 1px 1px #ccc;
+		-webkit-box-shadow:0px 1px 1px #ccc;
+		box-shadow:0px 1px 1px #ccc;
+    height: 39px;
+    margin-top: 1px;
+    padding-left: 2px;
 }
-body.backend .SubMnuTop li {
+/*body.backend .SubMnuTop li {
 	float:left;
 	background:none !important;
 	border:none !important;
@@ -2167,20 +2188,82 @@ body.backend .SubMnuTop li {
 	-webkit-border-radius:0px !important;
 	border-radius:0px !important;
 	padding:0 !important;
+}*/
+body.backend .SubMnuTop li {
+	border: 1px solid #63A23C;
+	font-weight: bold;
+	height: 28px;
+	line-height: 28px;
+	margin: 4px 2px 0;
+	padding: 0 3px;
+	overflow: hidden;
+	
+/*	background: #f5f6f6;
+	background: -moz-linear-gradient(top,  #f5f6f6 0%, #e4e4e3 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f5f6f6), color-stop(100%,#e4e4e3)); 
+	background: -webkit-linear-gradient(top,  #f5f6f6 0%,#e4e4e3 100%);
+	background: -o-linear-gradient(top,  #f5f6f6 0%,#e4e4e3 100%);
+	background: -ms-linear-gradient(top,  #f5f6f6 0%,#e4e4e3 100%);
+	background: linear-gradient(top,  #f5f6f6 0%,#e4e4e3 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f6f6', endColorstr='#e4e4e3',GradientType=0 );*/
+
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+	
+	-moz-box-shadow:inset 0px 1px #fff;
+	-webkit-box-shadow:inset 0px 1px #fff;
+	box-shadow:inset 0px 1px #fff;
 }
+
+body.backend .SubMnuTop li:hover {
+/*	background: #f7f7f7;
+	background: -moz-linear-gradient(top,  #f7f7f7 0%, #eaeaea 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f7f7f7), color-stop(100%,#eaeaea));
+	background: -webkit-linear-gradient(top,  #f7f7f7 0%,#eaeaea 100%);
+	background: -o-linear-gradient(top,  #f7f7f7 0%,#eaeaea 100%);
+	background: -ms-linear-gradient(top,  #f7f7f7 0%,#eaeaea 100%);
+	background: linear-gradient(top,  #f7f7f7 0%,#eaeaea 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#eaeaea',GradientType=0 );*/ 
+	background:#F9F9F9;
+	
+	-moz-box-shadow:0 1px 1px #AAAAAA;
+	-webkit-box-shadow:0 1px 1px #AAAAAA;
+	box-shadow:0 1px 1px #AAAAAA;
+	
+	border: 1px solid #666666;
+}
+
+
 body.backend .SubMnuTop li a {
 	color:#333 !important;
-	padding:0 5px !important;
-	font-weight:normal !important;
+	/*padding:0 5px !important;*/
+	padding:0 8px !important;
+/*	font-weight:normal !important;*/
 }
 body.backend .SubMnuTop li a:hover {
 	color:#000 !important;
 }
-body.backend .SubMnuTop li a span {
+/*body.backend .SubMnuTop li a span {
 	background: url(/img/ultraprop_ui_sprite.png) no-repeat scroll -568px -36px transparent !important;
 	display:inline-block;
 	height:20px;
 	width:20px;
+}*/
+body.backend .SubMnuTop li a span.add {
+	background: url(/img/ultraprop_ui_sprite.png) no-repeat scroll -744px -217px transparent !important;
+	display:inline-block;
+	height:9px;
+	width:8px; 
+	margin-right:6px;
+}
+
+body.backend .SubMnuTop li a span.list {
+	background: url(/img/ultraprop_ui_sprite.png) no-repeat scroll -753px -217px transparent !important;
+	display:inline-block;
+	height:9px;
+	width:9px; 
+	margin-right:6px;
 }
 /* ///// BUTTON ///// */
 body.backend .button {

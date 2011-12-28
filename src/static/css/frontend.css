@@ -87,8 +87,7 @@ body.frontend_search .mainContent {
 	position:absolute;
 	z-index:800;
 	bottom:0px;
-	top:34px;
-/*	border-top:solid 1px #fff;*/
+	top:34px;/*	border-top:solid 1px #fff;*/
 }
 /* ///// TABS ///// */
 body.frontend_search ul.tabs {
@@ -161,14 +160,12 @@ body.frontend_search .tab_content {
 /* /// FILTERS /// */
 
 body.frontend_search #filters_bar {
-/*	height:34px;*/
+	/*	height:34px;*/
 	background:#CADF93;
-
 	border-bottom: 1px solid #63A23C;
 	font-size: 12px;
 	height: 33px;
 	overflow: hidden;
-	
 }
 body.frontend_search #filters_bar li {
 	border-right:solid 1px #F0F5E3;
@@ -694,7 +691,8 @@ body.frontend_search .prop_container {
 	overflow-y:auto;
 	/*top:57px;*/
   top:32px;
-	bottom:29px;
+	/*	bottom:29px;*/
+	bottom:60px;
 	left:0;
 	right:0;
 	position:absolute;
@@ -758,7 +756,7 @@ body.frontend_search .prop_content .prop_box .head .address, body.frontend_searc
 }
 body.frontend_search .prop_content .prop_box .head .address a, body.frontend_search .compare_box .head .address a {
 	text-decoration:none;
-/*	color:#3E8924;*/
+	/*	color:#3E8924;*/
 	color:#000000;
 	font-weight:bold;
 	font-size:13px;
@@ -1280,14 +1278,14 @@ body.frontend_search .viewBubble.pic {
 }
 body.frontend_search .buttonsSlide {
 	position:absolute;
-/*	overflow:hidden;*/
+	/*	overflow:hidden;*/
 	width:306px;
 	height:31px;
 	/*padding-top:99px;*/
 /*	top:99px;*/
 	/*left:13px;*/
   /*z-index:9998;*/
-  z-index:102; 
+  z-index:102;
 	cursor:default;
 }
 body.frontend_search .btnSlide {
@@ -1301,7 +1299,7 @@ body.frontend_search .btnSlide {
 }
 body.frontend_search .btnSlide.prev {
 	background-position:-511px -64px;
-/*	float:left;*/
+	/*	float:left;*/
 	
 	position: absolute;
 	top: 99px;
@@ -1309,9 +1307,9 @@ body.frontend_search .btnSlide.prev {
 }
 body.frontend_search .btnSlide.next {
 	background-position:-527px -64px;
-/*	float:right;*/
+	/*	float:right;*/
 	position: absolute;
-	top: 99px; 
+	top: 99px;
 	left:290px;
 	z-index: 999;
 }
@@ -1350,6 +1348,51 @@ body.frontend_search .btnMoreProps {
 	border:none;
 	font-family:Arial, Helvetica, sans-serif;
 }
+.btnMoreProps_list {
+	height:30px;
+	border-top:solid 1px #65A33A;
+	position:absolute;
+	bottom:29px;
+	width:100%;
+}
+.btnMoreProps_list a {
+	display:inline-block;
+*display:block;
+*float:left;
+	width:135px;
+	margin:1px;
+	height:28px;
+	color: #000; 
+	font-size:12px; 
+	text-decoration:none; 
+	font-weight:bold; 
+	line-height:28px; 
+}
+
+.btnMoreProps_list a.disable{
+	color: #86B66A; 
+	*color: #cccccc; 
+	cursor:default; 
+}
+
+.btnMoreProps_list a.prev {
+	text-align:left;
+	border-right:solid 1px #bed8ad; 
+	padding-left:24px; 
+}
+.btnMoreProps_list a.next {
+	text-align:right;
+	padding-right:24px;
+}
+
+.btnMoreProps_list a span {background:url("/img/ultraprop_ui_sprite.png") no-repeat; padding:6px;}
+.btnMoreProps_list a.prev span {background-position: -625px -374px;}
+.btnMoreProps_list a.next span {background-position: -631px -374px;}
+
+.btnMoreProps_list a.prev.disable span {background-position: -625px -402px;}
+.btnMoreProps_list a.next.disable span {background-position: -631px -402px;}
+
+
 body.frontend_search .btnMoreProps.prev {
 	text-align:right;
  *padding-right:10px !important;
@@ -1656,14 +1699,14 @@ body.frontend_search .ficha_content #detailBox {
 	width:920px;
 }
 body.frontend_search #detailBox h1 {
-/*	color:#65A33A;*/
+	/*	color:#65A33A;*/
 	font-size:21px;
 	margin-bottom:15px;
 }
 body.frontend_search #detailBox h2 {
-/*	color:#65A33A;*/
+	/*	color:#65A33A;*/
 	font-weight:normal;
-	font-size:16px; 
+	font-size:16px;
 }
 /*body.frontend_search #detailBox .address {
 	border:solid 1px #CADF93;
@@ -1724,7 +1767,7 @@ body.frontend_search .dataCol {
 	overflow:hidden;
 }
 body.frontend_search .dataCol .agent {
-/*	border-top:1px solid #91B635;
+	/*	border-top:1px solid #91B635;
 	border-bottom:1px solid #91B635;*/
 	border-top:1px solid #cccccc;
 	border-bottom:1px solid #cccccc;
@@ -3009,11 +3052,9 @@ p.skill {
 #map_tab {
 	background:#CADF93;
 	border:solid 2px #fff;
-	text-shadow:0 1px 0 white; 
+	text-shadow:0 1px 0 white;
 	margin-top:3px;
-	
 	opacity:1;
-	-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+ -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
 	filter: alpha(opacity=100);
-
 }
