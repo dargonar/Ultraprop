@@ -471,8 +471,8 @@ function doSearch() {
     $('#btnMoreProps_next').attr('disabled','disabled');
     $('#btnMoreProps_prev').attr('disabled','disabled');
     
-    $('#btnMoreProps_list_next').attr('disabled','disabled');
-    $('#btnMoreProps_list_prev').attr('disabled','disabled');
+    $('#btnMoreProps_list_next').addClass('disabled');
+    $('#btnMoreProps_list_prev').addClass('disabled');
   }
   
   if(markers_coords!=null)
