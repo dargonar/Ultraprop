@@ -16,6 +16,7 @@ def get_rules():
       Route('/tsk/run_ipn/<account>'    , name='billing/payment/download'     , handler='apps.backend.payment.Download'),
       Route('/tsk/run_invoicer'         , name='billing/payment/run_invoicer' , handler='apps.backend.payment.RunInvoicer'),
       Route('/tsk/update_ipn/<account>' , name='billing/payment/update_ipn'   , handler='apps.backend.payment.UpdateIPN'),
+      Route('/tsk/inmob/<inmoid>'       , name='backend/import/inmob'         , handler='apps.backend.import.InmoBusqueda'),
       
       # Todas las rutas de billing
       PathPrefixRoute('/billing', [
