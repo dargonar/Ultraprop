@@ -39,6 +39,10 @@ class Plan(db.Model):
   allow_realestatefriendship  = db.IntegerProperty(indexed=False)
   allow_website               = db.IntegerProperty(indexed=False)
   
+  @property
+  def is_free(self):
+    return self.amount<=0
+    
   def __repr__(self):
     return 'PLAN: ' + self.name
     

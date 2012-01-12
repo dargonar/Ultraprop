@@ -61,7 +61,7 @@ class Pending(BackendHandler):
     invoice.state = Invoice._INPROCESS
     invoice.save()
 
-    self.set_ok(u'La factura #%s quedara en estado pendiente hasta que se acredite el pago.<br/>Si desea agilizar la acreditación envienos una copia del ticket de pago a pagos@ultraprop.com.ar.' % invoice.trx_id)
+    self.set_ok(u'La factura #%s quedara en estado pendiente hasta que se acredite el pago.<br/>Si desea agilizar la acreditación envienos una copia del ticket de pago a pagos@directodueno.com.' % invoice.trx_id)
     self.redirect_to('backend/account/status')
 
 class InvoicerMapper(Mapper):
@@ -69,7 +69,7 @@ class InvoicerMapper(Mapper):
   
   def map(self, re):
     
-    #logging.error('----------------entro al mapper para %s:%d' % (re.name, re.status) )
+    plan = re.plan
     
     if re.status == RealEstate._TRIAL:
       #logging.error('-----------------entro en trial')
@@ -89,7 +89,7 @@ class InvoicerMapper(Mapper):
         send_mail('trial_ended', re)
         return ([re], []) # update/delete
     
-    elif re.status == RealEstate._ENABLED:
+    elif re.status == RealEstate._ENABLED and not re.plan.is_free:
 
       #logging.error('-----------------------entro en ENABLED')
       
@@ -115,7 +115,6 @@ class InvoicerMapper(Mapper):
         invoice.trx_id     = create_transaction_number(next_date, re)
         invoice.amount     = re.plan.amount
         invoice.state      = Invoice._NOT_PAID
-        invoice.state      = Invoice._NOT_PAID if re.plan.amount > 0 else Invoice._INBANK
         invoice.date       = next_date
         invoice.put()
         

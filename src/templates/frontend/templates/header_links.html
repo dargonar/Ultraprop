@@ -5,16 +5,18 @@
     {% endif %}
     
 	<!-- ///// PUBLICAR ///// -->
-{% if in_map is not defined %}
+
 	{% if is_logged is defined and is_logged %}
-    	<li class="btnLight"><a href="{{ url_for('property/list') }}" title="Publicar propiedades">Soy Inmobiliaria</a></li>
+    	<li class="btnLight"><a href="{{ url_for('property/list') }}" title="Ingresar o registrarse">Ingresar</a></li>
     {% else %}
-    	<li class="btnLight"><a href="{{ url_for('backend/auth/login') }}" title="Publicar propiedades">Soy Inmobiliaria</a></li>
+    	<li class="btnLight"><a href="{{ url_for('backend/auth/login') }}" title="Ingresar o registrarse">Ingresar</a></li>
     {% endif %}
+{% if in_map is not defined %}
     <li style="border-left:none;"><a href="{{url_for('frontend/red')}}" title="Listado de inmobiliarias que forman parte de la Red ULTRAPROP en La Plata">Inmobiliarias de La Plata</a></li>
+{% endif %}
     <li style=""><a href="mailto:ayuda@ultraprop.com.ar" title="Ayuda">Ayuda</a></li>
     
     <!--li><a href="http://www.youtube.com/watch?v=QTIXl9ZKyUs" onclick="jQuery('#help_video').show(); return false;" title="Ver video de ayuda">Video</a></li-->
-{% endif %}
+
     
 </ul>

@@ -115,7 +115,8 @@ class SignUp(BackendHandler):
     realEstate.name             = self.form.name.data
     realEstate.email            = self.form.email.data
     realEstate.plan             = plan
-    realEstate.status           = RealEstate._REGISTERED
+    # realEstate.status           = RealEstate._REGISTERED
+    realEstate.status           = RealEstate._ENABLED if plan.is_free else RealEstate._REGISTERED
     
     # Ya tenemos registrado ese domain_id
     realEstate.domain_id = do_slugify(realEstate.name)
@@ -135,7 +136,8 @@ class SignUp(BackendHandler):
     invoice.realestate = realEstate
     invoice.trx_id     = '%sI%d' % ( first_date.strftime('%Y%m'), realEstate.key().id() )
     invoice.amount     = plan.amount
-    invoice.state      = Invoice._NOT_PAID if plan.amount > 0 else Invoice._INBANK
+    #invoice.state      = Invoice._NOT_PAID if plan.amount > 0 else Invoice._INBANK
+    invoice.state      = Invoice._NOT_PAID if not plan.is_free else Invoice._INBANK
     invoice.date       = first_date
     invoice.put()
     
