@@ -303,6 +303,9 @@ class Jinja2Mixin(object):
       flashes = self.session.get_flashes()
       env.globals['flash'] = flashes[0][0] if len(flashes) and len(flashes[0]) else None
       
+    # env.add_extension('jinja2.ext.with_')
+    # env.add_extension('jinja2.ext.do')
+    
   def render_response(self, _template, **context):
       # Renders a template and writes the result to the response.
       rv = self.jinja2.render_template(_template, **context)

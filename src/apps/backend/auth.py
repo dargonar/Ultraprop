@@ -76,13 +76,16 @@ class SignUp(BackendHandler):
     if 'promo' in kwargs:
       plan  = Plan.all().filter('slug',kwargs['promo']).get()
       if plan and plan.enabled==1:
-        kwargs['promo']   = plan
-        kwargs['planes']  = None
-        no_promo = False
+        kwargs['promo']           = plan
+        kwargs['default_plan']    = str(plan.key())
+        kwargs['planes']          = None
+        no_promo                  = False
         
     if no_promo:
-      kwargs['planes']  = Plan.all().filter('online = ',1).filter('enabled = ',1).order('amount').fetch(3)
-      kwargs['promo']   = None
+      planes                    = Plan.all().filter('online = ',1).filter('enabled = ',1).order('amount').fetch(3)
+      kwargs['planes']          = planes
+      kwargs['promo']           = None
+      kwargs['default_plan']    = str(planes[1].key())
     
     kwargs['selected_plan'] = None
     
@@ -96,17 +99,17 @@ class SignUp(BackendHandler):
     kwargs['selected_plan'] = None
     
     plan = get_or_404(self.request.POST.get('plan'))
-    if not plan:
-      kwargs['form']       = self.form
-      kwargs['flash']      = self.build_error('Seleccione un plan vigente.')
-      return self.render_response('backend/signup.html', **kwargs)
+    # if not plan:
+      # kwargs['form']       = self.form
+      # kwargs['flash']      = self.build_error('Seleccione un plan vigente.')
+      # return self.render_response('backend/signup.html', **kwargs)
     
     form_validated = self.form.validate()
     if not form_validated:
       kwargs['form']          = self.form
       if self.form.errors:
         kwargs['flash']       = self.build_error('Verifique los datos ingresados.')
-      kwargs['selected_plan'] = str(plan.key())
+      kwargs['default_plan'] = str(plan.key())
       return self.render_response('backend/signup.html', **kwargs)
     
     # Generamos la inmo en estado TRIAL y le ponemos el Plan

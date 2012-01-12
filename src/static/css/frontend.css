@@ -221,6 +221,7 @@ body.frontend_search .price_option_item {
 body.frontend_search.w1024or_less .price_option_item {
 	width:365px;
 }
+
 body.frontend_search .price_option_item {
 	/*width:375px;*/
 	width:385px;
@@ -3073,3 +3074,5 @@ p.skill {
  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
 	filter: alpha(opacity=100);
 }
+/* Oculto links top roght en mapa si resolution <= 1024. */
+body.frontend_search.w1024or_less .hide_less_1024 {display:none;}

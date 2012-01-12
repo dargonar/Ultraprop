@@ -71,8 +71,6 @@ $(document).ready(function() {
                   {{ form_field(form.confirm, label='repetir', class="xg long", placeholder="Repetir contraseña", id="confirm_password") }}
                 </div>
                 
-                {% set default_plan = 'nada' %}
-                
                 <div id="gallery" class="signup">
                   <ul>
                     {% if planes %}
@@ -91,13 +89,6 @@ $(document).ready(function() {
                             <a class="uibutton special" href="#" onclick="jQuery('.theme_box').removeClass('selected'); jQuery('.plan{{loop.index0}}').addClass('selected'); jQuery('#plan').val('{{plan.key()|string}}'); return false;">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
                           </div>
                         </li>
-                        {% if loop.index0==1 and selected_plan==None %}
-                          {% set default_plan = plan.key()|string %}
-                        {% else %}
-                          {% if plan.key()|string == selected_plan %}
-                            {% set default_plan = selected_plan %}
-                          {% endif %}
-                        {% endif %}
                       {% endfor %}
                     {% else %}
                       <li class="theme_box selected" key='{{promo.key()|string}}' style="position:relative;text-align:center;margin-left:125px;">
@@ -110,16 +101,15 @@ $(document).ready(function() {
                             <b style="text-align:center;">{% if promo.amount>0 %}${{promo.amount}}/mes {% else %}Sin costo{% endif %}</b>
                           </p>
                         </li>
-                        {% set default_plan = promo.key()|string %}
                     {% endif %}
                   </ul>
                 </div>
+                <input type="hidden" name="plan" id="plan" value="{{default_plan}}" />
                 <div class="last {{ 'errorbox' if form.accept_terms.errors else '' }}" style="clear:both;"> 
                   {{ form_field(form.accept_terms) }}
                 </div>
-                <a href="#" onclick="alert('{{default_plan}} - {{selected_plan}}');return false;">ESSTA</a>
                 {{form.ketchup(id='ketchup')}}
-                <input type="hidden" name="plan" id="plan" value="{{default_plan}}" />
+                
                 <input type="submit" value="COMENZAR A PUBLICAR!" name="" class="btnWizard start">
               </form>  
             </div>
