@@ -14,6 +14,7 @@ for plan in Plan.all().fetch(10):
   if plan.slug in ['plan-s','plan-m','plan-l']:
     plan.is_final_price               = 1
     plan.online                       = 1
+    
   plan.save()
   print plan.slug
 
