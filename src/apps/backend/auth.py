@@ -251,7 +251,7 @@ class RestorePassword(BackendHandler):
     user.enabled          = 1
     user.save()
     
-    self.set_ok(u'Su contraseña ha sido modificada satisfactoriamente.')
+    self.set_ok(u'Su contraseña ha sido modificada satisfactoriamente.<br/>Ya puede ingresar a ULTRAPROP.com.ar con la nueva contraseña!')
     
     return self.redirect_to('backend/auth/login')    
     
@@ -293,5 +293,5 @@ class RestorePasswordRequest(BackendHandler):
     user.enabled          = 0
     user.save()
     
-    self.set_ok(u'Un correo ha sido enviado a su casilla de email.<br/> Si no encuentra el correo en INBOX, búsquelo en SPAM.')
+    self.set_ok(u'Un correo ha sido enviado a su casilla de email con un enlace para recuperar su contraseña.<br/> Si no encuentra el correo en INBOX, búsquelo en SPAM.')
     return self.redirect_to('backend/auth/login')    

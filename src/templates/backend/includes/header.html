@@ -8,8 +8,6 @@
     <ul class="mnuTop">
       {% if is_logged is defined %}
         {% if is_logged %}
-        <!--li style="font-weight:bold;">Hola {{session['account.realestate.name']}}!&nbsp;&nbsp;</li-->
-        <li><a href="{{url_for('frontend/map')}}" target="_blank" title="Ir a búsqueda por mapa">Inicio</a></li>
         <li class="btnLight">
           <a href="{{ url_for('realestate/search', realestate=session['account.realestate.key']) }}" target="_blank" title="Ir a mi página web">Web {{session['account.realestate.name']}}</a>
         </li>
@@ -19,11 +17,11 @@
       {% if is_logged is defined and is_logged %}
 
       {% else %}
-        <li style="border-left:none;"><a href="{{url_for('frontend/map')}}" target="_blank" title="Ir a búsqueda por mapa">Inicio</a></li>
+        <li style="border-left:none;"><a href="{{url_for('frontend/map')}}" target="_blank" title="Ir a búsqueda por mapa">Búsqueda por mapa</a></li>
       {% endif %}
       
       {% if not is_logged %}
-        <li class="btnLight"><a href="{{url_for('backend/auth/login')}}" title="Iniciar sesión / Registrar Inmobiliaria">Soy Inmobiliria</a></li>
+        <li class="btnLight"><a href="{{url_for('backend/auth/login')}}" title="Iniciar sesión / Registrar Inmobiliaria">Ingresar o registrarse</a></li>
       {% endif %}
       
       
@@ -42,7 +40,7 @@
       {% endif %}
       
       {% if is_logged is defined and is_logged %}
-      <!--li><a href="mailto:ayuda@ultraprop.com.ar" title="Envianos tu consulta">Ayuda</a></li-->
+      <li><a href="{{url_for('backend/help') }}" title="Envianos tu consulta">Ayuda</a></li>
       {% else %}
       <li style="border-left:none;"><a href="mailto:ayuda@ultraprop.com.ar" title="Envianos tu consulta por email">Ayuda</a></li>
       {% endif %}

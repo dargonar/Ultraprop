@@ -1714,66 +1714,25 @@ function init_home()
                       , 'ars'
                       ,jQuery( "#price_slider" ).slider( "option", "max") );
   
-  function handle_result_home(location)
-  {
-      jQuery('#center_lat').val(location.lat());
-      jQuery('#center_lon').val(location.lng());
-  }
-  
-  // jQuery("#btnSearchHome").click( function() {
-    // checkForm();
-    
-    // //TODO: Unificar -> Esta funcion esta en backend/frontend x 2 (home e index)
-    // var address = document.getElementById("searchmap").value;
-
-    // put_marker = true;
-    // geocoder.geocode({'address': address,'region' : 'ar'}, function(results, status){ 
-    
-      // var handled = false;
-      // $.each(results, function(i, item) {
-        // if( is_from_country(item, 'Argentina') )
-        // {
-          // handle_result_home(item.geometry.location);
-          // handled = true;
-          // return false;
-        // }
-      // });
-      
-      // // if (status != google.maps.GeocoderStatus.OK || handled == false) 
-      // // {
-        // // return false;
-      // // }
-      
-      // $('#home_search_form').submit();
-    // });
-  // });
-  
   jQuery("#btnSearchHome").click( function() {
-    $('#home_search_form').submit();
+    home_submit(false, false);
   });
   
   jQuery("#home_search_form").submit( function() {
-    checkForm();
-    
-    //TODO: Unificar -> Esta funcion esta en backend/frontend x 2 (home e index)
-    var address = document.getElementById("searchmap").value;
-
-    put_marker = true;
-    geocoder.geocode({'address': address,'region' : 'ar'}, function(results, status){ 
-    
-      var handled = false;
-      $.each(results, function(i, item) {
-        if( is_from_country(item, 'Argentina') )
-        {
-          handle_result_home(item.geometry.location);
-          handled = true;
-          return false;
-        }
-      });
-      return true;
-    });
+    //home_submit(false, false);
+    home_submit(false, false);
   });
   
+  $('#searchmap').keypress(function(event){
+    if(event.keyCode == 13 || event.which == 13) {
+      event.preventDefault();
+      setTimeout("home_submit(false, false);",1)
+      // event.keyCode = 0;
+      // event.cancelBubble = true;
+      // event.returnValue = false;
+      return false;
+    }
+  });
   jQuery("#searchmap").autocomplete({
     source: function(request, response) {
       geocoder.geocode( {'address': request.term, 'region' : 'ar'}, function(results, status) {
@@ -1792,6 +1751,7 @@ function init_home()
     },
     select: function(event, ui) {
       handle_result_home(ui.item.result.geometry.location);
+      home_submit(true, false);
     }
   }); 
   
@@ -1810,6 +1770,48 @@ function init_home()
   });
   
   jQuery('input[placeholder]').addPlaceholder({ 'class': 'hint'}); //{dotextarea:false, class:hint}
+}
+
+function handle_result_home(location)
+{
+    jQuery('#center_lat').val(location.lat());
+    jQuery('#center_lon').val(location.lng());
+}
+  
+function home_submit(handled, ui_event){
+  checkForm();
+  if (!handled)
+  {
+    //TODO: Unificar -> Esta funcion esta en backend/frontend x 2 (home e index)
+    var address = jQuery("#searchmap").val();
+    put_marker = true;
+    geocoder.geocode({'address': address,'region' : 'ar'}, function(results, status){ 
+        $.each(results, function(i, item) {
+          if( is_from_country(item, 'Argentina') )
+          {
+            handle_result_home(item.geometry.location);
+            handled = true;
+            // if(!ui_event)
+            // { 
+              jQuery("#home_search_form").unbind();
+              jQuery("#home_search_form").submit();
+            // }
+            return true;
+          }
+        });
+      
+        if (status != google.maps.GeocoderStatus.OK || handled == false) 
+        {
+          alert("Imposible ubicar dirección");
+          return false;
+        }
+    });
+  }
+  else
+  {
+    jQuery("#home_search_form").unbind();
+    jQuery("#home_search_form").submit();
+  }
 }
 
 function checkForm()
