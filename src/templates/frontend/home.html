@@ -1,9 +1,14 @@
   {% extends "frontend/_base.html"%}
   
   {%block metas%}
-    <title>ULTRAPROP - Alquiler y Venta de Casas, Departamentos, Locales y Lotes en La Plata y Buenos Aires Zona Norte</title>
+    <!-- title>ULTRAPROP - Alquiler y Venta de Casas, Departamentos, Locales y Lotes en La Plata y Buenos Aires Zona Norte</title>
     <meta name="description" content="Encuentre su propiedad en La Plata y el Gran buenos Aires. Ubique casa, departamento, ph, oficina, local, galpón, consultorio, country, quinta, lote, terreno, cochera o campo en venta y en alquiler." />
-    <meta name="keywords" content="Ultraprop, búsqueda de inmuebles por mapa, casa, departamento, ph, oficina, local, galpón, consultorio, country, quinta, lote, terreno, cochera, campo, en alquiler, en venta" />
+    <meta name="keywords" content="Ultraprop, búsqueda de inmuebles por mapa, casa, departamento, ph, oficina, local, galpón, consultorio, country, quinta, lote, terreno, cochera, campo, en alquiler, en venta" / -->
+    
+    <title>Ultraprop: Portal Inmobiliario Argentino. Inmobiliarias en Argentina.</title>
+    <meta name="description" content="Portal Inmobiliario. Inmobiliarias Argentinas Argentina, Buenos Aires, Capital Federal y Gran buenos aires. Publicar anuncios gratis en Argentina">
+    <meta name="keywords" content="inmobiliaria, argentina, inmobiliarias, alquiler, venta, vender, alquilar, inmuebles, propiedades, argentinas, Inmobiliarias, Buenos Aires, Argentina, La Plata, Cordoba, Santa Fe, Capital Federal, Gran Buenos Aires, mapas, casa, casas, departamento, departamentos, ph, phs, ph's, terreno, terrenos, oficina, oficinas, local comercial, locales comerciales, fondo de comercio, fondos de comercio, galpón, galpones, consultorio, consultorios, casa en country o barrio privado, quintas, lotes y terrenos, cocheras">
+
   {%endblock%}
   
   {%block head%}
@@ -71,19 +76,19 @@
           </div>
             <div id="search">
               <div class="home_title">
-                <div class="first">
+                <h1 class="first">
                   Miles de inmuebles te están 
-                </div>
-                <div class="first">
+                </h1>
+                <h1 class="first">
                   esperando, encontrá el tuyo de 
-                </div>
-                <div class="second">
+                </h1>
+                <h1 class="second">
                   la forma más simple.
-                </div>
-                <div class="third">
-                  Búsquedas por mapa geolocalizadas <br />
+                </h1>
+                <h2 class="third">
+                  Búsquedas por mapa geolocalizadas<br />
                   de tu próxima casa.
-                </div>
+                </h2>
               </div>
               <div class="box">
                 <form action="{{ url_for('frontend/map') }}" method="post" name="home_search_form" id="home_search_form" >
@@ -200,7 +205,7 @@
                   </ul>
                 </div-->
                 <!--img class="icon" src="/img/zone.gif" style="margin-top:-15px; margin-left:30px;" /-->
-                <a href="admin/signup"><img src="/img/banners/publicar.gif" /></a>
+                <a href="admin/signup"><img src="/img/banners/publicar.gif" title="Si sos inmobiliaria publicá en ULTRAPROP!"/></a>
               </div>
     <!-- SEGUNDA LINEA -->
               <h1>¿Cómo utilizar la aplicación?</h1>

@@ -9,7 +9,7 @@ import logging
 import re
 
 from google.appengine.api import files
-from google.appengine.ext import db
+from google.appengine.ext import db, blobstore
 from google.appengine.api import images 
 from google.appengine.api.images import get_serving_url
 

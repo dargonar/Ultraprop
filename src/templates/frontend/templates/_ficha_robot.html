@@ -79,8 +79,7 @@
                 {% if property.realestate.website and property.realestate.website|wordcount>0 %}
                   <a href="{{'%s%s'|format('http://',property.realestate.website) if 'http://' not in property.realestate.website else property.realestate.website }}" target="_blank">{{property.realestate.website}}</a><br/>
                 {% endif %}
-                <!--span>{# {property.realestate.email} #}</span><br/ -->
-                <span><img src="{{url_for('frontend/realestate/email2image',key=property.realestate.key()|string)}}" alt="Correo electrónico" /> </span><br/>
+                <span><img src="{{property.realestate|email_to_png}}" alt="Correo electrónico" /> </span><br/>
                 {% if property.realestate.open_at %}
                   <span>Atención {{property.realestate.open_at}}</span><br/>
                 {% endif %}

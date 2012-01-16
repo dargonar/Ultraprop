@@ -120,7 +120,8 @@ class SignUp(BackendHandler):
     realEstate.plan             = plan
     # realEstate.status           = RealEstate._REGISTERED
     realEstate.status           = RealEstate._ENABLED if plan.is_free else RealEstate._REGISTERED
-    
+    realEstate.email_image      = None
+    realEstate.email_image_url  = ''
     # Ya tenemos registrado ese domain_id
     realEstate.domain_id = do_slugify(realEstate.name)
     tmp = validate_domain_id(realEstate.domain_id)

@@ -10,7 +10,6 @@ def get_rules():
         A list of class:`tipfy.Rule` instances.
     """
     rules = [
-      Route('/email/<key>', name='frontend/realestate/email2image', handler='apps.frontend.helper.EmailToPng'),
     
       #-------------------------------URL HACKS VAN ACA----------------------------------------
       Route('/tsk/fix_images',      name='fiximages',      handler='apps.backend.hacks.FixImages'),
