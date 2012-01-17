@@ -9,6 +9,8 @@ from datetime import datetime, date
 from google.appengine.api.images import get_serving_url
 from google.appengine.ext import deferred, db, blobstore
 
+from google.appengine.api import taskqueue
+
 # Cositas sueltas
 from utils import get_or_404, need_auth, BackendHandler 
 from taskqueue import Mapper
@@ -16,8 +18,9 @@ from models import Property, ImageFile, RealEstate, Plan, RealEstate, Invoice, P
 from myfilters import do_slugify
 from apps.backend.payment import create_transaction_number
 
-from google.appengine.api import taskqueue
-
+from texttoimage_helper import render_text_into_blob
+  
+  
 class Unsubscribe(BackendHandler):
   def get(self, **kwargs):
     return self.render_response('backend/unsubscribe.html', email=kwargs['email'])
@@ -204,12 +207,22 @@ class FixImages(BackendHandler):
 #------------
 class RealEstateFixMapper(Mapper):
   KIND    = RealEstate
+  
   def map(self, re):
 
-    # Nuevo hack
     re.is_tester = False
     if re.email in ['emiliomaull@gmail.com', 'matias.romeo@gmail.com' , 'federico.maull@regatta.com.br', 'ptutino@gmail.com']:
       re.is_tester = True
+    
+    if re.email_image:
+      blobstore.delete(re.email_image.key())
+    re.email_image      = None
+    re.email_image_url  = ''
+    if re.email and len(re.email):
+      blob_key = render_text_into_blob(re.email)
+      re.email_image      = blob_key
+      re.email_image_url  = get_serving_url(blob_key)
+      
     return ([re], []) # update/delete
 
 class FixRealEstates(BackendHandler):
@@ -218,7 +231,7 @@ class FixRealEstates(BackendHandler):
     # Mandamos a correr la tarea de mapeo
     tmp = RealEstateFixMapper()
     deferred.defer(tmp.run)
-    self.response.write('corriendo RealEstateFixMapper v2')    
+    self.response.write('corriendo RealEstateFixMapper :: text2image')    
 
 #------------
 class PropertyFixMapper(Mapper):
