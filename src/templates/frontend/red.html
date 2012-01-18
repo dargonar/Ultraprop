@@ -35,7 +35,7 @@
           <h2 style="margin-left:20px; margin-top:15px;">Las siguientes inmobiliarias ya nos eligieron </h2>
           <br/>
               {% for realestate in realestates %}
-                {% if not realestate.is_tester and realestate.enable==1 %}
+                {% if not realestate.is_tester and realestate.enable==1 and realestate.status!=status_disabled %}
                 <div id="agent_info" class="agentbox" style="width: 460px;float: left; margin-right:20px;">
                   <div style="width:130px;height:80px;float:left; margin-right:15px;">
                   {% if realestate.logo_url %}

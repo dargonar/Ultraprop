@@ -22,7 +22,8 @@ class Red(FrontendHandler):
   def get(self, **kwargs):
     realestates   = RealEstate.all().order('name')
     return self.render_response('frontend/red.html'
-                , realestates     = realestates)
+                , realestates     = realestates
+                , status_disabled = RealEstate._NO_PAYMENT)
 
 class Terms(FrontendHandler):
   def get(self, **kwargs):
