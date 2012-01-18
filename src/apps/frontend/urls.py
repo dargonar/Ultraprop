@@ -38,7 +38,7 @@ def get_rules():
       
       Route('/mapa',                                                name='frontend/map',              handler='apps.frontend.map.Index'),
       
-      Route('/inmobiliarias-la-plata',                              name='frontend/red',              handler='apps.frontend.home.Red'),
+      Route('/inmobiliarias',                                       name='frontend/red',              handler='apps.frontend.home.Red'),
 
       Route('/terms',                                               name='frontend/terms',            handler='apps.frontend.home.Terms'),      
       
