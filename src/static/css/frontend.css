@@ -3036,6 +3036,21 @@ body.frontend_home #footer .inner a:hover {
 	font-weight: normal;
 	margin-bottom: 14px;
 }
+
+.top_search h3.line_divider {
+	border-top:dotted 1px #ccc; 
+	padding-top:20px;
+}
+
+.top_search h4 {
+	color: #0A5278;
+	font-size:13px;
+	margin:0;
+}
+
+.top_search .nlk a { color:#000;}
+.skill a { color:#666; text-decoration:none;}
+
 .top_search a {
 	color: #006CA8;
 	font-size: 12px;
@@ -3073,6 +3088,10 @@ p.skill {
 	opacity:1;
  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
 	filter: alpha(opacity=100);
+<<<<<<< Updated upstream
 }
 /* Oculto links top roght en mapa si resolution <= 1024. */
 body.frontend_search.w1024or_less .hide_less_1024 {display:none;}
+=======
+}
+>>>>>>> Stashed changes

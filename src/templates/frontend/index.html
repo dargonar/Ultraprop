@@ -1,9 +1,12 @@
   {% extends "frontend/_base.html"%}
   
   {%block metas%}
-    <title>ULTRAPROP - Mapa {{'- '+title_description if title_description is defined else ''}}</title>
+    <!--title>ULTRAPROP - Mapa {{'- '+title_description if title_description is defined else ''}}</title>
     <meta name="description" content="Búsqueda por mapa" />
-    <meta name="keywords" content="" />
+    <meta name="keywords" content="" /-->
+    <title>Inmobiliarias Argentina Buenos Aires Zona Norte y La Plata propiedades en Capital Federal departamentos en alquiler casas en venta Inmobiliarias La Plata</title>
+    <meta name="description" content="Inmobiliarias en Argentina, Departamentos en Buenos Aires, Argentina Alquiler y Venta de Propiedades. Argentina Inmobiliarias en Buenos Aires Zona Norte, Departamentos en alquiler en La Plata, Argentina Inmobiliarias La Plata. Inmobiliarias Zona Norte Buenos Aires. Propiedades en capital federal, Inmobiliarias en Buenos Aires y La Plata." />
+    <meta name="keywords" content="departamentos argentina, departamento buenos aires, departamentos la plata, venta, alquiler, alquiler en la plata, argentina, inmobiliaria, inmobiliarias, inmobiliarias la plata, casas en venta, casa en venta en la plata, casa en venta zona norte" />
   {%endblock%}
   
   {%block head%}
@@ -63,7 +66,7 @@
       <div class="geoBox top" id="geolocation_advice" style="display:none;">
         <div class="pointer"></div>
         <div class="message">
-          <div class="btnClose close" onclick="return onGeolocationOverlayClose();"></div>
+          <div class="btnClose close" onClick="return onGeolocationOverlayClose();"></div>
           <h1>Haga click en "Permitir"</h1>
             <p>Para que podamos ofrecerle propiedades próximas a su ubicación actual.</p>
         </div>

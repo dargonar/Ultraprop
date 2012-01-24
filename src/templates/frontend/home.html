@@ -1,14 +1,9 @@
   {% extends "frontend/_base.html"%}
   
   {%block metas%}
-    <!-- title>ULTRAPROP - Alquiler y Venta de Casas, Departamentos, Locales y Lotes en La Plata y Buenos Aires Zona Norte</title>
-    <meta name="description" content="Encuentre su propiedad en La Plata y el Gran buenos Aires. Ubique casa, departamento, ph, oficina, local, galpón, consultorio, country, quinta, lote, terreno, cochera o campo en venta y en alquiler." />
-    <meta name="keywords" content="Ultraprop, búsqueda de inmuebles por mapa, casa, departamento, ph, oficina, local, galpón, consultorio, country, quinta, lote, terreno, cochera, campo, en alquiler, en venta" / -->
-    
-    <title>Ultraprop: Portal Inmobiliario Argentino. Inmobiliarias en Argentina.</title>
-    <meta name="description" content="Portal Inmobiliario. Inmobiliarias Argentinas Argentina, Buenos Aires, Capital Federal y Gran buenos aires. Publicar anuncios gratis en Argentina">
-    <meta name="keywords" content="inmobiliaria, argentina, inmobiliarias, alquiler, venta, vender, alquilar, inmuebles, propiedades, argentinas, Inmobiliarias, Buenos Aires, Argentina, La Plata, Cordoba, Santa Fe, Capital Federal, Gran Buenos Aires, mapas, casa, casas, departamento, departamentos, ph, phs, ph's, terreno, terrenos, oficina, oficinas, local comercial, locales comerciales, fondo de comercio, fondos de comercio, galpón, galpones, consultorio, consultorios, casa en country o barrio privado, quintas, lotes y terrenos, cocheras">
-
+    <title>Inmobiliarias Argentina Buenos Aires Zona Norte y La Plata propiedades en Capital Federal departamentos en alquiler casas en venta Inmobiliarias La Plata</title>
+    <meta name="description" content="Inmobiliarias en Argentina, Departamentos en Buenos Aires, Argentina Alquiler y Venta de Propiedades. Argentina Inmobiliarias en Buenos Aires Zona Norte, Departamentos en alquiler en La Plata, Argentina Inmobiliarias La Plata. Inmobiliarias Zona Norte Buenos Aires. Propiedades en capital federal, Inmobiliarias en Buenos Aires y La Plata." />
+    <meta name="keywords" content="departamentos argentina, departamento buenos aires, departamentos la plata, venta, alquiler, alquiler en la plata, argentina, inmobiliaria, inmobiliarias, inmobiliarias la plata, casas en venta, casa en venta en la plata, casa en venta zona norte" />
   {%endblock%}
   
   {%block head%}
@@ -76,19 +71,21 @@
           </div>
             <div id="search">
               <div class="home_title">
-                <h1 class="first">
-                  Miles de inmuebles te están 
-                </h1>
-                <h1 class="first">
-                  esperando, encontrá el tuyo de 
-                </h1>
-                <h1 class="second">
-                  la forma más simple.
-                </h1>
-                <h2 class="third">
-                  Búsquedas por mapa geolocalizadas<br />
-                  de tu próxima casa.
-                </h2>
+                
+                <!--div class="first">
+                  Las Inmobiliarias de
+                </div-->
+                <div class="second">
+                	<h1 style="color:#fff; font-weight:normal; font-size:34px;">Inmobiliarias de Argentina</h1>
+                  <h1 style="color:#fff; font-weight:normal;">Buenos Aires y Capital Federal</h1>
+                  <h2 style="color:#fff; font-weight:normal; font-size:18px;">Inmobiliarias Zona Norte e Inmobiliarias La Plata</h2>
+                </div>
+                <!--div class="first">
+                  <h3 style="color:#fff; font-weight:normal;">Alquiler y Venta de propiedades.</h3>
+                </div-->
+                <div class="third">
+                  <h2 style="color:#fff; font-weight:normal; font-size:18px;">Encontrá tu propiedad en Alquiler y Venta de la forma más simple.</h2>
+                </div>
               </div>
               <div class="box">
                 <form action="{{ url_for('frontend/map') }}" method="post" name="home_search_form" id="home_search_form" >
@@ -111,7 +108,8 @@
                   <div id="filterbox">
                     <ul>
                       <li class="type">
-                        <h4>ver sólo:</h4>
+                        <!--h4>ver sólo:</h4-->
+                        <h4>Tipo de propiedad:</h4>
                         <div jqtransform="true">
                           {% set in_home = config_array['cells']['prop_type_id']['in_home'] %}
                           {% set type_descriptions = config_array['cells']['prop_type_id']['descriptions'] %}
@@ -120,9 +118,10 @@
                             {% set index = loop.index0 %} 
                             {% if index>0 and in_home[index]==1 %}
                               <div class="ex-label" title="{{ item }}">
-                                <input type="checkbox" checked="checked" name="prop_type_id[{{ index }}]" id="prop_type_id[{{ index }}]" title="{{ item }}" />
+                                <input type="checkbox" name="prop_type_id[{{ index }}]" id="prop_type_id[{{ index }}]" title="{{ item }}" />
                                 &nbsp;{{ short_type_descriptions[index] }}
-                              </div>
+                                
+                            </div>
                             {% endif %}
                           {% endfor %}
                           <div>
@@ -164,11 +163,14 @@
               <div class="col">
                   <img class="icon" src="/img/icons/map.gif" style="position:relative;margin-left:-5px;" />
                     <div class="data">
-                        <!--<h3>Buscá por mapa</h3>-->
-                    <h3>Buscá en el mapa</h3>
+
+                    <h3>Búsqueda de propiedades</h3>
                         <p>
-                            ¿Cerca de la autopista? ¿Cerca de la terminal, un parque o una plaza? <br/> 
-                            Encontrá la propiedad que estás buscando de la forma más simple.
+                        ¿Buscar propiedades cerca de la autopista? ¿Cerca de la terminal, un parque o una plaza?  
+Encontrá la <br/>propiedad que estás buscando en Alquiler o Venta de la forma más simple.
+
+                            <!--¿Cerca de la autopista? ¿Cerca de la terminal, un parque o una plaza? <br/> 
+                            Encontrá la propiedad que estás buscando de la forma más simple.-->
                       </p>
                     </div>
                 </div>
@@ -179,7 +181,7 @@
                         <!--<h3>Compartí tu búsqueda</h3>-->
                     <h3>Comparte tu búsqueda</h3>
                         <p>
-                          Copiá y compartí tus búsquedas.<br/>
+                          Copiá y compartí tus búsquedas de propiedades.<br/>
                           No necesitas recordar la ficha de cada propiedad como tampoco su ubicación: <b>lo tienes en el link</b>.<br/>
                           <!-- Compartila con tu pareja así te da el <i>OK</i> con la propiedad que elegiste! -->
                         </p>
@@ -205,19 +207,19 @@
                   </ul>
                 </div-->
                 <!--img class="icon" src="/img/zone.gif" style="margin-top:-15px; margin-left:30px;" /-->
-                <a href="admin/signup"><img src="/img/banners/publicar.gif" title="Si sos inmobiliaria publicá en ULTRAPROP!"/></a>
+                <a href="admin/signup" title="Publicar Propiedades"><img alt="Publicar Propiedades" src="/img/banners/publicar.gif" /></a>
               </div>
     <!-- SEGUNDA LINEA -->
-              <h1>¿Cómo utilizar la aplicación?</h1>
+              <h1>¿Cómo Buscar Propiedades?</h1>
               <div class="col">
                 <div class="step">1</div>
                 <div class="data">
-                  <!--<h3>Ubicá el mapa</h3>-->
-                  <h3>Localizá el mapa</h3>
+                  <!--h3>Localizá el mapa</h3-->
+                  <h3>Propiedades por zona</h3>
                   <p>
                     Ubicá el mapa en la zona en que estás buscando propiedades.<br/>
-                      Podés hacerlo <b>arrastrando el mapa</b>, o <b>escribiendo la dirección deseada en la caja de búsqueda</b>.<br/>
-                      Por defecto, localizamos tu ubicación y buscamos en torno a ella.
+                      Podés hacerlo <b>arrastrando el mapa</b>, o <b>escribiendo la dirección deseada en la caja de búsqueda</b>.
+                      Por defecto, localizamos tu ubicación y buscamos propiedades entorno a ella.
                   </p>
                 </div>
               </div> 
@@ -226,19 +228,19 @@
                 <div class="step">2</div>
                 <div class="data">
                   <!--<h3>Ajustá el filtro</h3>-->
-                  <h3>Ajustá tus preferencias</h3>
+                  <h3>Ajustar tus preferencias</h3>
                   <p>
                     El filtro principal sobre el mapa te permite ajustar los <b>tipos de propiedad</b> más buscados, la <b>operación</b> que querés realizar y el <b>valor</b> que tenés pensado gastar.<br/>
-                    Podés ajustar tu búsqueda haciendo click en <b>+ opciones</b>. 
+                    Podés ajustar tu búsqueda de propiedades haciendo click en <b>+ opciones</b>. 
                   </p>
                 </div>
               </div> 
               <div class="col">
                 <div class="step">3</div>
                 <div class="data">
-                  <h3>Contactá a la inmobiliaria</h3>
+                  <h3>Contactar a la inmobiliaria</h3>
                   <p>
-                    Luego de navegar el mapa y elegir las propiedades de tu agrado, comunicate con la Inmobiliaria.<br/>
+                    Luego de navegar el mapa y elegir las propiedades en Alquiler o Venta de tu agrado, comunicate con la Inmobiliaria.<br/>
                     <b>No necesitás registrarte.</b>.<br/>
                   </p>
                     <!--a href="{{ url_for('frontend/map')}}" title="A buscar mi propiedad!" class="fancy_button find"> 
