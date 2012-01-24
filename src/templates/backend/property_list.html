@@ -30,11 +30,11 @@ $(document).ready(function() {
   {% if loop.first %} 
   
 	<div id="sort_by">
+    <div class="button add" id="nprop"><a href="{{url_for('property/new')}}"></a>Nueva Propiedad</div>
     <div class="sortbox">
        <label>Ordenar por</label> 
        {{ form.sort(id='fake_sort') }}
     </div>
-    <div class="button add" id="nprop"><a href="{{url_for('property/new')}}"></a>Nueva Propiedad</div>
   </div>
   <form id="remove" method="POST" action="{{url_for('property/bulkremove')}}">
   <input id="newstatus" type="hidden" name="newstatus" value="0"/>
@@ -49,12 +49,13 @@ $(document).ready(function() {
   {% endif %}
   {% else %}
   <div class="divider"></div>
-  <div class="noelement proplist txt">
-  	<span>No se encontraron propiedades</span>
+  <div class="noelement proplist txt" style="height: auto; padding:25px 0;">
+  	<!--span>No se encontraron propiedades</span-->
+    <div class="btnBig" onclick="location.href='{{url_for('property/new')}}'"><a href="#"></a>Nueva Propiedad</div>
   </div>
   {% if form.status.data == Property._PUBLISHED %}
   <div class="divider_h"></div>
-  <div class="btnBig" onclick="location.href='{{url_for('property/new')}}'"><a href="#"></a>Nueva Propiedad</div>
+  <!--div class="btnBig" onclick="location.href='{{url_for('property/new')}}'"><a href="#"></a>Nueva Propiedad</div-->
   {% endif %}
   {% endfor %}
   

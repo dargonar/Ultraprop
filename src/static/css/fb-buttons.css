@@ -123,6 +123,11 @@ http://github.com/necolas/css3-facebook-buttons
 .uibutton.delete:before {
 	background-position: -50px 0;
 }
+.uibutton.preview:before {
+	background-position: -110px 0;
+	margin: 0 0.2em 0 0;
+	width:16px;
+}
 /* ------------------------------------------------------------------------------------------------------------- BUTTON EXTENSIONS */
 
 /* ............................................................................................................. Large */

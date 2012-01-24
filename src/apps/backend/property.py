@@ -14,10 +14,11 @@ from google.appengine.api import taskqueue
 from webapp2 import cached_property, Response, RequestHandler
 
 from backend_forms import PropertyForm, PropertyFilterForm
-from models import Property, PropertyIndex, ImageFile
+from models import Property, PropertyIndex, ImageFile, RealEstateFriendship, RealEstate
 from search_helper_func import PropertyPaginatorMixin, create_query_from_dict
 
-from utils import need_auth, BackendHandler 
+from utils import need_auth, BackendHandler
+from counter_shards import on_public_property_added, on_public_property_deleted, realestate_can_add_public_property, get_realestate_public_properties
 
 class UpdateIndex(RequestHandler):
   # Solo se puede llamar desde appengine por eso no lo aseguramos
@@ -51,7 +52,7 @@ class Restore(BackendHandler):
   def get(self, **kwargs):
     property = self.mine_or_404(kwargs['key'])
     property.status = Property._NOT_PUBLISHED
-    property.save()
+    property.save(build_index=False)
     
     self.response.write('ok')
 
@@ -59,7 +60,7 @@ class Remove(BackendHandler):
   
   @need_auth(code=404)
   def post(self, **kwargs):
-    
+   
     page      = int(self.request.POST['page'])
     newstatus = int(self.request.POST['newstatus'])
     
@@ -68,21 +69,27 @@ class Remove(BackendHandler):
       if key != 'page' and key != 'newstatus':
         keys.append(key)
     
-    properties = []
-    for property in Property.get(keys):
-      property.status  = newstatus
-      property.save()
-      
+    props = Property.get(keys)
+    for property in props:
       # Verifico que sean mias las propiedades que voy a borrar del indice
       if str(property.realestate.key()) != self.get_realestate_key():
         self.abort(500)
+    
+    properties = []
+    for property in props:
+    
+      if property.status == Property._PUBLISHED and property.status != newstatus:
+        on_public_property_deleted(str(property.realestate.key()))
+      
+      property.status  = newstatus
+      property.save(build_index=False)
       
       properties.append(property)
     
     # Salvamos y mandamos a remover del indice
     def savetxn():
       for key in keys:
-        taskqueue.add(url=self.url_for('property/update_index'), params={'key': key,'action':'need_remove'})
+        taskqueue.add(url=self.url_for('property/update_index'), params={'key': key,'action':'need_remove'}, transactional=True)
     
     db.run_in_transaction(savetxn)
     
@@ -93,14 +100,33 @@ class Publish(BackendHandler):
   
   @need_auth(code=404)
   def get(self, **kwargs):
-    property = self.mine_or_404(kwargs['key'])
-    property.status = Property._PUBLISHED if int(kwargs['yes']) else Property._NOT_PUBLISHED
-    property.save()
+    
+    property    = self.mine_or_404(kwargs['key'])
+    
+    new_status  = Property._PUBLISHED if int(kwargs['yes']) else Property._NOT_PUBLISHED
+    
+    rs_key      = self.get_realestate_key()
+    # chequeo que está habilitado para publicar más propiedades.
+    if new_status != property.status:
+      if new_status == Property._PUBLISHED:
+        if not realestate_can_add_public_property(rs_key, self.plan_max_properties):
+          error_msg = u'Ha publicado el límite permitido para su plan (%d propiedades/avisos). Comuníquese con Ultraprop si desea publicar más propiedades o deshabilite otra propiedad para publicar ésta.' % get_realestate_public_properties(rs_key)
+          
+          self.response.status = '403 '
+          return self.response.write(error_msg)
+        else:
+          on_public_property_added(rs_key)
+      else:
+        on_public_property_deleted(rs_key)
+    
+    property.status = new_status
+    
+    property.save(build_index=False)
     
     # Updateamos y mandamos a rebuild el indice si es necesario
     def savetxn():
-      property.save()
-      taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':'need_rebuild' if property.status == Property._PUBLISHED else 'need_remove'})
+      property.save(build_index=False)
+      taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':'need_rebuild' if property.status == Property._PUBLISHED else 'need_remove'}, transactional=True)
     
     db.run_in_transaction(savetxn)
     return self.render_response('backend/includes/prop_list.html', property=property, Property=Property)
@@ -114,7 +140,7 @@ class Images(BackendHandler):
     images = ImageFile.all().filter('property =', property.key()).order('position')
     
     params = { 'current_tab' : 'pictures',
-               'title'       : 'Imagenes de propiedad',
+               'title'       : 'Fotos de la propiedad',
                'key'         :  kwargs['key'],
                'mnutop'      : 'propiedades',
                'images'      :  images}
@@ -134,8 +160,16 @@ class List(BackendHandler, PropertyPaginatorMixin):
 
   def add_extra_filter(self, base_query):
     if not self.has_role('ultraadmin'):
-      base_query.filter('realestate =', db.Key( self.get_realestate_key() ) )
-
+      #base_query.filter('realestate =', db.Key( self.get_realestate_key() ) )
+      
+      rs_filter = self.form.realestate_network.data
+      if rs_filter is None or rs_filter.strip()=='' or rs_filter.strip().lower()=='none': 
+        rs_filter = self.get_realestate_key()
+      if rs_filter.strip().lower()=='all': 
+        base_query.filter('location_geocells = ', self.get_realestate_key() )
+      else:
+        base_query.filter('realestate =', db.Key( rs_filter ) )
+      
     base_query.filter('status =', self.form.status.data)
       
       
@@ -176,10 +210,20 @@ class NewEdit(BackendHandler):
     # Updateamos y mandamos a rebuild el indice si es necesario
     # Solo lo hacemos si se require y la propiedad esta publicada
     # Si se modifica una propiedad BORRADA o DESACTIVADA no se toca el indice por que no existe
+    friend_realestates_keys = property.realestate_friend_keys()
+    
+    if not editing:
+      if not realestate_can_add_public_property(self.get_realestate_key(), self.plan_max_properties):
+        status          = Property._NOT_PUBLISHED
+      else:
+        status          = Property._PUBLISHED
+        on_public_property_added(self.get_realestate_key())
+      property.status = status
+        
     def savetxn():
-      result = property.save() if editing else property.put()
+      result = property.save(build_index=True, friends=friend_realestates_keys) if editing else property.put(friends=friend_realestates_keys)
       if result != 'nones' and property.status == Property._PUBLISHED:
-        taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':result})
+        taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':result}, transactional=True)
     
     db.run_in_transaction(savetxn)
     
@@ -197,125 +241,3 @@ class NewEdit(BackendHandler):
   @cached_property
   def form(self):
     return PropertyForm(self.request.POST)
-
-# HACK DE AYUDA PARA EL UPLOAD iNICIAL    
-from taskqueue import Mapper
-from google.appengine.ext.blobstore import BlobInfo
-
-class MyModelMapper(Mapper):
-  #KIND = User
-
-  def map(self, e):
-    # PONER CODIGO ACA
-    return ([], [])
-
-  def finish(self):
-    logging.error('Terminamos...')
-
-class RunMapper(BackendHandler):
-  @need_auth(roles='ultraadmin', code=505)
-  def get(self, **kwargs):
-    from google.appengine.ext import deferred
-    mapper = MyModelMapper()
-    deferred.defer(mapper.run)
-    self.response.write('Defereado!!')
-
-class VerArchivo(BackendHandler):
-  @need_auth(roles='ultraadmin', code=505)
-  def get(self, **kwargs):
-    return self.render_response(kwargs['archivo'].replace('-','/'))
-    
-class TraerFotines(RequestHandler):
-  @need_auth(roles='ultraadmin', code=505)
-  def get(self, **kwargs):
-    for p in Property.all(keys_only=True):
-      taskqueue.add(url=self.url_for('traer_para'), params={'id': int(p.name())})
-
-    self.response.write('listop')
-    
-class TraerPara(RequestHandler):
-  def post(self, **kwargs):
-    import urllib2
-    id   = int(self.request.POST['id'])
-    path ='http://www.ultraprop.com.ar/fotos_para.asp?id=%d' % id
-    req  = urllib2.urlopen(path)
-    try:
-      for imgname in req:
-        imgname = urllib2.quote(imgname[:-1])
-        taskqueue.add(url=self.url_for('asignar_foto'), params={'id': id, 'imgname':imgname})
-    except urllib2.URLError,e:
-      logging.exception(e)
-      logging.error('u:' + str(self.request.POST.mixed()))
-    
-    self.response.write('ok')
-
-from google.appengine.api import images, files
-from google.appengine.ext import db, blobstore
-      
-class AsignarFoto(RequestHandler):
-  def post(self, **kwargs):
-    import urllib2
-    try:
-      id       = int(self.request.POST['id'])
-      imgname  = self.request.POST['imgname']
-      path     = 'http://www.ultraprop.com.ar/fotos/%d/%s' % (id,imgname)
-      property = Property.get_by_key_name(str(id))
-      
-      data = urllib2.urlopen(path).read()
-      
-      try:
-        # Create the file
-        file_name = files.blobstore.create(mime_type='image/jpg', _blobinfo_uploaded_filename=imgname)
-
-        # Open the file and write to it
-        img = images.Image(data)
-        img.resize(width=800, height=600)
-
-        
-        with files.open(file_name, 'a') as f:
-          f.write(img.execute_transforms(output_encoding=images.JPEG, quality=70))
-
-        # Finalize the file. Do this before attempting to read it.
-        files.finalize(file_name)
-
-        # Get the file's blob key
-        blob_key = files.blobstore.get_blob_key(file_name)
-        imgfile = ImageFile()
-        imgfile.title     = ''
-        imgfile.data      = ''
-        imgfile.file      = blob_key
-        imgfile.filename  = imgname
-        imgfile.realestate= property.realestate
-        imgfile.property  = property
-        imgfile.put()
-        
-        #Update property
-        if property.images_count:
-          property.images_count = property.images_count + 1
-        else:
-          property.images_count = 1
-          property.main_image   = imgfile.file
-        
-        result = property.save()
-      except Exception, e:
-        logging.error(e)
-        logging.error('--voy a retry--')
-        self.response.status_int = 500
-        return
-        
-      # if result != 'nones':
-      #  taskqueue.add(url=self.url_for('property/update_index'), params={'key': str(property.key()),'action':result})
-    except urllib2.URLError,e:
-      logging.exception(e)
-      try:
-        logging.error('1:' + str(self.request.POST.mixed()))
-      except:
-        logging.error('--no pude1--' + str(id))
-    except Exception, e:
-      logging.exception(e)
-      try:
-        logging.error('2:' + str(self.request.POST.mixed()))
-      except:
-        logging.error('--no pude2--' + str(id))
-      
-    self.response.write('ok')

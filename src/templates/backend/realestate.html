@@ -40,7 +40,7 @@
 {% block content %}
 
 	<div style="overflow:hidden; margin-bottom:20px;">
-		<h1>Editar Inmobiliaria</h1>
+		<h1>Perfil de Inmobiliaria</h1>
   </div>
   {% if flash %}
     <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
@@ -59,7 +59,7 @@
                 	
                     {% if realestate_logo %}
                     <a href="#" onclick="jQuery('#form_logo_input').click();return false;">
-                    	<img src="{{realestate_logo}}" />
+                    	<img src="{{realestate_logo}}" style="max-width:280px;max-height:75px;"/>
                     </a>
                     {% else %}
                     <a class="nologo" href="#" onclick="jQuery('#form_logo_input').click();return false;">
@@ -71,10 +71,8 @@
                 </span>
             </div>
            
-
-            <div style="clear:both;"></div>
-            <span id="filename"></span>
-            <br/>
+            <div style="display:none" class="filename"><span class="icon16 file"></span><span id="filename">&nbsp;</span></div>
+            
             <small class="gray">
             Tamaño recomendado: 280 pixeles de ancho x 75 de alto.<br /> 
             Ancho máx. 300 pixeles, Altura Máx. 100 pixeles.
@@ -124,17 +122,24 @@
         <dt>Correo electrónico</dt>
         {{ form_field2(form.email, placeholder="correo electrónico", title="correo electrónico") }}
     </dl>  
-    <dl class="form">
-        <dt>Sitio Web</dt>
-        {{ form_field2(form.website, title="url", placeholder="url") }}
     </dl>
+      <dl class="form">
+        <dt>Días y horarios de atención</dt>
+        {{ form_field2(form.open_at, placeholder="Lun. a Vier. de 9:00 a 18:00 y Sab. de 10:00 a 13:00", title="Días y horarios de atención") }}
+    </dl>
+    
     <dl class="form">
-      <dt></dt>
-      <dd>
-        <div class="navButtons" style="text-align:left;">
-          <input type="submit" value="Guardar Inmobiliaria" name="" class="btnWizard">
-        </div>
+      <dd style="margin-left:200px;width:100%;">
+          <input name="goto" type="hidden" value=""/>
+          <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
+          <input type="submit" value="Guardar y configurar Mi Web" name="" class="btnWizard" id="goto_website">
       </dd>
     </dl>  
-  </form>  
+  </form>
+<br/>  
+<br/>
+<br/>
+ 
+ 
+  
 {% endblock  %}

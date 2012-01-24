@@ -7,7 +7,7 @@ from google.appengine.api.images import get_serving_url
 
 from webapp2 import cached_property
 
-from models import Property, ImageFile
+from models import Property, ImageFile, RealEstate
 from search_helper import config_array
 from backend_forms import PropertyFilterForm, PropertyContactForm
 
@@ -16,14 +16,22 @@ from utils import get_or_404, RealestateHandler
 class Show(RealestateHandler):
   def get(self, **kwargs):
     
-    realestate            = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
+    realestate = get_or_404(self.get_realestate_key_ex(kwargs.get('realestate')))
+    
+    # Ponemos la pantalla de disabled si esta en NO_PAYMENT
+    if realestate.status == RealEstate._NO_PAYMENT or realestate.plan.allow_website == 0:
+      return self.render_response('realestate/disabled.html', realestate=realestate)
+    
     kwargs['realestate']  = realestate
-    kwargs['realestate_logo'] = get_serving_url(realestate.logo) if realestate.logo else None
+    kwargs['realestate_logo'] =  realestate.logo_url
     
     key                   = kwargs['key']
     price_data_operation  = kwargs['oper']
     
     property = db.get(key) 
+    
+    property.visits=property.visits+1
+    property.save(build_index=False)
     
     price            = property.price_sell 
     cur              = property.price_sell_currency 
@@ -37,7 +45,7 @@ class Show(RealestateHandler):
     kwargs['price']       = price
     kwargs['cur']         = cur
     kwargs['config_array']= config_array
-    kwargs['menu_item']   =  'search'
+    kwargs['menu_item']   =  'ficha'
     
     kwargs['form']        =  self.form
     kwargs['oper']        =  price_data_operation
@@ -68,12 +76,12 @@ class Show(RealestateHandler):
                ,'prop_operation_id':          prop_operation_id}               
                 
     def txn():
-      taskqueue.add(url=self.url_for('frontend/email_task'), params=dict({'action':'requestinfo_user'}, **context))
-      taskqueue.add(url=self.url_for('frontend/email_task'), params=dict({'action':'requestinfo_agent'}, **context))
+      taskqueue.add(url=self.url_for('backend/email_task'), params=dict({'action':'requestinfo_user'}, **context), transactional=True)
+      taskqueue.add(url=self.url_for('backend/email_task'), params=dict({'action':'requestinfo_agent'}, **context), transactional=True)
     
     db.run_in_transaction(txn)
     
-    self.set_ok('Tu consulta enviada satisfactoriamente. Te hemos enviado una copia de la consulta a tu correo.')  
+    self.set_ok('Tu consulta fue enviada satisfactoriamente. Te hemos enviado una copia de la consulta a tu correo.')  
     return self.redirect_to('realestate/ficha', key=key, oper=prop_operation_id, realestate=realestate)
     
   @cached_property

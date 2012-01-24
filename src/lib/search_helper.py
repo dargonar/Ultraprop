@@ -87,31 +87,32 @@ config_array = {
                                   }
   }
   , 'binary_values_properties':{
-      'appurtenance':   {'description': 'Dependencia', 'title': 'Dependencia', 'is_filter': 1 , 'related_property':'aa'}
-      , 'balcony':      {'description': u'Balcón', 'title': u'Balcón', 'is_filter': 1, 'related_property':'ab'}
-      , 'doorman':      {'description': 'Portero', 'title': 'Portero', 'is_filter': 1, 'related_property':'ac'}
-      , 'elevator':     {'description': 'Ascensor', 'title': 'Ascensor', 'is_filter': 1, 'related_property':'ad'}
-      , 'fireplace':    {'description': 'Estufa Hogar', 'title': 'Estufa Hogar', 'is_filter': 1, 'related_property':'af'}
-      , 'furnished':    {'description': 'Amoblado', 'title': 'Amoblado', 'is_filter': 1, 'related_property':'ag'}
-      , 'garage':       {'description': 'Garage', 'title': 'Garage', 'is_filter': 1, 'related_property':'ah'}
-      , 'garden':       {'description': 'Patio', 'title': 'Patio', 'is_filter': 1, 'related_property':'ai'}
-      , 'grillroom':    {'description': 'Parrilla', 'title': 'Parrilla', 'is_filter': 1, 'related_property':'aj'}
-      , 'gym':          {'description': 'Gimnasio', 'title': 'Gimnasio', 'is_filter': 1, 'related_property':'ak'}
-      , 'live_work':    {'description': 'Apto Prof.', 'title': 'Apto Profesional', 'is_filter': 1, 'related_property':'al'}
-      , 'luxury':       {'description': 'Lujo', 'title': 'Lujo', 'is_filter': 1, 'related_property':'am'}
-      , 'pool':         {'description': 'Piscina', 'title': 'Piscina', 'is_filter': 1, 'related_property':'an'}
-      , 'terrace':      {'description': 'Terraza', 'title': 'Terraza', 'is_filter': 1, 'related_property':'ao'}
-      , 'washer_dryer': {'description': 'Laundry', 'title': 'Laundry', 'is_filter': 1, 'related_property':'ap'}
-      , 'sum':          {'description': 'SUM', 'title': u'Salón de usos múltiples', 'is_filter': 1, 'related_property':'aq'}
-      , 'agua_corriente':   {'description': 'Agua corriente', 'title': u'Agua corriente', 'is_filter': 0, 'related_property':''}
+       'agua_corriente':    {'description': 'Agua corriente', 'title': u'Agua corriente', 'is_filter': 0, 'related_property':''}
+      , 'furnished':        {'description': 'Amoblado', 'title': 'Amoblado', 'is_filter': 1, 'related_property':'ag'}
+      , 'live_work':        {'description': 'Apto Prof.', 'title': 'Apto Profesional', 'is_filter': 1, 'related_property':'al'}
+      , 'elevator':         {'description': 'Ascensor', 'title': 'Ascensor', 'is_filter': 1, 'related_property':'ad'}
+      , 'balcony':          {'description': u'Balcón', 'title': u'Balcón', 'is_filter': 1, 'related_property':'ab'}
+      , 'cloacas':          {'description': 'Cloacas', 'title': u'Cloacas', 'is_filter': 0, 'related_property':''}
+      ,'appurtenance':      {'description': 'Dependencia', 'title': 'Dependencia', 'is_filter': 1 , 'related_property':'aa'}
+      , 'fireplace':        {'description': 'Estufa Hogar', 'title': 'Estufa Hogar', 'is_filter': 1, 'related_property':'af'}
+      , 'garage':           {'description': 'Garage', 'title': 'Garage', 'is_filter': 1, 'related_property':'ah'}
       , 'gas_natural':      {'description': 'Gas natural', 'title': u'Gas natural', 'is_filter': 0, 'related_property':''}
       , 'gas_envasado':     {'description': 'Gas envasado', 'title': u'Gas envasado', 'is_filter': 0, 'related_property':''}
-      , 'cloacas':          {'description': 'Cloacas', 'title': u'Cloacas', 'is_filter': 0, 'related_property':''}
-      , 'telefono':         {'description': u'Teléfono', 'title': u'Teléfono', 'is_filter': 0, 'related_property':''}
-      , 'tv_cable':         {'description': 'TV por cable', 'title': u'TV por cable', 'is_filter': 0, 'related_property':''}
+      , 'gym':              {'description': 'Gimnasio', 'title': 'Gimnasio', 'is_filter': 1, 'related_property':'ak'}
       , 'internet':         {'description': 'Internet', 'title': u'Internet', 'is_filter': 0, 'related_property':''}
-      , 'vigilancia':       {'description': 'Vigilancia', 'title': u'Vigilancia', 'is_filter': 0, 'related_property':''}
       , 'monitoreo':        {'description': 'Monitoreo', 'title': u'Monitoreo', 'is_filter': 0, 'related_property':''}
+      , 'washer_dryer':     {'description': 'Laundry', 'title': 'Laundry', 'is_filter': 1, 'related_property':'ap'}
+      , 'luxury':           {'description': 'Lujo', 'title': 'Lujo', 'is_filter': 1, 'related_property':'am'}
+      , 'grillroom':        {'description': 'Parrilla', 'title': 'Parrilla', 'is_filter': 1, 'related_property':'aj'}
+      , 'garden':           {'description': 'Patio', 'title': 'Patio', 'is_filter': 1, 'related_property':'ai'}
+      , 'pool':             {'description': 'Piscina', 'title': 'Piscina', 'is_filter': 1, 'related_property':'an'}
+      , 'doorman':          {'description': 'Portero', 'title': 'Portero', 'is_filter': 1, 'related_property':'ac'}
+      , 'sum':              {'description': 'SUM', 'title': u'Salón de usos múltiples', 'is_filter': 1, 'related_property':'aq'}
+      , 'telefono':         {'description': u'Teléfono', 'title': u'Teléfono', 'is_filter': 0, 'related_property':''}
+      , 'terrace':          {'description': 'Terraza', 'title': 'Terraza', 'is_filter': 1, 'related_property':'ao'}
+      , 'tv_cable':         {'description': 'TV por cable', 'title': u'TV por cable', 'is_filter': 0, 'related_property':''}
+      , 'vigilancia':       {'description': 'Vigilancia', 'title': u'Vigilancia', 'is_filter': 0, 'related_property':''}
+      
   }
 }
 

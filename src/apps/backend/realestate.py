@@ -6,15 +6,20 @@
 from __future__ import with_statement
 
 import logging
+import re
 
 from google.appengine.api import files
-from google.appengine.ext import db
+from google.appengine.ext import db, blobstore
 from google.appengine.api import images 
 from google.appengine.api.images import get_serving_url
 
-from backend_forms import RealEstateForm 
+from google.appengine.api import mail
+
+from backend_forms import RealEstateForm, validate_domain_id
 from utils import get_or_404, need_auth, BackendHandler
 from webapp2 import cached_property
+from models import RealEstate
+
 
 class Edit(BackendHandler):
   #Edit/New
@@ -25,7 +30,8 @@ class Edit(BackendHandler):
     kwargs['form']                = RealEstateForm(obj=realestate)
     kwargs['key']                 = self.get_realestate_key()
     kwargs['mnutop']              = 'inmobiliaria'
-    kwargs['realestate_logo']     = get_serving_url(realestate.logo) if realestate.logo else None
+    kwargs['realestate_logo']     = realestate.logo_url
+    
     return self.render_response('backend/realestate.html', **kwargs)
   
   #Create/Save RealEstate & User.
@@ -34,11 +40,16 @@ class Edit(BackendHandler):
     self.request.charset = 'utf-8'
     
     realestate = get_or_404(self.get_realestate_key())
+    
+    #HACK: Hack? le pongo un miembro para que la validacion del slug sepa cual es la key actual de la RealEste
+    #de otra forma va a decir que ya esta siendo utilizada
+    self.form.thekey = self.get_realestate_key()
+    
     rs_validated = self.form.validate()
     if not rs_validated:
       kwargs['form']                = self.form
       kwargs['key']                 = self.get_realestate_key()
-      kwargs['realestate_logo']     = get_serving_url(realestate.logo) if realestate.logo else None
+      kwargs['realestate_logo']     = realestate.logo_url
       if self.form.errors:
         kwargs['flash']         = self.build_error(u'Verifique los datos ingresados:')
         # + '<br/>'.join(reduce(lambda x, y: str(x)+' '+str(y), t) for t in self.form.errors.values()))
@@ -51,7 +62,7 @@ class Edit(BackendHandler):
     if fs is not None and not isinstance(fs,unicode):
       if fs.filename is not None:
         # Create the file
-        file_name = files.blobstore.create(mime_type='image/jpg', _blobinfo_uploaded_filename=fs.filename)
+        file_name = files.blobstore.create(mime_type='image/png', _blobinfo_uploaded_filename=fs.filename)
         # Open the file and write to it
         img = images.Image(fs.file.getvalue())
         
@@ -66,20 +77,64 @@ class Edit(BackendHandler):
           f.write(data)
         # Finalize the file. Do this before attempting to read it.
         files.finalize(file_name)
-        # Get the file's blob key
-        blob_key            = files.blobstore.get_blob_key(file_name)
         
-        realestate.logo      = blob_key
+        # Get the file's blob key
+        blob_key = files.blobstore.get_blob_key(file_name)
+        
+        # ------ BEGIN HACK -------- #
+        # GAE BUG => http://code.google.com/p/googleappengine/issues/detail?id=5142
+        for i in range(1,10):
+          if not blob_key:
+            time.sleep(0.05)
+            blob_key = files.blobstore.get_blob_key(file_name)
+          else:
+            break
+        
+        if not blob_key:
+          logging.error("no pude obtener el blob_key, hay un leak en el blobstore!")
+          abort(500)
+        # ------ END HACK -------- #
+        
+        realestate.logo_url = get_serving_url(blob_key)
     
     realestate.save()
     
-    # Actualizo los cambios en la sesi�n.
+    # Actualizo los cambios en la sesión.
     self.do_login(db.get(self.get_user_key()))
     
     # Set Flash
     self.set_ok('Inmobiliaria guardada satisfactoriamente.')
+    if self.request.POST['goto'] == 'website':
+      return self.redirect_to('backend/realestate_website/edit')
     return self.redirect_to('backend/realestate/edit')
     
   @cached_property
   def form(self):
     return RealEstateForm(self.request.POST)
+    
+class RequestImport(BackendHandler):
+  #Edit/New
+  @need_auth()
+  def get(self, **kwargs):
+    
+    realestate                    = get_or_404(self.get_realestate_key())
+    if realestate.requested_properties_import==1:
+      self.set_ok(u'Su solicitud ya ha sido enviada. Pronto un agente se contactará con Usted. <br/>Muchas gracias.')
+      return self.redirect_to('property/list')
+    
+    mail_to='info@ultraprop.com.ar'
+    body=u'La inmobiliaria %s desea %s importar sus propiedades desde algún portal hacia ULTRAPROP. Key: %s; - Name:%s; - Url:%s' % (realestate.name, 'DES' if realestate.managed_domain==0 else '',str(realestate.key()), realestate.name, self.url_for( 'realestate/search', _full=True, realestate=str(realestate.key())))
+    mail.send_mail(sender="www.ultraprop.com.ar <info@ultraprop.com.ar>", 
+                 to       = mail_to,
+                 subject  = "ULTRAPROP: Una inmobiliaria solicita importar propiedades en ULTRAPROP",
+                 body     = body)
+    
+    realestate.requested_properties_import=1
+    realestate.save()
+
+    # Actualizo los cambios en la sesión.
+    self.do_login(db.get(self.get_user_key()))
+    
+    # Set Flash
+    self.set_ok(u'Su solicitud ha sido remitida. Un agente de ULTRAPROP se comunicará en breve con Usted.' )
+    return self.redirect_to('property/list')

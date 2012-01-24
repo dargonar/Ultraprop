@@ -12,27 +12,65 @@ def get_rules():
         A list of class.`tipfy.Rule` instances.
     """
     rules = [
-      Route('/ver/<archivo>'    , name='ver_archivo'  , handler='apps.backend.property.VerArchivo'),
-      Route('/traerfotines'     , name='traer_fotines', handler='apps.backend.property.TraerFotines'),
-      Route('/traer_para'       , name='traer_para'   , handler='apps.backend.property.TraerPara'),
-      Route('/asignarfoto'      , name='asignar_foto' , handler='apps.backend.property.AsignarFoto'),
-      Route('/laplatear'        , name='laplatear'    , handler='apps.backend.property.LaPlatear'),
+      Route('/tsk/email_task'           , name='backend/email_task'           , handler='apps.backend.email.SendTask'),
+      Route('/tsk/run_ipn/<account>'    , name='billing/payment/download'     , handler='apps.backend.payment.Download'),
+      Route('/tsk/run_invoicer'         , name='billing/payment/run_invoicer' , handler='apps.backend.payment.RunInvoicer'),
+      Route('/tsk/update_ipn/<account>' , name='billing/payment/update_ipn'   , handler='apps.backend.payment.UpdateIPN'),
       
-      Route('/admin'                     , name='backend/index/'                  , handler='apps.backend.auth.Index'),
+      # Todas las rutas de billing
+      PathPrefixRoute('/billing', [
+          
+        PathPrefixRoute('/payment', [
+          Route('/<invoice>/payment-cancel'   , name='billing/payment/cancel'       , handler='apps.backend.payment.Cancel'),
+          Route('/<invoice>/payment-done'     , name='billing/payment/done'         , handler='apps.backend.payment.Done'),
+          Route('/<invoice>/payment-pending'  , name='billing/payment/pending'      , handler='apps.backend.payment.Pending'),
+        ]),
+      ]),
+      
+      # Todas las rutas de administracion
+      Route('/admin'                     , name='backend/index/'                 , handler='apps.backend.auth.Index'),
+      
       PathPrefixRoute('/admin', [
         
         Route('/'                        , name='backend/auth/'                  , handler='apps.backend.auth.Index'),
+        Route('/help'                    , name='backend/help'                   , handler='apps.backend.help.Index'),
         Route('/login'                   , name='backend/auth/login'             , handler='apps.backend.auth.Login'),
         Route('/signup'                  , name='backend/auth/signup'            , handler='apps.backend.auth.SignUp'),
+        Route('/signup/<promo>'          , name='backend/auth/signup/promo'      , handler='apps.backend.auth.SignUp'),
         Route('/logout'                  , name='backend/auth/logout'            , handler='apps.backend.auth.Logout'),
         Route('/restore/password/<key>'  , name='backend/auth/restore'           , handler='apps.backend.auth.RestorePassword'),
         Route('/unrestore/password/<key>', name='backend/auth/unrestore'         , handler='apps.backend.auth.UnRestorePassword'),
         Route('/restore/request'         , name='backend/auth/restore/request'   , handler='apps.backend.auth.RestorePasswordRequest'),
         Route('/validate/<key>'          , name='backend/validate/user'          , handler='apps.backend.auth.ValidateUser'),
         
-        PathPrefixRoute('/realestate', [
-          Route('/edit'                  , name='backend/realestate/edit'   , handler='apps.backend.realestate.Edit'),
+        PathPrefixRoute('/consultas', [
+          Route('/list'                  , name='backend/consultas/list'         , handler='apps.backend.consultas.Index'),
+          Route('/list/<page>'           , name='backend/consultas/list/page'    , handler='apps.backend.consultas.Index:page'),
         ]),
+        
+        PathPrefixRoute('/realestate', [
+          Route('/edit'                  , name='backend/realestate/edit'             , handler='apps.backend.realestate.Edit'),
+          Route('/request_import'        , name='backend/realestate/request_import'   , handler='apps.backend.realestate.RequestImport'),
+        ]),
+        
+        PathPrefixRoute('/website', [
+          Route('/edit'                  , name='backend/realestate_website/edit'             , handler='apps.backend.realestate_website.Edit'),
+          Route('/validate_domain_id'    , name='backend/realestate_website/check_domain_id'  , handler='apps.backend.realestate_website.CheckDomainId'),
+          Route('/set_theme/<theme>'     , name='backend/realestate_website/set_theme'        , handler='apps.backend.realestate_website.Edit:set_theme')
+        ]),
+        
+        PathPrefixRoute('/inmobiliarias_amigas', [
+          Route('/list'                         , name='backend/realestatebook/list'                    , handler='apps.backend.realestatebook.Index'),
+          Route('/requests'                     , name='backend/realestatebook/requests'                , handler='apps.backend.realestatebook.Requests'),
+          Route('/friends'                      , name='backend/realestatebook/friends'                 , handler='apps.backend.realestatebook.Friends'),
+          Route('/friends/delete/<key>'         , name='backend/realestatebook/friends/delete'          , handler='apps.backend.realestatebook.Friends:delete'),
+          Route('/friends/share/<key>'          , name='backend/realestatebook/friends/share'           , handler='apps.backend.realestatebook.Friends:share'),
+          Route('/friends/unshare/<key>'        , name='backend/realestatebook/friends/unshare'         , handler='apps.backend.realestatebook.Friends:unshare'),
+          Route('/friend_request'               , name='backend/realestatebook/friend_request'          , handler='apps.backend.realestatebook.FriendRequest'),
+          Route('/friend_request/accept/<key>'  , name='backend/realestatebook/friend_request/accept'   , handler='apps.backend.realestatebook.FriendRequest:accept'),
+          Route('/friend_request/reject/<key>'  , name='backend/realestatebook/friend_request/reject'   , handler='apps.backend.realestatebook.FriendRequest:reject'),
+        ]),
+		
         
         PathPrefixRoute('/user', [
           Route('/edit'                  , name='backend/user/edit'               , handler='apps.backend.user.Edit'),
@@ -54,12 +92,16 @@ def get_rules():
         
         PathPrefixRoute('/images', [
           Route('/reorder'               , name='images/reorder'    , handler='apps.backend.images.Reorder'),
-          Route('/<key>'                 , name='images/original'   , handler='apps.backend.images.Show:original'),
-          Route('/<key>/<width>/<height>', name='images/show'       , handler='apps.backend.images.Show'),
           Route('/<key>/upload/'         , name='images/upload'     , handler='apps.backend.images.Upload'),
           Route('/<key>/remove/'         , name='images/remove'     , handler='apps.backend.images.Remove'),
           Route('/<key>/bulkremove/'     , name='images/bulkremove' , handler='apps.backend.images.Remove'),
         ]),
+        
+        PathPrefixRoute('/account', [
+          Route('/status'               , name='backend/account/status'         , handler='apps.backend.account.Status'),
+        ]),
+        
+        
       ])
     ]
 

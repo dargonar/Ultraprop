@@ -2,13 +2,16 @@
 <div id="mnuLeft">
   <form id="filter" method="POST" action="{{url_for('property/list')}}">
   <div class="filters">
-  	<h3>Filtros</h3>
+  	<h3>Filtrar búsqueda</h3>
     <div class="location_box">
       {{ff.simple_field(form.location_text, class='search', placeholder='Calle, Barrio, Localidad')}}
       <input class="btnSearch" type="submit" value=""/>
     </div>
     <div style="padding:0 10px;">
-      <div class="divider_h"></div>
+        <div class="divider_h"></div>
+        {{ff.simple_field(form.realestate_network)}}
+        
+        <div class="divider_h"></div>
         {{ff.simple_field(form.prop_type)}}
         
         <div class="divider_h"></div>
@@ -36,7 +39,7 @@
         {{form.sort(style='display:none')}}
         
         <div class="divider_h"></div>
-        <a id="apply" href="#" class="uibutton special submit">Aplicar</a>
+        <a id="apply" href="#" class="uibutton special submit">Buscar</a>
     </div>
 	</div>
   </form>

@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 {% import 'backend/_form_fields.html' as ff %}
 {% block tab_content %}
-<form id="registerform" action="{{url_for('property/new')}}" method="post">
+<form id="new_property_form" action="{{url_for('property/new')}}" method="post">
   <input name="key" type="hidden" value="{% if key %}{{key}}{% endif %}"/>
   <input name="goto" type="hidden" value=""/>
   <!-- type.html -->
@@ -23,7 +23,7 @@ $(document).ready(function() {
           {{form.prop_operation_id(type='hidden')}}
           <dd class="operation {% if form.prop_operation_id.errors %}errorbox{% endif %}">
               <p class="h2">Tipo de Operación</p>
-              {{ ff.field_operation(form.rent_yes, form.price_rent_currency, form.price_rent) }}
+              {{ ff.field_operation(form.rent_yes, form.price_rent_currency, form.price_rent, form.price_expensas) }}
               {{ ff.field_operation(form.sell_yes, form.price_sell_currency, form.price_sell) }}
               {% if form.prop_operation_id.errors %}
               <p class="error">{{form.prop_operation_id.errors.0}}</p>
@@ -43,8 +43,13 @@ $(document).ready(function() {
     {{ ff.field(form.area_indoor, class='short') }}
     {{ ff.field(form.area_outdoor, class='short') }}
     {{ ff.field(form.prop_state_id) }}
+    {{ ff.field(form.cardinal_direction) }}
   </dl>
-
+  
+  <h2 class="title">Características de la operación</h2>
+  <dl class="form">
+    {{ ff.field(form.prop_operation_state_id) }}
+  </dl>
   <!-- more_features.html -->
   <h2 class="title">Detalles de la Propiedad</h2>
   <ul class="services">
@@ -79,54 +84,92 @@ $(document).ready(function() {
   </div>
   
   <!-- location.html -->
-  <h2 class="title">Ubique el Inmueble</h2>
+  <div id="locate_prop_in_map"></div>
+  
+  <h2 class="title">Ubique la propiedad completando los siguientes pasos</h2>
   {% if form.location.errors %}
   <div class="msg_error">Debe ubicar la propiedad</div>
   {% endif %}
-  <div id="searchbox2">
-      <input id="searchmap" class="search" type="text" value="" autocomplete="off" placeholder="Escriba aquí la dirección"/>
-      <!-- SEARCH BUTTON -->
-      <div id="btnSearch2" class="btnSearch blue">Ubicar</div>
-      
-      
-      <p class="info">1 - Escriba parte de la dirección en la caja de texto.</p>
-      <p class="info">2 - Ajuste la ubicación del inmueble arrastrando el icono "ICONO"</p>
-      <p class="info">3 - Modifique los valores de ser necesario.</p>
-      <div id="map_canvas" style="width:740px; height: 300px"></div>
-  </div>
   
-	<p class="msg_warning msg_small"><span class="ico"></span>Ubique la propiedad en el mapa, luego de ser necesario modifique los datos manualmente.</p>
-    
-  <dl class="form x2col">
-    {{ ff.field(form.country, style='width:200px;') }}
-    {{ ff.field(form.state, style='width:200px;') }}
-    {{ ff.field(form.city, style='width:200px;') }}
-    {{ ff.field(form.neighborhood, style='width:200px;') }}
+  <dl class="location">
+  	<dt><div class="step">1</div></dt>
+    <dd>
+        <div id="searchbox2">
+          <input id="searchmap" class="search ui-autocomplete-input" type="text" value="" autocomplete="off" placeholder="Escriba: Calle, Número, Localidad, Provincia"/>
+          <!-- SEARCH BUTTON -->
+          <div id="btnSearch2" class="btnSearch">Ubicar</div>
+          <a href="#locate_prop_in_map" style="float:right; line-height:40px;" onclick="jQuery('#locate_in_map_help_video').show();">Video de ayuda</a>
+        </div>
 
-    {{ form.location(type="hidden") }}
+        <div class="example_box">
+          <div id="locate_in_map_help_video" style="display:none;">
+            <a class="close" href="#locate_prop_in_map" onclick="jQuery('#locate_in_map_help_video').hide();" title="Ocultar video"></a>
+            <div style="padding:20px 0px 10px 0px;opacity:1;height:auto;width:auto;min-height:575px;min-width:700px;">
+              <object width="700" height="575">
+                <param name="movie" value="http://www.youtube.com/v/WQ0CI2h3aIs&rel=0"></param>
+                <param name="wmode" value="direct"></param>
+                <embed src="http://www.youtube.com/v/WQ0CI2h3aIs&rel=0" type="application/x-shockwave-flash" wmode="direct" width="700" height="575"></embed>
+              </object>
+            </div>
+          </div>
+            Ejemplo: <b>Av 44 1100, La Plata, Buenos Aires.</b><br />
+            Si no encuentra la dirección, busque una zona familiar próxima a la propiedad (en el ejemplo: <b> La Plata, Buenos Aires, Argentina</b>).
+        </div>
+	</dd>
   </dl>
 
-  <dl class="form x2col"> 
-      <dt>Dirección</dt>
-      <dd class="clear">
-          <div>
-              <p>Calle</p>
-              {{form.street_name}}
-          </div>
-          
-          <div class="edit {{ 'errorbox' if form.street_number.errors or form.floor_number.errors else '' }}">
-              <div class="short">
-                  <p>Número</p>
-                  {{form.street_number}}
-                  {% if form.street_number.errors %} <p class="error">{{ form.street_number.errors.0 }}</p> {% endif %}
-               </div>
-               <div class="short">   
-                  <p>Piso / Dpto.</p>
-                  {{form.floor_number}}
-                  {% if form.floor_number.errors %} <p class="error">{{ form.floor_number.errors.0 }}</p> {% endif %}
+
+  <dl class="location">
+  	<dt><div class="step">2</div></dt>
+    <dd>
+        <div id="location_box">
+        	<div class="location_head">
+            	<span class="indication">Ajuste la ubicación de la propiedad arrastrando el icono que aparece en el mapa.</span>
+            	<a href="#" id="btnMaximize" class="icon16 maximize" title="Maximizar/minimizar mapa"></a>
+            </div>
+        	<div id="map_canvas" style="width:740px; height: 300px"></div>
+        </div>
+    </dd>
+  </dl>
+  
+  <dl class="location">
+  	<dt><div class="step">3</div></dt>
+    <dd>
+    	<div id="location_glass" title="Antes de este paso, debe ubicar la propiedad."></div>
+        <div class="location_head border">
+            <span class="indication">De ser necesario, modifique los campos de la dirección que considere oportuno.</span>
+        </div>
+        <dl class="form x2col">
+{{ ff.field(form.country, style='width:200px;') }}
+{{ ff.field(form.state, style='width:200px;') }}
+{{ ff.field(form.city, style='width:200px;') }}
+{{ ff.field(form.neighborhood, style='width:200px;') }}
+
+{{ form.location(type="hidden") }}
+</dl>
+        <dl class="form x2col"> 
+          <dt>Dirección</dt>
+          <dd class="clear">
+              <div>
+                  <p>Calle</p>
+                  {{form.street_name}}
               </div>
-          </div>
-      </dd>
+              
+              <div class="edit {{ 'errorbox' if form.street_number.errors or form.floor_number.errors else '' }}">
+                  <div class="short">
+                      <p>Número</p>
+                      {{form.street_number}}
+                      {% if form.street_number.errors %} <p class="error">{{ form.street_number.errors.0 }}</p> {% endif %}
+                   </div>
+                   <div class="short">   
+                      <p>Piso / Dpto.</p>
+                      {{form.floor_number}}
+                      {% if form.floor_number.errors %} <p class="error">{{ form.floor_number.errors.0 }}</p> {% endif %}
+                  </div>
+              </div>
+          </dd>
+      </dl>
+    </dd>
   </dl>
 
   <!-- services.html -->
@@ -151,8 +194,8 @@ $(document).ready(function() {
     
   <!-- NAV BUTTONS -->
   <div class="navButtons">
-      <input class="btnWizard prev" name="" type="submit" value="Guardar" />
-      <input id="toimages" class="btnWizard next" name="" type="submit" value="Guardar y Cargar Fotos" />
+      <input class="btnWizard prev" name="" type="submit" value="Guardar" title="Guardar y volver al listado de propiedades" />
+      <input id="toimages" class="btnWizard next" name="" type="submit" value="Guardar y Cargar Fotos" title="Guardar y cargar fotos de la propeidad"/>
   </div>
 </form>
 {% endblock %}

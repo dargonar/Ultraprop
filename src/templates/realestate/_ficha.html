@@ -1,17 +1,16 @@
 {% extends "realestate/_base.html" %}
 
 {%block head%}
-  <script type="text/javascript" src="/js/jquery.ketchup.js"></script>
-  <script type="text/javascript" src="/js/jquery.ketchup.run.js"></script>
+  <script type="text/javascript">
+  $(document).ready( function() {
+    init_ficha();
+  });
+  </script>
 {%endblock%}  
-  
+
 {% block content %}
   <div id="content">
-
-  {% set realestate_logo = url_for('images/show',key=property.realestate.logo.key()|string, width=133, height=47) if property.realestate and property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
-  {% set realestate_logo_big = url_for('images/show',key=property.realestate.logo.key()|string, width=230, height=80) if property.realestate and property.realestate.logo else '/img/picturebox/realestate_ficha_nophoto.jpg'%}
   <div class="innerContent detail" id="ficha_{{property.key()}}">
- 
  
  <!-- CONTACT --> 
  <div class="rightColumn"> 
@@ -38,23 +37,26 @@
   <div class="contactData">
       <!-- AGENT INFO -->
       <div id="agent_info" class="agentbox">
-         {% if property.realestate %}  
-          <div class="data">
-            <h1>{{property.realestate.name}}</h1>
-            <span>{{property.realestate.address}}</span><br/>
-            <span>{{property.realestate.telephone_number}}</span><br/>
-            <a href="{{property.realestate.website}}" target="_blank">{{property.realestate.website}}</a><br/>
-            <span>{{property.realestate.email}}</span><br/>
-          </div>
-        {% endif %}
-        
+        <div class="data">
+          <h1>{{realestate.name}}</h1>
+          <span>{{realestate.address if realestate.address else ''}}</span><br/>
+          <span>{{realestate.telephone_number if realestate.telephone_number else ''}}</span><br/>
+          <a href="{{realestate|realestate_linkfy}}" target="_blank" title="Enlace de {{realestate.name}} en Ultraprop"><b>{{realestate.name}}</b> en Ultraprop</a><br/>
+          {% if realestate.website and realestate.website|wordcount>0 %}
+            <a href="{{'%s%s'|format('http://',realestate.website) if 'http://' not in realestate.website else realestate.website }}" target="_blank">{{realestate.website}}</a><br/>
+          {% endif %}
+          <span><img src="{{realestate|email_to_png}}" alt="Correo electrónico" /></span><br/>
+          {% if realestate.open_at %}
+            <span>Atención {{realestate.open_at}}</span><br/>
+          {% endif %}
+        </div>
       </div>
    </div>
    
 </div>
   
     <div id="detailBox" class="detailBox">
-      <!--h2 class="super">{{ property.getPropType() }} en {{ property.getPropOperation() }}</h2-->
+      <!--h2 class="super">{# { property.getPropType() } #} en {# { property.getPropOperation() } #}</h2-->
       <div class="addressbox">
       	<p class="address">{{ property | addressify }}</p>
         <p class="price"><small>{{ cur }}</small> {{ price|currencyfy }}</p>
@@ -65,6 +67,7 @@
       
       {%include "realestate/includes/_prop_details.html"%}
       
+              
       <!-- ///// DETAIL ///// -->
       <div class="infoBox">
         <h2>Descripción de la Propiedad</h2>
@@ -96,10 +99,8 @@
           </div>
           <!-- ////// MAP 625 x 302 ////// -->
           <img id="{{ map_img_id }}" src="{{img_map_src}}" />
-
-
-
      </div>
     </div>
   </div>
+ </div>
 {% endblock %}

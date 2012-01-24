@@ -100,9 +100,9 @@ function map_initialize() {
   }
   else
   {
-    // latlng = new google.maps.LatLng(-34.397, 150.644);
-    // LatLong del hint (Aguirre 276...).
-    latlng = new google.maps.LatLng(-34.59962,-58.433897);
+    // LatLong del centro de laplata
+    latlng = new google.maps.LatLng(-34.921267,-57.954597);
+    //$('#location').val(latlng.lat() + ',' + latlng.lng());
     zoom = 15;
   }
   
@@ -203,6 +203,7 @@ function is_from_country(item, country)
   return false;
 }
 
+  
 function init_new_property()
 {
   //Cargamos maps api
@@ -210,23 +211,29 @@ function init_new_property()
   
   //Pone estilo 'Selected' cuando marcan checkbox y limpia errores <p>
   $(".typebox input[type=checkbox]").click( function() {
-
     var typebox = $(this).parents('.typebox:first');
-    $(typebox).toggleClass('selected', this.checked);
+    $(typebox).toggleClass('selected'); //, this.checked);
 
-    //recalculate operation
-    var val=0;
-    $(".typebox input[type=checkbox]:checked").each( function(i, field) {
-      var tmp = field.id.split('_');
-      val |= parseInt( tmp[1] );
-    });
-    $("#prop_operation_id").val(val);
-    
     var op = $(this).parents('dd.operation:first');
     op.removeClass('errorbox');
     op.find('p.error').remove();
   });
   
+  //Auto checkea el box cuando hay precio
+  $("#price_rent").keyup(function(event){
+    chk = $('input[name=rent_yes]');
+    if( ($(this).val() != '' && chk.is(':checked') == false) ||
+        ($(this).val() == '' && chk.is(':checked') == true ) )
+      chk.trigger('click'); 
+  });
+  
+  $("#price_sell").keyup(function(event){
+    chk = $('input[name=sell_yes]');
+    if( ($(this).val() != '' && chk.is(':checked') == false) ||
+        ($(this).val() == '' && chk.is(':checked') == true ) )
+      chk.trigger('click'); 
+  });
+ 
   $("#description").focus( function() {
     $(this).removeClass('errorbox');
   });
@@ -292,6 +299,34 @@ function init_new_property()
   $("#toimages").click( function(e) {
     $("input[name=goto]").val('go');
   });
+  
+  //Boton de maximizar
+  $('#btnMaximize').toggle(function() {
+    $('#location_box').addClass('fullsize');
+    $(this).removeClass('maximize');
+    $(this).addClass('minimize');
+    $('#map_canvas').css('width',$('#location_box').width()+'px').css('height',$('#location_box').height()-$('#location_box .location_head').innerHeight()+'px');
+    google.maps.event.trigger(map, 'resize');
+  }, function() {
+    $('#location_box').removeClass('fullsize');
+    $(this).removeClass('minimize');
+    $(this).addClass('maximize');
+    $('#map_canvas').css('width','740px').css('height','300px');
+    google.maps.event.trigger(map, 'resize');
+    map.setCenter(marker.getPosition());
+  });
+  
+  $('#new_property_form').submit(function() {
+    //recalculate operation
+    var val=0;
+    $(".typebox input[type=checkbox]:checked").each( function(i, field) {
+      var tmp = field.id.split('_');
+      val |= parseInt( tmp[1] );
+    });
+    $("#prop_operation_id").val(val);
+    return true;
+  });
+    
 }
 
 //----------------------------------
@@ -526,6 +561,7 @@ function init_pictures(bulk_remove_url, img_reorder_url, img_upload_url)
     button_placeholder_id  : "addphoto",
     
     swfupload_load_failed_handler : function() { 
+      //TODO: poner lo que nos de emo
       alert('error cargando flash');
     },
     
@@ -581,7 +617,7 @@ function init_pictures(bulk_remove_url, img_reorder_url, img_upload_url)
     
     upload_complete_handler       : function(file) {
       //alert('cuando se llama esto??');
-    },
+    }
   });
   
   if( $('#masterpic>li').length > 1 ) 
@@ -608,7 +644,7 @@ function init_property_list(property_new_url)
     $('form#filter').submit();
   });
   
-  $('#prop_type, #currency, #rooms, #area_indoor, #status').change( function(e) {
+  $('#prop_type, #currency, #rooms, #area_indoor, #status, #realestate_network').change( function(e) {
     $('form#filter').submit();
   });
   
@@ -690,7 +726,7 @@ function init_property_list(property_new_url)
           });
         },
         error: function(xml, txt, err) {
-          alert('error');
+          alert('ERROR: '+xml.responseText);
           $(this).removeClass('disable');
         } 
       }); 
@@ -720,6 +756,65 @@ function init_realestate()
     });
     return false;
   });
+  
+  $('#form_logo_input').change( function() {
+    var tmp = $(this).val();
+    var inx = tmp.lastIndexOf('\\') + 1;
+    $('#filename').html(tmp.substr(inx));
+    $('div.filename').show();
+  });
+  
+  $("#goto_website").click( function(e) {
+    $("input[name=goto]").val('website');
+  });
+  
+}
+//----------------------------------
+//         PROFILE->REALESTATE WEBSITE
+//---------------------------------- 
+function init_realestate_website(didurl){
+  //Validar slug de domain id
+  $('#validate_domain_id').click( function() {
+    
+    $(this).addClass('disable');
+    
+    $.ajax({
+      url:  didurl,
+      type: "GET",
+      data: {did:$('#domain_id').val()},
+      success: function(res) {
+        $('#validate_domain_id').removeClass('disable');
+        if(res.result=='free')
+        {
+          $('#did_dd>p').attr('class','ok');
+          $('#did_dd').attr('class',false);
+          alert('El nombre se encuentra disponible. Puede utilizarlo.');
+        }
+        else
+        {
+          $('#did_dd>p').attr('class','error');
+          $('#did_dd').attr('class','errorbox');
+          alert('El nombre ya esta siendo utilizado. Por favor ingrese otro nombre.');
+        }
+
+        $('#did_dd>p').html(res.msg);
+        $('#did_dd>p').show();
+      },
+      error: function(xml, txt, err) {
+        $('#validate_domain_id').removeClass('disable');
+        alert('Error verificando');
+      } 
+    }); 
+    
+    return false;
+  });
+  //
+  setTimeout("hideFlashMessageSlow()", 5000);
+}
+
+function hideFlashMessageSlow(){
+  if (jQuery('#flash_message').length>0)
+    jQuery('#flash_message').fadeOut('slow');
 }
 
 //----------------------------------
@@ -783,5 +878,18 @@ function init_user()
       // Animation complete.
     });
     jQuery("#actual_password").css({ opacity: 1 });
+  });
+}
+
+//----------------------------------
+//         ACCOUNT
+//---------------------------------- 
+
+function init_account()
+{
+  $('.action>form').submit( function() {
+    $('#msg1').show();
+    $('#msg2').show();
+    return true;
   });
 }

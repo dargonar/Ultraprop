@@ -1,20 +1,37 @@
-<div id="gallery" class="ad-gallery">
+{% block headscript %}
+    <script type="text/javascript">
+    $(function() {
+				$('.thumblist_{{ property.key()|string }} a').lightBox();
+    });
+    </script>
+{% endblock %}
+
+
+<div id="gallery" class="ad-gallery" style="position:relative;">
+  {{ property|oper_labelify(1) }}
+  
   <div class="ad-image-wrapper"></div>
+  
   <div class="ad-controls"></div>
   <div class="ad-nav">
     <div class="ad-thumbs">
-      <ul class="ad-thumb-list">
+      <ul id="thumblist" class="ad-thumb-list thumblist_{{ property.key()|string }}">
+        {% set _width  = 616 %}
+        {% set _height = 462 %}
         {% for img in images %}
-          {% if img.file %}
+          {% if img.title %}
           <li>
-            <a href="{{ url_for('images/show', key=img.file.key()|string, width=322, height=242) }}">
-              <img id="image_{{loop.index}}" src="{{ url_for('images/show', key=img.file.key()|string, width=72, height=55) }}"  style="max-height:55px;" title="" alt="" class="popupimg class{{loop.index}}"> 
+            <a href="{{img.title}}=s{{_width}}" wh="_width,_height">
+              <div class="pic_zoom"></div>
+              <div id="imgbox" style="display: table-cell; vertical-align: middle; text-align:center; height:63px">
+								<img id="image_{{loop.index}}" src="{{img.title}}=s63-c" style="max-width:83px;max-height:63px;" wh="83,63" title="" class="popupimg class{{loop.index}}"> 
+              </div>
             </a>
           </li>
           {% endif %}
         {% else %}
           <li class="nophoto">
-            <a href="/img/picturebox/nophoto_322x242.jpg"> 
+            <a href="/img/picturebox/nophoto_{{_width}}x{{_height}}.jpg"> 
               <img id="image_no" src="/img/picturebox/nophoto_115x86.jpg" />
             </a>
           </li>

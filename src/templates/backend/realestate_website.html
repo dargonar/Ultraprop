@@ -1,0 +1,257 @@
+{% extends "backend/_base.html" %}
+
+{%- macro form_field(field, class='') -%}
+		{% if field.errors %}
+      {{field(class=class+' error', **kwargs)}}
+    {% else %}
+      {{field(class=class, **kwargs)}}
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro form_field2(field) -%}
+  <dd {% if field.errors %} class="errorbox" {% endif %} >
+  	<div style="border:solid 1px #ccc; padding:10px 15px;">
+		<span style="font-size:14px; font-weight:bold; padding-right:5px;">http://</span>   
+        {{ form_field(field, **kwargs)}}
+        {{ form_error(field) }}
+    </div>
+  </dd>  
+{%- endmacro -%}
+
+{%- macro form_error(field) -%}
+    {% if field.description != '' %}<span class="m2">{{field.description}}</span>{% endif %}
+    {% if field.errors %} <p class="error">{{ field.errors.0 }}</p> {% endif %}
+{%- endmacro -%}
+
+
+{%- macro form_field2_container_double(field1, field2) -%}
+  <dd {% if field1.errors or field2.errors %} class="errorbox" {% endif %} >
+{%- endmacro -%}
+
+{%- macro form_field2_container(field) -%}
+  <dd {% if field.errors %} class="errorbox" {% endif %} >
+{%- endmacro -%}
+
+{%- macro is_selected(selected, theme) -%}
+  {% if selected == theme %}
+    selected
+  {% endif %}
+{%- endmacro -%}
+
+
+{% block headscript %}
+    <script type="text/javascript" src="/js/jquery.lightbox-0.5.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/jquery.lightbox-0.5.css" media="screen" />
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+      init_realestate_website('{{url_for('backend/realestate_website/check_domain_id')}}');
+    });
+  
+    $(function() {
+        $('#gallery a.zoomin').lightBox();
+    });
+    
+    function PreviewTexts(obj, url)
+    {
+      var the_url = url.replace('-message-', $('#tpl_text').val());
+      the_url = the_url.replace('-title-', $('#tpl_title').val());
+      $(obj).attr('href', the_url);
+      return true;
+    }
+    </script>
+{% endblock %}
+
+{% block content %}
+
+	<div style="overflow:hidden; margin-bottom:20px;">
+		<h1>Mi Web <!--i style="font-size:14px;">edición de sitio web</i--></h1>
+  </div>
+  {% if flash %}
+    <div class="msg_{{flash.type}}" id="flash_message"><b>{{flash.message}}</b></div>
+  {% endif %}
+    
+  <form id="website_form" action="{{url_for('backend/realestate_website/edit')}}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="key" value="{{key}}" />
+    <!-- ///// IDENTITY ///// -->    
+    <h2 class="title">Mi marca y mi presencia en la web</h2>
+    <dl class="form" style="max-width:920px;">
+        <dt style="width:380px; margin-right:20px; margin-bottom:15px;">
+            <h3>Ya tengo página web</h3>
+            <p style="font-weight:normal;">
+            Ingrese la dirección para que figure en nuestros listados y en la página de contacto.</p>
+        </dt>
+
+        {{ form_field2(form.website, title="www.sudominio.com.ar", placeholder="www.sudominio.com.ar") }}
+  
+        <dt style="width:380px; margin-right:20px; margin-bottom:15px;">
+        	<h3>No tengo página web</h3>
+        	<p style="font-weight:normal;">
+            Si desea tener su página web con dominio propio seleccione esta opción.&nbsp;&nbsp;
+            <a href="http://www.jorgemaull.com.ar" target="_blank"> (ver ejemplo)</a>
+			</p>
+        </dt>
+        <dd>
+   	  <div class="block_info" style="margin-bottom:15px;">
+            	<p>Seleccione esta opción y un responsable del área técnica se contactará para tramitar su solicitud.</p>
+                
+                <div class="block_info_divider"></div>
+                
+                {{form.managed_domain}}
+                <label for="managed_domain">
+                    <b>Quiero mi página web</b>
+                </label>
+            </div>
+        </dd>
+      
+        
+      <dt style="width:380px; margin-right:20px; margin-bottom:15px;">
+        <h3>Dirección en UltraProp</h3>
+         <p style="font-weight:normal;">Elija su dirección web en ULTAPROP.</p>
+      </dt>
+      
+	<dd id="did_dd" {% if form.domain_id.errors %} class="errorbox" {% endif %}>
+    	<div style="border:solid 1px #ccc; padding:10px 15px;">
+          <span>http://www.ultraprop.com.ar/</span>
+            {{form.domain_id(style='width:140px;', placeholder='')}}
+          <a class="uibutton" id="validate_domain_id" href="#" title="Comprobar disponibilidad">&nbsp;Comprobar&nbsp;</a>
+            {{ form_error(form.domain_id) }}
+            {% if not form.domain_id.errors %}
+              <p style="display:none" class="ok">&nbsp;</p>
+            {% endif %}
+        </div>
+        
+        <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
+      </dd>
+</dl>
+
+<!-- ///// THEMES ///// -->
+<h2 class="title">Seleccionar Plantilla</h2> 
+{% set the_theme = realestate.get_web_theme() %}
+<div id="gallery">
+  <ul>
+    <li class="theme_box {{is_selected(the_theme, 'theme_green_blue')}} ">
+    		<h3>Verde y Azul</h3>
+    		<a class="zoomin" href="/img/themplates/green_medium.jpg" title="Plantilla Verde">
+          <img src="/img/pixel-transp.gif" class="ico_zoom" />
+          <div class="zoom"></div>
+          <img class="pic" src="/img/themplates/green_small.jpg" />
+        </a>
+        
+        <div class="buttons">
+          <a class="uibutton icon preview" href="{{ url_for('realestate/theme_preview', realestate=realestate.key()|string, theme='theme_green_blue') }}" target="_blank">&nbsp;Vista previa&nbsp;</a>
+          <a class="uibutton special" href="{{ url_for('backend/realestate_website/set_theme', theme='theme_green_blue')}}">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
+        </div>
+    </li>
+    
+    <li class="theme_box {{is_selected(the_theme, 'theme_blue')}} ">
+    		<h3>Azul</h3>
+    		<a class="zoomin" href="/img/themplates/blue_medium.jpg" title="Plantilla Azul">
+          <img src="/img/pixel-transp.gif" class="ico_zoom" />
+          <div class="zoom"></div>
+          <img class="pic" src="/img/themplates/blue_small.jpg" />
+        </a>
+        
+        <div class="buttons">
+          <a class="uibutton icon preview" href="{{ url_for('realestate/theme_preview', realestate=realestate.key()|string, theme='theme_blue') }}" target="_blank">&nbsp;Vista previa&nbsp;</a>
+          <a class="uibutton special" href="{{ url_for('backend/realestate_website/set_theme', theme='theme_blue')}}">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
+        </div>
+    </li>
+    
+    <li class="theme_box {{is_selected(the_theme, 'theme_grey')}} ">
+    		<h3>Gris</h3>
+    		<a class="zoomin" href="/img/themplates/grey_medium.jpg" title="Plantilla Gris">
+          <img src="/img/pixel-transp.gif" class="ico_zoom" />
+          <div class="zoom"></div>
+          <img class="pic" src="/img/themplates/grey_small.jpg" />
+        </a>
+        
+        <div class="buttons">
+          <a class="uibutton icon preview" href="{{ url_for('realestate/theme_preview', realestate=realestate.key()|string, theme='theme_grey') }}" target="_blank">&nbsp;Vista previa&nbsp;</a>
+          <a class="uibutton special" href="{{ url_for('backend/realestate_website/set_theme', theme='theme_grey')}}">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
+        </div>
+    </li>
+    
+    <li class="theme_box {{is_selected(the_theme, 'theme_red_black')}} ">
+    		<h3>Rojo alto contraste</h3>
+    		<a class="zoomin" href="/img/themplates/red_black_medium.jpg" title="Plantilla Rojo y Negro">
+          <img src="/img/pixel-transp.gif" class="ico_zoom" />
+          <div class="zoom"></div>
+          <img class="pic" src="/img/themplates/red_black_small.jpg" />
+        </a>
+        
+        <div class="buttons">
+          <a class="uibutton icon preview" href="{{ url_for('realestate/theme_preview', realestate=realestate.key()|string, theme='theme_red_black') }}" target="_blank">&nbsp;Vista previa&nbsp;</a>
+          <a class="uibutton special" href="{{ url_for('backend/realestate_website/set_theme', theme='theme_red_black')}}">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
+        </div>
+    </li>
+    
+    <li class="theme_box {{is_selected(the_theme, 'theme_red_white')}} ">
+    		<h3>Rojo minimalista</h3>
+    		<a class="zoomin" href="/img/themplates/red_white_medium.jpg" title="Plantilla Rojo y Blanco">
+          <img src="/img/pixel-transp.gif" class="ico_zoom" />
+          <div class="zoom"></div>
+          <img class="pic" src="/img/themplates/red_white_small.jpg" />
+        </a>
+        
+        <div class="buttons">
+          <a class="uibutton icon preview" href="{{ url_for('realestate/theme_preview', realestate=realestate.key()|string, theme='theme_red_white') }}" target="_blank">&nbsp;Vista previa&nbsp;</a>
+          <a class="uibutton special" href="{{ url_for('backend/realestate_website/set_theme', theme='theme_red_white')}}">&nbsp;&nbsp;&nbsp;Seleccionar&nbsp;&nbsp;&nbsp;</a>
+        </div>
+    </li>
+    
+    <li class="theme_box selected" style="display:none;">
+		<div style="width:240px; height:188px;">
+    
+    	<h1 style="margin:20px 20px 10px 20px; font-size:24px; line-height:24px; letter-spacing:-1px;">Solicitar plantilla personalizada</h1>
+      <p style="color:#0A5278; font-size:14px; line-height:18px; margin:0 20px 10px 20px;">Diseñamos una plantilla personalizada acorde a la identidad de su Inmobiliaria.</p>
+      <div class="buttons" style="margin-left:20px;">
+        <a class="uibutton special" href="#" style="font-size:13px;">Pedir cotización</a>
+      </div>
+    
+    </div>
+        
+
+    </li>
+  
+  </ul>
+</div>
+
+<h2 class="title">Mensajes institucionales en su Página Web</h2>
+
+<dl class="form" style="max-width:920px;">
+	<dt style="width:400px; margin-bottom:15px;">
+        <img src="/img/myweb_sample.jpg"/>
+      </dt>
+      
+      <dd>
+      	<div class="custom_data_theme">
+            <h4 style=" margin:0; margin-bottom:3px;">Título institucional</h4>
+            {{ form.tpl_title(title="Título", placeholder="Escriba un título institucional aquí", id='tpl_title') }}
+            
+            <h4 style="margin-bottom:3px;">Texto institucional</h4>
+            {{ form.tpl_text(title="Título", placeholder="Escriba un texto institucional aquí", id='tpl_text') }}
+            
+            <!-- div class="block_info" style="margin-left:0; margin-top:10px; margin-bottom:18px;"> 
+              <h4 style="margin-bottom:3px; margin-top:0;">Imagen de fondo (opcional)</h4>   
+              <p>Si lo desea puede utilizar una imagen propia.</p>
+              <input name="" type="file" style="margin:5px 0;" />
+              <p>
+              La imagen debe medir 586 x 306 pixeles.
+              <a href="/img/comp_2.jpg" target="_blank">Descargar ejemplo !</a>
+              </p>
+            </div-->
+             
+            <div style="margin-top:8px;">
+            	<a href="#" onclick="return PreviewTexts(this, '{{ url_for('realestate/texts_preview', realestate=realestate.key()|string, title='-title-', message='-message-', _full=true) }}');" target="_blank" id="preview" class="uibutton icon preview">&nbsp;Vista Previa&nbsp;</a>              
+             </div>
+             
+        </div>
+        
+        <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
+      </dd>
+
+	</dl>
+</form>
+
+{% endblock  %}

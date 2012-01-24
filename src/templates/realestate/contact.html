@@ -12,26 +12,30 @@
 {%- endmacro -%}
 
 {%block head%}
-  <script type="text/javascript" src="/js/jquery.ketchup.js"></script>
-  <script type="text/javascript" src="/js/jquery.ketchup.run.js"></script>
+  <script type="text/javascript">
+  $(document).ready( function() {
+    init_contact();
+  });
+  </script>
 {%endblock%}  
 
 
 {% block content %}
-  <div id="content">
+  <div id="content" class="contact">
     <h1>Contáctenos</h1>
     
     <div class="contactform">
     
       <div class="contactinfo">
-        <span><b>Teléfono:</b> {{realestate.telephone_number}}</span><br/>
-        <span><b>Email:</b> {{realestate.email}}</span><br/>
-        <span><b>Dirección:</b> {{realestate.address}}</span>
-        
+        <span><b>Teléfono:</b> {{realestate.telephone_number if realestate.telephone_number else 'N/D'}}</span><br/>
+        <span><img src="{{realestate|email_to_png}}" alt="Correo electrónico" /></span><br/>
+        <span><b>Dirección:</b> {{realestate.address if realestate.address else 'N/D'}}</span>
+        {% if realestate.open_at %}
+          <br/><span>Atención {{realestate.open_at}}</span><br/>
+        {% endif %}
         <br/>
         <br/> 
-        
-      	<p class="txt">Si desea saber más de nosotros o nuestros servicios, por favor complete el siguiente formulario para que podamos contactarlo a la brevedad.</p>        
+        <p class="txt">Si desea saber más de nosotros o nuestros servicios, por favor complete el siguiente formulario para que podamos contactarlo a la brevedad.</p>        
 	</div>
 
 

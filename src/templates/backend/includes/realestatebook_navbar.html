@@ -1,0 +1,24 @@
+  <div style="overflow:hidden; margin-bottom:20px;">
+    <h1 style="margin-bottom:10px;">Red Ultraprop</h1><br/>
+    <b style="color:#0A5278;">
+      Amplía tu oferta inmobiliaria y comparte negocios con tus colegas solicitando su amistad.<br/>
+      ¡Crea tu Red ULTRAPROP y multiplica tus negocios!
+    </b>
+  </div>
+  <ul class="tabs_admin">
+    <li class="{{ 'active' if rsbook_menu == 'red_ultraprop' else ''}}">
+      <a href="{{url_for('backend/realestatebook/friends')}}" >Mi Red</a>
+    </li>
+    <li class="{{ 'active' if rsbook_menu == 'solicitudes' else ''}}">
+      <a href="{{url_for('backend/realestatebook/requests')}}">Solicitudes</a>
+    </li>
+    <li class="{{ 'active' if rsbook_menu == 'search' else ''}}">
+      <a href="{{url_for('backend/realestatebook/friend_request')}}">Buscar inmobiliarias</a>
+    </li>
+  </ul>
+  
+  {% if flash %}
+    <div class="msg_{{flash.type}}" id="flash_message"><b>{{flash.message}}</b></div>
+  {% endif %}
+  
+  <h2 style="margin:5px;">{{rsbook_title}}</h2>

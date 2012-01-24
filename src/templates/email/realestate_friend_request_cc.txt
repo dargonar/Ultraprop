@@ -1,0 +1,14 @@
+{% extends "email/_base.txt"%}
+{%block content%}
+    ¡Hola {{rs_requestor.name}}!
+    
+    Su invitación a {{rs_receiver.name}} ha sido enviada.
+    
+    Datos de contacto del solicitado:
+      Nombre: {{rs_receiver|ownerify(min=True)}}
+      Correo electrónico: {{rs_receiver.email}}
+      Teléfono: {{rs_receiver.telephone_number}}
+      Web de la inmobiliaria: {{rs_receiver.website}}
+      Web en Ultraprop: {{rs_receiver|realestate_linkfy}}
+    
+{% endblock %}

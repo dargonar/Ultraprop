@@ -1,0 +1,71 @@
+from models import *
+from myfilters import do_slugify
+
+for plan in Plan.all().fetch(10):
+  plan.max_properties               = -1
+  plan.allow_realestatefriendship   = 1
+  plan.allow_website                = 1
+  plan.payd_days                    = 0
+  plan.online                       = 0
+  plan.enabled                      = 1
+  plan.html                         = plan.description
+  plan.slug                         = do_slugify(plan.name)
+  plan.is_final_price               = 0
+  if plan.slug in ['plan-s','plan-m','plan-l']:
+    plan.is_final_price               = 1
+    plan.online                       = 1
+    
+  plan.save()
+  print plan.slug
+
+p = Plan()
+p.name  = 'Plan S'
+p.slug  = do_slugify(p.name)
+p.description = u'Avisos ilimitados'
+p.html = u'Avisos ilimitados'
+p.type = Plan._ONE_TIME
+p.amount = 0
+p.free_days = 0
+p.payd_days = 0
+p.online = 1
+p.enabled = 1
+p.max_properties               = -1
+p.allow_realestatefriendship   = 0
+p.allow_website                = 0
+p.is_final_price               = 1
+p.put()
+
+p = Plan()
+p.name = 'Plan M'
+p.slug  = do_slugify(p.name)
+p.description = u'Avisos ilimitados y página web'
+p.html = u'Avisos ilimitados.<br/><b title="Con dominio propio www.su_inmobiliaria.com">Página web</b>.'
+p.type = Plan._MONTHLY
+p.amount = 99
+p.free_days = 7
+p.payd_days = 0
+p.online = 1
+p.enabled = 1
+p.max_properties               = -1
+p.allow_realestatefriendship   = 0
+p.allow_website                = 1
+p.is_final_price               = 1
+p.put()
+
+p = Plan()
+p.name = 'Plan L'
+p.slug  = do_slugify(p.name)
+p.description = u'Página web y dominio de correo propio'
+p.html = u'Avisos ilimitados.<br/><b title="Con dominio propio www.su_inmobiliaria.com">Página web</b>.<br/><b title="Con dominio propio casilla@su_inmobiliaria.com"> Correo propio</b>.<br/><b title="Para ampliar su oferta inmobiliaria">Red inmobiliaria</b>.'
+p.type = Plan._MONTHLY
+p.amount = 119
+p.free_days = 7
+p.payd_days = 0
+p.online = 1
+p.enabled = 1
+p.max_properties               = -1
+p.allow_realestatefriendship   = 1
+p.allow_website                = 1
+p.is_final_price               = 1
+p.put()
+

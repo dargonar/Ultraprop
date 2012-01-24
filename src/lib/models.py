@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from google.appengine.ext import db, blobstore
+from google.appengine.api.images import get_serving_url
+
 from geo.geomodel import GeoModel
 import random 
 import logging
@@ -13,42 +15,86 @@ from search_helper import build_list, get_index_alphabet , calculate_price, inde
 
 from geo import geocell
 
+from texttoimage_helper import render_text_into_blob
 
-class State(db.Model):
+class UPConfig(db.Model):
+  last_ipn     = db.DateProperty()
+  last_ipn_emi = db.DateProperty()
+
+class Plan(db.Model):
+  _MONTHLY     = 1
+  _ONE_TIME    = 2
+  _EMI_MONTHLY = 3
+
   name                = db.StringProperty()
-  country_code        = db.StringProperty()
-  def __repr__(self):
-    return self.name
+  description         = db.StringProperty(indexed=False)
+  slug                = db.StringProperty()
+  type                = db.IntegerProperty()
+  amount              = db.IntegerProperty()
+  free_days           = db.IntegerProperty(indexed=False)
+  payd_days           = db.IntegerProperty(indexed=False) # Si es _ONE_TIME.
+  online              = db.IntegerProperty() # Lo mostramos en SignUp.
+  enabled             = db.IntegerProperty() # Indica si permite que nuevas inmobiliarias utilicen este plan.
+  html                = db.TextProperty(indexed=False)
+  
+  is_final_price      = db.IntegerProperty()
+  
+  max_properties              = db.IntegerProperty(indexed=False)
+  allow_realestatefriendship  = db.IntegerProperty(indexed=False)
+  allow_website               = db.IntegerProperty(indexed=False)
+  
+  @property
+  def is_free(self):
+    return self.amount<=0
     
-class City(db.Model):
-  name                = db.StringProperty()
-  state               = db.ReferenceProperty(State)
   def __repr__(self):
-    return self.name
-
-class Neighborhood(GeoModel):
-  name                = db.StringProperty()
-  zip_code            = db.StringProperty()
-  city                = db.ReferenceProperty(City)
-  # geo                 = db.ListProperty(db.GeoPt)
-  def __repr__(self):
-    return self.name
-   
+    return 'PLAN: ' + self.name
+    
 class RealEstate(db.Model):
+  
+  _REGISTERED   = 0
+  _TRIAL        = 1
+  _TRIAL_END    = 2
+  _ENABLED      = 3
+  _NO_PAYMENT   = 4 
   
   @classmethod
   def new(cls):
-    return RealEstate(enable=0, managed_domain=1)
+    rs = RealEstate(status=RealEstate._TRIAL, managed_domain=0)
+    rs.tpl_title  = u'Hacemos más fácil, rápida y segura su operación inmobiliaria'
+    rs.tpl_text   = u'Nuestra inmobiliaria se ha convertido en una empresa moderna y dinámica. Hoy cuenta con los más modernos sistemas de comercialización, con los recursos humanos y con la tecnología necesarios para realizar con éxito sus negocios inmobiliarios.'
+    rs.is_tester  = False
+    return rs
+  
+  @classmethod
+  def get_realestate_sharing_key(cls, string_key, realestate=None):
+    prefix = 'fe_'
+    if string_key is not None and string_key.strip()!='':
+      return prefix+string_key
+    return prefix+str(realestate.key())
+  
+  def get_web_theme(self):
+    if self.web_theme is not None and self.web_theme.strip()!='':
+      return self.web_theme
+    return 'theme_grey'
     
-  logo                = blobstore.BlobReferenceProperty()
+  logo                = blobstore.BlobReferenceProperty() #--Borrar--
+  logo_url            = db.StringProperty(indexed=False)
   name                = db.StringProperty()
-  website             = db.LinkProperty(indexed=False)
+  website             = db.StringProperty(indexed=False)
   email               = db.EmailProperty(indexed=False)
+
+  email_image         = blobstore.BlobReferenceProperty() #--Borrar--
+  email_image_url     = db.StringProperty(indexed=False)
+  
+  tpl_title           = db.StringProperty(indexed=False)
+  tpl_text            = db.TextProperty(indexed=False)
   
   title               = db.StringProperty()
   fax_number          = db.StringProperty(indexed=False)
   telephone_number    = db.StringProperty(indexed=False)
   telephone_number2   = db.StringProperty(indexed=False)
+  open_at             = db.StringProperty(indexed=False)
   
   address             = db.StringProperty(indexed=False)
   zip_code            = db.StringProperty()
@@ -56,8 +102,27 @@ class RealEstate(db.Model):
   created_at          = db.DateTimeProperty(auto_now_add=True)
   
   enable              = db.IntegerProperty()
+  status              = db.IntegerProperty()
   managed_domain      = db.IntegerProperty()
-
+  is_tester           = db.BooleanProperty()
+  
+  web_theme           = db.StringProperty(indexed=False)
+  domain_id           = db.StringProperty()
+  plan                = db.ReferenceProperty(Plan)
+  last_email          = db.DateProperty()
+  last_invoice        = db.DateProperty()
+  last_login          = db.DateTimeProperty()
+  
+  matricula_martillero                = db.StringProperty()
+  matricula_martillero_owner_fullname = db.StringProperty()
+  matricula_martillero_owner_dni      = db.StringProperty()
+  matricula_martillero_enabled        = db.IntegerProperty()
+  
+  requested_properties_import         = db.IntegerProperty()
+  
+  def is_in_trial(self):
+    return self.status==RealEstate._TRIAL
+  
   @staticmethod
   def public_attributes():
     """Returns a set of simple attributes on Immovable Property entities."""
@@ -65,6 +130,60 @@ class RealEstate(db.Model):
   
   def __repr__(self):
     return self.name
+  
+  def put(self):
+    if self.email and len(self.email):
+      blob_key = render_text_into_blob(self.email)
+      self.email_image      = blob_key
+      self.email_image_url  = get_serving_url(blob_key)
+    
+    super(RealEstate, self).put()
+  
+  def save(self):  
+    _change_email = db.get(self.key()).email != self.email
+    if _change_email:
+      if self.email_image:
+        blobstore.delete(self.email_image.key())
+      self.email_image      = None
+      self.email_image_url  = ''
+      if self.email and len(self.email):
+        blob_key = render_text_into_blob(self.email)
+        self.email_image      = blob_key
+        self.email_image_url  = get_serving_url(blob_key)
+      
+    super(RealEstate, self).save()
+
+  
+class Payment(db.Model):
+  trx_id              = db.StringProperty()
+  date                = db.DateProperty()
+  amount              = db.IntegerProperty()
+  assinged            = db.IntegerProperty()
+  created_at          = db.DateTimeProperty(auto_now_add=True)
+
+class Invoice(db.Model):
+  _INVALID    = 0
+  _NOT_PAID   = 1
+  _INPROCESS  = 2
+  _PAID       = 3
+  _INBANK     = 4
+  
+  realestate          = db.ReferenceProperty(RealEstate)
+  trx_id              = db.StringProperty()
+  amount              = db.IntegerProperty()
+  payment             = db.ReferenceProperty(Payment)
+  state               = db.IntegerProperty()
+  date                = db.DateProperty()
+  created_at          = db.DateTimeProperty(auto_now_add=True)
+
+  def str_state(self, css=True):
+    if self.state == Invoice._INPROCESS:
+      return ('inprocess' if css else 'En Proceso')
+    
+    if (datetime.now().date() - self.date).days > 15:
+      return ('pending' if css else 'Vencida')
+    
+    return ('indate' if css else 'Pendiente')
     
 class User(db.Model):
   
@@ -89,7 +208,7 @@ class User(db.Model):
   
   @property
   def full_name(self):
-    return '%s %s' % (self.first_name, self.last_name)
+    return '%s %s' % (self.first_name if self.first_name else '' , self.last_name if self.last_name else '')
   
   def __repr__(self):
     return self.name
@@ -100,10 +219,12 @@ class Property(GeoModel):
   _NOT_PUBLISHED = 2
   _DELETED       = 3
   
+  # realestates_friends     => al ser amigos
+  # realestates_frontend    => al ampliar oferta  
   @staticmethod
   def new(realestate):
     return Property(realestate=realestate, status=Property._PUBLISHED ,image_count=0)
-
+    
   status                  = db.IntegerProperty()
   def is_deleted(self):
     return self.status == Property._DELETED
@@ -125,7 +246,9 @@ class Property(GeoModel):
   street_number           = db.IntegerProperty(indexed=False)
   
   zip_code                = db.StringProperty(indexed=False)
-  	
+  
+  cardinal_direction      = db.StringProperty(indexed=False)
+  
   floor                   = db.StringProperty(indexed=False)
   building_floors	        = db.IntegerProperty(indexed=False)
   	
@@ -163,6 +286,7 @@ class Property(GeoModel):
   # PRICES FIELDS
   price_sell              = db.FloatProperty(indexed=False)
   price_rent              = db.FloatProperty(indexed=False)
+  price_expensas          = db.FloatProperty(indexed=False, default=0.0)
   
   _CURRENCY_RATE          = 4
   _CURRENCY_ARS           = 'ARS'
@@ -228,7 +352,7 @@ class Property(GeoModel):
   realestate              = db.ReferenceProperty(RealEstate)
   	
   # PROPERTY TYPES
-  prop_type_id	                    = db.StringProperty(indexed=False)
+  prop_type_id	                = db.StringProperty(indexed=False)
   #prop_type_id_cell                 = db.StringListProperty()  
   
   # PROPERTY STATE & OPERATION & OWNER
@@ -240,11 +364,20 @@ class Property(GeoModel):
         # Bueno	        5
         # Muy bueno	    6
         # Excelente	    7
+  
+  _OPER_STATE_NADA              = 1
+  _OPER_STATE_VENDIDO           = 2
+  _OPER_STATE_ALQUILADO         = 4
+  _OPER_STATE_RESERVADO         = 8
+  _OPER_STATE_SUSPENDIDO        = 16
+  _OPER_STATE_DE_POZO           = 32
+  _OPER_STATE_APTO_CREDITO      = 64
+  _OPER_STATE_IMPECABLE         = 128
+  _OPER_STATE_INVERSION         = 256
+  _OPER_STATE_OPORTUNIDAD       = 512
+  
   prop_operation_state_id	      = db.IntegerProperty(indexed=False)
-        # Disponible	  1
-        # Reservada	    2
-        # Vendida	      3
-        # Alquilada	    4
+  
   prop_owner_id	                = db.IntegerProperty(indexed=False)
         # Inmobiliaria	1
         # Dueño directo	2
@@ -254,7 +387,8 @@ class Property(GeoModel):
         # Venta	        1
         # Alquiler	    2
   
-  main_image              = blobstore.BlobReferenceProperty()
+  main_image                    = blobstore.BlobReferenceProperty() #--Borrar--
+  main_image_url                = db.StringProperty(indexed=False)
   # # ======================================================= #
   # # PROPIEDADES PARA DEFINIR RANGOS A PARTIR DE OTRAS PROPS #
   # area_indoor_id          = db.IntegerProperty() # 0-40
@@ -268,6 +402,7 @@ class Property(GeoModel):
   # year_built_id           = db.IntegerProperty() # A estrenar
   # # ======================================================= #
 
+  visits                        = db.IntegerProperty(indexed=False, default=0) 
   def has_images(self):
     if self.images_count is not None and self.images_count != 0:
       return 1
@@ -323,9 +458,30 @@ class Property(GeoModel):
     pi.realestate              = self.realestate
     pi.property                = self.key()    
   
-  def save(self):
-    self.calculate_inner_values()
-
+  
+  def realestate_friend_keys(self):
+    my_key = str(self.realestate.key())
+    
+    friends = RealEstateFriendship.all().filter('realestates = ', my_key).filter('state = ', RealEstateFriendship._ACCEPTED).fetch(1000)
+    friend_realestates_keys = []
+    friend_realestates_keys.append(my_key)
+    friend_realestates_keys.append(RealEstate.get_realestate_sharing_key(my_key))
+    
+    for friend in friends:
+      my_friend_key = friend.get_the_other_realestate(my_key, key_only=True)
+      # Somos amigos, entonces ves mis props en admin
+      friend_realestates_keys.append(my_friend_key)
+      # Si estas mostrando mi oferta en tu web
+      if friend.is_the_other_realestate_offering_my_props(my_key):
+        friend_realestates_keys.append(RealEstate.get_realestate_sharing_key(my_friend_key))
+  
+    return friend_realestates_keys
+    
+  def save(self, build_index=True, friends=None):
+    # Puede ser que venga de imagenes.
+    if build_index:
+      self.calculate_inner_values()
+      self.append_friends(friends)
     # Magia para saber si necesitamos actualizar o rebuildear el index [o no hacer nada]
     # Solo para la edicion, quitar publicacion o borrar lo fuerzan directamente
     retvalue = 'nones'
@@ -334,15 +490,22 @@ class Property(GeoModel):
       retvalue = 'need_update'
       if self.location != oldme.location:
         retvalue = 'need_rebuild'
-    
+  
     super(Property, self).save()
     return retvalue
     
   #Cuando nuevo
-  def put(self):
+  def put(self, friends):
     self.calculate_inner_values()
+    self.append_friends(friends)
+    
     super(Property, self).put()
     return 'need_rebuild'
+  
+  #Agrego realestates amigas a self.location_geocells y me agrgo a mi mismo jejej.
+  def append_friends(self, friends):
+    self.location_geocells.extend(friends)
+    
   
   def getPropType(self):
     return config_array['cells']['prop_type_id']['short_descriptions'][alphabet.index(self.prop_type_id)]
@@ -384,7 +547,8 @@ class Property(GeoModel):
   
   def getAge(self):
     if self.year_built > 0:
-      return str(self.year_built)
+      index = config_array['discrete_range_config']['year_built']['rangos'].index(int(self.year_built))
+      return config_array['discrete_range_config']['year_built']['descriptions'][index]
     return 'Sin datos'
     
     data  = config_array['discrete_range_config']['year_built']
@@ -540,5 +704,124 @@ class Consulta(db.Model):
   prop_operation_desc       = db.StringProperty()
   is_from_ultraprop         = db.IntegerProperty()
   created_at                = db.DateTimeProperty(auto_now_add=True)
+
+class Link(db.Model):
+  @classmethod
+  def new_for_user(cls):
+    return Link(type='user')
+  @classmethod
+  def new_for_admin(cls):
+    return Link(type='home')
+  type                      = db.StringProperty(required=True, choices=set(['home', 'user']))
+  description               = db.StringProperty()
+  slug                      = db.StringProperty()
+  query_string              = db.TextProperty()
+  created_at                = db.DateTimeProperty(auto_now_add=True)
+
+class HelpDesk(db.Model):
+  @classmethod
+  def new_for_current(cls, user):
+    tel = (user.mobile_number if user.mobile_number and user.mobile_number.strip()!='' else user.telephone_number)
+    if not tel:
+      tel = user.realestate.telephone_number
+    return HelpDesk(realestate_name=user.realestate.name
+                , realestate=user.realestate
+                , sender_name= '%s %s' % (user.first_name if user.first_name else '', user.last_name if user.last_name else '') 
+                , sender_email=user.email
+                , sender_telephone=tel)
+    
+  realestate_name           = db.StringProperty()
+  realestate                = db.ReferenceProperty(RealEstate)
+  sender_name               = db.StringProperty()
+  sender_email              = db.StringProperty()
+  sender_telephone          = db.StringProperty()
+  sender_subject            = db.StringProperty()
+  sender_comment            = db.TextProperty()
+  created_at                = db.DateTimeProperty(auto_now_add=True)
   
+  def __repr__(self):
+    return self.realestate_name + '|' + str(self.realestate.key()) + '|' + self.sender_name + '|' + self.sender_email + '|' + self.sender_telephone + '|' + self.sender_subject + '|' + self.sender_comment + '|' + self.created_at.strftime('%d/%m/%Y')
+
+class RealEstateFriendship(db.Model):
+  _REQUESTED        = 1
+  _ACCEPTED         = 2
+  _DENIED           = 3
+  _DELETED          = 4
+  
+  @classmethod
+  def not_accepted_states(cls):
+    return [RealEstateFriendship._REQUESTED, RealEstateFriendship._DENIED, RealEstateFriendship._DELETED]
+    
+  @classmethod
+  def new_for_request(cls, realestate_a, realestate_b):
+    rs                  = RealEstateFriendship(key_name = '%s,%s' % (str(realestate_a.key()), str(realestate_b.key())), state=RealEstateFriendship._REQUESTED)
+    rs.rs_a_shows_b     = False
+    rs.rs_b_shows_a     = False
+    rs.realestate_a     = realestate_a
+    rs.realestate_b     = realestate_b
+    return rs
+  
+  @classmethod
+  def get_the_other(cls, obj_key, known_realestate, get_key=False):
+    datu        = str(obj_key.name()).split(',')
+    unknown_key = datu[0]
+    if(datu[0]==known_realestate):
+      unknown_key = datu[1]
+    if get_key:
+      return db.Key(unknown_key)
+    return unknown_key
+  
+  @classmethod
+  def is_sender_ex(cls, obj_key, known_realestate):
+    datu        = str(obj_key.name()).split(',')
+    return datu[0]==known_realestate
+    
+  def is_the_other_realestate_offering_my_props(self, my_realestate_key):
+    if str(self.key()).split(',')[0]==my_realestate_key:
+      return self.rs_b_shows_a
+    return self.rs_a_shows_b
+    
+  def get_the_other_realestate(self, known_realestate, key_only=False):
+    if key_only:
+      return RealEstateFriendship.get_the_other(self.key(), str(known_realestate), get_key=False)
+    return db.get(RealEstateFriendship.get_the_other(self.key(), str(known_realestate), get_key=True))
+  
+  def is_sender(self, realestate):
+    return self.realestate_a.key() == realestate.key()
+  
+  def accept(self):
+    self.state = RealEstateFriendship._ACCEPTED
+    self.save()
+    return
+    
+  def reject(self):
+    self.state = RealEstateFriendship._DENIED
+    self.save()
+    return 
+  
+  def alive(self):
+    self.state = RealEstateFriendship._REQUESTED
+    self.save()
+    return 
+    
+  realestate_a              = db.ReferenceProperty(RealEstate, collection_name ='realestate_a')
+  realestate_b              = db.ReferenceProperty(RealEstate, collection_name ='realestate_b')
+  realestate_deleter        = db.ReferenceProperty(RealEstate, collection_name ='realestate_deleter') 
+  created_at                = db.DateTimeProperty(auto_now_add=True)
+  state                     = db.IntegerProperty()
+  rs_a_shows_b              = db.BooleanProperty()
+  rs_b_shows_a              = db.BooleanProperty()
+  realestates               = db.StringListProperty()
+  
+  # def save(self):
+    # super(RealEstateFriendship, self).save()
+    # return self
+    
+  #Cuando nuevo
+  def put(self):
+    self.realestates.append(str(self.realestate_a.key()))
+    self.realestates.append(str(self.realestate_b.key()))
+    super(RealEstateFriendship, self).put()
+    return self
+    
   

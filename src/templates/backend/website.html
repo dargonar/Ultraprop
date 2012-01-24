@@ -1,0 +1,170 @@
+{% extends "backend/_base.html" %}
+
+{%- macro form_field(field, class='') -%}
+		{% if field.errors %}
+      {{field(class=class+' error', **kwargs)}}
+    {% else %}
+      {{field(class=class, **kwargs)}}
+    {% endif %}
+{%- endmacro -%}
+
+{%- macro form_field2(field) -%}
+  <dd {% if field.errors %} class="errorbox" {% endif %} >
+    {{ form_field(field, **kwargs)}}
+    {{ form_error(field) }}
+  </dd>  
+{%- endmacro -%}
+
+{%- macro form_error(field) -%}
+    {% if field.description != '' %}<span class="m2">{{field.description}}</span>{% endif %}
+    {% if field.errors %} <p class="error">{{ field.errors.0 }}</p> {% endif %}
+{%- endmacro -%}
+
+
+{%- macro form_field2_container_double(field1, field2) -%}
+  <dd {% if field1.errors or field2.errors %} class="errorbox" {% endif %} >
+{%- endmacro -%}
+
+{%- macro form_field2_container(field) -%}
+  <dd {% if field.errors %} class="errorbox" {% endif %} >
+{%- endmacro -%}
+
+{% block headscript %}
+  <script type="text/javascript">
+  $(document).ready(function() {
+    init_realestate('{{url_for('backend/realestate/check_domain_id')}}');
+  });
+  </script>
+{% endblock %}
+
+{% block content %}
+
+	<div style="overflow:hidden; margin-bottom:20px;">
+		<h1>Editar Inmobiliaria</h1>
+  </div>
+  {% if flash %}
+    <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
+  {% endif %}
+    
+  <form id="signup_form" action="{{url_for('backend/realestate/edit')}}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="key" value="{{key}}" />
+    <!-- ///// IDENTITY ///// -->    
+    <h2 class="title">Inmobiliaria</h2>
+    <dl class="form">
+        <dt>Logo</dt>
+        {{ form_field2_container(form.logo) }}
+
+            <div class="lbl_upload">
+            	<span class="logobox">
+                	
+                    {% if realestate_logo %}
+                    <a href="#" onclick="jQuery('#form_logo_input').click();return false;">
+                    	<img src="{{realestate_logo}}" />
+                    </a>
+                    {% else %}
+                    <a class="nologo" href="#" onclick="jQuery('#form_logo_input').click();return false;">
+                      <span>Subir una imagen</span>
+                      <br />Haga click aquí
+                    </a>
+                    {% endif %}
+                    {{ form_field(form.logo, id="form_logo_input") }}
+                </span>
+            </div>
+           
+            <div style="display:none" class="filename"><span class="icon16 file"></span><span id="filename">&nbsp;</span></div>
+            
+            <small class="gray">
+            Tamaño recomendado: 280 pixeles de ancho x 75 de alto.<br /> 
+            Ancho máx. 300 pixeles, Altura Máx. 100 pixeles.
+            </small>
+            {{ form_error(form.logo) }}
+        </dd>
+    </dl> 
+    <dl class="form">
+        <dt>Nombre de la Inmobiliaria</dt>
+        
+        {{ form_field2(form.name, placeholder="nombre/razón social", title="nombre/razón social") }}
+    </dl> 
+    <dl class="form">
+          <dt>Dirección</dt>
+          {{ form_field2_container_double(form.address, form.zip_code) }}
+            {{ form_field(form.address, placeholder="calle, ciudad, provincia, país", title="calle, ciudad, provincia, país", class="medium") }} 
+            {{ form_field(form.zip_code, placeholder="cód. postal", title="cód. postal",  class="short") }} 
+          {{ form_error(form.address) }}
+          {{ form_error(form.zip_code) }}
+          </dd>
+    </dl>
+    <dl class="form">
+      <dt>Teléfono</dt>
+      {{ form_field2_container(form.telephone_number) }}
+        {{ form_field(form.telephone_number, placeholder="área+número (interno)", title="área+número (interno)") }}
+        <a href="#" class="btnIcon">
+          <img id="btnAddPhone" src="/img/icons/add.png" />
+        </a>
+        {{ form_error(form.telephone_number) }}
+      </dd>
+    </dl>
+    <dl class="form">     
+      <dt>Fax</dt>
+      {{ form_field2(form.fax_number, placeholder="área+número (interno)", title="área+número (interno)") }}
+    </dl>
+    <dl id="phone2" class="form" style="{{ 'display:none;' if not form.telephone_number2.data and not form.telephone_number2.errors else '' }}">    
+      <dt>Teléfono 2</dt>
+      {{ form_field2_container(form.telephone_number2) }}
+        {{ form_field(form.telephone_number2, title="área+número (interno)", placeholder="área+número (interno)") }}
+        <a href="#" class="btnIcon">
+          <img id="btnDeletePhone" src="/img/icons/delete.png" />
+        </a><br />
+        {{ form_error(form.telephone_number2) }}
+      </dd>
+    </dl>
+      <dl class="form">
+        <dt>Correo electrónico</dt>
+        {{ form_field2(form.email, placeholder="correo electrónico", title="correo electrónico") }}
+    </dl>  
+  
+  
+<h2 class="title">Página web</h2>
+<dl class="form">
+        <dt>
+        Mi dirección web
+        <p style="font-weight:normal; font-size:11px; color:#666;">Ingrese su direccion si ya posee un dominio propio</p>
+        </dt>
+
+        {{ form_field2(form.website, title="www.sudominio.com.ar", placeholder="www.sudominio.com.ar") }}
+        <dt></dt>
+        <dd>
+            <div class="ex-label">
+                {{form.managed_domain}}
+                <label for="live_work">Quiero utilizar ULTRAPROP como mi web <a href="http://www.jorgemaull.com.ar" target="_blank">(ver ejemplo)</a></label>
+            </div>
+        </dd>
+        
+</dl>
+    <dl class="form">
+      <dt>Mi dirección en ULTRAPROP</dt>
+      <dd id="did_dd" {% if form.domain_id.errors %} class="errorbox" {% endif %}>
+        <span>http://www.ultraprop.com.ar/</span>
+        {{form.domain_id(style='width:140px;', placeholder='')}}
+        <a class="uibutton" id="validate_domain_id" href="#">&nbsp;Validar&nbsp;</a>
+        {{ form_error(form.domain_id) }}
+        {% if not form.domain_id.errors %}
+          <p style="display:none" class="ok">&nbsp;</p>
+        {% endif %}
+      </dd>
+    </dl>  
+
+    <dl class="form">
+      <dt></dt>
+      <dd>
+          <input type="submit" value="Guardar Cambios" name="" class="btnWizard">
+      </dd>
+    </dl>  
+  </form>
+<br/>  
+<br/>
+<br/>
+ 
+ 
+  
+{% endblock  %}

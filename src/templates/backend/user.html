@@ -40,7 +40,7 @@ jQuery(document).ready(function() {
 {% block content %}
 
 	<div style="overflow:hidden; margin-bottom:20px;">
-		<h1>Editar Usuario</h1>
+		<h1>Perfil de Usuario</h1>
   </div>
   {% if flash %}
   <div class="msg_{{flash.type}}"><b>{{flash.message}}</b></div>
@@ -99,7 +99,7 @@ jQuery(document).ready(function() {
         {{ form_field2_container(form.email) }}
           <!-- placeholder="Email", class="hint", hint="Email", -->
           {{ form_field(form.email, class="hint", readonly="readonly", id="user_name") }}
-          <a href="#" id="btnChangeEmail" class="uibutton icon edit">Cambiar</a>
+          <a href="#" id="btnChangeEmail" class="uibutton icon edit">Editar</a>
           {{ form_error(form.email) }}
         </dd>
       </dl>

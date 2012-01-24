@@ -1,16 +1,30 @@
 {% import 'realestate/includes/_form_fields.html' as ff %}
+
+
+<div class="filters_app">
+	<h3>Filtros Aplicados</h3>
+  <ul class="filters_list">
+  	<li><span>Departamento</span><a href="#" class="close"></a></li>
+    <li><span>Venta</span><a href="#" class="close"></a></li>
+    <li><span>Con precio</span><a href="#" class="close"></a></li>
+  </ul>
+  <a href="#" class="filters_delete">Eliminar filtros</a>
+</div>
+
+
 <div class="box">
   <form id="filter" method="POST" action="{{url_for('realestate/search', realestate=realestate.key()|string)}}">
   <div class="filters">
-  	<h3>Buscador</h3>
-    <div class="location_box">
-      <p class="label">Zona</p>
+  	<h3>Filtrar resultados</h3>
+    <div class="location_box list">
+      <p class="label">Ubicación</p>
       {{form.location_text(class='search', placeholder='Calle, Barrio, Localidad')}}
       <input class="btnSearch" type="submit" value=""/>
     </div>
     
     
     <div class="fields">
+        <input type="hidden" name="realestate_network" id="realestate_network" value="ALL"/>
       	<div class="divider_h"></div>
         {{ff.simple_field(form.prop_type)}}
         
@@ -28,6 +42,10 @@
         <div class="divider_h"></div>
         <p class="label">Ambientes</p>
         {{form.rooms}}
+        
+        <div class="divider_h"></div>
+        <p class="label">Dormitorios</p>
+        {{form.bedrooms}}
         
         <div class="divider_h"></div>
         <p class="label">Superficie Cub.</p>

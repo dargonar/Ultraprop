@@ -1,0 +1,88 @@
+{% extends "backend/_base.html" %}
+
+{% block menuleft %} 
+<!--div id="mnuLeft">
+  
+</div--> 
+{% endblock %}
+
+{% block headscript %} 
+<script type="text/javascript">
+$(document).ready(function() {
+  setTimeout("hideFlashMessageSlow()", 5000);
+  jQuery('#send_friend_keys').click(function(){
+    var keys=jQuery('#selected_friend_keys').val();
+    jQuery('input[type="checkbox"].rskey:checked ').each(
+      function(index, value){ 
+        if(keys!=null && keys!='')
+          keys=keys+','
+        keys=keys+jQuery(value).attr('key');
+      }
+    );
+    jQuery('#selected_friend_keys').val(keys);
+    
+    jQuery('#send_friend_request').submit();
+    return false;
+  });
+});
+</script> 
+{% endblock %}
+
+{% block content %}
+  
+  {% set rsbook_title = 'Mi Red'%}
+  {% set rsbook_menu = 'red_ultraprop'%}
+  {% include 'backend/includes/realestatebook_navbar.html' %}
+  
+  {% if requests|length>0 %}
+    <div class="viewPicBox">
+      <ul id="realestatebook_list" class="picturebox_admin">
+        {% for request in requests %}
+        {% set req_realestate = request.get_the_other_realestate(realestate.key()) %}
+        <li style="position:relative;">
+          <div style="width:160px; height:120px" id="imgbox"> 
+            <div class="agentbox" style="width: 160px;float: left; margin-right:20px;">
+              <div style="width:160px;height:120px;display: table-cell; vertical-align: middle;">
+                {% if req_realestate.logo_url %}
+                  <img class="logo" src="{{req_realestate.logo_url+'=s160'}}" style="max-width:160px;max-height:120px;" title="{{req_realestate.name}}"/> 
+                {% else %}
+                  <div style="width:160px;height:120px;float:left;"></div>
+                {% endif %} 
+              </div>
+              <div class="data" style="width:160px;test-align:left;">
+                <h3>{{req_realestate.name}}</h3>
+                <span>{{req_realestate.address if req_realestate.address else ''}}</span><br/>
+                <span>{{req_realestate.telephone_number if req_realestate.telephone_number else ''}}</span><br/>
+                {% if req_realestate.website and req_realestate.website|wordcount>0 %}
+                  <a href="{{'%s%s'|format('http://',req_realestate.website) if 'http://' not in req_realestate.website else req_realestate.website }}" target="_blank" title="Sitio web de {{req_realestate.name}}">{{req_realestate.website}}</a><br/>
+                {% else %}
+                  <br/>
+                {% endif %}
+                <a href="{{req_realestate|realestate_linkfy}}" target="_blank" title="{{req_realestate.name}} en Ultraprop">www.ultraprop.com.ar{{req_realestate|realestate_linkfy}}</a><br/>
+                <p>{{ req_realestate|ownerify}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="ex-label" style="bottom:0px;position:absolute;"  title="eliminar amistad">
+            <br/>
+            {% if (request.is_sender(realestate) and not request.rs_a_shows_b) or (not request.is_sender(realestate) and not request.rs_b_shows_a) %}
+              <a class="publisher uibutton " href="{{url_for('backend/realestatebook/friends/share', key=request.key()|string)}}" title="Ampliar mi oferta con las propiedades de mi colega">Ampliar mi oferta</a>
+            {% else %}
+              <a class="publisher uibutton " href="{{url_for('backend/realestatebook/friends/unshare', key=request.key()|string)}}" title="Dejar de ampliar mi oferta con las propiedades de mi colega">No ampliar mi oferta</a>
+            {% endif %}
+            <br/>
+            <a class="" href="{{url_for('backend/realestatebook/friends/delete', key=request.key()|string)}}" title="Eliminar a este colega de mi Red">Quitar de mi Red</a>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% else %}
+    <div class="divider"></div>
+    <div class="noelement proplist txt">
+      <span>No posee inmobilirias amigas</span>
+    </div>
+  {% endif %}    
+    
+
+{% endblock %}

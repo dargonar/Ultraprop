@@ -1,33 +1,48 @@
 <div id="header">
     <!--img class="logo" src="/img/logo_meddium.gif" /-->
-    <a href="/admin/property/list" title="Inicio">
+    <!--a href="/admin/property/list" title="Inicio"-->
+    <a href="/" title="Inicio">
         <img class="logo" src="/img/pixel-transp.gif">
     </a>
     
     <ul class="mnuTop">
       {% if is_logged is defined %}
         {% if is_logged %}
-        <li>Hola {{session['account.realestate.name']}}!&nbsp;</li>
+        <li class="btnLight">
+          <a href="{{ url_for('realestate/search', realestate=session['account.realestate.key']) }}" target="_blank" title="Ir a mi página web">Web {{session['account.realestate.name']}}</a>
+        </li>
         {% endif %}
       {% endif %}
-      {% if not is_logged %}
-        <li><a href="{{url_for('backend/auth/login')}}" title="Inicio de sesión">Ingresar</a></li>
-        <li><a href="{{url_for('backend/auth/signup')}}" title="Regístrese">Registrarse</a></li>
+      
+      {% if is_logged is defined and is_logged %}
+
+      {% else %}
+        <li style="border-left:none;"><a href="{{url_for('frontend/map')}}" target="_blank" title="Ir a búsqueda por mapa">Búsqueda por mapa</a></li>
       {% endif %}
-      <li><a href="{{url_for('frontend/map')}}" target="_blank" title="Búsqueda por mapa">Mapa</a></li>
+      
+      {% if not is_logged %}
+        <li class="btnLight"><a href="{{url_for('backend/auth/login')}}" title="Iniciar sesión / Registrar Inmobiliaria">Ingresar o registrarse</a></li>
+      {% endif %}
+      
+      
       {% if is_logged is defined %}
         {% if is_logged %}
         <li>
-          <a href="{{ url_for('frontend/map/realestate', realestate=session['account.realestate.key']) }}" target="_blank" title="Vea sólo sus propiedades en el Mapa">Mis propiedades en mapa</a>
+          <a href="{{ url_for('frontend/map/realestate', realestate=session['account.realestate.key']) }}" target="_blank" title="Vea sólo sus propiedades en el Mapa">Mapa</a>
         </li>
-        <li>
+        <!--li class="btnLight">
           <a href="{{ url_for('realestate/search', realestate=session['account.realestate.key']) }}" target="_blank" title="Ir a mi página web">Mi Web</a>
-        </li>
+        </li-->
         <li>
           <a href="{{url_for('backend/auth/logout')}}" title="Cerrar sesión">Salir</a>
         </li>
         {% endif %}
       {% endif %}
-      <li><a href="mailto:ayuda@ultraprop.com.ar" title="Mandanos un correo. Estamos armando la ayuda online.">Ayuda</a></li>
+      
+      {% if is_logged is defined and is_logged %}
+      <li><a href="{{url_for('backend/help') }}" title="Envianos tu consulta">Ayuda</a></li>
+      {% else %}
+      <li style="border-left:none;"><a href="mailto:ayuda@ultraprop.com.ar" title="Envianos tu consulta por email">Ayuda</a></li>
+      {% endif %}
     </ul>
 </div>
