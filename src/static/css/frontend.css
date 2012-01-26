@@ -2710,6 +2710,20 @@ body.frontend_home .home_title .second {
 	font-weight:400;/*  
   text-align:right;*/
 }
+
+body.frontend_home .home_title .second h1 {
+	color:#fff !important; 
+	font-weight:normal !important;
+}
+body.frontend_home .home_title .second h2,
+body.frontend_home .home_title .third h2 {
+	color:#fff !important; 
+	font-weight:normal !important; 
+	font-size:18px !important;
+}
+
+
+
 body.frontend_home .home_title .third {
 	color: #fff;
 	font-size: 21px;
