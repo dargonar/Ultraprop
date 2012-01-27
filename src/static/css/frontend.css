@@ -1778,6 +1778,12 @@ body.frontend_search .picCol {
 body.frontend_search .ficha_content .picCol {
 	width: 616px;
 }
+
+.share_buttons {margin-top:10px;}
+.share_buttons .gplus {width:72px;}
+.share_buttons .facebook {width:133px;}
+.share_buttons .twitter {width:115px;}
+
 body.frontend_search .dataCol {
 	float:left;
 	overflow:hidden;

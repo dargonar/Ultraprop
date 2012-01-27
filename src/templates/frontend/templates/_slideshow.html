@@ -6,7 +6,6 @@
     </script>
 {% endblock %}
 
-
 <div id="gallery" class="ad-gallery" style="position:relative;">
   {{ property|oper_labelify(1) }}
   
@@ -24,7 +23,7 @@
             <a href="{{img.title}}=s{{_width}}" wh="_width,_height">
               <div class="pic_zoom"></div>
               <div id="imgbox" style="display: table-cell; vertical-align: middle; text-align:center; height:63px">
-								<img id="image_{{loop.index}}" src="{{img.title}}=s63-c" style="max-width:83px;max-height:63px;" wh="83,63" title="" class="popupimg class{{loop.index}}"> 
+								<img itemprop="image" id="image_{{loop.index}}" src="{{img.title}}=s63-c" style="max-width:83px;max-height:63px;" wh="83,63" title="" class="popupimg class{{loop.index}}"> 
               </div>
             </a>
           </li>
