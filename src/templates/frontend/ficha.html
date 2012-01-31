@@ -4,6 +4,26 @@
     <title>ULTRAPROP - {{property|headlinify}} - {{property|addressify}}</title>
     <meta name="description" content="{{property|headlinify}}, {{property|addressify}}, {{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor','area_outdoor']) }}. Inmobiliarias en Argentina, Departamentos en Buenos Aires, Argentina Alquiler y Venta de Propiedades. Argentina Inmobiliarias en Buenos Aires Zona Norte, Departamentos en alquiler en La Plata, Argentina Inmobiliarias La Plata. Inmobiliarias Zona Norte Buenos Aires. Propiedades en capital federal, Inmobiliarias en Buenos Aires y La Plata " />
     <meta name="keywords" content="departamentos argentina, departamento buenos aires, departamentos la plata, venta, alquiler, alquiler en la plata, argentina, inmobiliaria, inmobiliarias, inmobiliarias la plata, casas en venta, casa en venta en la plata, casa en venta zona norte" />
+  
+
+	<meta property="og:type" content="article" />
+  <meta property="og:title" content="{{property|headlinify}} - {{property|addressify}}" />
+	<meta property="og:description" content="{{property|headlinify}}, {{property|addressify}}, {{ property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor','area_outdoor']) }}" />
+	
+        {% set _width  = 616 %}
+        {% set _height = 462 %}
+        {% for img in images %}
+          {% if img.title %}
+          	<meta property="og:image" content="{{img.title}}=s63-c" />
+						<!-- IMAGEN PARA BTOTON COMPARTIR -->
+  					<link rel="image_src" href="{{img.title}}=s63-c" />
+  				{% endif %}
+        {% endfor %}
+        
+  
+  
+  
+  
   {%endblock%}
   
   {%block js%}
