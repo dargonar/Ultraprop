@@ -8,6 +8,12 @@
   
   {%block head%}
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600&v2' rel='stylesheet' type='text/css'>
+    
+    <style type="text/css">
+      #selectbox p {width: 220px; float:left;}
+      #selectbox select {border: 1px solid #E6E6E6;padding: 4px; width:120px;}
+      #selectbox label {width:80px; text-align: right; float:left; display:block; height:20px; padding-top: 10px;}
+    </style>
   {%endblock%}  
   
   {%block js%}
@@ -78,7 +84,7 @@
                 <div class="second">
                 	<h1 style="color:#fff; font-weight:normal; font-size:34px;">Inmobiliarias de Argentina</h1>
                   <h1 style="color:#fff; font-weight:normal;">Buenos Aires y Capital Federal</h1>
-                  <h2 style="color:#fff; font-weight:normal; font-size:18px;">Inmobiliarias Zona Norte e Inmobiliarias La Plata</h2>
+                  <h2 style="color:#fff; font-weight:normal; font-size:18px;">Inmobiliarias Zona Norte e Inmobiliarias La Plata...</h2>
                 </div>
                 <!--div class="first">
                   <h3 style="color:#fff; font-weight:normal;">Alquiler y Venta de propiedades.</h3>
@@ -88,24 +94,67 @@
                 </div>
               </div>
               <div class="box">
+                <div style="position: absolute;float: right;height: 30px;right: 29px;top:10px;"> 
+                  <a href="#" onclick="$('#searchbox').hide();$('#selectbox').show();"><img src="/img/icons/combobox_min.png" title="Locación ingresada por teclado" style="height:15px;width:auto;" /></a>
+                  <a href="#" onclick="$('#selectbox').hide();$('#searchbox').show();" ><img src="/img/icons/textinput_min.png" title="Locación elegida por opciones" style="height:15px;width:auto;"/></a>
+                </div>
                 <form action="{{ url_for('frontend/map') }}" method="post" name="home_search_form" id="home_search_form" >
                   <input name="price_min" id="price_min" type="hidden" value="0" />
                   <input name="price_max" id="price_max" type="hidden" value="0" />
                   <input name="center_lat" id="center_lat" type="hidden" value="0" />
                   <input name="center_lon" id="center_lon" type="hidden" value="0" />
                   <input name="zoom_level" id="zoom_level" type="hidden" value="14" />
-                  <div id="searchbox">
-                    <input class="search" name="searchmap" id="searchmap" placeholder="ej: La Plata, Buenos Aires, Argentina" type="text" value="" />                    
-                    <input type="button" id="btnSearchHome" value="Buscar" style="border:none;"/>
-                    <ul id="locations">
-                      <li><a href="/mapa/casas-departamentos-ph-en-venta-en-la-plata/75004" onClick="return onDirectLink('la_plata');" title="La Plata (centro)">La Plata,</a></li>
-                      <li><a href="/mapa/casas-departamentos-ph-en-venta-en-gonnet/72009" onClick="return onDirectLink('gonnet');" title="Manuel B. Gonnet">Gonnet,</a></li>
-                      <li><a href="/mapa/casas-departamentos-ph-en-venta-en-city-bell/71004" onClick="return onDirectLink('city_bell');" title="City Bell">City Bell,</a></li>
-                      <li><a href="/mapa/casas-departamentos-ph-en-venta-en-zona-norte/76006" onClick="return onDirectLink('bsas_zona_norte');" title="Vicente López, Florida, Olivos, La Lucila, Martínez, Acasusso, San Isidro">Buenos Aires Zona Norte</a></li>
-                    </ul>
-                    <div class="hr"></div>
+                  
+                  <div id="search_container" style="height:71px;">
+                    <div id="searchbox" style="height:auto;">
+                      <input class="search" name="searchmap" id="searchmap" placeholder="ej: La Plata, Buenos Aires, Argentina" type="text" value="" />                    
+                      <input type="button" id="btnSearchHome" value="Buscar" style="border:none;"/>
+                      <ul id="locations">
+                        <li><a href="/mapa/casas-departamentos-ph-en-venta-en-la-plata/75004" onClick="return onDirectLink('la_plata');" title="La Plata (centro)">La Plata,</a></li>
+                        <li><a href="/mapa/casas-departamentos-ph-en-venta-en-gonnet/72009" onClick="return onDirectLink('gonnet');" title="Manuel B. Gonnet">Gonnet,</a></li>
+                        <li><a href="/mapa/casas-departamentos-ph-en-venta-en-city-bell/71004" onClick="return onDirectLink('city_bell');" title="City Bell">City Bell,</a></li>
+                        <li><a href="/mapa/casas-departamentos-ph-en-venta-en-zona-norte/76006" onClick="return onDirectLink('bsas_zona_norte');" title="Vicente López, Florida, Olivos, La Lucila, Martínez, Acasusso, San Isidro">Buenos Aires Zona Norte</a></li>
+                      </ul>
+                    </div>
+                  
+                    <div id="selectbox" style="display:none;height:auto;">
+                      <p>
+                        <label for="country">País:</label>
+                        <select name="country" id="country">
+                              <option value="">Argentina</option>
+                              <option value="">Brasil</option>
+                              <option value="">Uruguay</option>
+                        </select> 
+                      </p>
+                      <p>
+                        <label for="partido">Partido:</label>
+                        <select name="partido" id="partido">
+                              <option value="">Berazategui</option>
+                              <option value="">La Plata</option>
+                              <option value="">San Isidro</option>
+                        </select><br />
+                      </p>
+                      <p>
+                        <label for="provincia">Provincia:</label>
+                        <select name="provincia" id="provincia">
+                          <option value="">Capital Federal</option>
+                          <option value="">Buenos Aires</option>
+                          <option value="">Santa Fe</option>
+                        </select> 
+                      </p>
+                      <p>
+                        <label for="localidad">Localidad:</label>
+                        <select name="localidad" id="localidad">
+                          <option value="">Gonnet</option>
+                          <option value="">La Plata</option>
+                          <option value="">City Bell</option>
+                        </select> 
+                      </p>
+                    </div>
+                    
                   </div>
-                  <div id="filterbox">
+                  <div class="hr" style="clear: both;bottom:0px;"></div>
+                  <div id="filterbox" style="clear:both;">
                     <ul>
                       <li class="type">
                         <!--h4>ver sólo:</h4-->
