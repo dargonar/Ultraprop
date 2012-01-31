@@ -5,13 +5,44 @@
   <div class="innerContent detail" id="ficha_{{property.key()}}">
     <div id="detailBox">
       <h2>Ficha de Propiedad</h2>
-      <h1>{{property | headlinify}}, {{ property | addressify }}</h1>
+      <h1 itemprop="name">{{property | headlinify}}, {{ property | addressify }}</h1>
       <!--p class="address"></p-->
       <div class="colBox" style="position:relative;">
         <!-- /// PICTURE COLUMN /// -->
         <div class="picCol">
           <!-- /// SLIDESHOW /// -->
           {%include "frontend/templates/_slideshow.html"%}
+          
+          
+          <!-- /// BOTONES 2.0 /// -->
+          <ul class="share_buttons">
+
+            {% set ficha_url = url_for('frontend/ficha', slug=(property|headlinify+'-'+property|addressify)|slugify ,key=property.key(), oper=price_data_operation, _full=True) %}
+          	<li class="gplus">
+              <g:plusone size="medium"></g:plusone>
+							<script type="text/javascript">
+                window.___gcfg = {lang: 'es'};
+              
+                (function() {
+                  var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                  po.src = 'https://apis.google.com/js/plusone.js';
+                  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+                })();
+              </script>
+            </li>
+            
+            <li class="facebook">
+              <a name="fb_share" type="button_count" share_url="{{ficha_url}}">Compartir</a>
+              <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+            </li>
+            
+            <li class="twitter">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-text="{{property | headlinify}}, {{ property | addressify }}, {{property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor'], small=True, total_area_included=True) }} - {{ cur }} {{ price|currencyfy }} > {{ficha_url}}" data-lang="es">Twittear</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </li>
+          </ul>
+          
+          
         </div>
         <!--div style="float:left;position:absolute;bottom:0px">
             Visitas: {# {property.visits} #}.
@@ -29,7 +60,7 @@
       <!-- ///// DETAIL ///// -->
       <div class="infoBox">
         <h2>Descripción de la Propiedad</h2>
-          <p class="detail">
+          <p class="detail" itemprop="description">
             {{ property.main_description}}
           </p>
           <h2>Detalles de la Propiedad</h2>

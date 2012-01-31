@@ -5,8 +5,20 @@
 
 <div id="map_tab_content">
   <div id="shadow-h"></div>
-  <!-- div id="shadow-v"></div -->
+  
   <div class="map" id="map_container">
+    <!-- New propaganda divs!!! -->
+    <div id="flyer_propaganda" style="position:absolute;left:50%;margin-left:-250px;top:100%;margin-top:-250px;z-index: 98;-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px; width: 500px;border: 1px solid #63A23C;height:150px;background:#FFFFFF url('/img/backgrounds/propaganda_bg.png') center center no-repeat;/*background-color:#FFFFFF;*/">
+      <a onclick="$('#flyer_propaganda').hide();$('#show_flyer_propaganda').show();" href="#" class="ui-dialog-titlebar-close ui-corner-all" style="float:right;margin-top:4px;margin-right:4px;" role="button" title="Cerrar">
+        <span class="ui-icon ui-icon-closethick">close</span>
+      </a>
+    </div>
+    <div id="show_flyer_propaganda" style="display:none;position:absolute;left:10px;top:100%;margin-top:-90px;z-index: 98;-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px; width: 60px;border: 1px solid #63A23C;height:50px;background:transparent url('/img/backgrounds/propaganda_info.png') center center no-repeat; ">
+      <a onclick="$('#show_flyer_propaganda').hide();$('#flyer_propaganda').show();" href="#" class="ui-dialog-titlebar-close ui-corner-all" style="float:right;margin-top:4px;margin-right:4px;" role="button" title="Mostrar">
+        <span class="ui-icon ui-icon-tag">mostrar</span>
+      </a>
+    </div>
+    
     <div id="btnMoreProps">
       <input class="btnMoreProps prev btnMoreProps_prev" id="btnMoreProps_prev" name="" type="button" value="{{max_results}} Anteriores" disabled="disabled" onclick="return getPrev();"/>
       <input class="btnMoreProps next btnMoreProps_next" id="btnMoreProps_next" name="" type="button" value="{{max_results}} Siguientes" disabled="disabled" onclick="return getNext();" />
