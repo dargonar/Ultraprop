@@ -35,9 +35,7 @@
               <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
             </li>
             
-            
-            
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  
   <script>
 function addJavascript(jsname) {
     var th = document.getElementsByTagName('head')[0];
@@ -66,13 +64,13 @@ function addJavascript(jsname) {
     $.getJSON(daurl, function(data){
 
         // Ahora que lo devolvió podemos utilizarlo	
-  $('#resulta').append("<a class='twitter-share-button' data-lang='es' href='http://twitter.com/share?url="+encodeURIComponent(data['data']['url'])+"&counturl="+encodeURIComponent(document.location.href)+"&text={{property | headlinify}}, {{ property | addressify }}, {{property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor'], small=True, total_area_included=True) }} - {{ cur }} {{ price|currencyfy }} - '>Tweet</a>"); 
+  $('.twitter').append("<a id='ficha_{{property.key()}}' class='twitter-share-button' data-lang='es' href='http://twitter.com/share?url="+encodeURIComponent(data['data']['url'])+"&counturl="+encodeURIComponent(document.location.href)+"&text={{property | headlinify}}, {{ property | addressify }}, {{property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor'], small=True,) }} - {{ cur }} {{ price|currencyfy }} - '>Tweet</a>"); 
 	addJavascript('http://platform.twitter.com/widgets.js');
     });
 })(jQuery);
 </script> 
          
-<li id="resulta" class="twitter">
+<li class="twitter">
 
 </li>
 
