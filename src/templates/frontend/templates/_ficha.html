@@ -34,51 +34,46 @@
               <a name="fb_share" type="button_count" share_url="{{ficha_url}}">Compartir</a>
               <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
             </li>
-            
-  
-  <script>
-function addJavascript(jsname) {
-    var th = document.getElementsByTagName('head')[0];
-    var s = document.createElement('script');
-    s.setAttribute('type','text/javascript');
-    s.setAttribute('src',jsname);
-    th.appendChild(s);
-}
-(function($){
-  // opciones
-  var defaults = {    
-    login:      'diventiservices',
-    apiKey:     'R_3a5d98588cb05423c22de21292cd98d6',
-    history:    '0'
-  };
+            <script type="text/javascript">
+              function addJavascript(jsname) {
+                  var th = document.getElementsByTagName('head')[0];
+                  var s = document.createElement('script');
+                  s.setAttribute('type','text/javascript');
+                  s.setAttribute('src',jsname);
+                  th.appendChild(s);
+              }
+              (function($){
+                // opciones
+                var defaults = {    
+                  login:      'diventiservices',
+                  apiKey:     'R_3a5d98588cb05423c22de21292cd98d6',
+                  history:    '0'
+                };
 
-  // La consulta jQuery a bit.ly
-  var daurl = "http://api.bit.ly/v3/shorten?"    
-    +"&longUrl="+encodeURIComponent("http://www.ultraprop.com.ar")
-    +"&login="+defaults.login
-    +"&apiKey="+defaults.apiKey
-    +"&history="+defaults.history
-    +"&format=json&callback=?";
+                // La consulta jQuery a bit.ly
+                var long_url = "{{ficha_url}}";
+                long_url = long_url.replace("localhost:8081", "www.ultraprop.com.ar");
+                long_url=encodeURIComponent(long_url);
 
-    // Utilizamos la API
-    $.getJSON(daurl, function(data){
+                var daurl = "http://api.bit.ly/v3/shorten?"    
+                  +"&longUrl="+long_url
+                  +"&login="+defaults.login
+                  +"&apiKey="+defaults.apiKey
+                  +"&history="+defaults.history
+                  +"&format=json&callback=?";
 
-        // Ahora que lo devolvió podemos utilizarlo	
-  $('.twitter').append("<a id='ficha_{{property.key()}}' class='twitter-share-button' data-lang='es' href='http://twitter.com/share?url="+encodeURIComponent(data['data']['url'])+"&counturl="+encodeURIComponent(document.location.href)+"&text={{property | headlinify}}, {{ property | addressify }}, {{property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor'], small=True,) }} - {{ cur }} {{ price|currencyfy }} - '>Tweet</a>"); 
-	addJavascript('http://platform.twitter.com/widgets.js');
-    });
-})(jQuery);
-</script> 
+                  // Utilizamos la API
+                  $.getJSON(daurl, function(data){
+                    // Ahora que lo devolvió podemos utilizarlo	
+                    $('#alink_tweet_container{{property.key()}}').append('<a id="alink_tweet_{{property.key()}}" class="twitter-share-button" data-lang="es" href="http://twitter.com/share?url='+encodeURIComponent(data.data.url)+'&counturl='+encodeURIComponent(document.location.href)+'&text={{property | headlinify}}, {{ property | addressify }}, {{property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor'], small=True,) }} - {{ cur }} {{ price|currencyfy }} - ">Tweet</a>'); 
+                    addJavascript('http://platform.twitter.com/widgets.js');
+                  });
+              })(jQuery);
+            </script> 
          
-<li class="twitter">
-
-</li>
-
-     
-            
+            <li class="twitter" id="alink_tweet_container{{property.key()}}">
+            </li>
           </ul>
-          
-          
         </div>
         <!--div style="float:left;position:absolute;bottom:0px">
             Visitas: {# {property.visits} #}.
