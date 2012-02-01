@@ -35,48 +35,48 @@
               <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
             </li>
             
-            <li class="twitter">
+            
+            
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script>
+function addJavascript(jsname) {
+    var th = document.getElementsByTagName('head')[0];
+    var s = document.createElement('script');
+    s.setAttribute('type','text/javascript');
+    s.setAttribute('src',jsname);
+    th.appendChild(s);
+}
+(function($){
+  // opciones
+  var defaults = {    
+    login:      'diventiservices',
+    apiKey:     'R_3a5d98588cb05423c22de21292cd98d6',
+    history:    '0'
+  };
 
+  // La consulta jQuery a bit.ly
+  var daurl = "http://api.bit.ly/v3/shorten?"    
+    +"&longUrl="+encodeURIComponent("http://www.ultraprop.com.ar")
+    +"&login="+defaults.login
+    +"&apiKey="+defaults.apiKey
+    +"&history="+defaults.history
+    +"&format=json&callback=?";
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script src="http://maps.google.com/maps/api/js?sensor=true&language=es" type="text/javascript"></script> 
+    // Utilizamos la API
+    $.getJSON(daurl, function(data){
 
-<script type="text/javascript">            
-  function get_short_url(long_url, login, api_key, func)
-{
-    $.getJSON(
-        'https://api-ssl.bitly.com/v3/shorten',
-        { 
-            "format": "json",
-            "apiKey": api_key,
-            "login": login,
-            "longUrl": long_url
-        },
-        function(response)
-        {
-          alert(response.status_code);
-          alert(response.status_txt);
-          alert(response.data.url);
-          func(response.data.url);
-					$('#ficha_{{property.key()}}').attr('data-text', $('#ficha_{{property.key()}}').attr('data-text')+response.data.url);
-        }
-    );
-    }
+        // Ahora que lo devolvió podemos utilizarlo	
+  $('#resulta').append("<a class='twitter-share-button' data-lang='es' href='http://twitter.com/share?url="+encodeURIComponent(data['data']['url'])+"&counturl="+encodeURIComponent(document.location.href)+"&text={{property | headlinify}}, {{ property | addressify }}, {{property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor'], small=True, total_area_included=True) }} - {{ cur }} {{ price|currencyfy }} - '>Tweet</a>"); 
+	addJavascript('http://platform.twitter.com/widgets.js');
+    });
+})(jQuery);
+</script> 
+         
+<li id="resulta" class="twitter">
 
-  var login = "diventiservices";
-  var api_key = "R_3a5d98588cb05423c22de21292cd98d6";
-  var long_url = "http://www.ultraprop.com.ar/";
+</li>
 
-  get_short_url(long_url, login, api_key, function(short_url) {
-      console.log(short_url);
-			//$('#ficha_{{property.key()}}').attr('data-text', $('#ficha_{{property.key()}}').attr('data-text')+short_url);
-  });
-</script>  
-
-<a id="ficha_{{property.key()}}" href="https://twitter.com/share" class="twitter-share-button" data-text="{{property | headlinify}}, {{ property | addressify }}, {{property | descriptify(cols=['rooms','bedrooms','bathrooms','area_indoor'], small=True, total_area_included=True) }} - {{ cur }} {{ price|currencyfy }}" data-lang="es">Twittear</a>
-
-<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-            </li>
+     
             
           </ul>
           
