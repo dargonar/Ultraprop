@@ -23,6 +23,9 @@ body.frontend_search {
 body.frontend_home, body.frontend_common, body.frontend_search {
 	font:10px normal Arial, Helvetica, sans-serif;
 }
+body.frontend_home{
+  margin: 0 auto;
+}
 body.backend, body.backend_simple, body.frontend_common {
 	font-family:Arial, Helvetica, sans-serif;
 	font-size:12px;
