@@ -13,11 +13,12 @@
           <!-- /// SLIDESHOW /// -->
           {%include "frontend/templates/_slideshow.html"%}
           
+          {% set ficha_url = url_for('frontend/ficha', slug=(property|headlinify+'-'+property|addressify)|slugify ,key=property.key(), oper=price_data_operation, _full=True)|replace("localhost:8081", "www.ultraprop.com.ar")  %}
           
           <!-- /// BOTONES 2.0 /// -->
           <ul class="share_buttons">
           	<li class="gplus">
-              <g:plusone size="medium"></g:plusone>
+              <g:plusone href="{{ficha_url}}" size="medium"></g:plusone>
 							<script type="text/javascript">
                 window.___gcfg = {lang: 'es'};
               
@@ -30,7 +31,6 @@
             </li>
             
             <li class="facebook">
-               {% set ficha_url = url_for('frontend/ficha', slug=(property|headlinify+'-'+property|addressify)|slugify ,key=property.key(), oper=price_data_operation, _full=True) %}
               <a name="fb_share" type="button_count" share_url="{{ficha_url}}">Compartir</a>
               <script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
             </li>
@@ -52,7 +52,7 @@
 
                 // La consulta jQuery a bit.ly
                 var long_url = "{{ficha_url}}";
-                long_url = long_url.replace("localhost:8081", "www.ultraprop.com.ar");
+                //long_url = long_url.replace("localhost:8081", "www.ultraprop.com.ar");
                 long_url=encodeURIComponent(long_url);
 
                 var daurl = "http://api.bit.ly/v3/shorten?"    
