@@ -61,9 +61,11 @@
           <form action="https://checkout.dineromail.com/CheckOut" method="post" > 
             <!--data nuestra-->
             {% if plan.type == 3 %}    
+            <!-- EMO -->
             <input type="hidden" name="merchant" value="2321817" />
             {% else %}
-            <input type="hidden" name="merchant" value="2267637" />
+            <!-- input type="hidden" name="merchant" value="2267637" / -->
+            <input type="hidden" name="merchant" value="2321817" />
             {% endif %}
             
             <input type="hidden" name="country_id" value="1" /> 
