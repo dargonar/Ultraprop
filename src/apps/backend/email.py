@@ -185,6 +185,10 @@ class SendTask(MyBaseHandler):
     # realestate_property_link  = '%s/propiedades.html#%s/%s' % (realestate.website, key, prop_operation_id)
     realestate_property_link  = url_for('realestate/ficha', realestate=str(realestate.key()), key=key, oper=prop_operation_id,  _full=True) 
     
+    if contact_from_map:
+      str_query                 = params['query_string'] 
+      realestate_property_link  = get_bitly_url(str_query)
+    
     # if contact_from_map:
       # if realestate.website is None or realestate.website.strip()=='': # Deben tener ptopiedades.html y rever tema #if realestate.managed_domain==1 :
         # str_query                 = params['query_string'] 
