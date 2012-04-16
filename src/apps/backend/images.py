@@ -22,6 +22,7 @@ from webapp2_extras.securecookie import SecureCookieSerializer
 class Reorder(BackendHandler):
   @need_auth(code=500)
   def post(self, **kwargs):
+    self.request.charset = 'utf-8'
     keys = self.request.POST['keys'].split(',')
     
     to_save = []
@@ -123,7 +124,7 @@ class Upload(BackendHandler):
   
   # @need_auth(code=500)
   def post(self, **kwargs):
-    
+    self.request.charset = 'utf-8'
     # Todo esto es para recuperar la session en funcion de un parametro del post 
     # que nos manda el flash swfupload
     cookie_name  = self.app.config['webapp2_extras.sessions']['cookie_name']

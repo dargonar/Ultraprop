@@ -33,7 +33,9 @@ class Index(BackendHandler):
     page = int(kwargs.get('page','1'))
     kwargs['consultas'] , kwargs['page'] = self.get_items(page=page, realestate=realestate)
     kwargs['page']  = page
-
+    
+    kwargs['plan_allow_website']  = realestate.plan.allow_website
+    
     return self.render_response('backend/consultas.html', **kwargs)
   
   def get_items(self, page=1, realestate=None):
