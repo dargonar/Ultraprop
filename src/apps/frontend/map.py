@@ -29,6 +29,7 @@ class Index(FrontendHandler):
       dict = self.session.pop('frontend.querystring') #self.session.clear()
       
     return self.render_response('frontend/index.html'
+                          , analytics_mark='mapa'
                           , config_arrayJSON=json.dumps(config_array)
                           , config_array=config_array
                           , max_results=MAX_QUERY_RESULTS
@@ -105,6 +106,7 @@ class Index(FrontendHandler):
           })
     # ================================= END FROM SEARCH ========================================== #
     return self.render_response('frontend/index.html'
+                          , analytics_mark      = 'mapa-sugerido' if mLink.type == 'home' else 'mapa-compartido'
                           , config_arrayJSON    = json.dumps(config_array)
                           , config_array        = config_array
                           , max_results         = MAX_QUERY_RESULTS

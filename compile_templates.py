@@ -10,10 +10,15 @@
 """
 import os
 import sys
+import platform
 
 base_path = os.getcwd()
 app_path = os.path.join(base_path, 'src')
-gae_path = os.path.join(base_path, r'C:\Program Files (x86)\Google\google_appengine')
+
+if platform.system() == 'Darwin':
+  gae_path = os.path.join(base_path, '/Applications/AppEngine.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine')  
+else:
+  gae_path = os.path.join(base_path, r'C:\Program Files (x86)\Google\google_appengine')
 
 extra_paths = [
     app_path,

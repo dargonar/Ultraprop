@@ -4,6 +4,13 @@
   _gaq.push(['_setAccount', 'UA-30934396-1']);
   _gaq.push(['_trackPageview']);
 
+  {% if analytics_mark is defined %}
+    _gaq.push(
+      ['b._setAccount', 'UA-30934396-2'],
+      ['b._trackPageview','{{analytics_mark}}']
+    );
+  {% endif %}
+
   (function() {
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';

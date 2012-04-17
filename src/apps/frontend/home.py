@@ -11,6 +11,7 @@ class Index(FrontendHandler):
     preset        = {'prop_operation_id':str(Property._OPER_SELL)}
     direct_links  = Link.all().filter('type = ', 'home').fetch(25)
     return self.render_response('frontend/home.html'
+                , analytics_mark  = 'home'
                 , config_array    = config_array
                 , preset          = preset
                 , presetJSON      = json.dumps(preset)
