@@ -7,7 +7,7 @@
     <div class="head">
       <div class="address">
         <input type="checkbox" class="chk" key="{{ property.key()|string }}" title="Marque esta propiedad para compararla con otras propiedades" />
-        <a href="{{ url_for('frontend/ficha', slug=(headline+'-'+address)|slugify ,key=property.key(), oper=price_data_operation)}}" onclick="return onShowFicha(this, '{{property.key()}}');" 
+        <a href="{{ url_for('frontend/ficha', slug=(headline+'-'+address)|slugify ,key=property.key(), oper=price_data_operation)}}" onclick="return onShowFicha(this, '{{property.key()}}', 'abre-ficha-sidebar');" 
           title="Ver ficha: {{ headline }} - {{address}} " class="address_link" >{{ address }}</a>
         <!--a href="#" onclick="return false;" class="index" title="Indice del paginador">{# {index} #}&nbsp;</a-->
       </div>
@@ -16,7 +16,7 @@
     </div>
       
     <!-- div class="picbox" onclick="return onShowPopup(this, null, '--key--');"-->
-    <div class="picbox" onclick="return onShowFicha(this, '{{property.key()}}');" style="position:relative;">
+    <div class="picbox" onclick="return onShowFicha(this, '{{property.key()}}', 'abre-ficha-sidebar');" style="position:relative;">
       <div class="qty">{{ property.images_count }}&nbsp;fotos</div>
       {{ property|oper_labelify(0) }}
       <img class="viewBubble pic" style="max-width:115px; max-height:86px;" {% if property.main_image_url %} src="{{property.main_image_url}}=s115" wh="115,86" {% else %} src="/img/picturebox/nophoto_115x86.jpg"  {% endif %} onerror="this.src='/img/picturebox/nophoto_115x86.jpg';" title="Ver ficha: {{ headline }} - {{address}} "/>
