@@ -9,6 +9,12 @@ var m_initializing = false;
 
 var filter_ranges;
 
+function postMetric(analytics_mark)
+{
+  var pageTracker = _gat._getTracker('UA-30934396-1');
+  pageTracker._trackPageview(analytics_mark);
+}
+
 function is_array(input){
   return typeof(input)=='object'&&(input instanceof Array);
 }
@@ -196,7 +202,6 @@ function initUI() {
     toggleFilter();
 }
 
-
 function initMap(){
   autoGeolocate();
   if(navigator.geolocation) {
@@ -217,8 +222,7 @@ function triggerGeolocationAdvice(){
     }
   , 5000);
 }
-function onGeolocationOverlayClose()
-{
+function onGeolocationOverlayClose(){
   stopGeolocationAdvice();
   jQuery('#geolocation_overlay').remove();
   jQuery('#geolocation_advice').remove();
@@ -436,6 +440,10 @@ function onMainFilterChange(obj)
     return false;
   checkFiltersOptions();
   doSearch();
+  
+  //Posteo al analytics lo que hace el user(postMetric(analytics_mark)).
+  postMetric('busca-filtro-princ');
+  
   return false;
 }
 
@@ -730,22 +738,16 @@ function enableSearchOnPan(enable) {
   } else if (!g_mapPanListener) {
     g_mapZoomListener= google.maps.event.addListener(map, 'zoom_changed',
         function() {
+          //Posteo al analytics lo que hace el user(postMetric(analytics_mark)).
+          postMetric('busca-map-pan');
           doSearch();
         });
     g_mapPanListener = google.maps.event.addListener(map, 'dragend',
         function() {
-          // g_mapDragStarted = false;
+          //Posteo al analytics lo que hace el user(postMetric(analytics_mark)).
+          postMetric('busca-map-pan');
           doSearch();
         });
-    // g_mapDragStartListener = google.maps.event.addListener(map, 'dragstart',
-        // function() {
-          // g_mapDragStarted = true;
-        // });
-    // g_mapBoundChangedListener = google.maps.event.addListener(map, 'bounds_changed',
-        // function() {
-          // if (!g_mapDragStarted)
-            // doSearch();
-        // });
   }
 }
 
@@ -770,7 +772,11 @@ function createResultMarker(coord) {
   
   //markersArray.push(marker);
   google.maps.event.addListener(marker, 'click', (function(marker) {
-    return function() { return onShowPopup(marker, marker, marker.key); }; 
+    return function() { 
+        //Posteo al analytics lo que hace el user(postMetric(analytics_mark)).
+        postMetric('abre-bubble');
+        return onShowPopup(marker, marker, marker.key); 
+      }; 
   })(marker));
   
   google.maps.event.addListener(marker, 'mouseover', (function(marker) {
@@ -1120,6 +1126,8 @@ function closeBubbles()
   function applyFilterOptions(){
     toggleFilter();
     checkFiltersOptions();
+    //Posteo al analytics lo que hace el user(postMetric(analytics_mark)).
+    postMetric('busca-filtro-ext');
     doSearch();
   }
   
@@ -1347,7 +1355,7 @@ function onShowCompare(){
   return false;
 }
       
-function onShowFicha(sender, key)
+function onShowFicha(sender, key, analytics_metric)
 {
   // HACK: para debuggear la apertura de tabs -> comentar las dos lineas siguientes.
   if(jQuery('#ficha_'+key).length>0)
@@ -1362,6 +1370,9 @@ function onShowFicha(sender, key)
     jQuery('#foot_map').hide();
     winTabs.show();
   }
+  
+  //Posteo al analytics lo que hace el user(postMetric(analytics_mark)).
+  postMetric(analytics_metric);
   
   // Obtengo ficha de propiedad
   jQuery.ajax({
@@ -1673,6 +1684,9 @@ function sendMail(form){
   });
   
   var url          = jQuery(form).attr('action');
+  
+  //Posteo al analytics lo que hace el user(postMetric(analytics_mark)).
+  postMetric('contacta');
   
   showLoading();
   jQuery.ajax({
