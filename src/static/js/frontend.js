@@ -11,8 +11,11 @@ var filter_ranges;
 
 function postMetric(analytics_mark)
 {
-  var pageTracker = _gat._getTracker('UA-30934396-1');
-  pageTracker._trackPageview(analytics_mark);
+  if(typeof _gaq !== 'undefined' && _gaq !== null && _gaq != null)
+  {
+    var pageTracker = _gaq._getTracker('UA-30934396-1');
+    pageTracker._trackPageview(analytics_mark);
+  }
 }
 
 function is_array(input){
