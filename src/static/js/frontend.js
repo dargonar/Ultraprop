@@ -11,9 +11,9 @@ var filter_ranges;
 
 function postMetric(analytics_mark)
 {
-  if(typeof _gaq !== 'undefined' && _gaq !== null && _gaq != null)
+  if(typeof _gat !== 'undefined' && _gat !== null && _gat != null)
   {
-    var pageTracker = _gaq._getTracker('UA-30934396-1');
+    var pageTracker = _gat._getTracker('UA-30934396-1');
     pageTracker._trackPageview(analytics_mark);
   }
 }
