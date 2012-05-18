@@ -88,7 +88,7 @@ class Ficha(FrontendHandler):
     
     context_ex = dict({'form':self.form}, **context)
     context_ex = dict({'images': ImageFile.all().filter('property =', db.Key(key)).order('position') }, **context_ex)
-    context_ex = dict({'analytics_mark':'ficha'}, **context)
+    context_ex = dict({'analytics_mark':'ficha'}, **context_ex)
     
     return self.render_response('frontend/ficha.html', **context_ex)  
   
