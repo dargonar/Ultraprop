@@ -152,7 +152,7 @@ class PaymentAssingMapper(Mapper):
   def map(self, payment):
     
     # Traemos la factura que este pago cancela el pago (payment)
-    invoice = Invoice.all().filter('trx_id', payment.trx_id).get()
+    invoice = Invoice.all().filter('Trx_id', payment.trx_id).get()
     if not invoice:
       logging.error('No encontre factura para el pago %s' % str(payment.key()))
       return ([],[])
@@ -235,11 +235,15 @@ class Download(RequestHandler):
       
     _to = datetime.utcnow().date()
 
-    if (_to - _from).days > 28:
-      _to = _from + timedelta(days=28)
+    # if (_to - _from).days > 28:
+      # _to = _from + timedelta(days=28)
     
     # Bajamos el xml con la api de IPN
-    dom = minidom.parseString(ipn_download(account, _from, _to))
+    _xml = ipn_download(account, _from, _to)
+    dom = minidom.parseString(_xml)
+    
+    self.response.write(_xml)
+    return
     
     # Verificamos que este todo bien el xml de vuelta
     state = int(get_xml_value(dom, 'State'))
@@ -255,7 +259,7 @@ class Download(RequestHandler):
     for pay in dom.getElementsByTagName('Pay'):
       
       p = Payment()
-      p.trx_id  = pay.attributes['trx_id']
+      p.trx_id  = pay.attributes['Trx_id']
       
       # Rompemos la fecha (la esperamos en formato YYYYMMDD)
       tmp = get_xml_value(pay,'Trx_Date')
@@ -284,3 +288,92 @@ class Download(RequestHandler):
     
     # Mandamos a correr la tarea de mapeo de pagos si bajamos alguno nuevo
     self.response.write('ok')
+    
+    
+# Metauro ->  agtzfnVsdHJhcHJvcHISCxIKUmVhbEVzdGF0ZRjJshEM
+  # SELECT * FROM Invoice where realestate = Key('agtzfnVsdHJhcHJvcHISCxIKUmVhbEVzdGF0ZRjJshEM')
+# Gotelli -> agtzfnVsdHJhcHJvcHISCxIKUmVhbEVzdGF0ZRimpCgM
+  # SELECT * FROM Invoice where realestate = Key('agtzfnVsdHJhcHJvcHISCxIKUmVhbEVzdGF0ZRimpCgM')
+
+class QueOnda(BackendHandler):
+  @need_auth(checkpay=False)
+  def get(self, **kwargs):
+    self.request.charset  = 'utf-8'
+    
+    re = db.get(kwargs['key'])
+  
+    
+    plan = re.plan
+    
+    if re.status == RealEstate._TRIAL:
+      #logging.error('-----------------entro en trial')
+      # Uso el 80% del free_days del Plan?
+      delta = datetime.utcnow() - re.created_at
+      if delta.days >= int(re.plan.free_days*0.80):
+        #re.status = RealEstate._TRIAL_END
+        #send_mail('trial_will_expire', re)
+        self.response.write('1')
+        return 
+      
+    elif re.status == RealEstate._TRIAL_END:
+      #logging.error('---------------entro en trial end')
+      # Llegamos a los free_days del Plan y todavia no pago?
+      delta = datetime.utcnow() - re.created_at
+      if delta.days >= re.plan.free_days:
+        # re.status = RealEstate._NO_PAYMENT
+        # send_mail('trial_ended', re)
+        self.response.write('2')
+        return
+        
+    elif re.status == RealEstate._ENABLED and not re.plan.is_free:
+
+      # Today
+      today = datetime.utcnow().date()
+      
+      next_month = re.last_invoice.month + 1
+      next_year  = re.last_invoice.year
+      
+      if next_month == 13:
+        next_month = 1
+        next_year  = next_year + 1
+      
+      next_date = date(next_year, next_month, re.last_invoice.day)
+
+      self.response.write(' || next_month: [%s] | next_year: [%s] | next_date: [%s]  || ' % (str(next_month), str(next_year), str(next_date)))
+      
+      invoice = None
+      if today > next_date:
+        invoice = Invoice()
+        invoice.realestate = re
+        invoice.trx_id     = create_transaction_number(next_date, re)
+        invoice.amount     = re.plan.amount
+        invoice.state      = Invoice._NOT_PAID
+        invoice.date       = next_date
+        # invoice.put()
+        
+        # re.last_invoice = next_date
+        self.response.write('4')
+        #return
+        
+      # Contamos las facturas impagas, si son mas que dos, ponemos en disabled
+      # Si son menos que dos y le acabo de facturar, le envio la factura
+      not_paid_invoices = len(Invoice().all(keys_only=True).filter('realestate', re.key()).filter('state', Invoice._NOT_PAID).fetch(10))
+      #logging.error('----------- Lleva %d sin pagar' % not_paid_invoices)
+      
+      if not_paid_invoices > 2:
+        # re.status = RealEstate._NO_PAYMENT
+        # send_mail('no_payment', re)
+        # # TODO: mandar a deshablitiar?
+        # return ([re], [])
+        self.response.write('5')
+        return
+        
+      elif invoice:
+        # send_mail('new_invoice', re, invoice)
+        # return ([re], [])
+        self.response.write('6')
+        return
+    
+    self.response.write('nada')
+    return
+     
