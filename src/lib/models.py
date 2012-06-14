@@ -159,6 +159,7 @@ class Payment(db.Model):
   date                = db.DateProperty()
   amount              = db.IntegerProperty()
   assinged            = db.IntegerProperty()
+  tag_data            = db.StringProperty()
   created_at          = db.DateTimeProperty(auto_now_add=True)
 
 class Invoice(db.Model):

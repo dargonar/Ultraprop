@@ -235,21 +235,25 @@ class Download(RequestHandler):
       
     _to = datetime.utcnow().date()
 
-    # if (_to - _from).days > 28:
-      # _to = _from + timedelta(days=28)
+    if (_to - _from).days > 28:
+      _to = _from + timedelta(days=28)
+    
+    # _to = date(2011,10,22)
+    # _from = date(2011,9,24)
     
     # Bajamos el xml con la api de IPN
     _xml = ipn_download(account, _from, _to)
     dom = minidom.parseString(_xml)
     
-    self.response.write(_xml)
-    return
+    # self.response.write(_xml)
+    # self.response.write(dom)
+    # return
     
     # Verificamos que este todo bien el xml de vuelta
     state = int(get_xml_value(dom, 'State'))
     if state != 1:
       logging.error('Error al traer xml: %d [%s]' % (state,account) )
-      self.response.write('ok')
+      self.response.write('error')
       return
 
     #logging.error('----------traje joya')
@@ -259,14 +263,16 @@ class Download(RequestHandler):
     for pay in dom.getElementsByTagName('Pay'):
       
       p = Payment()
-      p.trx_id  = pay.attributes['Trx_id']
+      p.trx_id  = str(pay.attributes['Trx_id'].value)
       
       # Rompemos la fecha (la esperamos en formato YYYYMMDD)
       tmp = get_xml_value(pay,'Trx_Date')
-      p.date = date(int(tmp[0:4]),int(tmp[4:6]),int(tmp[6:8]))
+      date_arr = tmp.split(' ')[0].split('-')
+      p.date = date(int(date_arr[0]),int(date_arr[1]),int(date_arr[2]))
       
       # El monto lo ponemos en int por 10
       p.amount = int(float(get_xml_value(pay,'Trx_Payment'))*10)
+      p.tag_data = account
       p.assinged = 0
       
       to_save.append(p)
@@ -275,19 +281,27 @@ class Download(RequestHandler):
     logging.info('Se recibieron %d pagos [%s]' % ( len(to_save), account ) )
       
     # Salvamos todos los payments juntos y la ultima vez que corrimos en una transaccion
-    def txn():
-      if(len(to_save)):
-        db.put(to_save)
+    # def txn():
+      # if(len(to_save)):
+        # db.put(to_save)
         
-        tmp = PaymentAssingMapper()
-        deferred.defer(tmp.run, _transactional=True)
+        # tmp = PaymentAssingMapper()
+        # deferred.defer(tmp.run, _transactional=True)
       
-      taskqueue.add(url='/tsk/update_ipn/%s' % account, params={'date': _to.strftime('%Y%m%d'), 'account':account}, transactional=True)
+      # taskqueue.add(url='/tsk/update_ipn/%s' % account, params={'date': _to.strftime('%Y%m%d'), 'account':account}, transactional=True)
     
-    db.run_in_transaction(txn)
+    # db.run_in_transaction(txn)
+    
+    if(len(to_save)):
+      db.put(to_save)
+      
+      tmp = PaymentAssingMapper()
+      deferred.defer(tmp.run)
+    
+    taskqueue.add(url='/tsk/update_ipn/%s' % account, params={'date': _to.strftime('%Y%m%d'), 'account':account})
     
     # Mandamos a correr la tarea de mapeo de pagos si bajamos alguno nuevo
-    self.response.write('ok')
+    self.response.write('ok - end')
     
     
 # Metauro ->  agtzfnVsdHJhcHJvcHISCxIKUmVhbEVzdGF0ZRjJshEM
